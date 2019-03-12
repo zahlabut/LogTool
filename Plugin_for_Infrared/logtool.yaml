@@ -1,0 +1,36 @@
+---
+#- name: Generate inventory
+#  hosts: localhost
+#  roles:
+#    - tripleo_inventory
+
+- name: Export Overcloud ERRORs from logs
+  hosts: undercloud
+  gather_facts: no
+  vars:
+    logtool_action: '{{ install.logtool }}'
+    log_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
+
+  tasks:
+
+  - name: create logtool script file
+    template:
+      src: logtool.sh.j2
+      dest: /home/stack/logtool.sh
+      group: stack
+      mode: 0744
+
+
+  - name: run logtool script
+    command: /home/stack/logtool.sh
+    #register: logtool
+
+  - name: check logs
+    shell: grep "Total Number of Errors/Warnings is:" *.log
+    args:
+      chdir: "{{ log_result_dir }}"
+    register: log_output
+
+  - name: Print errors
+    debug:
+      var: log_output

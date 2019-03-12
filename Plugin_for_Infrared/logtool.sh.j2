@@ -1,0 +1,10 @@
+#!/bin/bash
+# Script that starts LogTool execution on Undercloud
+
+if [ ! -e /home/stack/LogTool ]; then
+  git clone https://github.com/zahlabut/LogTool.git
+else
+  cd LogTool;git pull
+fi
+cd /home/stack/LogTool/Plugin_for_Infrared
+python -m unittest LogTool_Plugin
