@@ -17,7 +17,7 @@ if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
 # Parameters #
 errors_on_execution = {}
 competed_nodes={}
-script_start_time=time.time()
+
 
 # Runtime Logs #
 empty_file_content('Runtime.log')
@@ -34,10 +34,12 @@ if check_time(user_start_time)!=True:
 nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
 nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
 
-### Create Result Folder ###
-if result_dir in os.listdir('.'):
-    shutil.rmtree(result_dir)
-os.mkdir(result_dir)
+### Create Result Folders ###
+result_folders=[overcloud_result_dir,undercloud_result_dir]
+for fold in result_folders:
+    if fold in os.listdir('.'):
+        shutil.rmtree(fold)
+    os.mkdir(fold)
 
 class LogTool(unittest.TestCase):
     @staticmethod
@@ -47,6 +49,7 @@ class LogTool(unittest.TestCase):
     """ Start LogTool and export Errors from Overcloud """
     def test_1_Export_Overcloud_Errors(self):
         print '\ntest_1_Export_Overcloud_Errors'
+        mode_start_time = time.time()
         for node in nodes:
             print '\n'+'-'*40+'Remote Overcloud Node -->', str(node)+'-'*40
             result_file = node['Name'].replace(' ', '') + '.log'
@@ -74,18 +77,34 @@ class LogTool(unittest.TestCase):
             s.ssh_close()
         script_end_time = time.time()
         if len(errors_on_execution) == 0:
-            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Execution Time: ' + str(script_end_time - script_start_time) + '[sec]'], 'green')
+            spec_print(['Completed!!!', 'Result Directory: ' + overcloud_result_dir,
+                        'Execution Time: ' + str(script_end_time - mode_start_time) + '[sec]'], 'green')
         else:
             if len(errors_on_execution)==len(nodes):
                 spec_print(['Execution has failed for all nodes :-( ',
-                           'Execution Time: ' + str(script_end_time - script_start_time) + '[sec]'],'red')
+                           'Execution Time: ' + str(script_end_time - mode_start_time) + '[sec]'],'red')
             else:
-                spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
-                            'Execution Time: ' + str(script_end_time - script_start_time) + '[sec]',
+                spec_print(['Completed with failures!!!', 'Result Directory: ' + overcloud_result_dir,
+                            'Execution Time: ' + str(script_end_time - mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in errors_on_execution.keys()], 'yellow')
         self.assertGreater(len(competed_nodes),0,'Failed - LogTool execution has failed for all Overcloud nodes :-( ')
 
+
+
+    """ Start LogTool and export Errors from Undercloud """
+    def test_2_Export_Undercloud_Errors(self):
+        print '\ntest_2_Export_Undercloud_Errors'
+        mode_start_time = time.time()
+        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
+        command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + undercloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
+        com_result=exec_command_line_command(command)
+        shutil.move(result_file, os.path.join(os.path.abspath(undercloud_result_dir),result_file))
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!','Result Directory: '+undercloud_result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + undercloud_result_dir,
+                        'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
 
 
 

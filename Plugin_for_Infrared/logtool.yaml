@@ -9,7 +9,8 @@
   gather_facts: no
   vars:
     logtool_action: '{{ install.logtool }}'
-    log_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
+    overcloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
+    undercloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
 
   tasks:
 
@@ -25,7 +26,7 @@
     command: /home/stack/logtool.sh
     #register: logtool
 
-  - name: check logs
+  - name: Check LogTool result files
     shell: grep "Total Number of Errors/Warnings is:" *.log
     args:
       chdir: "{{ log_result_dir }}"
