@@ -105,7 +105,7 @@ class LogTool(unittest.TestCase):
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + undercloud_result_dir,
                         'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
-
+        self.assertEqual(com_result['ReturnCode'],0,'Failed - LogTool execution has failed :-( ')
 
 
 
