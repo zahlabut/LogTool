@@ -69,7 +69,7 @@ class LogTool(unittest.TestCase):
                 print_in_color(str(node) + ' --> FAILED', 'yellow')
                 self.raise_warning(str(node) + ' --> FAILED')
                 errors_on_execution[node['Name']] = False
-            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(overcloud_result_dir), result_file))
             # Clean all #
             files_to_delete = ['Extract_On_Node_NEW.py', result_file]
             for fil in files_to_delete:
