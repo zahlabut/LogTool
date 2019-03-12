@@ -26,12 +26,13 @@
     command: /home/stack/logtool.sh
     #register: logtool
 
-  - name: Check LogTool result files
+  - name: Check LogTool result files for Overcloud
     shell: grep "Total Number of Errors/Warnings is:" *.log
     args:
-      chdir: "{{ log_result_dir }}"
+      chdir: "{{ overcloud_result_dir }}"
     register: log_output
 
   - name: Print errors
     debug:
       var: log_output
+
