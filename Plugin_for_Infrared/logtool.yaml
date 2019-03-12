@@ -13,7 +13,7 @@
 
   tasks:
 
-  - name: create logtool script file
+  - name: Create LogTool script (logtool.sh)
     template:
       src: logtool.sh.j2
       dest: /home/stack/logtool.sh
@@ -21,7 +21,7 @@
       mode: 0744
 
 
-  - name: run logtool script
+  - name: Execute LogTool script
     command: /home/stack/logtool.sh
     #register: logtool
 

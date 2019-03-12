@@ -39,14 +39,14 @@ if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
 os.mkdir(result_dir)
 
-class OvercloudErrors(unittest.TestCase):
+class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-    """This test will start LogTool execution on Undercloud and it's planned to "control" the execution itself """
-    def test_1_LogTool_Execution(self):
-        print '\ntest_1_LogTool_Execution'
+    """ Start LogTool and export Errors from Overcloud """
+    def test_1_Export_Overcloud_Errors(self):
+        print '\ntest_1_Export_Overcloud_Errors'
         for node in nodes:
             print '\n'+'-'*40+'Remote Overcloud Node -->', str(node)+'-'*40
             result_file = node['Name'].replace(' ', '') + '.log'
@@ -84,25 +84,29 @@ class OvercloudErrors(unittest.TestCase):
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
                             'Execution Time: ' + str(script_end_time - script_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in errors_on_execution.keys()], 'yellow')
-        self.assertGreater(len(competed_nodes),0,'Failed - LogTool execution has failed for all nodes :-( ')
+        self.assertGreater(len(competed_nodes),0,'Failed - LogTool execution has failed for all Overcloud nodes :-( ')
 
-    """This test will use the result files created by LogTool, to make its final verdict :
-        Pass - if no ERRORs have been detected
-        Fail - if ERRORs have been detected, it will also print the content of "Unique Section" 
-    """
-    def test_2_Export_Overcloud_Errors(self):
-        print '\ntest_2_Export_Overcloud_Errors'
-        failed_nodes={}
-        detected_unique_errors=''
-        for fil in os.listdir(os.path.abspath(result_dir)):
-            fil_path=os.path.join(os.path.abspath(result_dir),fil)
-            data=open(fil_path,'r').readlines()
-            if 'Total Number of Errors/Warnings is:0' not in str(data):
-                failed_nodes[fil]=fil_path
-                detected_unique_errors+='\n\n\nUnique ERRORs on: '+fil.split('.log')[0]
-                unique_section_start_index=int(data[-1].split(' --> ')[-1])
-                for line in data[unique_section_start_index:-7]:
-                    detected_unique_errors+=line
-        # self.assertEquals(len(failed_nodes),0,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
-        #                 '\nDetected Unique ERRORs are:\n'+detected_unique_errors+
-        #                   '\nCheck LogTool result files in: "'+result_dir+'" for more details')
+
+
+
+
+    # """This test will use the result files created by LogTool, to make its final verdict :
+    #     Pass - if no ERRORs have been detected
+    #     Fail - if ERRORs have been detected, it will also print the content of "Unique Section"
+    # """
+    # def test_2_Export_Overcloud_Errors(self):
+    #     print '\ntest_2_Export_Overcloud_Errors'
+    #     failed_nodes={}
+    #     detected_unique_errors=''
+    #     for fil in os.listdir(os.path.abspath(result_dir)):
+    #         fil_path=os.path.join(os.path.abspath(result_dir),fil)
+    #         data=open(fil_path,'r').readlines()
+    #         if 'Total Number of Errors/Warnings is:0' not in str(data):
+    #             failed_nodes[fil]=fil_path
+    #             detected_unique_errors+='\n\n\nUnique ERRORs on: '+fil.split('.log')[0]
+    #             unique_section_start_index=int(data[-1].split(' --> ')[-1])
+    #             for line in data[unique_section_start_index:-7]:
+    #                 detected_unique_errors+=line
+    #     self.assertEquals(len(failed_nodes),0,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
+    #                     '\nDetected Unique ERRORs are:\n'+detected_unique_errors+
+    #                       '\nCheck LogTool result files in: "'+result_dir+'" for more details')
