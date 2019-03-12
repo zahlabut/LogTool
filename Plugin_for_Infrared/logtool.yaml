@@ -9,8 +9,8 @@
   gather_facts: no
   vars:
     logtool_action: '{{ install.logtool }}'
-    overcloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
-    undercloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_CLI_Log_Tool'
+    overcloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_Log_Tool_Results'
+    undercloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_Log_Tool_Results'
 
   tasks:
 
