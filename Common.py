@@ -6,7 +6,6 @@ import json
 import sys
 import re
 
-
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
     f.write('')
