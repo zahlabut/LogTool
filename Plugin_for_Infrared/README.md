@@ -27,3 +27,8 @@ component, that could be used for deeper investigation. The plan is to include t
 
 # Start LogTool plugin
 *ir logtool*
+
+# Troubleshooting
+There are two log files created on runtime on remote host (undercloud) under /home/stack/LogTool/Plugin_for_Infrared:
+ _"Error.log"_ and _"Runtime.log"_.
+Please add the content of both into the description of issue you'd like to open.
