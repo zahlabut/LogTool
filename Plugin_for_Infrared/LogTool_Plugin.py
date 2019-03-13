@@ -129,3 +129,4 @@ class LogTool(unittest.TestCase):
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
                         '\nDetected Unique ERRORs are:\n'+detected_unique_errors+
                           '\nCheck LogTool result files in: "'+result_dir+'" for more details')
+

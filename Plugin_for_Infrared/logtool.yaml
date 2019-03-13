@@ -24,16 +24,12 @@
     command: /home/stack/logtool.sh
     #register: logtool
 
-#  - name: P/F - If Report file exists (F), print its content
-#    command: ls /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
-#    register: report_file_exists
-#    command: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
-#    when: report_file_exists
-
-
   - name: P/F - If Report file exists (F), print its content
-    command: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
-    when: ls /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+    command: ls /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+    register: report_file_exists
+    - shell: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+    when: report_file_exists==0
+
 
 #  - name: Check LogTool result files for Overcloud logs
 #    shell: grep "Total Number of Errors/Warnings is:" *.log
