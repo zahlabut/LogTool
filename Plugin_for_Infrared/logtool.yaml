@@ -55,6 +55,7 @@
 
 
 
+
 #  - name: Check LogTool result files for Overcloud logs
 #    shell: grep "Total Number of Errors/Warnings is:" *.log
 #    args:
