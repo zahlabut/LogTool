@@ -3,9 +3,6 @@
 # Log debug level to export #
 grep_string = ' ERROR '
 
-# LogTool Report file name
-report_file_name='LogTool_Report.log'
-
 # Path that will be used for saving LogTool result files
 result_dir = 'LogTool_Result_Files'
 

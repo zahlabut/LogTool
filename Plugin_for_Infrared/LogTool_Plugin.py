@@ -111,6 +111,7 @@ class LogTool(unittest.TestCase):
     """
     def test_3_create_final_report(self):
         print '\ntest_3_create_final_report'
+        report_file_name = 'LogTool_Report.log'
         if report_file_name in os.listdir('.'):
             os.remove(report_file_name)
         failed_nodes={}
