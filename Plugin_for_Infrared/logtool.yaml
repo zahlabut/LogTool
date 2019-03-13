@@ -32,7 +32,5 @@
 
       - name: Print content of Report File
         debug:
-          #var: report_log_content.stdout_lines
-          var: report_log_content.stdout
-
+          var: report_log_content.stdout_lines
     when: report_log_stat.stat.exists
