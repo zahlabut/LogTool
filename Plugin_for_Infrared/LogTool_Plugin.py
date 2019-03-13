@@ -130,3 +130,4 @@ class LogTool(unittest.TestCase):
                         '\nDetected Unique ERRORs are:\n'+detected_unique_errors+
                           '\nCheck LogTool result files in: "'+result_dir+'" for more details')
 
+
