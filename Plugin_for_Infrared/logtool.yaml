@@ -25,8 +25,9 @@
     #register: logtool
 
   - name: P/F - If Report file exists (F), print its content
-    chdir: "{{ logtool_dir }}"
-    command: cat LogTool_Report.log
+    args:
+      chdir: "{{ logtool_dir }}"
+      command: cat LogTool_Report.log
 
 
 
