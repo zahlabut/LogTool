@@ -11,7 +11,6 @@
     logtool_action: '{{ install.logtool }}'
     logtool_dir: '/home/stack/LogTool/Plugin_for_Infrared/'
 
-
   tasks:
 
   - name: Create LogTool Start Script (logtool.sh)
@@ -20,7 +19,6 @@
       dest: /home/stack/logtool.sh
       group: stack
       mode: 0744
-
 
   - name: Execute LogTool Start Script
     command: /home/stack/logtool.sh
