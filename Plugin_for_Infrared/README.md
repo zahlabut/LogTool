@@ -6,21 +6,13 @@ component, that could be used for deeper investigation. The plan is to include t
 
 # Install Infrared
 sudo yum install git gcc libffi-devel openssl-devel
-
 sudo yum install python-virtualenv
-
 sudo yum install libselinux-python
-
 git clone https://github.com/redhat-openstack/infrared.git
-
 cd infrared
-
 virtualenv .venv && source .venv/bin/activate
-
 pip install --upgrade pip
-
 pip install --upgrade setuptools
-
 pip install .
 
 
