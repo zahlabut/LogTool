@@ -6,6 +6,10 @@ import json
 import sys
 import re
 
+def append_to_file(log_file, msg):
+    log_file = open(log_file, 'a')
+    log_file.write(msg)
+
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
     f.write('')

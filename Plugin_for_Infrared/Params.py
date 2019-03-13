@@ -3,9 +3,11 @@
 # Log debug level to export #
 grep_string = ' ERROR '
 
+# LogTool Report file name
+report_file_name='LogTool_Report.log'
+
 # Path that will be used for saving LogTool result files
-overcloud_result_dir = 'Overcloud_' + grep_string.replace(' ', '')+'_Log_Tool_Results'
-undercloud_result_dir = 'Undercloud_' + grep_string.replace(' ', '')+'_Log_Tool_Results'
+result_dir = 'Overcloud_' + grep_string.replace(' ', '')+'_Log_Tool_Results'
 
 # Path to OSP logs on Overcloud nodes
 overcloud_logs_dir = '/var/log/containers'
