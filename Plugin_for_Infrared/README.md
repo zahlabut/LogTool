@@ -5,15 +5,15 @@ into the output all the UNIQUE Error messages for each OSP component. Also it wi
 component, that could be used for deeper investigation. The plan is to include these files into Job Artifact.
 
 # Install Infrared
-sudo yum install git gcc libffi-devel openssl-devel
-sudo yum install python-virtualenv
-sudo yum install libselinux-python
-git clone https://github.com/redhat-openstack/infrared.git
-cd infrared
-virtualenv .venv && source .venv/bin/activate
-pip install --upgrade pip
-pip install --upgrade setuptools
-pip install .
+    sudo yum install git gcc libffi-devel openssl-devel
+    sudo yum install python-virtualenv
+    sudo yum install libselinux-python
+    git clone https://github.com/redhat-openstack/infrared.git
+    cd infrared
+    virtualenv .venv && source .venv/bin/activate
+    pip install --upgrade pip
+    pip install --upgrade setuptools
+    pip install .
 
 # Install LogTool Plugin
 ir plugin add https://github.com/zahlabut/LogTool.git --src-path Plugin_for_Infrared
