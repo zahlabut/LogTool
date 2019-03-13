@@ -121,7 +121,7 @@ class LogTool(unittest.TestCase):
             data=open(fil_path,'r').readlines()
             if 'Total Number of Errors/Warnings is:0' not in str(data):
                 failed_nodes[fil]=fil_path
-                detected_unique_errors+='\r\r\r******* Unique ERRORs in: '+fil+' *******'
+                detected_unique_errors+='='*10+' Unique ERRORs in: '+fil+' '+'='*10
                 unique_section_start_index=int(data[-1].split(' --> ')[-1])
                 for line in data[unique_section_start_index:-7]:
                     detected_unique_errors+=line
