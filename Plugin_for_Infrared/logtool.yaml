@@ -4,7 +4,7 @@
 #  roles:
 #    - tripleo_inventory
 
-- name: Export Overcloud ERRORs from logs
+- name: Install LogTool
   hosts: undercloud
   gather_facts: no
   vars:
@@ -14,7 +14,7 @@
 
   tasks:
 
-  - name: Create LogTool script (logtool.sh)
+  - name: Create LogTool Start Script (logtool.sh)
     template:
       src: logtool.sh.j2
       dest: /home/stack/logtool.sh
@@ -22,15 +22,24 @@
       mode: 0744
 
 
-  - name: Execute LogTool script
+  - name: Execute LogTool Start Script
     command: /home/stack/logtool.sh
     #register: logtool
 
-  - name: Check LogTool result files for Overcloud
+  - name: Check LogTool result files for Overcloud logs
     shell: grep "Total Number of Errors/Warnings is:" *.log
     args:
       chdir: "{{ overcloud_result_dir }}"
     register: log_output
+
+
+  - name: Check LogTool result files for Undercloud logs
+    shell: grep "Total Number of Errors/Warnings is:" *.log
+    args:
+      chdir: "{{ undercloud_result_dir }}"
+    register: log_output
+
+
 
   - name: Print errors
     debug:
