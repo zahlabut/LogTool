@@ -1,8 +1,4 @@
 ---
-#- name: Generate inventory
-#  hosts: localhost
-#  roles:
-#    - tripleo_inventory
 
 - name: Install LogTool
   hosts: undercloud
@@ -22,15 +18,6 @@
 
   - name: Execute LogTool Start Script
     command: /home/stack/logtool.sh
-    #register: logtool
-
-#  - name: P/F - If Report file exists (F), print its content
-#    shell: ls /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
-#    register: report_file_exists
-#    command: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
-#    when : report_file_exists == 0
-
-
 
   - name: Check for Report File existence
     stat:
@@ -47,31 +34,4 @@
         debug:
           var: report_log_content.stdout_lines
 
-      - name: 'Raise failure with message'
-        fail:
-          msg: "Errors detected in OSP logs"
-
     when: report_log_stat.stat.exists
-
-
-
-
-#  - name: Check LogTool result files for Overcloud logs
-#    shell: grep "Total Number of Errors/Warnings is:" *.log
-#    args:
-#      chdir: "{{ overcloud_result_dir }}"
-#    register: log_output
-#
-#
-#  - name: Check LogTool result files for Undercloud logs
-#    shell: grep "Total Number of Errors/Warnings is:" *.log
-#    args:
-#      chdir: "{{ undercloud_result_dir }}"
-#    register: log_output
-#
-#
-#
-#  - name: Print errors
-#    debug:
-#      var: log_output
-
