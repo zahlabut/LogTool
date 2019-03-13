@@ -49,7 +49,7 @@
 
       - name: 'Raise failure with message'
         fail:
-        msg: "Errors detected in OSP logs"
+          msg: "Errors detected in OSP logs"
 
     when: report_log_stat.stat.exists
 
