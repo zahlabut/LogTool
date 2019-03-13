@@ -27,7 +27,7 @@
   - name: P/F - If Report file exists (F), print its content
     command: ls /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
     register: report_file_exists
-    - shell: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+    shell: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
     when: report_file_exists==0
 
 
