@@ -87,9 +87,8 @@ class LogTool(unittest.TestCase):
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + overcloud_result_dir,
                             'Execution Time: ' + str(script_end_time - mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in errors_on_execution.keys()], 'yellow')
-        self.assertGreater(len(competed_nodes),0,'Failed - LogTool execution has failed for all Overcloud nodes :-( ')
-
-
+        if len(competed_nodes)==0:
+            self.raise_warning('LogTool execution has failed to be executed on all Overcloud nodes :-(')
 
     """ Start LogTool and export Errors from Undercloud """
     def test_2_Export_Undercloud_Errors(self):
@@ -105,7 +104,9 @@ class LogTool(unittest.TestCase):
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + undercloud_result_dir,
                         'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
-        self.assertEqual(com_result['ReturnCode'],0,'Failed - LogTool execution has failed :-( ')
+        if com_result['ReturnCode']==0:
+            self.raise_warning('LogTool execution has failed to be executed on Underloud logs :-(')
+
 
 
 
