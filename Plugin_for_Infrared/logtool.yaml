@@ -9,8 +9,8 @@
   gather_facts: no
   vars:
     logtool_action: '{{ install.logtool }}'
-    overcloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_Log_Tool_Results'
-    undercloud_result_dir: '/home/stack/LogTool/Plugin_for_Infrared/Overcloud_ERROR_Log_Tool_Results'
+    logtool_dir: '/home/stack/LogTool/Plugin_for_Infrared/'
+
 
   tasks:
 
@@ -27,6 +27,7 @@
     #register: logtool
 
   - name: P/F - If Report file exists (F), print its content
+    chdir: "{{ logtool_dir }}"
     command: cat LogTool_Report.log
 
 
