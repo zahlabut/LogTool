@@ -92,7 +92,7 @@ class LogTool(unittest.TestCase):
     def test_2_Export_Undercloud_Errors(self):
         print '\ntest_2_Export_Undercloud_Errors'
         mode_start_time = time.time()
-        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
+        result_file='Undercloud.log'
         command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + undercloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
         com_result=exec_command_line_command(command)
         shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
@@ -120,7 +120,7 @@ class LogTool(unittest.TestCase):
             data=open(fil_path,'r').readlines()
             if 'Total Number of Errors/Warnings is:0' not in str(data):
                 failed_nodes[fil]=fil_path
-                detected_unique_errors+='\n\n\nUnique ERRORs on: '+fil.split('.log')[0]
+                detected_unique_errors+='\n\n\nUnique ERRORs in: '+fil
                 unique_section_start_index=int(data[-1].split(' --> ')[-1])
                 for line in data[unique_section_start_index:-7]:
                     detected_unique_errors+=line

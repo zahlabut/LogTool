@@ -7,7 +7,7 @@ grep_string = ' ERROR '
 report_file_name='LogTool_Report.log'
 
 # Path that will be used for saving LogTool result files
-result_dir = 'Overcloud_' + grep_string.replace(' ', '')+'_Log_Tool_Results'
+result_dir = 'LogTool_Result_Files'
 
 # Path to OSP logs on Overcloud nodes
 overcloud_logs_dir = '/var/log/containers'
