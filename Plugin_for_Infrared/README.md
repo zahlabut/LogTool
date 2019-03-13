@@ -5,25 +5,25 @@ into the output all the UNIQUE Error messages for each OSP component. Also it wi
 component, that could be used for deeper investigation. The plan is to include these files into Job Artifact.
 
 # Install Infrared
-**sudo yum install git gcc libffi-devel openssl-devel<br/>**
-**sudo yum install python-virtualenv<br/>**
-**sudo yum install libselinux-python<br/>**
-**git clone https://github.com/redhat-openstack/infrared.git<br/>**
-**cd infrared<br/>**
-**virtualenv .venv && source .venv/bin/activate<br/>**
-**pip install --upgrade pip<br/>**
-**pip install --upgrade setuptools<br/>**
-**pip install .<br/>**
+*sudo yum install git gcc libffi-devel openssl-devel<br/>*
+*sudo yum install python-virtualenv<br/>*
+*sudo yum install libselinux-python<br/>*
+*git clone https://github.com/redhat-openstack/infrared.git<br/>*
+*cd infrared<br/>*
+*virtualenv .venv && source .venv/bin/activate<br/>*
+*pip install --upgrade pip<br/>*
+*pip install --upgrade setuptools<br/>*
+*pip install .<br/>*
 
 
 # Install LogTool Plugin
-**ir plugin add https://github.com/zahlabut/LogTool.git --src-path Plugin_for_Infrared**
+*ir plugin add https://github.com/zahlabut/LogTool.git --src-path Plugin_for_Infrared*
 
 # Uninstall LogTool Plugin
-**ir plugin remove logtool**
+*ir plugin remove logtool*
 
 # Inventory file
-**ir workspace import http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible-poc/30/artifact/workspace.tgz**
+*ir workspace import http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible-poc/30/artifact/workspace.tgz*
 
 # Start LogTool plugin
-**ir logtool**
+*ir logtool*
