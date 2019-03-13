@@ -37,9 +37,6 @@
      path: /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
     register: report_log_stat
 
-  - debug:
-      var: report_log_stat
-
   - name:
     block:
       - name: Read content of Report File
@@ -49,6 +46,11 @@
       - name: Print content of Report File
         debug:
           var: report_log_content.stdout_lines
+
+      - name: 'Raise failure with message'
+        fail:
+        msg: "Errors detected in OSP logs"
+
     when: report_log_stat.stat.exists
 
 
