@@ -3,9 +3,6 @@
 - name: Install LogTool
   hosts: undercloud
   gather_facts: no
-#  vars:
-#    logtool_action: '{{ install.logtool }}'
-#    logtool_dir: '/home/stack/LogTool/Plugin_for_Infrared/'
 
   tasks:
 
