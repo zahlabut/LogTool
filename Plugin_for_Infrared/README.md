@@ -23,7 +23,7 @@ OSP component, that could be used for deeper investigation. The plan is to inclu
 *ir plugin remove logtool*
 
 # Inventory file (Import inventory file)
-*ir workspace import http://YOUR_CI_SETUP/workspace.tgz*
+*ir workspace import http://YOUR_CI_SETUP/workspace.tgz<br/>*
 ** For example <br/>**
 *ir workspace import http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible-poc/30/artifact/workspace.tgz*
 
