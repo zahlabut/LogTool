@@ -124,7 +124,8 @@ class LogTool(unittest.TestCase):
                 unique_section_start_index=int(data[-1].split(' --> ')[-1])
                 for line in data[unique_section_start_index:-7]:
                     detected_unique_errors+=line
+                detected_unique_errors+='\n'*5
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
-                        '\nDetected Unique ERRORs are:\n\n\n'+detected_unique_errors+'\n'*10+
+                        '\nDetected Unique ERRORs are:\n\n\n'+detected_unique_errors+'\n'*5+
                           '\nCheck LogTool result files in: "'+os.path.abspath(result_dir)+'" for more details')
