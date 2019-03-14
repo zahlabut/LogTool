@@ -1,8 +1,8 @@
 # General
-This LogTool plugin can be used by Infrared in order to export Error messages from OSP logs: Undercloud and Overcloud.
-The plugin will activate LogTool on remote host (Undercoud), once LogTool execution will be completed it will prompt
-into the output all the UNIQUE Error messages for each OSP component. Also it will generate report file for each
-component, that could be used for deeper investigation. The plan is to include these files into Job Artifact.
+This plugin can be used by Infrared in order to export Error messages from OSP logs on both: Undercloud and Overcloud.
+LogTool will be installed and executed on remote host (Undercoud), once execution is competed, it will prompt
+all the UNIQUE Error messages for each OSP component. In addition to that, it will generate report files for each
+OSP component, that could be used for deeper investigation. The plan is to include these files into Jenkins Job Artifacts.
 
 # Install Infrared
 *sudo yum install git gcc libffi-devel openssl-devel<br/>*
