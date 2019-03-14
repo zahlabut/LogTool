@@ -18,7 +18,6 @@ if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
 errors_on_execution = {}
 competed_nodes={}
 
-
 # Runtime Logs #
 empty_file_content('Runtime.log')
 empty_file_content('Error.log')
