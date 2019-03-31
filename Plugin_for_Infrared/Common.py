@@ -52,7 +52,15 @@ class MyOutput():
     def close(self):
         self.stdout.close()
         self.log.close()
-        
+
+def check_ping(ip):
+    try:
+        if subprocess.check_output(["ping", "-c", "1", ip]):
+            return True
+    except Exception, e:
+        print 'Ping to '+ip+' failed with '+str(e)
+        return False
+
 class SSH():
     def __init__(self, host, user, password='', key_path=''):
         self.host=host

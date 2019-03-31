@@ -30,8 +30,15 @@ if check_time(user_start_time)!=True:
     sys.exit(1)
 
 ### Get all nodes ###
-nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
+nodes=[]
+all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
+all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
+for node in all_nodes:
+    if check_ping(node['ip']) is True:
+        nodes.append(node)
+    else:
+        print_in_color('Warning - ' + str(node) + ' will be skipped, due to connectivity issue!!!', 'yellow')
+
 
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):
