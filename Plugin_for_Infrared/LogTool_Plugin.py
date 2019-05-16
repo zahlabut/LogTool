@@ -32,7 +32,7 @@ if check_time(user_start_time)!=True:
 ### Get all nodes ###
 nodes=[]
 all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
+all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
 for node in all_nodes:
     if check_ping(node['ip']) is True:
         nodes.append(node)
