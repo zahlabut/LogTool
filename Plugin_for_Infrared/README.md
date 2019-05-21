@@ -37,3 +37,10 @@ For example <br/>
 There are two log files created on runtime on remote host (undercloud) under /home/stack/LogTool/Plugin_for_Infrared:
  _"Error.log"_ and _"Runtime.log"_.
 Please add the content of both into the description of issue you'd like to open.
+
+
+# To Do list
+1) Increase the execution time by adding threads
+2) Support Python3
+3) LogTool stage will always been executed on NEW setup, don't handle timestamps in logs
+4) RabbitMQ log, are currently in Black List add support to parse this log
