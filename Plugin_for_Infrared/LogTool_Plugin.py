@@ -98,8 +98,9 @@ class LogTool(unittest.TestCase):
     def test_2_Export_Undercloud_Errors(self):
         print '\ntest_2_Export_Undercloud_Errors'
         mode_start_time = time.time()
-        result_file='Undercloud.log'
+
         for dir in undercloud_logs_dir:
+            result_file = 'Undercloud_'+dir.split('/')[-1]+'.log'
             command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + dir + " '" + grep_string + "'" + ' ' + result_file
             com_result=exec_command_line_command(command)
             shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
