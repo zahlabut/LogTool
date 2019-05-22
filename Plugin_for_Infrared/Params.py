@@ -1,7 +1,7 @@
 ### Parameters ###
 
 # Log debug level to export #
-grep_string = ' ERROR '
+grep_string = ' WARNING '
 
 # Path that will be used for saving LogTool result files
 result_dir = 'LogTool_Result_Files'
