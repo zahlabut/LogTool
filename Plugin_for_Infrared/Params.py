@@ -10,7 +10,7 @@ result_dir = 'LogTool_Result_Files'
 overcloud_logs_dir = '/var/log/containers'
 
 # Path to OSP logs on Undercloud
-undercloud_logs_dir = '/var/log/containers'
+undercloud_logs_dir = ['/var/log/containers','/home/stack']
 
 # SSH credentials used for connection to Overcloud nodes
 overcloud_ssh_user = 'heat-admin'
