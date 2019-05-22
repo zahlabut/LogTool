@@ -53,7 +53,7 @@ class LogTool(unittest.TestCase):
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-    def run_on_node(node):
+    def run_on_node(self, node):
         print '\n' + '-' * 40 + 'Remote Overcloud Node -->', str(node) + '-' * 40
         result_file = node['Name'].replace(' ', '') + '.log'
         s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
