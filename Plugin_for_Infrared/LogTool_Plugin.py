@@ -136,6 +136,6 @@ class LogTool(unittest.TestCase):
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
                         '\nDetected Unique ERRORs are:'+'\n'*5+detected_unique_errors+
-                          '\n*** For more details, check LogTool result files on your setup, \under: "'+os.path.abspath(result_dir)+'" for more details')
+                          '\n*** For more details, check LogTool result files on your setup, \under: "'+os.path.abspath(result_dir))
 
 
