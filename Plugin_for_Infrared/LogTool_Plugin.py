@@ -98,9 +98,8 @@ class LogTool(unittest.TestCase):
     def test_2_Export_Undercloud_Errors(self):
         print '\ntest_2_Export_Undercloud_Errors'
         mode_start_time = time.time()
-
         for dir in undercloud_logs_dir:
-            result_file = 'Undercloud_'+dir.replace('/','_')+'.log'
+            result_file = 'Undercloud'+dir.replace('/','_')+'.log'
             command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + dir + " '" + grep_string + "'" + ' ' + result_file
             com_result=exec_command_line_command(command)
             shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
@@ -137,6 +136,6 @@ class LogTool(unittest.TestCase):
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
                         '\nDetected Unique ERRORs are:'+'\n'*5+detected_unique_errors+
-                          '\n*** Check LogTool result files in: "'+os.path.abspath(result_dir)+'" for more details')
+                          '\n*** For more details, check LogTool result files on your setup, \under: "'+os.path.abspath(result_dir)+'" for more details')
 
 
