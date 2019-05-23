@@ -92,7 +92,7 @@ class LogTool(unittest.TestCase):
 
         threads=[]
         for node in nodes:
-            t=threading.Thread(target=self.run_on_node, kwargs=node)
+            t=threading.Thread(target=self.run_on_node, args=node)
             print t
             threads.append(t)
             t.start()
