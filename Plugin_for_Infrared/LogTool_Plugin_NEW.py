@@ -4,6 +4,7 @@ from Common import *
 from Params import *
 import unittest
 import warnings
+import threading
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Common.py configuration file.',
@@ -45,40 +46,60 @@ if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
 os.mkdir(result_dir)
 
+
+
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
+    def run_on_node(self, node):
+        print '\n' + '-' * 40 + 'Remote Overcloud Node -->', str(node) + '-' * 40
+        result_file = node['Name'].replace(' ', '') + '.log'
+        s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+        s.ssh_connect_key()
+        s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
+        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
+        command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
+            user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
+        print 'Executed command on host --> ', command
+        com_result = s.ssh_command(command)
+        print com_result['Stdout']  # Do not delete me!!!
+        if 'SUCCESS!!!' in com_result['Stdout']:
+            print_in_color(str(node) + ' --> OK', 'green')
+            competed_nodes[node['Name']] = True
+        else:
+            print_in_color(str(node) + ' --> FAILED', 'yellow')
+            self.raise_warning(str(node) + ' --> FAILED')
+            errors_on_execution[node['Name']] = False
+        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+        # Clean all #
+        files_to_delete = ['Extract_On_Node_NEW.py', result_file]
+        for fil in files_to_delete:
+            s.ssh_command('rm -rf ' + fil)
+        s.ssh_close()
+
     """ Start LogTool and export Errors from Overcloud """
     def test_1_Export_Overcloud_Errors(self):
         print '\ntest_1_Export_Overcloud_Errors'
         mode_start_time = time.time()
+
+
+
+        threads=[]
         for node in nodes:
-            print '\n'+'-'*40+'Remote Overcloud Node -->', str(node)+'-'*40
-            result_file = node['Name'].replace(' ', '') + '.log'
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
-            s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
-            command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
-                user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
-            print 'Executed command on host --> ', command
-            com_result = s.ssh_command(command)
-            print com_result['Stdout']  # Do not delete me!!!
-            if 'SUCCESS!!!' in com_result['Stdout']:
-                print_in_color(str(node) + ' --> OK', 'green')
-                competed_nodes[node['Name']] = True
-            else:
-                print_in_color(str(node) + ' --> FAILED', 'yellow')
-                self.raise_warning(str(node) + ' --> FAILED')
-                errors_on_execution[node['Name']] = False
-            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
-            # Clean all #
-            files_to_delete = ['Extract_On_Node_NEW.py', result_file]
-            for fil in files_to_delete:
-                s.ssh_command('rm -rf ' + fil)
-            s.ssh_close()
+            self.run_on_node(node)
+        #     t=threading.Thread(target=self.run_on_node, kwargs=node)
+        #     print t
+        #     threads.append(t)
+        #     t.start()
+        # #for t in threads:
+        #     print 'here'
+        #     t.join()
+        #     print 'threads done'
+
+
+
         script_end_time = time.time()
         if len(errors_on_execution) == 0:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
@@ -98,10 +119,11 @@ class LogTool(unittest.TestCase):
     def test_2_Export_Undercloud_Errors(self):
         print '\ntest_2_Export_Undercloud_Errors'
         mode_start_time = time.time()
-        result_file='Undercloud.log'
-        command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + undercloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
-        com_result=exec_command_line_command(command)
-        shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
+        for dir in undercloud_logs_dir:
+            result_file = 'Undercloud'+dir.replace('/','_')+'.log'
+            command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + dir + " '" + grep_string + "'" + ' ' + result_file
+            com_result=exec_command_line_command(command)
+            shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
@@ -135,6 +157,6 @@ class LogTool(unittest.TestCase):
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
                         '\nDetected Unique ERRORs are:'+'\n'*5+detected_unique_errors+
-                          '\n*** Check LogTool result files in: "'+os.path.abspath(result_dir)+'" for more details')
+                          '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
 
 
