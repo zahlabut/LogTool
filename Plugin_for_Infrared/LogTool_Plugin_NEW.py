@@ -60,7 +60,7 @@ class LogTool(unittest.TestCase):
         print '\ntest_1_Export_Overcloud_Errors'
         mode_start_time = time.time()
 
-        def run_on_node(self, node):
+        def run_on_node(node):
             print '-------------------------'
             print node
             print '--------------------------'
