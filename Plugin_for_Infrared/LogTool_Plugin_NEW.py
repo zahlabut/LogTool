@@ -96,10 +96,10 @@ class LogTool(unittest.TestCase):
             print t
             threads.append(t)
             t.start()
-        # for t in threads:
-        #     print 'here'
-        #     t.join()
-        #     print 'threads done'
+        for t in threads:
+            print 'here'
+            t.join()
+            print 'threads done'
 
 
 
