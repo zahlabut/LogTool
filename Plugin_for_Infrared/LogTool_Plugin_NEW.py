@@ -53,8 +53,8 @@ class LogTool(unittest.TestCase):
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-    @staticmethod
-    def run_on_node(node):
+
+    def run_on_node(self, node):
         print '-------------------------'
         print node
         print '--------------------------'
