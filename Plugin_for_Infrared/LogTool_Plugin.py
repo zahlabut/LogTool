@@ -7,7 +7,7 @@ import warnings
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Common.py configuration file.',
-         '2) Type: "python -m unittest Take_Me_Jenkins" to start this script']
+         '2) Type: "python -m unittest LogTool_Plugin" to start this script']
 if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
     spec_print(usage, 'yellow')
     sys.exit(1)
