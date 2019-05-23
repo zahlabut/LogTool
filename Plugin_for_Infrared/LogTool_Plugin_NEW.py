@@ -53,8 +53,8 @@ class LogTool(unittest.TestCase):
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-
-    def run_on_node(self, node):
+    @staticmethod
+    def run_on_node(node):
         print '-------------------------'
         print node
         print '--------------------------'
@@ -92,7 +92,7 @@ class LogTool(unittest.TestCase):
 
         threads=[]
         for node in nodes:
-            t=threading.Thread(target=self.run_on_node, args=node)
+            t=threading.Thread(target=self.run_on_node, args=(node,))
             print t
             threads.append(t)
             t.start()
