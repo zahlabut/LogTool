@@ -83,25 +83,18 @@ class LogTool(unittest.TestCase):
             s.ssh_command('rm -rf ' + fil)
         s.ssh_close()
 
-    """ Start LogTool and export Errors from Overcloud """
+    """ Start LogTool and export Errors from Overcloud, execution on nodes is running in parallel"""
     def test_1_Export_Overcloud_Errors(self):
         print '\ntest_1_Export_Overcloud_Errors'
         mode_start_time = time.time()
 
-
-
         threads=[]
         for node in nodes:
             t=threading.Thread(target=self.run_on_node, args=(node,))
-            print t
             threads.append(t)
             t.start()
         for t in threads:
-            print 'here'
             t.join()
-            print 'threads done'
-
-
 
         script_end_time = time.time()
         if len(errors_on_execution) == 0:
