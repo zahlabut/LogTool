@@ -4,7 +4,6 @@ from Common import *
 from Params import *
 import unittest
 import warnings
-import threading
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Common.py configuration file.',
@@ -46,56 +45,40 @@ if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
 os.mkdir(result_dir)
 
-
-
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-    @staticmethod
-    def run_on_node(node):
-        print '-------------------------'
-        print node
-        print '--------------------------'
-        print '\n' + '-' * 40 + 'Remote Overcloud Node -->', str(node) + '-' * 40
-        result_file = node['Name'].replace(' ', '') + '.log'
-        s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-        s.ssh_connect_key()
-        s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
-            user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
-        print 'Executed command on host --> ', command
-        com_result = s.ssh_command(command)
-        print com_result['Stdout']  # Do not delete me!!!
-        if 'SUCCESS!!!' in com_result['Stdout']:
-            print_in_color(str(node) + ' --> OK', 'green')
-            competed_nodes[node['Name']] = True
-        else:
-            print_in_color(str(node) + ' --> FAILED', 'yellow')
-            self.raise_warning(str(node) + ' --> FAILED')
-            errors_on_execution[node['Name']] = False
-        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
-        # Clean all #
-        files_to_delete = ['Extract_On_Node_NEW.py', result_file]
-        for fil in files_to_delete:
-            s.ssh_command('rm -rf ' + fil)
-        s.ssh_close()
-
-    """ Start LogTool and export Errors from Overcloud, execution on nodes is running in parallel"""
+    """ Start LogTool and export Errors from Overcloud """
     def test_1_Export_Overcloud_Errors(self):
         print '\ntest_1_Export_Overcloud_Errors'
         mode_start_time = time.time()
-
-        threads=[]
         for node in nodes:
-            t=threading.Thread(target=self.run_on_node, args=(node,))
-            threads.append(t)
-            t.start()
-        for t in threads:
-            t.join()
-
+            print '\n'+'-'*40+'Remote Overcloud Node -->', str(node)+'-'*40
+            result_file = node['Name'].replace(' ', '') + '.log'
+            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            s.ssh_connect_key()
+            s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
+            s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
+            command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
+                user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
+            print 'Executed command on host --> ', command
+            com_result = s.ssh_command(command)
+            print com_result['Stdout']  # Do not delete me!!!
+            if 'SUCCESS!!!' in com_result['Stdout']:
+                print_in_color(str(node) + ' --> OK', 'green')
+                competed_nodes[node['Name']] = True
+            else:
+                print_in_color(str(node) + ' --> FAILED', 'yellow')
+                self.raise_warning(str(node) + ' --> FAILED')
+                errors_on_execution[node['Name']] = False
+            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+            # Clean all #
+            files_to_delete = ['Extract_On_Node_NEW.py', result_file]
+            for fil in files_to_delete:
+                s.ssh_command('rm -rf ' + fil)
+            s.ssh_close()
         script_end_time = time.time()
         if len(errors_on_execution) == 0:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
@@ -131,7 +114,7 @@ class LogTool(unittest.TestCase):
 
     """ This test will create a Final report. The report file will be created only when ERRORs have been detected.
         Report file will be used as indication to ansible to PASS or FAIl, in case of failure it will "cat" its
-        content.
+        content. 
     """
     def test_3_create_final_report(self):
         print '\ntest_3_create_final_report'
