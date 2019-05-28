@@ -457,17 +457,13 @@ try:
         os.mkdir(result_dir)
         errors_on_execution={}
         executed_script_on_overcloud.append('Extract_On_Node_NEW.py')
+        threads = []
         for node in nodes:
-
-            threads = []
-            for node in nodes:
-                t = threading.Thread(target=run_on_node, args=(node,))
-                threads.append(t)
-                t.start()
-            for t in threads:
-                t.join()
-
-
+            t = threading.Thread(target=run_on_node, args=(node,))
+            threads.append(t)
+            t.start()
+        for t in threads:
+            t.join()
         end_time=time.time()
         if len(errors_on_execution)==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
