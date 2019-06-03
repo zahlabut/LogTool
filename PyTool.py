@@ -156,8 +156,6 @@ try:
             files=[f.split(' ')[-1] for f in files if '.tar.gz' in f]
             for fil in files:
                 print_in_color('Downloading "'+fil+'"...', 'bold')
-                print os.path.join(job_full_path,fil)
-                print os.path.join(destination_dir,fil)
                 s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
             s.ssh_close()
 
@@ -173,7 +171,7 @@ try:
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
         command = "python Extract_On_Node_NEW.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         shutil.copytree(destination_dir, os.path.abspath(result_dir))
-        print_in_color(command,'yellow')
+        print_in_color('\n -->'+command,'bold')
         start_time=time.time()
         com_result=exec_command_line_command(command)
         end_time=time.time()
