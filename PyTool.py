@@ -99,7 +99,7 @@ try:
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-        print_in_color('OK '+destination_dir+' - temporary directory to download files','green')
+
 
         #Download log files
         options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
@@ -111,7 +111,7 @@ try:
             except Exception as e:
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install beautifulsoup4" to install it!', 'yellow')
-            artifacts_url = raw_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL:')
+            artifacts_url = raw_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
             response = urllib2.urlopen(artifacts_url)
             html = response.read()
