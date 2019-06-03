@@ -79,12 +79,12 @@ try:
            'Overcloud - check Unhealthy dockers',
            'Extract all logs messages for given time range',
            'Extract NEW (DELTA) messages from Overcloud',
-           'Analyze OSP logs, from Jenkins Job artifacts URL',
+           'Download OSP logs and run LogTool locally',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
-    if mode[1]=='Analyze OSP logs, from Jenkins Job artifacts URL':
+    if mode[1]=='Download OSP logs and run LogTool locally':
         # Make sure that BeutifulSoup is installed
         try:
             from BeautifulSoup import BeautifulSoup
@@ -586,7 +586,6 @@ try:
 
     if mode[1]=='Extract NEW (DELTA) messages from Overcloud':
         print_in_color('ToDo - Not implemented yet :-(', 'yellow')
-
 
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')

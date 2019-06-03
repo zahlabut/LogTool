@@ -52,6 +52,10 @@ Create your own script and save it in UserScripts directory, set proper interpre
 For better performance using Python FuzzyWuzzy module on Overcloud nodes is necessary.
 This mode will install FuzzyWuzzy on Overcloud nodes.
 
+**11)  Download OSP logs and run LogTool locally**
+
+This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11.scl.lab.tlv.redhat.com) and to analyze downloaded logs locally.
+
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud** host with:
 
