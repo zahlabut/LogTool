@@ -61,7 +61,7 @@ This tool is available on GitHub, clone it to your **Undercloud** host with:
 
     git clone https://github.com/zahlabut/LogTool.git
 
-**Note**: two external python modules are used by tool:
+**Note**: some external python modules are used by tool:
 
 1)_Paramiko_ - SSH module
 
@@ -73,6 +73,11 @@ Follow "Install Paramiko" section if you don't have this module installed.
 
 This module is not mandatory, as Python has its own built in module that is used by default, but!!!
 For best performance my suggestion is to use FuzzyWuzzy, follow "Install FuzzyWuzzy" section if you find it relevant.
+
+3)_BeautifulSoup_ - HTML parser
+This module is used in #11 only, where Log files are downloaded using HTTP and it's used to parse the Artifacts HTML
+page to get all links in it. Follow "Install BeautifulSoup" section to install it
+
 
 # Configuration
 All required parameters are set directly inside PyTool.py script, defaults are:
@@ -107,6 +112,10 @@ On your Undercloud execute the following commands:
 
      cd LogTool
      python PyTool.py
+
+# Install BeutifulSoup
+
+     pip install beautifulsoup4
 
 # Troubleshooting
 There are two log files created on runtime: _"Error.log"_ and _"Runtime.log"_.
