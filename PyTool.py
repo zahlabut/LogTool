@@ -19,6 +19,10 @@ overcloud_ssh_user = 'heat-admin'
 overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
 undercloud_logs = ['/var/log/containers','/home/stack']
 source_rc_file_path='/home/stack/'
+log_storage_host='cougar11.scl.lab.tlv.redhat.com'
+log_storage_user='zahlabut'
+log_storage_password='12345678'
+log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
 
@@ -61,6 +65,7 @@ def run_on_node(node):
         s.ssh_close()
     except Exception, e:
         spec_print('Failed with: ' + str(e))
+
 try:
     ### Operation Modes ###
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
@@ -74,9 +79,109 @@ try:
            'Overcloud - check Unhealthy dockers',
            'Extract all logs messages for given time range',
            'Extract NEW (DELTA) messages from Overcloud',
+           'Analyze OSP logs, from Jenkins Job artifacts URL',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+    if mode[1]=='Analyze OSP logs, from Jenkins Job artifacts URL':
+        # Make sure that BeutifulSoup is installed
+        try:
+            from BeautifulSoup import BeautifulSoup
+        except Exception as e:
+            print_in_color(str(e), 'red')
+            print_in_color('Execute "pip install beautifulsoup4" to install it!', 'yellow')
+
+        # Start mode
+        options = ['ERROR', 'WARNING']
+        option=choose_option_from_list(options,'Please choose debug level: ')
+        if option[1]=='ERROR':
+            grep_string=' ERROR '
+        if option[1]=='WARNING':
+            grep_string=' WARNING '
+
+        # Create folder to save the logs
+        destination_dir='Jenkins_Job_Files'
+        destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+
+        #Download log files
+        options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
+        option=choose_option_from_list(options,'Please choose your option to download files: ')
+        if option[1]=='Download files through Jenkins Artifacts URL using HTTP':
+            artifacts_url = raw_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL:')
+            mode_start_time=time.time()
+            response = urllib2.urlopen(artifacts_url)
+            html = response.read()
+            parsed_url = urlparse.urlparse(artifacts_url)
+            base_url = parsed_url.scheme + '://' + parsed_url.netloc
+            soup = BeautifulSoup(html)
+            for link in soup.findAll('a'):
+                if str(link.get('href')).endswith('.tar.gz'):
+                    link = urlparse.urljoin(artifacts_url, link.get('href'))
+                    os.system('wget -P ' + destination_dir + ' ' + link)
+
+        if option[1]=="Download files using SCP from: "+log_storage_host:
+            # Make sure that Paramiko is installed
+            try:
+                import paramiko
+            except Exception as e:
+                print_in_color(str(e), 'red')
+                print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
+            s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
+            s.ssh_connect_password()
+            # grep_job_string=raw_input('Enter string to filter out your Job, for example "ovn-15":')
+            # com_result = s.ssh_command('ls -ltrh '+log_storage_directory+' | grep -i '+grep_job_string)
+            # job_name=choose_option_from_list(com_result['Stdout'].split('\n'),'Choose your Job:')[1]
+            # job_name=job_name.split(' ')[-1]
+            # print job_name
+            # builds=s.ssh_command('ls -ltrh '+os.path.join(log_storage_directory,job_name))['Stdout'].split('\n')
+            # build_number=choose_option_from_list(builds,'Choose build number:')[1].split('\n')[-1]
+            # log_path=os.path.join(os.path.join(log_storage_directory,job_name), build_number)
+            # print log_path
+            # log_server_path=raw_input('Copy and paste link under: "InfraRed collected logs" section in yoor Jenkins Job, for example:\nhttp://cougar11.scl.lab.tlv.redhat.com/DFG-pidone-upgrades-upgrade-13-14_director-rhel-virthost-3cont_3db_3msg_2net_1comp_3ceph-ipv4-vxlan-composable/30\nyour URL:')
+            # response = urllib2.urlopen(log_server_path)
+            # html = response.read()
+            # soup = BeautifulSoup(html)
+            # job_full_path=os.path.join(log_storage_directory, soup.title.string.replace('Index of /',''))
+            job_name=raw_input('Please enter Job name: ')
+            job_build=raw_input('Please enter build number: ')
+            job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
+            job_full_path=os.path.join(job_full_path,job_build)
+
+            print job_full_path
+            files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
+            files=[f.split(' ')[-1] for f in files if '.tar.gz' in f]
+            for fil in files:
+                print_in_color('Downloading "'+fil+'"...', 'bold')
+                print os.path.join(job_full_path,fil)
+                print os.path.join(destination_dir,fil)
+                s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
+            s.ssh_close()
+
+        #Unzip all downloaded .tar.gz files
+        for fil in os.listdir(os.path.abspath(destination_dir)):
+            cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
+            os.system(cmd)
+
+        # Run LogTool analyzing
+        result_dir='Jenkins_Job_'+grep_string.replace(' ','')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
+        command = "python Extract_On_Node_NEW.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        print_in_color(command,'yellow')
+        start_time=time.time()
+        com_result=exec_command_line_command(command)
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         print 'Current date is: '+exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()

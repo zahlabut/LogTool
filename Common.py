@@ -5,6 +5,10 @@ import subprocess
 import json
 import sys
 import re
+import urllib2
+from urllib2 import urlparse
+
+
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -201,3 +205,10 @@ def check_time(time_string):
         return True
     except:
         return False
+
+def download_jenkins_job_logs(node_names_list,url):
+    response = urllib2.urlopen(url)
+    html= response.read(url)
+
+
+
