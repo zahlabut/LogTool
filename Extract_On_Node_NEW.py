@@ -17,7 +17,8 @@ import collections
 
 ### Parameters ###
 fuzzy_match = 0.6
-not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log','rabbit@']
+not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log','rabbit@','stdout.log','docker_info.log','csh.login',
+                    'boot.log',]
 # Grep by time #
 try:
     time_grep=sys.argv[1].strip()
@@ -338,7 +339,7 @@ write_list_of_dict_to_file(result_file,statistics_list,'\n\n\n'+'#'*20+' Statist
 #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
 append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching per log file '+'#'*20+'\n')
 for item in analyzed_logs_result:
-    print 'LogPath --> '+item['Log']
+    #print 'LogPath --> '+item['Log']
     for block in item['AnalyzedBlocks']:
         append_to_file(result_file, '\n'+'-'*30+' LogPath:' + item['Log']+'-'*30+' \n')
         append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
