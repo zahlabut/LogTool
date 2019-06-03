@@ -85,13 +85,6 @@ try:
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1]=='Download OSP logs and run LogTool locally':
-        # Make sure that BeutifulSoup is installed
-        try:
-            from BeautifulSoup import BeautifulSoup
-        except Exception as e:
-            print_in_color(str(e), 'red')
-            print_in_color('Execute "pip install beautifulsoup4" to install it!', 'yellow')
-
         # Start mode
         options = ['ERROR', 'WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
@@ -106,11 +99,18 @@ try:
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
+        print_in_color('OK '+destination_dir+' - temporary directory to download files','green')
 
         #Download log files
         options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
         option=choose_option_from_list(options,'Please choose your option to download files: ')
         if option[1]=='Download files through Jenkins Artifacts URL using HTTP':
+            # Make sure that BeutifulSoup is installed
+            try:
+                from BeautifulSoup import BeautifulSoup
+            except Exception as e:
+                print_in_color(str(e), 'red')
+                print_in_color('Execute "pip install beautifulsoup4" to install it!', 'yellow')
             artifacts_url = raw_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL:')
             mode_start_time=time.time()
             response = urllib2.urlopen(artifacts_url)
@@ -151,8 +151,6 @@ try:
             job_build=raw_input('Please enter build number: ')
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
             job_full_path=os.path.join(job_full_path,job_build)
-
-            print job_full_path
             files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
             files=[f.split(' ')[-1] for f in files if '.tar.gz' in f]
             for fil in files:
@@ -163,16 +161,18 @@ try:
         #Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
             cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
+            print_in_color('Unzipping '+fil+'...', 'bold')
             os.system(cmd)
 
         # Run LogTool analyzing
+        print_in_color('Start analyzing downloaded OSP logs locally','bold')
         result_dir='Jenkins_Job_'+grep_string.replace(' ','')
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
         command = "python Extract_On_Node_NEW.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         shutil.copytree(destination_dir, os.path.abspath(result_dir))
-        print_in_color('\n -->'+command,'bold')
+        print_in_color('\n --> '+command,'bold')
         start_time=time.time()
         com_result=exec_command_line_command(command)
         end_time=time.time()
