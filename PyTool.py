@@ -130,6 +130,7 @@ try:
             except Exception as e:
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
+            mode_start_time = time.time()
             s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
             s.ssh_connect_password()
             # grep_job_string=raw_input('Enter string to filter out your Job, for example "ovn-15":')
