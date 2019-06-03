@@ -20,8 +20,8 @@ overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
 undercloud_logs = ['/var/log/containers','/home/stack']
 source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
-log_storage_user='zahlabut'
-log_storage_password='12345678'
+log_storage_user=''
+log_storage_password=''
 log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
@@ -68,6 +68,7 @@ def run_on_node(node):
 
 try:
     ### Operation Modes ###
+    spec_print(['------------- Achtung!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
            'Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud',

@@ -18,7 +18,7 @@ import collections
 ### Parameters ###
 fuzzy_match = 0.6
 not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log','rabbit@','stdout.log','docker_info.log','csh.login',
-                    'boot.log',]
+                    'boot.log','os-apply-config.log','audit.log','yum.log','program.log','deploy_resources.log']
 # Grep by time #
 try:
     time_grep=sys.argv[1].strip()
