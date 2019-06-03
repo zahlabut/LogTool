@@ -20,8 +20,6 @@ overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
 undercloud_logs = ['/var/log/containers','/home/stack']
 source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
-log_storage_user=''
-log_storage_password=''
 log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
@@ -68,7 +66,7 @@ def run_on_node(node):
 
 try:
     ### Operation Modes ###
-    spec_print(['------------- Achtung!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
+    spec_print(['------------- ACHTUNG!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
            'Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud',
@@ -131,6 +129,8 @@ try:
             except Exception as e:
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
+            log_storage_user=raw_input('SSH User - '+log_storage_host+': ')
+            log_storage_password=raw_input('SSH password - '+log_storage_host+': ')
             mode_start_time = time.time()
             s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
             s.ssh_connect_password()
@@ -148,6 +148,8 @@ try:
             # html = response.read()
             # soup = BeautifulSoup(html)
             # job_full_path=os.path.join(log_storage_directory, soup.title.string.replace('Index of /',''))
+
+
             job_name=raw_input('Please enter Job name: ')
             job_build=raw_input('Please enter build number: ')
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
