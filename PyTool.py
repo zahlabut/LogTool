@@ -121,6 +121,9 @@ try:
                 if str(link.get('href')).endswith('.tar.gz'):
                     link = urlparse.urljoin(artifacts_url, link.get('href'))
                     os.system('wget -P ' + destination_dir + ' ' + link)
+                else:
+                    spec_print(['There is no *.tar.gz files detected','Nothing to work on :-)'],'red')
+                    exit('Goodbye World!!!')
 
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed

@@ -288,7 +288,7 @@ if __name__ == "__main__":
     logs=collect_log_paths(log_root_dir)
     #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
     for log in logs:
-        print_in_color('--> '+log, 'bold')
+        #print_in_color('--> '+log, 'bold')
         Log_Analyze_Info = {}
         Log_Analyze_Info['Log']=log
         Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
