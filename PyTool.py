@@ -110,6 +110,7 @@ try:
             except Exception as e:
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install beautifulsoup4" to install it!', 'yellow')
+                exit('Install beautifulsoup and rerun!')
             artifacts_url = raw_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
             response = urllib2.urlopen(artifacts_url)
@@ -132,6 +133,7 @@ try:
             except Exception as e:
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
+                exit('Install Paramiko and rerun!')
             log_storage_user=raw_input('SSH User - '+log_storage_host+': ')
             log_storage_password=raw_input('SSH password - '+log_storage_host+': ')
             mode_start_time = time.time()
