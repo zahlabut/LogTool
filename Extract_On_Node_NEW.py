@@ -247,6 +247,8 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
         for k in l.keys():
             append_to_file(fil,str(k)+' --> '+str(l[k])+'\n')
 
+
+
 def is_single_line_file(log):
     if log.endswith('.gz'):
         result=exec_command_line_command('zcat ' + log + ' | wc -l')['CommandOutput'].strip()
@@ -290,10 +292,7 @@ def parse_rabbit_log(log,string_for_grep):
                 break
         if to_add == True:
             unique_messages.append(block)
-    messages=''
-    for item in unique_messages:
-        messages+=item
-    return {'~'*40+log+'~'*40+'\n':messages}
+    return {'~'*40+log+'~'*40+'\n':unique_messages}
 
 
 
@@ -379,7 +378,7 @@ for item in analyzed_logs_result:
 
 ### Not standared logs - unique messages per log file, since setup creation time  ###
 append_to_file(result_file,'\n\n\n'+'#'*20+' Not standared logs - unique messages per log file, since setup creation time '+'#'*20+'\n')
-write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages)
+write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages,msg_delimeter='\n')
 
 
 ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
