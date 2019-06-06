@@ -17,7 +17,7 @@ import collections
 
 ### Parameters ###
 fuzzy_match = 0.6
-not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log','rabbit@']
+not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log']
 # Grep by time #
 try:
     time_grep=sys.argv[1].strip()
@@ -276,11 +276,30 @@ def get_file_line_index(fil,line):
 def unique_list(lis):
     return collections.OrderedDict.fromkeys(lis).keys()
 
+# Parsers for not standard logs
+def parse_rabbit_log(log,string_for_grep):
+    unique_messages=[]
+    content_as_list=open(log, 'r').read().split('\n\n')
+    content_as_list=[item for item in content_as_list if string_for_grep in item]
+    print content_as_list
+    for block in content_as_list:
+        to_add=True
+        for key in unique_messages:
+            if similar(key, block) >= fuzzy_match:
+                to_add = False
+                break
+        if to_add == True:
+            unique_messages.append(block)
+    messages=''
+    for item in unique_messages:
+        messages+=item
+    return {'~'*40+log+'~'*40+'\n':messages}
 
 
 
 not_standard_logs=[{'Log':item,'LastLine':"Log is in black list by default"} for item in not_supported_logs]
 analyzed_logs_result=[]
+not_standard_logs_unique_messages=[]
 if __name__ == "__main__":
     empty_file_content(result_file)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Extracted Errors/Warnings (raw data)'+'#'*20)
@@ -288,7 +307,9 @@ if __name__ == "__main__":
     logs=collect_log_paths(log_root_dir)
     #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
     for log in logs:
-        #print_in_color('--> '+log, 'bold')
+        print_in_color('--> '+log, 'bold')
+        if "rabbit" in log:
+            not_standard_logs_unique_messages.append(parse_rabbit_log(log,string_for_grep.replace(' ','')))
         Log_Analyze_Info = {}
         Log_Analyze_Info['Log']=log
         Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
@@ -356,6 +377,10 @@ for item in analyzed_logs_result:
                 append_to_file(result_file, line + '\n')
         #append_to_file(result_file, '~' * 100 + '\n')
 
+### Not standared logs - unique messages per log file, since setup creation time  ###
+append_to_file(result_file,'\n\n\n'+'#'*20+' Not standared logs - unique messages per log file, since setup creation time '+'#'*20+'\n')
+write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages)
+
 
 ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
 #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
@@ -397,6 +422,7 @@ messages=[
     'Warning, following logs failed on parsing due to non standard date format',
     'Statistics - Number of Errors/Warnings per log',
     'Statistics - Unique(Fuzzy Matching per log file',
+    'Not standared logs - unique messages per log file, since setup creation time',
     'Statistics - Unique(Fuzzy Matching for all messages in total'
     ]
 for msg in messages:
