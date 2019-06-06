@@ -247,6 +247,10 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
         for k in l.keys():
             append_to_file(fil,str(k)+' --> '+str(l[k])+'\n')
 
+def write_list_to_file(fil, list):
+    for item in list:
+        append_to_file(fil, str(item)+'\n')
+
 
 
 def is_single_line_file(log):
@@ -283,7 +287,6 @@ def parse_rabbit_log(log,string_for_grep):
     unique_messages=[]
     content_as_list=open(log, 'r').read().split('\n\n')
     content_as_list=[item for item in content_as_list if string_for_grep in item]
-    print content_as_list
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
@@ -292,13 +295,13 @@ def parse_rabbit_log(log,string_for_grep):
                 break
         if to_add == True:
             unique_messages.append(block)
-    return {'~'*40+log+'~'*40+'\n':unique_messages}
+    return {log:unique_messages}
 
 
 
 not_standard_logs=[{'Log':item,'LastLine':"Log is in black list by default"} for item in not_supported_logs]
 analyzed_logs_result=[]
-not_standard_logs_unique_messages=[]
+not_standard_logs_unique_messages=[] #Use it for all not standard log files, add to this list {log_path:[list of all unique messages]}
 if __name__ == "__main__":
     empty_file_content(result_file)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Extracted Errors/Warnings (raw data)'+'#'*20)
@@ -378,7 +381,13 @@ for item in analyzed_logs_result:
 
 ### Not standared logs - unique messages per log file, since setup creation time  ###
 append_to_file(result_file,'\n\n\n'+'#'*20+' Not standared logs - unique messages per log file, since setup creation time '+'#'*20+'\n')
-write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages,msg_delimeter='\n')
+for dir in not_standard_logs_unique_messages:
+    key=dir.keys()[0]
+    if len(dir[key])>0:
+        append_to_file(result_file,'~'*40+key+'~'*40+'\n')
+        write_list_to_file(result_file,dir[key])
+
+#write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages,msg_delimeter='\n')
 
 
 ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
