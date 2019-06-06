@@ -126,6 +126,7 @@ try:
                 #     spec_print(['There is no *.tar.gz files detected','Nothing to work on :-)'],'red')
                 #     exit('Goodbye World!!!')
 
+
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed
             try:
