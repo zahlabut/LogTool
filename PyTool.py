@@ -174,7 +174,7 @@ try:
             os.system(cmd)
 
         # Run LogTool analyzing
-        print_in_color('Start analyzing downloaded OSP logs locally','bold')
+        print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
         result_dir='Jenkins_Job_'+grep_string.replace(' ','')
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))

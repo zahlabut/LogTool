@@ -17,7 +17,11 @@ import collections
 
 ### Parameters ###
 fuzzy_match = 0.6
-not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log']
+not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log','.login','anaconda','haproxy.log',
+                    'messaging','cloud-init-output.log','audit.log','keystone-tokenflush.log','sssd_implicit_files.log',
+                    'hawkey.log','boot.log','swift.log','deploy_resources.log','ceph-volume.log','sssd_kcm.log']
+not_supported_logs=['redis.log']
+
 # Grep by time #
 try:
     time_grep=sys.argv[1].strip()
@@ -28,13 +32,14 @@ try:
     log_root_dir=sys.argv[2].strip()
 except:
     log_root_dir='/var/log/containers'
+    log_root_dir='/home/ashtempl/PycharmProjects/Jenkins_Job_Files'
     #log_root_dir='/root/Overcloud_Logs/com0'
     #log_root_dir='/root/tzach/containers'
 # String for Grep #
 try:
     string_for_grep=sys.argv[3].strip()
 except:
-    string_for_grep=' ERROR '
+    string_for_grep=' WARNING '
 # Result file #
 try:
     result_file=sys.argv[4]
@@ -46,9 +51,6 @@ try:
     save_raw_data=sys.argv[5]
 except:
     save_raw_data='yes'
-
-
-
 
 def exec_command_line_command(command):
     try:
@@ -249,9 +251,7 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
 
 def write_list_to_file(fil, list):
     for item in list:
-        append_to_file(fil, str(item)+'\n')
-
-
+        append_to_file(fil, '\n'+str(item)+'\n')
 
 def is_single_line_file(log):
     if log.endswith('.gz'):
@@ -297,7 +297,51 @@ def parse_rabbit_log(log,string_for_grep):
             unique_messages.append(block)
     return {log:unique_messages}
 
+# Extract WARN or ERROR messages from log and return unique messages #
+def extract_log_unique_greped_lines(log, string_for_grep):
+    unique_messages = []
+    if os.path.exists('grep.txt'):
+        os.remove('grep.txt')
+    if log.endswith('.gz'):
+        command = "zgrep -n -A3 '" + string_for_grep + "' " + log+" > grep.txt"
+    else:
+        command="grep -n -A3 '"+string_for_grep+"' "+log+" > grep.txt"
+    command_result=exec_command_line_command(command)
+    if command_result['ReturnCode']==0:
+        content_as_list=open('grep.txt','r').read().split('--\n')
+    else: #grep.txt is empty
+        return {log: unique_messages}
+    content_as_list=[item[0:1000] if len(item)>1000 else item.strip() for item in content_as_list] # If line is bigger than 100 cut it
+    for block in content_as_list:
+        to_add=True
+        for key in unique_messages:
+            if similar(key, block) >= fuzzy_match:
+                to_add = False
+                break
+        if to_add == True:
+            unique_messages.append(block)
 
+    if 'csh.login' in log:
+        print 'hete'*100
+        sys.exit(1)
+
+
+    return {log:unique_messages}
+
+def parse_overcloud_install_log(log, string_for_grep):
+    unique_messages = []
+    content_as_list=[item for item in open(log,'r').readlines() if string_for_grep in item]
+    for block in content_as_list:
+        if len(block)>1000:
+            block = block[0:1000]+'... \nLogTool --> The above line is to long!!!'
+        to_add=True
+        for key in unique_messages:
+            if similar(key, block) >= fuzzy_match:
+                to_add = False
+                break
+        if to_add == True:
+            unique_messages.append(block)
+    return {log:unique_messages}
 
 not_standard_logs=[{'Log':item,'LastLine':"Log is in black list by default"} for item in not_supported_logs]
 analyzed_logs_result=[]
@@ -310,8 +354,17 @@ if __name__ == "__main__":
     #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
     for log in logs:
         print_in_color('--> '+log, 'bold')
-        if "rabbit" in log:
-            not_standard_logs_unique_messages.append(parse_rabbit_log(log,string_for_grep.replace(' ','')))
+        # if "rabbit@" in log:
+        #     not_standard_logs_unique_messages.append(parse_rabbit_log(log,string_for_grep.replace(' ','')))
+        #     continue
+        # if 'corosync.log' in log:
+        #     string_for_grep=string_for_grep.replace(' ','').lower()
+        #     not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+        #     continue
+        # if 'overcloud_install.log' in log:
+        #     string_for_grep = string_for_grep.replace(' ', '')
+        #     not_standard_logs_unique_messages.append(parse_overcloud_install_log(log, string_for_grep))
+        #     continue
         Log_Analyze_Info = {}
         Log_Analyze_Info['Log']=log
         Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
@@ -321,10 +374,16 @@ if __name__ == "__main__":
         Log_Analyze_Info['ParseLogTime']=last_line_date
         if last_line_date['Error']!=None:
             print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
-            not_standard_logs.append({'Log':log,'LogLastLine':last_line.strip()})
-                                      #'IsSingleLineLog':Log_Analyze_Info['IsSingleLine'],
-                                      #'ParseError':last_line_date['Error'],
-                                      #'DateToParse':last_line_date['Date']})
+            # Extract all ERROR or WARN lines and provide the unique messages
+            if 'WARNING' in string_for_grep:
+                string_for_grep='WARN'
+            if 'ERROR' in string_for_grep:
+                string_for_grep='ERROR'
+            not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+            # not_standard_logs.append({'Log':log,'LogLastLine':last_line.strip()})
+            #                           #'IsSingleLineLog':Log_Analyze_Info['IsSingleLine'],
+            #                           #'ParseError':last_line_date['Error'],
+            #                           #'DateToParse':last_line_date['Date']})
         else:
             if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                 log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
@@ -384,7 +443,7 @@ append_to_file(result_file,'\n\n\n'+'#'*20+' Not standared logs - unique message
 for dir in not_standard_logs_unique_messages:
     key=dir.keys()[0]
     if len(dir[key])>0:
-        append_to_file(result_file,'~'*40+key+'~'*40+'\n')
+        append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
         write_list_to_file(result_file,dir[key])
 
 #write_list_of_dict_to_file(result_file, not_standard_logs_unique_messages,msg_delimeter='\n')
