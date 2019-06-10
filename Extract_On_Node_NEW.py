@@ -32,14 +32,11 @@ try:
     log_root_dir=sys.argv[2].strip()
 except:
     log_root_dir='/var/log/containers'
-    log_root_dir='/home/ashtempl/PycharmProjects/Jenkins_Job_Files'
-    #log_root_dir='/root/Overcloud_Logs/com0'
-    #log_root_dir='/root/tzach/containers'
 # String for Grep #
 try:
     string_for_grep=sys.argv[3].strip()
 except:
-    string_for_grep=' WARNING '
+    string_for_grep=' ERROR '
 # Result file #
 try:
     result_file=sys.argv[4]
