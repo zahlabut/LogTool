@@ -23,7 +23,7 @@ not_supported_logs=['.swp','.login']
 try:
     time_grep=sys.argv[1].strip()
 except:
-    time_grep='2018-01-01 00:00:00'
+    time_grep='2019-01-01 00:00:00'
 # Log path #
 try:
     log_root_dir=sys.argv[2].strip()
@@ -374,8 +374,8 @@ if __name__ == "__main__":
 
 ### Fill Failed log Section ###
 if len(not_standard_logs)>0:
-    print_in_color('Failed to parse the following logs:','yellow')
-    print_list(not_standard_logs)
+    print_in_color('Warning - list of not standard logs:','yellow')
+    print_list(item['Log'] for item in not_standard_logs)
     write_list_of_dict_to_file(result_file,
                                not_standard_logs,
                                '\n\n\n'+'#'*20+' Warning - not standard logs, no debug indication string detected in log content '+'#'*20+'\n'+
