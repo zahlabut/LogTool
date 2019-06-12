@@ -243,9 +243,12 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
         for k in l.keys():
             append_to_file(fil,str(k)+' --> '+str(l[k])+'\n')
 
-def write_list_to_file(fil, list):
+def write_list_to_file(fil, list, add_new_line=True):
     for item in list:
-        append_to_file(fil, '\n'+str(item)+'\n')
+        if add_new_line==True:
+            append_to_file(fil, '\n'+str(item)+'\n')
+        else:
+            append_to_file(fil, '\n'+str(item))
 
 def is_single_line_file(log):
     if log.endswith('.gz'):
@@ -377,10 +380,12 @@ if __name__ == "__main__":
 if len(not_standard_logs)>0:
     print_in_color('Warning - list of NOT STANDARD logs:','yellow')
     print_list(item['Log'] for item in not_standard_logs)
+
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
+    write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
     write_list_of_dict_to_file(result_file,
                                not_standard_logs,
-                               '\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+
-                               'In Total:'+str(len(not_standard_logs))+'\n',
+                               '\n\nMore details for each log:\n',
                                msg_delimeter='~'*100+'\n')
 
 ### Fill statistics section ###
