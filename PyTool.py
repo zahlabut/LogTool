@@ -14,10 +14,10 @@ def handler(signum, frame):
 signal.signal(signal.SIGTSTP, handler)
 
 # Parameters #
-overcloud_logs_dir = '/var/log/containers'
+overcloud_logs_dir = '/var/log'
 overcloud_ssh_user = 'heat-admin'
 overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
-undercloud_logs = ['/var/log/containers','/home/stack']
+undercloud_logs = ['/var/log','/home/stack']
 source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 log_storage_directory='/srv/static'
@@ -42,9 +42,9 @@ def run_on_node(node):
         result_file = node['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
         s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
         s.ssh_connect_key()
-        s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
+        s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
+        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
+        command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
             start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data
         print 'Executed command on host --> ', command
         com_result = s.ssh_command(command)
@@ -56,7 +56,7 @@ def run_on_node(node):
             errors_on_execution[node['Name']] = False
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
         # Clean all #
-        files_to_delete = ['Extract_On_Node_NEW.py', result_file]
+        files_to_delete = ['Extract_On_Node.py', result_file]
         for fil in files_to_delete:
             s.ssh_command('rm -rf ' + fil)
         # Close SSH #
@@ -66,7 +66,7 @@ def run_on_node(node):
 
 try:
     ### Operation Modes ###
-    spec_print(['------------- ACHTUNG!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
+    #spec_print(['------------- ACHTUNG!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
            'Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud',
@@ -118,13 +118,15 @@ try:
             parsed_url = urlparse.urlparse(artifacts_url)
             base_url = parsed_url.scheme + '://' + parsed_url.netloc
             soup = BeautifulSoup(html)
+            tar_gz_files=[]
             for link in soup.findAll('a'):
                 if str(link.get('href')).endswith('.tar.gz'):
+                    tar_gz_files.append(link)
                     link = urlparse.urljoin(artifacts_url, link.get('href'))
                     os.system('wget -P ' + destination_dir + ' ' + link)
-                # else:
-                #     spec_print(['There is no *.tar.gz files detected','Nothing to work on :-)'],'red')
-                #     exit('Goodbye World!!!')
+            if len(tar_gz_files)==0:
+                spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
+                exit('Check your: '+artifacts_url)
 
 
         if option[1]=="Download files using SCP from: "+log_storage_host:
@@ -140,22 +142,6 @@ try:
             mode_start_time = time.time()
             s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
             s.ssh_connect_password()
-            # grep_job_string=raw_input('Enter string to filter out your Job, for example "ovn-15":')
-            # com_result = s.ssh_command('ls -ltrh '+log_storage_directory+' | grep -i '+grep_job_string)
-            # job_name=choose_option_from_list(com_result['Stdout'].split('\n'),'Choose your Job:')[1]
-            # job_name=job_name.split(' ')[-1]
-            # print job_name
-            # builds=s.ssh_command('ls -ltrh '+os.path.join(log_storage_directory,job_name))['Stdout'].split('\n')
-            # build_number=choose_option_from_list(builds,'Choose build number:')[1].split('\n')[-1]
-            # log_path=os.path.join(os.path.join(log_storage_directory,job_name), build_number)
-            # print log_path
-            # log_server_path=raw_input('Copy and paste link under: "InfraRed collected logs" section in yoor Jenkins Job, for example:\nhttp://cougar11.scl.lab.tlv.redhat.com/DFG-pidone-upgrades-upgrade-13-14_director-rhel-virthost-3cont_3db_3msg_2net_1comp_3ceph-ipv4-vxlan-composable/30\nyour URL:')
-            # response = urllib2.urlopen(log_server_path)
-            # html = response.read()
-            # soup = BeautifulSoup(html)
-            # job_full_path=os.path.join(log_storage_directory, soup.title.string.replace('Index of /',''))
-
-
             job_name=raw_input('Please enter Job name: ')
             job_build=raw_input('Please enter build number: ')
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
@@ -179,7 +165,7 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python Extract_On_Node_NEW.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        command = "python Extract_On_Node.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')
@@ -187,10 +173,10 @@ try:
         com_result=exec_command_line_command(command)
         end_time=time.time()
         if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Analyze logs execution time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
+                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         print 'Current date is: '+exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
@@ -212,9 +198,9 @@ try:
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
         result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
-        command="sudo python Extract_On_Node_NEW.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
+        command="sudo python Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
         print command
-        executed_script_on_undercloud.append('Extract_On_Node_NEW.py')
+        executed_script_on_undercloud.append('Extract_On_Node.py')
         com_result=exec_command_line_command(command)
         shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
         end_time=time.time()
@@ -338,66 +324,6 @@ try:
             s.ssh_close()
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
-
-    if mode[1]=='Export ERRORs/WARNINGs from Overcloud logs OLD':
-        ### Get all nodes ###
-        nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-        nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-        random_node=random.choice(nodes)
-        s = SSH(random_node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-        s.ssh_connect_key()
-        com_result=s.ssh_command('date "+%Y-%m-%d %H:%M:%S"')
-        print_in_color('Current date on '+random_node['Name']+' is: '+com_result['Stdout'].strip(),'blue')
-        s.ssh_close()
-        mode_start_time=time.time()
-        print_in_color('Use the same date format as in previous output','blue')
-        start_time = raw_input('And Enter your "since time" to extract log messages: ')
-        if check_time(start_time)==False:
-            print_in_color('Bad timestamp format: '+start_time,'yellow')
-            exit('Execution will be interrupted!')
-        options=['ERROR','WARNING']
-        option=choose_option_from_list(options,'Please choose debug level: ')
-        if option[1]=='ERROR':
-            grep_string=' ERROR '
-        if option[1]=='WARNING':
-            grep_string=' WARNING '
-        #result_dir='Overcloud_'+start_time+'_'+grep_string.replace(' ','_').replace(':','_').replace('\n','')
-        result_dir='Overcloud_'+grep_string.replace(' ','')
-        if result_dir in os.listdir('.'):
-            shutil.rmtree(result_dir)
-        os.mkdir(result_dir)
-        errors_on_execution={}
-        executed_script_on_overcloud.append('Extract_On_Node.py')
-        for node in nodes:
-            print '-'*90
-            print [str(node)]
-            result_file=node['Name'].replace(' ','')+'_'+grep_string.replace(' ','_')+'.log'
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            print s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
-            print s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
-            command="sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
-            print command
-            com_result=s.ssh_command(command)
-            print com_result['Stdout'] # Do not delete me!!!
-            if 'SUCCESS!!!' in com_result['Stdout']:
-                print_in_color(str(node)+' --> OK','green')
-            else:
-                print_in_color(str(node) + ' --> FAILED','red')
-                errors_on_execution[node['Name']]=False
-            print s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
-            # Clean all #
-            files_to_delete=['Extract_On_Node.py',result_file]
-            for fil in files_to_delete:
-                s.ssh_command('rm -rf ' + fil)
-            # Close SSH #
-            s.ssh_close()
-        end_time=time.time()
-        if len(errors_on_execution)==0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
-        else:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+ str(end_time-mode_start_time)+'[sec]',
-                        'Failed nodes:'+str(errors_on_execution)],'red')
 
     if mode[1] == 'Download "relevant logs" only, by given timestamp':
         ### Get all nodes ###
@@ -570,7 +496,7 @@ try:
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
         errors_on_execution={}
-        executed_script_on_overcloud.append('Extract_On_Node_NEW.py')
+        executed_script_on_overcloud.append('Extract_On_Node.py')
         threads = []
         for node in nodes:
             t = threading.Thread(target=run_on_node, args=(node,))
