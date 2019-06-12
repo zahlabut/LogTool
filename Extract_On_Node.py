@@ -276,7 +276,7 @@ def get_file_line_index(fil,line):
 def unique_list(lis):
     return collections.OrderedDict.fromkeys(lis).keys()
 
-# Parsers for not standard logs
+# Parsers for NOT STANDARD logs
 def parse_rabbit_log(log,string_for_grep):
     unique_messages=[]
     content_as_list=open(log, 'r').read().split('\n\n')
@@ -339,7 +339,7 @@ def parse_overcloud_install_log(log, string_for_grep):
 
 not_standard_logs=[]
 analyzed_logs_result=[]
-not_standard_logs_unique_messages=[] #Use it for all not standard log files, add to this list {log_path:[list of all unique messages]}
+not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
 if __name__ == "__main__":
     empty_file_content(result_file)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+'#'*20)
@@ -375,11 +375,11 @@ if __name__ == "__main__":
 
 ### Fill Failed log Section ###
 if len(not_standard_logs)>0:
-    print_in_color('Warning - list of not standard logs:','yellow')
+    print_in_color('Warning - list of NOT STANDARD logs:','yellow')
     print_list(item['Log'] for item in not_standard_logs)
     write_list_of_dict_to_file(result_file,
                                not_standard_logs,
-                               '\n\n\n'+'#'*20+' Warning - not standard logs, no debug indication string detected in log content '+'#'*20+'\n'+
+                               '\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+
                                'In Total:'+str(len(not_standard_logs))+'\n',
                                msg_delimeter='~'*100+'\n')
 
@@ -420,8 +420,8 @@ for item in analyzed_logs_result:
                 append_to_file(result_file, line + '\n')
         #append_to_file(result_file, '~' * 100 + '\n')
 
-### Statistics - Unique messages per not standard log file, since ever  ###
-append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per not standard log file, since ever '+'#'*20+'\n')
+### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
+append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
 for dir in not_standard_logs_unique_messages:
     key=dir.keys()[0]
     if len(dir[key])>0:
@@ -462,10 +462,10 @@ for item in unique_messages:
 section_indexes=[]
 messages=[
     'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
-    'Warning - not standard logs, no debug indication string detected in log content',
+    'Warning - NOT STANDARD logs, no debug indication string detected in log content',
     'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
     'Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep,
-    'Statistics - Unique messages per not standard log file, since ever',
+    'Statistics - Unique messages per NOT STANDARD log file, since ever',
     'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
     ]
 for msg in messages:
