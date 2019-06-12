@@ -179,9 +179,35 @@ try:
                         'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
-        print 'Current date is: '+exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
+        undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
+        print 'Current date is: '+undercloud_time
         print_in_color('Use the same date format as in previous output','blue')
         start_time = raw_input('And Enter your "since time" to extract log messages: ')
+        start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
+        start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
+        if start_time_option[1]=='Custom':
+            print_in_color('Current date on Overcloud is: ' + com_result['Stdout'].strip(), 'blue')
+            print_in_color('Use the same date format as in previous output', 'blue')
+            start_time = raw_input('And enter your "since time" to extract log messages: ')
+        if start_time_option[1]=='10 Minutes ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
+        if start_time_option[1]=='30 Minutes ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=30)
+        if start_time_option[1]=='One Hour ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=1)
+        if start_time_option[1]=='Three Hours ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=3)
+        if start_time_option[1]=='Ten Hours ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=10)
+        if start_time_option[1]=='One Day ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=24)
+        if start_time_option[1]=='Two Days ago':
+            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
+        start_time=str(start_time)
+        print_in_color('\nYour "since time" is set to: '+start_time,'blue')
+
+
+
         log_root_dir=choose_option_from_list(undercloud_logs,'Plese choose logs path to analyze:')[1]
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
