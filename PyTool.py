@@ -181,7 +181,6 @@ try:
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
         print 'Current date is: '+undercloud_time
-        start_time = raw_input('And Enter your "since time" to extract log messages: ')
         start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
         start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
         if start_time_option[1]=='Custom':
@@ -204,9 +203,6 @@ try:
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
         start_time=str(start_time)
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
-
-
-
         log_root_dir=choose_option_from_list(undercloud_logs,'Plese choose logs path to analyze:')[1]
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
