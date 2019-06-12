@@ -17,7 +17,7 @@ import collections
 
 ### Parameters ###
 fuzzy_match = 0.6
-not_supported_logs=['.swp','.login']
+not_supported_logs=['.swp','.login','anaconda-post']
 
 # Grep by time #
 try:
