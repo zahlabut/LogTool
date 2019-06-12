@@ -181,7 +181,6 @@ try:
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
         print 'Current date is: '+undercloud_time
-        print_in_color('Use the same date format as in previous output','blue')
         start_time = raw_input('And Enter your "since time" to extract log messages: ')
         start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
         start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
