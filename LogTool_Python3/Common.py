@@ -149,7 +149,7 @@ def exec_command_line_command(command):
         json_output = None
 
         #try:
-        json_output = json.loads(result.lower().encode())
+        json_output = json.loads(result.lower().decode())
         #except:
         #    pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
