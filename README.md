@@ -4,6 +4,7 @@ could probably be the "root cause" of problem you've encountered on your Setup a
 If that's the case, this tool will make your "life" much more easier, at least it will reduce the time you'll need to spent on "donkey work" to acomplish the same manually.
 This tool is a set of Python script and its main module is running on Undercloud host.
 There are also operation modes when additional scripts are executed directly on Overcloud nodes, for example: "Export ERRORs/WARNINGs from Overcloud logs"
+
 **Note**: there are two different versions available: LogTool_Python2 and LogTool_Python3, make sure to CD into the correct directory.
 
 # Operation modes
