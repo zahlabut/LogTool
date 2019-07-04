@@ -144,10 +144,11 @@ def exec_command_line_command(command):
         result = subprocess.check_output(command, shell=True)
         result=str(result)
         json_output = None
-        try:
-            json_output = json.loads(result.lower())
-        except:
-            pass
+
+        #try:
+        json_output = json.loads(result.lower())
+        #except:
+        #    pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
         print_in_color(str(e),'red')
