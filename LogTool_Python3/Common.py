@@ -91,7 +91,7 @@ class SSH():
             return {'Status':False,'Exception':e}
 
     def ssh_command(self, command):
-        stdin,stdout,stderr=self.client.exec_command(command).decode()
+        stdin,stdout,stderr=self.client.exec_command(command)
         #stdin.close()
         self.output=''
         self.stderr=''
