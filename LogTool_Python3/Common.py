@@ -187,6 +187,7 @@ def choose_option_from_list(list_object, msg):
         print('*** No such option!!!***', e)
         return[False, str(e)]
 
+
 def exit(string):
     print_in_color(string,'red')
     sys.exit(1)
