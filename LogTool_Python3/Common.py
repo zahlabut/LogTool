@@ -56,14 +56,12 @@ class MyOutput():
     def write(self, text):
         self.stdout.write(text)
         self.log.write(text)
-        self.log.flush()
+        #self.log.flush()
   
     def close(self):
         self.stdout.close()
         self.log.close()
 
-    def flush(self):
-        pass
 
 def check_ping(ip):
     try:
