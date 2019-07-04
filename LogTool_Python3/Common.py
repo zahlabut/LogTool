@@ -181,10 +181,10 @@ def choose_option_from_list(list_object, msg):
         for item in list_object:
             print(str(counter)+') - '+item)
             counter=counter+1
-        choosed_option=input("Choose your option:")
+        choosed_option=my_input("Choose your option:")
         while (int(choosed_option)<0 or int(choosed_option)> len(list_object)):
             print("No such option - ", choosed_option)
-            choosed_option=input("Choose your option:")
+            choosed_option=my_input("Choose your option:")
         print_in_color("Option is: '"+list_object[int(choosed_option)-1]+"'"+'\n','bold')
         return [True,list_object[int(choosed_option)-1]]
     except Exception as e:
