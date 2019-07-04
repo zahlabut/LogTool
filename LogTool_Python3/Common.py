@@ -11,9 +11,11 @@ from urllib.request import urlparse
 
 
 def my_input(string_to_display):
-    print(string_to_display,end = '')
+    sys.stdout.write(string_to_display)
+    #print(string_to_display,end = '')
     result=input()
     return result
+
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
