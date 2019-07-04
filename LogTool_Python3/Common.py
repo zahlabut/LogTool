@@ -62,6 +62,9 @@ class MyOutput():
         self.stdout.close()
         self.log.close()
 
+    def flush(self):
+        pass
+
 def check_ping(ip):
     try:
         if subprocess.check_output(["ping", "-c", "1", ip]):
