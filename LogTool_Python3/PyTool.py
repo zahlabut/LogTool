@@ -7,11 +7,11 @@ import datetime
 import threading
 
 
-# Ignore Ctrl+Z if pressed #
-def handler(signum, frame):
-    print('Ctrl+Z pressed, but ignored')
-    print('Use Ctrl+C to stop execution!')
-signal.signal(signal.SIGTSTP, handler)
+# # Ignore Ctrl+Z if pressed #
+# def handler(signum, frame):
+#     print('Ctrl+Z pressed, but ignored')
+#     print('Use Ctrl+C to stop execution!')
+# signal.signal(signal.SIGTSTP, handler)
 
 # Parameters #
 overcloud_logs_dir = '/var/log'
