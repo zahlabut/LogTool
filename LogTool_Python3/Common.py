@@ -91,7 +91,7 @@ class SSH():
             return {'Status':False,'Exception':e}
 
     def ssh_command(self, command):
-        stdin,stdout,stderr=self.client.exec_command(command)
+        stdin,stdout,stderr=self.client.exec_command(command).decode()
         #stdin.close()
         self.output=''
         self.stderr=''
@@ -142,16 +142,11 @@ def exec_command_line_command(command):
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
         result = subprocess.check_output(command, shell=True, encoding='UTF-8')
-        #result=str(result)
-
-        print(result)
-        print (type(result))
         json_output = None
-
-        #try:
-        json_output = json.loads(result.lower())
-        #except:
-        #    pass
+        try:
+            json_output = json.loads(result.lower())
+        except:
+            pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
         print_in_color(str(e),'red')
