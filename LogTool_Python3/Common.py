@@ -145,7 +145,7 @@ def exec_command_line_command(command):
         result=str(result)
 
         print(result)
-        print type(result)
+        print (type(result))
         json_output = None
 
         #try:
