@@ -27,8 +27,8 @@ mode_execution_status={}
 
 empty_file_content('Runtime.log')
 empty_file_content('Error.log')
-sys.stdout=MyOutput('Runtime.log')
-sys.stderr=MyOutput('Error.log')
+# sys.stdout=MyOutput('Runtime.log')
+# sys.stderr=MyOutput('Error.log')
 
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
