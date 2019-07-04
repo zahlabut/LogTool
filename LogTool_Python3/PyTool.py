@@ -461,7 +461,7 @@ try:
         all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
 
         print (all_nodes)
-        print type(all_nodes)
+        print (type(all_nodes))
 
 
         all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
