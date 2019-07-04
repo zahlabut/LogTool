@@ -141,7 +141,7 @@ def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, shell=True, encoding='UTF-8')
         result=str(result)
 
         print(result)
@@ -149,7 +149,7 @@ def exec_command_line_command(command):
         json_output = None
 
         #try:
-        json_output = json.loads(result.lower().decode())
+        json_output = json.loads(result.lower())
         #except:
         #    pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
