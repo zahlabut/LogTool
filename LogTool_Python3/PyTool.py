@@ -293,7 +293,7 @@ if mode[1]=='"Grep" some string for all Overcloud logs':
     #print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
 
     print('here')
-    string_to_grep = "'"+eval(input("Please enter your 'grep' string: "))+"'"
+    string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
 
 
     start_time = time.time()
