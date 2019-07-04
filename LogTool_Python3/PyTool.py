@@ -112,7 +112,7 @@ if __name__ == '__main__':
                 print_in_color(str(e), 'red')
                 print_in_color('Execute "pip install beautifulsoup" to install it!', 'yellow')
                 exit('Install beautifulsoup and rerun!')
-            artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
+            artifacts_url = my_input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
             response = urllib.request.urlopen(artifacts_url)
             html = response.read()
@@ -143,8 +143,8 @@ if __name__ == '__main__':
             mode_start_time = time.time()
             s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
             s.ssh_connect_password()
-            job_name=input('Please enter Job name: ')
-            job_build=input('Please enter build number: ')
+            job_name=my_input('Please enter Job name: ')
+            job_build=my_input('Please enter build number: ')
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
             job_full_path=os.path.join(job_full_path,job_build)
             files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
@@ -187,7 +187,7 @@ if __name__ == '__main__':
         if start_time_option[1]=='Custom':
             print_in_color('Current date on Overcloud is: ' + com_result['Stdout'].strip(), 'blue')
             print_in_color('Use the same date format as in previous output', 'blue')
-            start_time = input('And enter your "since time" to extract log messages: ')
+            start_time = my_input('And enter your "since time" to extract log messages: ')
         if start_time_option[1]=='10 Minutes ago':
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
         if start_time_option[1]=='30 Minutes ago':
@@ -291,12 +291,8 @@ if __name__ == '__main__':
         ### Get all nodes ###
         nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
         nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-        #print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
-
-        print('here')
-        string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
-
-
+        print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
+        string_to_grep = "'"+my_input("Please enter your 'grep' string: ")+"'"
         start_time = time.time()
         result_dir='All_Greped_Strings'
         if result_dir in os.listdir('.'):
