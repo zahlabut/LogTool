@@ -11,6 +11,7 @@ from urllib.request import urlparse
 
 
 def my_input(string_to_display):
+    print ('\n')
     print (string_to_display, end='')
     #sys.stdout.write(string_to_display)
     #print(string_to_display,end = '')
