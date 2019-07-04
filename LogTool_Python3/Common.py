@@ -143,10 +143,12 @@ def exec_command_line_command(command):
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
         result = subprocess.check_output(command, shell=True)
         result=str(result)
+
+        print(result)
         json_output = None
 
         #try:
-        json_output = json.loads(str(result.lower()))
+        json_output = json.loads(result.lower())
         #except:
         #    pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
