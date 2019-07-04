@@ -97,7 +97,7 @@ class SSH():
         self.stderr=''
         for line in stdout.read().decode().splitlines():
             self.output+=line+'\n'
-        for line in stderr.read().splitlines():
+        for line in stderr.read().decode().splitlines():
             self.stderr+=line+'\n'
         result= {'Stdout':self.output, 'Stderr':self.stderr}
         if len(result['Stderr'])!=0 and 'warning' in str(result['Stderr']).lower():
