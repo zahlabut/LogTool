@@ -292,7 +292,7 @@ if mode[1]=='"Grep" some string for all Overcloud logs':
     nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
     #print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
 
-    string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
+    string_to_grep = "'"+eval(input("Please enter your 'grep' string: "))+"'"
 
 
     start_time = time.time()
