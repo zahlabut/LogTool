@@ -294,7 +294,10 @@ if mode[1]=='"Grep" some string for all Overcloud logs':
 
     print('-----------------------------------------')
 
-    string_to_grep = "'"+eval(input('Please enter your "grep" string: ')+"'")
+    string_to_grep = input("Please enter your 'grep' string: ")
+    string_to_grep = "'"+string_to_grep+"'"
+
+
     start_time = time.time()
     result_dir='All_Greped_Strings'
     if result_dir in os.listdir('.'):
