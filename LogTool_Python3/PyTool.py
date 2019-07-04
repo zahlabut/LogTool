@@ -290,7 +290,7 @@ if mode[1]=='"Grep" some string for all Overcloud logs':
     ### Get all nodes ###
     nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
     nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-    print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
+    #print_in_color("1) You can use special characters in your string\n2) Ignore case sensitive flag is used by default",'yellow')
 
     string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
 
