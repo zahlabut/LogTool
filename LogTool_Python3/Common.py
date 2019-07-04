@@ -177,7 +177,7 @@ def choose_option_from_list(list_object, msg):
         for item in list_object:
             print(str(counter)+') - '+item)
             counter=counter+1
-        choosed_option=input("Choose option by entering the suitable number! ")
+        choosed_option=input("Choose your option:\n")
         while (int(choosed_option)<0 or int(choosed_option)> len(list_object)):
             print("No such option - ", choosed_option)
             choosed_option=input("Choose option by entering the suitable number! ")
