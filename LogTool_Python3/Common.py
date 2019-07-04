@@ -95,7 +95,7 @@ class SSH():
         #stdin.close()
         self.output=''
         self.stderr=''
-        for line in stdout.decode().read().splitlines():
+        for line in stdout.read().decode().splitlines():
             self.output+=line+'\n'
         for line in stderr.read().splitlines():
             self.stderr+=line+'\n'
