@@ -6,7 +6,7 @@ import json
 import sys
 import re
 import urllib.request, urllib.error, urllib.parse
-from urllib2 import urlparse
+from urllib.request import urlparse
 
 
 
