@@ -110,7 +110,8 @@ if mode[1]=='Download OSP logs and run LogTool locally':
             from BeautifulSoup import BeautifulSoup
         except Exception as e:
             print_in_color(str(e), 'red')
-            print_in_color('Execute "pip3 install beautifulsoup" to install it!', 'yellow')
+            print_in_color('Execute "psudo yum install python3-setuptools" to install pip3', 'yellow')
+            print_in_color('Execute "pip3 install beautifulsoup4" to install it!', 'yellow')
             exit('Install beautifulsoup and rerun!')
         artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
         mode_start_time=time.time()
