@@ -7,6 +7,7 @@ import sys
 import re
 import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
+from urllib.parse import urljoin
 
 
 def empty_file_content(log_file_name):
