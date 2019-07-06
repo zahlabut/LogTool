@@ -107,7 +107,7 @@ if mode[1]=='Download OSP logs and run LogTool locally':
     if option[1]=='Download files through Jenkins Artifacts URL using HTTP':
         # Make sure that BeutifulSoup is installed
         try:
-            from BeautifulSoup import BeautifulSoup
+            from bs4 import BeautifulSoup
         except Exception as e:
             print_in_color(str(e), 'red')
             print_in_color('Execute "psudo yum install python3-setuptools" to install pip3', 'yellow')
