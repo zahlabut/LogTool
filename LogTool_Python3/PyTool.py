@@ -101,7 +101,6 @@ if mode[1]=='Download OSP logs and run LogTool locally':
         shutil.rmtree(destination_dir)
     os.mkdir(destination_dir)
 
-
     #Download log files
     options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
     option=choose_option_from_list(options,'Please choose your option to download files: ')
@@ -111,7 +110,7 @@ if mode[1]=='Download OSP logs and run LogTool locally':
             from BeautifulSoup import BeautifulSoup
         except Exception as e:
             print_in_color(str(e), 'red')
-            print_in_color('Execute "pip install beautifulsoup" to install it!', 'yellow')
+            print_in_color('Execute "pip3 install beautifulsoup" to install it!', 'yellow')
             exit('Install beautifulsoup and rerun!')
         artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
         mode_start_time=time.time()
