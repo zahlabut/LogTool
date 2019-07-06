@@ -167,7 +167,7 @@ if mode[1]=='Download OSP logs and run LogTool locally':
     if os.path.exists(os.path.abspath(result_dir)):
         shutil.rmtree(os.path.abspath(result_dir))
     result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-    command = "python Extract_On_Node.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+    command = "python3 Extract_On_Node.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
     #shutil.copytree(destination_dir, os.path.abspath(result_dir))
     exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
     print_in_color('\n --> '+command,'bold')
@@ -221,7 +221,7 @@ if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         shutil.rmtree(result_dir)
     os.mkdir(result_dir)
     result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
-    command="sudo python Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
+    command="sudo python3 Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
     print(command)
     executed_script_on_undercloud.append('Extract_On_Node.py')
     com_result=exec_command_line_command(command)
