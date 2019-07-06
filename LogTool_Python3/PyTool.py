@@ -125,7 +125,7 @@ if mode[1]=='Download OSP logs and run LogTool locally':
         for link in soup.findAll('a'):
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_gz_files.append(link)
-                link = urlparse.urljoin(artifacts_url, link.get('href'))
+                link = urljoin(artifacts_url, link.get('href'))
                 os.system('wget -P ' + destination_dir + ' ' + link)
         if len(tar_gz_files)==0:
             spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
