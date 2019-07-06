@@ -121,7 +121,7 @@ if mode[1]=='Download OSP logs and run LogTool locally':
         base_url = parsed_url.scheme + '://' + parsed_url.netloc
         soup = BeautifulSoup(html)
         tar_gz_files=[]
-        for link in soup.findAll('a'):
+        for link in soup.findAll(html,'a'):
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_gz_files.append(link)
                 link = urlparse.urljoin(artifacts_url, link.get('href'))
