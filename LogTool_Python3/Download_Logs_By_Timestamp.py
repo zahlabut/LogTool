@@ -7,22 +7,6 @@ import gzip
 start_time=time.time()
 not_supported_logs=[]
 
-def exec_command_line_command(command):
-    try:
-        command_as_list = command.split(' ')
-        command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True, encoding='UTF-8')
-        json_output = None
-        try:
-            json_output = json.loads(result.lower())
-        except:
-            pass
-        return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
-    except subprocess.CalledProcessError as e:
-        return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
-
-
-#exec_command_line_command('sudo easy_install fuzzywuzzy')
 
 ## Grep by time ###
 try:
@@ -106,7 +90,7 @@ def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, shell=True, encoding='UTF-8')
         json_output = None
         try:
             json_output = json.loads(result.lower())
@@ -114,7 +98,6 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        print_in_color(str(e),'red')
         return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
 
 def get_file_last_modified(file_path):
