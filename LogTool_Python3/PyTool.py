@@ -452,7 +452,7 @@ if mode[1]=='Overcloud - check Unhealthy dockers':
             if len(out) ==0:
                 print_in_color(str(node)+" --> OK", 'green')
             if len(err)!=0:
-                print(out['Stderr'])
+                print(err)
         s.ssh_close()
     end_time=time.time()
     spec_print(['Completed!!!', 'Execution Time: ' + str(end_time - start_time) + '[sec]'],'bold')
