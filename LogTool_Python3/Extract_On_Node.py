@@ -58,7 +58,6 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        print_in_color(str(e),'red')
         return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
 
 def get_file_last_line(log, tail_lines='1'):

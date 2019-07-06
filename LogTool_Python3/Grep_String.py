@@ -23,6 +23,30 @@ try:
 except:
     output_greps_file='All_Greps.log'
 
+def print_in_color(string,color_or_format=None):
+    string=str(string)
+    class bcolors:
+        HEADER = '\033[95m'
+        OKBLUE = '\033[94m'
+        OKGREEN = '\033[92m'
+        WARNING = '\033[93m'
+        FAIL = '\033[91m'
+        ENDC = '\033[0m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+    if color_or_format == 'green':
+        print(bcolors.OKGREEN + string + bcolors.ENDC)
+    elif color_or_format =='red':
+        print(bcolors.FAIL + string + bcolors.ENDC)
+    elif color_or_format =='yellow':
+        print(bcolors.WARNING + string + bcolors.ENDC)
+    elif color_or_format =='blue':
+        print(bcolors.OKBLUE + string + bcolors.ENDC)
+    elif color_or_format =='bold':
+        print(bcolors.BOLD + string + bcolors.ENDC)
+    else:
+        print(string)
+
 def collect_log_paths(log_root_path):
     logs=[]
     for root, dirs, files in os.walk(log_root_path):
@@ -38,7 +62,7 @@ def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, shell=True, encoding='UTF-8')
         json_output = None
         try:
             json_output = json.loads(result.lower())
