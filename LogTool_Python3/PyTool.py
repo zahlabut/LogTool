@@ -221,7 +221,7 @@ if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         shutil.rmtree(result_dir)
     os.mkdir(result_dir)
     result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
-    command="sudo python3 Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
+    command="sudo Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
     print(command)
     executed_script_on_undercloud.append('Extract_On_Node.py')
     com_result=exec_command_line_command(command)
