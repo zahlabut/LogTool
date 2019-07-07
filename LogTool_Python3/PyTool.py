@@ -548,23 +548,23 @@ try:
         print_in_color('ToDo - Not implemented yet :-(', 'yellow')
 
 except KeyboardInterrupt:
-print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
-if len(executed_script_on_undercloud)!=0:
-    for script in executed_script_on_undercloud:
-        os.system('sudo pkill -f '+script)
-if len(executed_script_on_overcloud)!=0:
-    nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-    nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-    for node in nodes:
-        print('-'*90)
-        print([str(node)])
-        s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-        s.ssh_connect_key()
-        for script in executed_script_on_overcloud:
-            command='sudo pkill -f '+script
-            print('--> '+command)
-            com_result=s.ssh_command(command)
-        s.ssh_close()
+    print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
+    if len(executed_script_on_undercloud)!=0:
+        for script in executed_script_on_undercloud:
+            os.system('sudo pkill -f '+script)
+    if len(executed_script_on_overcloud)!=0:
+        nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
+        nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
+        for node in nodes:
+            print('-'*90)
+            print([str(node)])
+            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            s.ssh_connect_key()
+            for script in executed_script_on_overcloud:
+                command='sudo pkill -f '+script
+                print('--> '+command)
+                com_result=s.ssh_command(command)
+            s.ssh_close()
 # except Exception as e:
 #     print_in_color(e,'red')
 
