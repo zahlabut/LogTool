@@ -436,7 +436,7 @@ try:
         cpu = 'sudo top -n 1 | head -6'
         mem = 'sudo free'
         disk = 'sudo df -h'
-        commands=['sudo podman ps']# | grep -i unhealthy']
+        commands=['sudo podman ps | grep -i unhealthy']
         for node in nodes:
             try:
                 print_in_color('#'*20+str(node)+'#'*20,'blue')
@@ -445,9 +445,6 @@ try:
                 for com in commands:
                     print(com)
                     out=s.ssh_command(com)
-
-                    print(out)
-
                     err = out['Stderr']
                     out=out['Stdout']
                     if len(out) !=0:
