@@ -63,7 +63,7 @@ def run_on_node(node):
         # Close SSH #
         s.ssh_close()
     except Exception as e:
-        spec_print('Failed with: ' + str(e))
+        spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
 
 
 ### Operation Modes ###

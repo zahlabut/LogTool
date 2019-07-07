@@ -54,6 +54,7 @@ def run_on_node(node):
         else:
             print_in_color(str(node) + ' --> FAILED', 'red')
             errors_on_execution[node['Name']] = False
+        result_file = result_file + '.gz'
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
         # Clean all #
         files_to_delete = ['Extract_On_Node.py', result_file]

@@ -476,5 +476,6 @@ messages=[
 for msg in messages:
     section_indexes.append({msg:get_file_line_index(result_file,msg)})
 write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
+exec_command_line_command('gzip '+result_file)
 print 'Execution time:'+str(time.time()-start_time)
 print 'SUCCESS!!!'
