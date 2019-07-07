@@ -438,21 +438,24 @@ try:
         disk = 'sudo df -h'
         commands=['sudo docker ps | grep -i unhealthy']
         for node in nodes:
-            print_in_color('#'*20+str(node)+'#'*20,'blue')
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            for com in commands:
-                print(com)
-                out=s.ssh_command(com)
-                err = out['Stderr']
-                out=out['Stdout']
-                if len(out) !=0:
-                    print_in_color(out,'red')
-                if len(out) ==0:
-                    print_in_color(str(node)+" --> OK", 'green')
-                if len(err)!=0:
-                    print(err)
-            s.ssh_close()
+            try:
+                print_in_color('#'*20+str(node)+'#'*20,'blue')
+                s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+                s.ssh_connect_key()
+                for com in commands:
+                    print(com)
+                    out=s.ssh_command(com)
+                    err = out['Stderr']
+                    out=out['Stdout']
+                    if len(out) !=0:
+                        print_in_color(out,'red')
+                    if len(out) ==0:
+                        print_in_color(str(node)+" --> OK", 'green')
+                    if len(err)!=0:
+                        print(err)
+                s.ssh_close()
+            except Exception as e:
+                print_in_color('Execution has failed on node: '+str(node)+'with: '+str(e), 'red')
         end_time=time.time()
         spec_print(['Completed!!!', 'Execution Time: ' + str(end_time - start_time) + '[sec]'],'bold')
 
