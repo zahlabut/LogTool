@@ -23,7 +23,7 @@ not_supported_logs=['.swp','.login','anaconda-post']
 try:
     time_grep=sys.argv[1].strip()
 except:
-    time_grep='2019-01-01 00:00:00'
+    time_grep='2018-01-01 00:00:00'
 # Log path #
 try:
     log_root_dir=sys.argv[2].strip()
@@ -108,14 +108,19 @@ def collect_log_paths(log_root_path):
         for name in files:
             if '.log' in name:
                 file_abs_path=os.path.join(os.path.abspath(root), name)
-                if os.path.getsize(file_abs_path)!=0 and 'LogTool' not in file_abs_path:
-                    to_add = True
+                if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
+                    if 'Jenkins_Job_Files' in file_abs_path:
+                        to_add = True
+                    else:
+                        to_add = False
                     for item in not_supported_logs:
                         if item in file_abs_path:
                             to_add = False
                     if to_add==True:
                         logs.append(file_abs_path)
     logs=list(set(logs))
+    if len(logs)==0:
+        sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
 
 def empty_file_content(log_file_name):
@@ -348,7 +353,6 @@ if __name__ == "__main__":
     append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+'#'*20)
     start_time=time.time()
     logs=collect_log_paths(log_root_dir)
-    #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
     for log in logs:
         print_in_color('--> '+log, 'bold')
         Log_Analyze_Info = {}

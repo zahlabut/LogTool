@@ -167,12 +167,13 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python3 Extract_On_Node.py '"+"2018-10-02 00:04:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')
         start_time=time.time()
         com_result=exec_command_line_command(command)
+        #print (com_result['CommandOutput'])
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Analyze logs execution time: '+str(end_time-mode_start_time)+'[sec]'],'green')

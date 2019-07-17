@@ -108,14 +108,19 @@ def collect_log_paths(log_root_path):
         for name in files:
             if '.log' in name:
                 file_abs_path=os.path.join(os.path.abspath(root), name)
-                if os.path.getsize(file_abs_path)!=0 and 'LogTool' not in file_abs_path:
-                    to_add = True
+                if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
+                    if 'Jenkins_Job_Files' in file_abs_path:
+                        to_add = True
+                    else:
+                        to_add =False
                     for item in not_supported_logs:
                         if item in file_abs_path:
                             to_add = False
                     if to_add==True:
                         logs.append(file_abs_path)
     logs=list(set(logs))
+    if len(logs)==0:
+        sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
 
 def empty_file_content(log_file_name):
@@ -278,21 +283,6 @@ def get_file_line_index(fil,line):
 
 def unique_list(lis):
     return collections.OrderedDict.fromkeys(lis).keys()
-
-# Parsers for NOT STANDARD logs
-def parse_rabbit_log(log,string_for_grep):
-    unique_messages=[]
-    content_as_list=open(log, 'r').read().split('\n\n')
-    content_as_list=[item for item in content_as_list if string_for_grep in item]
-    for block in content_as_list:
-        to_add=True
-        for key in unique_messages:
-            if similar(key, block) >= fuzzy_match:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append(block)
-    return {log:unique_messages}
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
