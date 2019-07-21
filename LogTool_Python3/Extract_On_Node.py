@@ -120,6 +120,7 @@ def collect_log_paths(log_root_path):
                 if to_add==True:
                     logs.append(file_abs_path)
     logs=list(set(logs))
+    print (logs)
     if len(logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
