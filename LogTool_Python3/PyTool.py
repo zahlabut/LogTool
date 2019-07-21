@@ -117,6 +117,7 @@ try:
             #response = urllib.request.urlopen(artifacts_url)
             #html = response.read()
 
+
             import requests
             html = requests.get(artifacts_url, verify=False).text
 
