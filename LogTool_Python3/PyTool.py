@@ -5,6 +5,7 @@ import random
 #import signal
 import datetime
 import threading
+import ssl
 
 
 # # Ignore Ctrl+Z if pressed #
@@ -23,7 +24,6 @@ log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
-
 
 empty_file_content('Runtime.log')
 empty_file_content('Error.log')
@@ -114,7 +114,16 @@ try:
                 exit('Install beautifulsoup and rerun!')
             artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
-            response = urllib.request.urlopen(artifacts_url)
+
+
+            context = ssl._create_unverified_context()
+            #response = urllib.request.urlopen(artifacts_url)
+            urllib.urlopen(artifacts_url, context=context)
+
+
+
+
+
             html = response.read()
             parsed_url = urlparse(artifacts_url)
             base_url = parsed_url.scheme + '://' + parsed_url.netloc
