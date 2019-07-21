@@ -221,7 +221,7 @@ try:
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
-        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
+        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log.gz'
         command="sudo python3 Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
         print(command)
         executed_script_on_undercloud.append('Extract_On_Node.py')
