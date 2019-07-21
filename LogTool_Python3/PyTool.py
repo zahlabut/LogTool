@@ -127,7 +127,7 @@ try:
 
 
             context = ssl._create_unverified_context()
-            response = urllib.request.urlopen(artifacts_url)
+            response = urllib.request.urlopen(artifacts_url,context=ctx)
             #response=urllib.request.urlopen(artifacts_url, context=context)
 
 
