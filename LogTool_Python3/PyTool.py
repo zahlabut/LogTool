@@ -7,16 +7,6 @@ import datetime
 import threading
 
 
-
-import ssl
-import urllib.request
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
-
-
-
-
 # # Ignore Ctrl+Z if pressed #
 # def handler(signum, frame):
 #     print('Ctrl+Z pressed, but ignored')
@@ -123,16 +113,8 @@ try:
                 exit('Install beautifulsoup and rerun!')
             artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
-
-
             context = ssl._create_unverified_context()
-            response = urllib.request.urlopen(artifacts_url,context=ctx)
-            #response=urllib.request.urlopen(artifacts_url, context=context)
-
-
-
-
-
+            response = urllib.request.urlopen(artifacts_url)
             html = response.read()
             parsed_url = urlparse(artifacts_url)
             base_url = parsed_url.scheme + '://' + parsed_url.netloc
