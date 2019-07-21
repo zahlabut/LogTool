@@ -113,14 +113,12 @@ def collect_log_paths(log_root_path):
                         to_add = True
                 if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
                         to_add = True
-
                 for item in not_supported_logs:
                     if item in file_abs_path:
                         to_add = False
                 if to_add==True:
                     logs.append(file_abs_path)
     logs=list(set(logs))
-    print (logs)
     if len(logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
