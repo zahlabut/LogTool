@@ -113,8 +113,13 @@ try:
                 exit('Install beautifulsoup and rerun!')
             artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
-            response = urllib.request.urlopen(artifacts_url)
-            html = response.read()
+
+            #response = urllib.request.urlopen(artifacts_url)
+            #html = response.read()
+
+            import requests
+            html = requests.get(artifacts_url, verify=False).text
+
             parsed_url = urlparse(artifacts_url)
             base_url = parsed_url.scheme + '://' + parsed_url.netloc
             #soup = BeautifulSoup(html)
