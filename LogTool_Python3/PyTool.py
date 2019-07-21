@@ -5,7 +5,17 @@ import random
 #import signal
 import datetime
 import threading
+
+
+
+
 import ssl
+import urllib.request
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+
 
 
 # # Ignore Ctrl+Z if pressed #
@@ -117,8 +127,8 @@ try:
 
 
             context = ssl._create_unverified_context()
-            #response = urllib.request.urlopen(artifacts_url)
-            response=urllib.request.urlopen(artifacts_url, context=context)
+            response = urllib.request.urlopen(artifacts_url)
+            #response=urllib.request.urlopen(artifacts_url, context=context)
 
 
 
