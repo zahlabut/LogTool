@@ -175,7 +175,9 @@ try:
         #print com_result['CommandOutput']
         end_time=time.time()
         if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Analyze logs execution time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
