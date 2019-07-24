@@ -290,9 +290,9 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
     if log.endswith('.gz'):
-        command = "zgrep -n -A10 '" + string_for_grep + "' " + log+" > grep.txt"
+        command = "zgrep -n -B5 -A15 '" + string_for_grep + "' " + log+" > grep.txt"
     else:
-        command="grep -n -A10 '"+string_for_grep+"' "+log+" > grep.txt"
+        command="grep -n -B5 -A15 '"+string_for_grep+"' "+log+" > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         content_as_list=open('grep.txt','r').read().split('--\n')
@@ -307,12 +307,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                 break
         if to_add == True:
             unique_messages.append(block)
-
-    if 'csh.login' in log:
-        print 'hete'*100
-        sys.exit(1)
-
-
     return {log:unique_messages}
 
 def parse_overcloud_install_log(log, string_for_grep):
@@ -335,7 +329,7 @@ analyzed_logs_result=[]
 not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
 if __name__ == "__main__":
     empty_file_content(result_file)
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+'#'*20)
+    append_to_file(result_file,'\n\n\n'+'#'*20+'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+'#'*20)
     start_time=time.time()
     logs=collect_log_paths(log_root_dir)
     #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
