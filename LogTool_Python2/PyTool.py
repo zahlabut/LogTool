@@ -219,7 +219,7 @@ try:
         elif option[1]=='WARNING':
             grep_string=' WARNING '
         else:
-            grep_string=grep_string
+            grep_string=option[1]
         result_dir='Undercloud_'+grep_string.replace(' ','')
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
