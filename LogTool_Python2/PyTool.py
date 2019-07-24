@@ -216,8 +216,10 @@ try:
         mode_start_time=time.time()
         if option[1]=='ERROR':
             grep_string=' ERROR '
-        if option[1]=='WARNING':
+        elif option[1]=='WARNING':
             grep_string=' WARNING '
+        else:
+            grep_string=grep_string
         result_dir='Undercloud_'+grep_string.replace(' ','')
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
