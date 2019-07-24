@@ -329,7 +329,7 @@ analyzed_logs_result=[]
 not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
 if __name__ == "__main__":
     empty_file_content(result_file)
-    append_to_file(result_file,'\n\n\n'+'#'*20+'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+'#'*20)
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
     start_time=time.time()
     logs=collect_log_paths(log_root_dir)
     #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
