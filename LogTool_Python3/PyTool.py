@@ -8,7 +8,7 @@ import threading
 
 
 # # Ignore Ctrl+Z if pressed #
-# def handler(signum, frame):
+# def handlROR
 #     print('Ctrl+Z pressed, but ignored')
 #     print('Use Ctrl+C to stop execution!')
 # signal.signal(signal.SIGTSTP, handler)
@@ -209,7 +209,7 @@ try:
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
-        options=['ERROR','WARNING']
+        options=['ERROR','WARNING','failed','fatal']
         option=choose_option_from_list(options,'Please choose debug level: ')
         mode_start_time=time.time()
         if option[1]=='ERROR':
