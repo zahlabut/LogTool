@@ -286,7 +286,6 @@ def unique_list(lis):
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
-    string_for_grep=' '+string_for_grep+' '
     unique_messages = []
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
