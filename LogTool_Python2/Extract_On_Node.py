@@ -290,15 +290,15 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
     if log.endswith('.gz'):
-        command = "zgrep -n -B5 -A15 '" + string_for_grep + "' " + log+" > grep.txt"
+        command = "zgrep -n -B5 -A30 '" + string_for_grep + "' " + log+" > grep.txt"
     else:
-        command="grep -n -B5 -A15 '"+string_for_grep+"' "+log+" > grep.txt"
+        command="grep -n -B5 -A30 '"+string_for_grep+"' "+log+" > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         content_as_list=open('grep.txt','r').read().split('--\n')
     else: #grep.txt is empty
         return {log: unique_messages}
-    content_as_list=[item[0:1000] if len(item)>1000 else item.strip() for item in content_as_list] # If line is bigger than 100 cut it
+    content_as_list=[item[0:5000] if len(item)>5000 else item.strip() for item in content_as_list] # If line is bigger than 5000 cut it
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
