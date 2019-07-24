@@ -301,13 +301,14 @@ def parse_rabbit_log(log,string_for_grep):
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
+    string_for_grep = ' ' + string_for_grep + ' '
     unique_messages = []
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
     if log.endswith('.gz'):
-        command = "zgrep -n -B5 -A30 '" + string_for_grep + "' " + log+" > grep.txt"
+        command = "zgrep -n -B5 -A20 '" + string_for_grep + "' " + log+" > grep.txt"
     else:
-        command="grep -n -B5 -A30 '"+string_for_grep+"' "+log+" > grep.txt"
+        command="grep -n -B5 -A20 '"+string_for_grep+"' "+log+" > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         content_as_list=open('grep.txt','r').read().split('--\n')
