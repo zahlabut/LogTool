@@ -313,7 +313,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         content_as_list=open('grep.txt','r').read().split('--\n')
     else: #grep.txt is empty
         return {log: unique_messages}
-    content_as_list=[item[0:5000] if len(item)>5000 else item.strip() for item in content_as_list] # If line is bigger than 100 cut it
+    content_as_list=[item[0:5000] if len(item)>5000 else item.strip() for item in content_as_list] # If line is bigger than 5000 cut it
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
