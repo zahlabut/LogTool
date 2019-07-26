@@ -112,7 +112,7 @@ def collect_log_paths(log_root_path):
                 if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
                     if 'Jenkins_Job_Files' in file_abs_path:
                         to_add = True
-                if os.path.getsize(file_abs_path) != 0:
+                if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
                     to_add = True
                 for item in not_supported_logs:
                     if item in file_abs_path:
