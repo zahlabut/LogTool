@@ -150,7 +150,7 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
+        return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def spec_print(string_list,color=None):
     len_list=[]
