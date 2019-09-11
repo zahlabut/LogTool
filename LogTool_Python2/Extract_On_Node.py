@@ -359,6 +359,7 @@ if __name__ == "__main__":
 
             else:
                 string_for_grep=string_for_grep.replace(' ','')
+                print 'hhhhhhhhh'
 
             not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
         else:
