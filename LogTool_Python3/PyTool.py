@@ -33,7 +33,6 @@ empty_file_content('Error.log')
 executed_script_on_overcloud = []
 executed_script_on_undercloud = []
 
-
 def run_on_node(node):
     print('-' * 90)
     print('Remote Overcloud Node -->', str(node))
