@@ -17,7 +17,7 @@ signal.signal(signal.SIGTSTP, handler)
 overcloud_logs_dir = '/var/log'
 overcloud_ssh_user = 'heat-admin'
 overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
-undercloud_logs = ['/var/log','/home/stack','/usr/share/']
+undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
 source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 log_storage_directory='/srv/static'
