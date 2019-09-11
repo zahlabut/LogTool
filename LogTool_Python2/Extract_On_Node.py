@@ -351,10 +351,6 @@ if __name__ == "__main__":
             if ('ERROR' in log_last_ten_lines or 'WARN' in log_last_ten_lines or
                 'INFO' in log_last_ten_lines or 'DEBUG' in log_last_ten_lines) is False:
                 not_standard_logs.append({'Log':log,'Last_Lines':'\n'+log_last_ten_lines})
-
-            if 'overcloud_deployment.log' in log:
-                not_standard_logs.append({'Log': log, 'Last_Lines': '\n' + log_last_ten_lines})
-
             # Extract all ERROR or WARN lines and provide the unique messages
             if 'WARNING' in string_for_grep:
                 string_for_grep='WARN'
