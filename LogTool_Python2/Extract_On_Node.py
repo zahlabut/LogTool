@@ -356,6 +356,10 @@ if __name__ == "__main__":
                 string_for_grep='WARN'
             if 'ERROR' in string_for_grep:
                 string_for_grep='ERROR'
+
+            else:
+                string_for_grep=string_for_grep
+
             not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
         else:
             if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
