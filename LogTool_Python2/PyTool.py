@@ -108,7 +108,7 @@ try:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
         log_path=choose_option_from_list(log_path,'Please chose your OC deploy log')
-        data = open(log_path, 'r').read().splitlines()
+        data = open(log_path[1], 'r').read().splitlines()
         for line in data:
             if 'fatal: [' in line:
                 line = line.split('\\n')
