@@ -107,7 +107,7 @@ try:
                         if w in item:
                             magic_dic_result[w].append(item)
         for key in magic_dic_result:
-            append_to_file('\n' + '-' * 40 + key + '-' * 40)
+            append_to_file(result_file,'\n' + '-' * 40 + key + '-' * 40)
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
                 if key in ['stderr','msg']:
                     append_to_file(result_file,'\n'+v)
