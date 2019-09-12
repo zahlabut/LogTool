@@ -106,7 +106,7 @@ try:
             return difflib.SequenceMatcher(None, str(a), str(b)).ratio()
         for word in magic_words:
             magic_dic_result[word] = []
-        log_path=[os.path.abspath(path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
+        log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
         log_path=choose_option_from_list(log_path,'Please chose your OC deploy log')
         data = open(log_path, 'r').read().splitlines()
         for line in data:
