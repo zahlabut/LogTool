@@ -113,7 +113,7 @@ try:
                     append_to_file('\n'+v)
                 else:
                     append_to_file(v)
-    spec_print(['Result File is: ' + result_file])
+        spec_print(['Result File is: ' + result_file])
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':

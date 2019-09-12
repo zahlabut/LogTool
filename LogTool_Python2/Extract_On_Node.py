@@ -326,142 +326,144 @@ def parse_overcloud_install_log(log, string_for_grep):
             unique_messages.append(block)
     return {log:unique_messages}
 
-not_standard_logs=[]
-analyzed_logs_result=[]
-not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
+
 if __name__ == "__main__":
-    empty_file_content(result_file)
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
-    start_time=time.time()
-    logs=collect_log_paths(log_root_dir)
-    #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
-    for log in logs:
-        print_in_color('--> '+log, 'bold')
-        Log_Analyze_Info = {}
-        Log_Analyze_Info['Log']=log
-        Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
-        # Get the time of last line, if fails will be added to ignored logs
-        last_line=get_file_last_line(log)
-        last_line_date=get_line_date(last_line)
-        Log_Analyze_Info['ParseLogTime']=last_line_date
-        if last_line_date['Error']!=None:
-            #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
-            # Check if last line contains: proper debug level: INFO or WARN or ERROR string
-            log_last_ten_lines=get_file_last_line(log,'10')
-            if ('ERROR' in log_last_ten_lines or 'WARN' in log_last_ten_lines or
-                'INFO' in log_last_ten_lines or 'DEBUG' in log_last_ten_lines) is False:
-                not_standard_logs.append({'Log':log,'Last_Lines':'\n'+log_last_ten_lines})
-            # Extract all ERROR or WARN lines and provide the unique messages
-            if 'WARNING' in string_for_grep:
-                string_for_grep='WARN'
-            if 'ERROR' in string_for_grep:
-                string_for_grep='ERROR'
-            not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
-        else:
-            if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
-                analyzed_logs_result.append(log_result)
+    not_standard_logs=[]
+    analyzed_logs_result=[]
+    not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
+    if __name__ == "__main__":
+        empty_file_content(result_file)
+        append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
+        start_time=time.time()
+        logs=collect_log_paths(log_root_dir)
+        #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
+        for log in logs:
+            print_in_color('--> '+log, 'bold')
+            Log_Analyze_Info = {}
+            Log_Analyze_Info['Log']=log
+            Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
+            # Get the time of last line, if fails will be added to ignored logs
+            last_line=get_file_last_line(log)
+            last_line_date=get_line_date(last_line)
+            Log_Analyze_Info['ParseLogTime']=last_line_date
+            if last_line_date['Error']!=None:
+                #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
+                # Check if last line contains: proper debug level: INFO or WARN or ERROR string
+                log_last_ten_lines=get_file_last_line(log,'10')
+                if ('ERROR' in log_last_ten_lines or 'WARN' in log_last_ten_lines or
+                    'INFO' in log_last_ten_lines or 'DEBUG' in log_last_ten_lines) is False:
+                    not_standard_logs.append({'Log':log,'Last_Lines':'\n'+log_last_ten_lines})
+                # Extract all ERROR or WARN lines and provide the unique messages
+                if 'WARNING' in string_for_grep:
+                    string_for_grep='WARN'
+                if 'ERROR' in string_for_grep:
+                    string_for_grep='ERROR'
+                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+            else:
+                if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
+                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
+                    analyzed_logs_result.append(log_result)
 
-### Fill Failed log Section ###
-if len(not_standard_logs)>0:
-    print_in_color('Warning - list of NOT STANDARD logs:','yellow')
-    print_list(item['Log'] for item in not_standard_logs)
+    ### Fill Failed log Section ###
+    if len(not_standard_logs)>0:
+        print_in_color('Warning - list of NOT STANDARD logs:','yellow')
+        print_list(item['Log'] for item in not_standard_logs)
 
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
-    write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
-    write_list_of_dict_to_file(result_file,
-                               not_standard_logs,
-                               '\n\nMore details for each log:\n',
-                               msg_delimeter='~'*100+'\n')
+        append_to_file(result_file,'\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
+        write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
+        write_list_of_dict_to_file(result_file,
+                                   not_standard_logs,
+                                   '\n\nMore details for each log:\n',
+                                   msg_delimeter='~'*100+'\n')
 
-### Fill statistics section ###
-print_in_color('\nAggregating statistics','bold')
-statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0}
-statistics_dic = sorted(statistics_dic.items(), key=operator.itemgetter(1))
-statistics_list=[{item[0]:item[1]} for item in statistics_dic]
-total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
-if 'error' in string_for_grep.lower():
-    statistics_list.insert(0,{'Total_Number_Of_Errors':total_number_of_all_logs_errors})
-if 'warn' in string_for_grep.lower():
-    statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
-print_list(statistics_list)
-write_list_of_dict_to_file(result_file,statistics_list,
-                           '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep+'#'*20+'\n'+
-                           'Total Number of Errors/Warnings is:'+str(total_number_of_all_logs_errors)+'\n')
+    ### Fill statistics section ###
+    print_in_color('\nAggregating statistics','bold')
+    statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0}
+    statistics_dic = sorted(statistics_dic.items(), key=operator.itemgetter(1))
+    statistics_list=[{item[0]:item[1]} for item in statistics_dic]
+    total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
+    if 'error' in string_for_grep.lower():
+        statistics_list.insert(0,{'Total_Number_Of_Errors':total_number_of_all_logs_errors})
+    if 'warn' in string_for_grep.lower():
+        statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
+    print_list(statistics_list)
+    write_list_of_dict_to_file(result_file,statistics_list,
+                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep+'#'*20+'\n'+
+                               'Total Number of Errors/Warnings is:'+str(total_number_of_all_logs_errors)+'\n')
 
-### Fill Statistics - Unique(Fuzzy Matching) section ###
-#print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
-append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep+'#'*20+'\n')
-for item in analyzed_logs_result:
-    #print 'LogPath --> '+item['Log']
-    for block in item['AnalyzedBlocks']:
-        append_to_file(result_file, '\n'+'-'*30+' LogPath:' + item['Log']+'-'*30+' \n')
-        append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
-        append_to_file(result_file, 'BlockTuple:' + str(block['BlockTuple'])+'\n')
-        append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
-        append_to_file(result_file, 'BlockLinesSize:' + str(block['BlockLinesSize']) + '\n')
-        if block['BlockLinesSize']<30:
-            for line in block['BlockLines']:
-                append_to_file(result_file,line+'\n')
-        else:
-            for line in block['BlockLines'][0:10]:
-                append_to_file(result_file, line + '\n')
-            append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
-            for line in block['BlockLines'][-10:-1]:
-                append_to_file(result_file, line + '\n')
-        #append_to_file(result_file, '~' * 100 + '\n')
+    ### Fill Statistics - Unique(Fuzzy Matching) section ###
+    #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep+'#'*20+'\n')
+    for item in analyzed_logs_result:
+        #print 'LogPath --> '+item['Log']
+        for block in item['AnalyzedBlocks']:
+            append_to_file(result_file, '\n'+'-'*30+' LogPath:' + item['Log']+'-'*30+' \n')
+            append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
+            append_to_file(result_file, 'BlockTuple:' + str(block['BlockTuple'])+'\n')
+            append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
+            append_to_file(result_file, 'BlockLinesSize:' + str(block['BlockLinesSize']) + '\n')
+            if block['BlockLinesSize']<30:
+                for line in block['BlockLines']:
+                    append_to_file(result_file,line+'\n')
+            else:
+                for line in block['BlockLines'][0:10]:
+                    append_to_file(result_file, line + '\n')
+                append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
+                for line in block['BlockLines'][-10:-1]:
+                    append_to_file(result_file, line + '\n')
+            #append_to_file(result_file, '~' * 100 + '\n')
 
-### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
-append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
-for dir in not_standard_logs_unique_messages:
-    key=dir.keys()[0]
-    if len(dir[key])>0:
-        append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
-        write_list_to_file(result_file,dir[key])
+    ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
+    for dir in not_standard_logs_unique_messages:
+        key=dir.keys()[0]
+        if len(dir[key])>0:
+            append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
+            write_list_to_file(result_file,dir[key])
 
-### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
-#print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
-append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs '+'#'*20+'\n')
-unique_messages=[]
-for item in analyzed_logs_result:
-    #print 'LogPath --> '+item['Log']
-    for block in item['AnalyzedBlocks']:
-        block_lines=block['BlockLines']
-        lines_number=block['BlockLinesSize']
-        is_traceback=block['IsTracebackBlock']
-        to_add = True
-        if is_traceback==False:
-            block_lines=unique_list_by_fuzzy(block_lines,fuzzy_match)
-        if is_traceback == True:
-            block_lines=unique_list(block_lines)
-        if lines_number>5:
-            block_lines = [l for l in block_lines[-5:]]
-        for key in unique_messages:
-            if similar(key[1], str(block_lines)) >= fuzzy_match:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append([lines_number,block_lines,item['Log'],is_traceback])
+    ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
+    #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs '+'#'*20+'\n')
+    unique_messages=[]
+    for item in analyzed_logs_result:
+        #print 'LogPath --> '+item['Log']
+        for block in item['AnalyzedBlocks']:
+            block_lines=block['BlockLines']
+            lines_number=block['BlockLinesSize']
+            is_traceback=block['IsTracebackBlock']
+            to_add = True
+            if is_traceback==False:
+                block_lines=unique_list_by_fuzzy(block_lines,fuzzy_match)
+            if is_traceback == True:
+                block_lines=unique_list(block_lines)
+            if lines_number>5:
+                block_lines = [l for l in block_lines[-5:]]
+            for key in unique_messages:
+                if similar(key[1], str(block_lines)) >= fuzzy_match:
+                    to_add = False
+                    break
+            if to_add == True:
+                unique_messages.append([lines_number,block_lines,item['Log'],is_traceback])
 
-for item in unique_messages:
-    append_to_file(result_file, '\n'+'~' * 40 + item[2] + '~' * 40 + '\n')
-    append_to_file(result_file, '### IsTraceback:'+str(item[3])+'###\n')
-    for line in item[1]:
-        append_to_file(result_file, line + '\n')
+    for item in unique_messages:
+        append_to_file(result_file, '\n'+'~' * 40 + item[2] + '~' * 40 + '\n')
+        append_to_file(result_file, '### IsTraceback:'+str(item[3])+'###\n')
+        for line in item[1]:
+            append_to_file(result_file, line + '\n')
 
-### Fill statistics section - Table of Content: line+index ###
-section_indexes=[]
-messages=[
-    'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
-    'Warning - NOT STANDARD logs, no debug indication string detected in log content',
-    'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
-    'Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep,
-    'Statistics - Unique messages per NOT STANDARD log file, since ever',
-    'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
-    ]
-for msg in messages:
-    section_indexes.append({msg:get_file_line_index(result_file,msg)})
-write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
-exec_command_line_command('gzip '+result_file)
-print 'Execution time:'+str(time.time()-start_time)
-print 'SUCCESS!!!'
+    ### Fill statistics section - Table of Content: line+index ###
+    section_indexes=[]
+    messages=[
+        'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
+        'Warning - NOT STANDARD logs, no debug indication string detected in log content',
+        'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
+        'Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep,
+        'Statistics - Unique messages per NOT STANDARD log file, since ever',
+        'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
+        ]
+    for msg in messages:
+        section_indexes.append({msg:get_file_line_index(result_file,msg)})
+    write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
+    exec_command_line_command('gzip '+result_file)
+    print 'Execution time:'+str(time.time()-start_time)
+    print 'SUCCESS!!!'
