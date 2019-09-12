@@ -86,7 +86,7 @@ try:
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Undercloud - export "valued" Information from OC deploy log':
-        from Extract_On_Node import append_to_file,empty_file_content,similar,unique_list
+        from Extract_On_Node import *
         result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
