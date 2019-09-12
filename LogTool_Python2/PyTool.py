@@ -86,44 +86,34 @@ try:
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Undercloud - export "valued" Information from OC deploy log':
-        import difflib
+        from Extract_On_Node import *
+        result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
-        def unique_list_by_fuzzy(lis, fuzzy):
-            unique_messages = []
-            for item in lis:
-                to_add = True
-                for key in unique_messages:
-                    if similar(key, str(item)) >= fuzzy:
-                        to_add = False
-                        break
-                if to_add == True:
-                    unique_messages.append(str(item))
-            return unique_messages
-        def similar(a, b):
-            return difflib.SequenceMatcher(None, str(a), str(b)).ratio()
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
         log_path=choose_option_from_list(log_path,'Please chose your OC deploy log')
+        empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
             if 'fatal: [' in line:
                 line = line.split('\\n')
                 for item in line:
+                    append_to_file(item)
                     for w in magic_words:
                         if w in item:
                             magic_dic_result[w].append(item)
         for key in magic_dic_result:
-            print '\n' + '-' * 40 + key + '-' * 40
+            append_to_file(print '\n' + '-' * 40 + key + '-' * 40)
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
                 if key in ['stderr','msg']:
-                    print '\n'+v
+                    append_to_file('\n'+v)
                 else:
-                    print v
-
+                    append_to_file(v)
+    spec_print(['Result File is: ' + result_file])
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
