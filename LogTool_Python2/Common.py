@@ -8,8 +8,6 @@ import re
 import urllib2
 from urllib2 import urlparse
 
-
-
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
     f.write('')
