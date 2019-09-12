@@ -37,4 +37,4 @@ for line in data:
 for key in magic_dic_result:
     print '\n'+'-'*40+key+'-'*40
     for v in unique_list_by_fuzzy(magic_dic_result[key],0.6):
-        print v
+        print '\n'+v
