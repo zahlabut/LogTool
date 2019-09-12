@@ -119,7 +119,12 @@ try:
         for key in magic_dic_result:
             print '\n' + '-' * 40 + key + '-' * 40
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
-                print v
+                if key in ['stderr','msg']:
+                    print '\n'+v
+                else:
+                    print v
+
+
 
     if mode[1]=='Download OSP logs and run LogTool locally':
         # Start mode
