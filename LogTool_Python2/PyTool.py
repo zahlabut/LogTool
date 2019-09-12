@@ -102,17 +102,17 @@ try:
             if 'fatal: [' in line:
                 line = line.split('\\n')
                 for item in line:
-                    append_to_file(item)
+                    append_to_file(result_file,item)
                     for w in magic_words:
                         if w in item:
-                            magic_dic_result[w].append(item)
+                            magic_dic_result[w].append(result_file,item)
         for key in magic_dic_result:
             append_to_file('\n' + '-' * 40 + key + '-' * 40)
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
                 if key in ['stderr','msg']:
-                    append_to_file('\n'+v)
+                    append_to_file(result_file,'\n'+v)
                 else:
-                    append_to_file(v)
+                    append_to_file(result_file,v)
         spec_print(['Result File is: ' + result_file])
 
 
