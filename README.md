@@ -60,7 +60,7 @@ This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11
 
 **12)  Undercloud - export "valued" Information from OC deploy log**
 
-This mode may help you to understand what went wrong on Overcloud Deploy, basing on generated log, which is not. (Note this mode is available for Python 2 version)
+This mode is available for Python 2 version only and may help you to understand what went wrong on Overcloud Deployment, basing on generated log.
 
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud** host with:
