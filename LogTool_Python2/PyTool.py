@@ -106,9 +106,9 @@ try:
                     for w in magic_words:
                         if w in item:
                             magic_dic_result[w].append(item)
-        append_to_file(result_file,'\n'*10+'-'*40+'Statistics'+'-'*40)
+        append_to_file(result_file,'\n'*10+'#'*50+'Statistics'+'#'*50+'\n\n\n')
         for key in magic_dic_result:
-            append_to_file(result_file,'\n' + '-' * 40 + key + '-' * 40)
+            append_to_file(result_file,'\n' + '_' * 40 + key + '_' * 40)
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
                 if key in ['stderr','msg']:
                     append_to_file(result_file,'\n'+v)
