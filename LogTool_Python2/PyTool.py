@@ -111,10 +111,10 @@ try:
             append_to_file(result_file,'\n' + '_' * 40 + key + '_' * 40+'\n')
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
                 if key in ['stderr','msg']:
-                    append_to_file(result_file,v+'\n')
+                    append_to_file(result_file,'\n'+v+'\n')
                 else:
-                    append_to_file(result_file,v)
-        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of thw file for details'],'green')
+                    append_to_file(result_file,v+'\n')
+        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
