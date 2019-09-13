@@ -58,6 +58,10 @@ This mode will install FuzzyWuzzy on Overcloud nodes.
 
 This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11.scl.lab.tlv.redhat.com) and to analyze downloaded logs locally.
 
+**12)  Undercloud - export "valued" Information from OC deploy log**
+
+This mode may help you to understand what went wrong on Overcloud Deploy, basing on generated log, which is not. (Note this mode is available for Python 2 version)
+
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud** host with:
 
