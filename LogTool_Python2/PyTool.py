@@ -106,6 +106,7 @@ try:
                     for w in magic_words:
                         if w in item:
                             magic_dic_result[w].append(item)
+        append_to_file(result_file,'\n'*10+'-'*40+'Statistics'+'-'*40)
         for key in magic_dic_result:
             append_to_file(result_file,'\n' + '-' * 40 + key + '-' * 40)
             for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
@@ -113,7 +114,7 @@ try:
                     append_to_file(result_file,'\n'+v)
                 else:
                     append_to_file(result_file,v)
-        spec_print(['Result File is: ' + result_file])
+        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of thw file for details'])
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
