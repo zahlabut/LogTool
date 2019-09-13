@@ -114,7 +114,7 @@ try:
                     append_to_file(result_file,v+'\n')
                 else:
                     append_to_file(result_file,v)
-        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of thw file for details'])
+        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of thw file for details'],'green')
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
