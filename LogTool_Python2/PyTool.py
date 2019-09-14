@@ -100,7 +100,7 @@ try:
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
             if 'fatal: [' in line:
-                print_in_color(line,'red')
+                print_in_color(line+'\n','red')
                 line = line.split('\\n')
                 for item in line:
                     append_to_file(result_file,item)
