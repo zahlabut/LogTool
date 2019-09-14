@@ -117,7 +117,9 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
-        print_list(fatal_lines)
+        print_in_color('####### Detected lines with "fatal" string:#######', 'red')
+        for f in fatal_lines:
+            print_in_color(f,'red')
         spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
 
 
