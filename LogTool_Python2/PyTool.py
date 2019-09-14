@@ -101,9 +101,9 @@ try:
         for line in data:
             if 'fatal: [' in line:
                 line = line.split('\\n')
-                if 'fatal' in line.lower():
-                    print_in_color(line + '\n', 'red')
                 for item in line:
+                    if 'fatal' in item.lower():
+                        print_in_color(item + '\n', 'red')
                     append_to_file(result_file,item)
                     for w in magic_words:
                         if w in item:
