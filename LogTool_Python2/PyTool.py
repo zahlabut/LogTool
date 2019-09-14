@@ -89,6 +89,7 @@ try:
         from Extract_On_Node import *
         result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
+        fatal_lines=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
@@ -102,8 +103,8 @@ try:
             if 'fatal: [' in line:
                 line = line.split('\\n')
                 for item in line:
-                    if 'fatal' in item.lower():
-                        print_in_color(item + '\n', 'red')
+                    if 'fatal' in item.lower() and item not in fatal_lines:
+                        fatal_lines.append(item)
                     append_to_file(result_file,item)
                     for w in magic_words:
                         if w in item:
@@ -116,6 +117,7 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
+        print_list(fatal_lines)
         spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
 
 
