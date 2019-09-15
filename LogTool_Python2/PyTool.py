@@ -88,7 +88,6 @@ try:
     if mode[1] == 'Undercloud - export "valued" Information from OC deploy log':
         from Extract_On_Node import *
         result_file='Overcloud_Deploy_Script_Readable.txt'
-        fuzzy=0.6
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
