@@ -115,6 +115,8 @@ try:
             append_to_file(result_file,'\n' + '_' * 40 + key + '_' * 40+'\n')
             if key in ['fatal','FAILED','ERROR']:
                 fuzzy=1
+            else:
+                fuzzy=0.6
             for v in unique_list_by_fuzzy(magic_dic_result[key], fuzzy):
                 if key in ['stderr','msg']:
                     append_to_file(result_file,'\n'+v+'\n')
