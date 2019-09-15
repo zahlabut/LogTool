@@ -78,9 +78,73 @@ try:
            'Extract all logs messages for given time range',
            'Extract NEW (DELTA) messages from Overcloud',
            'Download OSP logs and run LogTool locally',
+           'Undercloud - analyze Ansible Deployment log',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+    if mode[1] == 'Undercloud - analyze Ansible Deployment log':
+        from Extract_On_Node import *
+        result_file='Ansible_Deploy_Log_Result.txt'
+        undercloud_home_path = '/home/stack'
+        fatal_lines=[]
+        error_lines=[]
+        failed_tasks=[]
+        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
+        magic_dic_result = {}
+        log_name = 'overcloud_deployment.log'
+        for word in magic_words:
+            magic_dic_result[word] = []
+        log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
+        log_path=choose_option_from_list(log_path,'Please choose your Ansible deployment log file path: ')
+        empty_file_content(result_file)
+        data = open(log_path[1], 'r').read().splitlines()
+        lines_to_analyze=[]
+        for line in data:
+            if ' ERROR ' in line and line not in error_lines:
+                error_lines.append(line)
+            if 'fatal: [' in line:
+                previous_line=data[data.index(line)-1]
+                lines_to_analyze.append(previous_line)
+                lines_to_analyze.append(line)
+                failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
+                if len(failed_task)!=0:
+                    failed_tasks.append(failed_task)
+        for line in lines_to_analyze:
+            line = line.split('\\n')
+            for item in line:
+                if 'fatal' in item.lower() and item not in fatal_lines:
+                    fatal_lines.append(item)
+                append_to_file(result_file,item)
+                for w in magic_words:
+                    if w in item:
+                        magic_dic_result[w].append(item)
+        append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
+        for key in magic_dic_result:
+            append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
+            if key in ['fatal','FAILED']:
+                fuzzy=1
+            else:
+                fuzzy=0.6
+            for v in unique_list_by_fuzzy(magic_dic_result[key], fuzzy):
+                if key in ['stderr','msg']:
+                    append_to_file(result_file,'\n'+v+'\n')
+                else:
+                    append_to_file(result_file,v+'\n')
+        append_to_file(result_file, '\n\n\n' + '*' * 7 + ' Failed_Tasks: ' + '*' * 7)
+        write_list_to_file(result_file, failed_tasks, False)
+        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
+        print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
+        for f in fatal_lines:
+            print_in_color(f,'bold')
+        print_in_color('\n\n\n####### Detected lines with " ERROR " string:#######', 'red')
+        for e in error_lines:
+            print_in_color(e,'bold')
+        print_in_color('\n\n\n####### Detected failed TASKs: #######', 'red')
+        for t in failed_tasks:
+            print_in_color(t, 'bold')
+        spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
+
 
     if mode[1]=='Download OSP logs and run LogTool locally':
         # Start mode

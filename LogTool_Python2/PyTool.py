@@ -83,12 +83,9 @@ try:
            'Undercloud - analyze Ansible Deployment log',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
-
-
-
-
-
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+
     if mode[1] == 'Undercloud - analyze Ansible Deployment log':
         from Extract_On_Node import *
         result_file='Ansible_Deploy_Log_Result.txt'
@@ -116,7 +113,6 @@ try:
                 failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
                 if len(failed_task)!=0:
                     failed_tasks.append(failed_task)
-
         for line in lines_to_analyze:
             line = line.split('\\n')
             for item in line:
@@ -150,23 +146,7 @@ try:
         print_in_color('\n\n\n####### Detected failed TASKs: #######', 'red')
         for t in failed_tasks:
             print_in_color(t, 'bold')
-
-
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
