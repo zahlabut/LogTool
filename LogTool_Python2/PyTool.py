@@ -80,13 +80,13 @@ try:
            'Extract all logs messages for given time range',
            'Extract NEW (DELTA) messages from Overcloud',
            'Download OSP logs and run LogTool locally',
-           'Undercloud - export "valued" Information from OC deploy log',
+           'Undercloud - analyze Ansible Deployment log',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
-    if mode[1] == 'Undercloud - export "valued" Information from OC deploy log':
+    if mode[1] == 'Undercloud - analyze Ansible Deployment log':
         from Extract_On_Node import *
-        result_file='Overcloud_Deploy_Script_Readable.txt'
+        result_file='Ansible_Deploy_Log_Readable.txt'
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
         error_lines=[]
@@ -96,14 +96,13 @@ try:
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
-        log_path=choose_option_from_list(log_path,'Please chose your OC deploy log: ')
+        log_path=choose_option_from_list(log_path,'Please chose your deployment log: ')
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
-                print line
                 line = line.split('\\n')
                 for item in line:
                     if 'fatal' in item.lower() and item not in fatal_lines:
