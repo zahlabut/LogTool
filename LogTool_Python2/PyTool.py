@@ -130,7 +130,7 @@ try:
         print_in_color('\n\n\n####### Detected lines with " ERROR " string:#######', 'red')
         for e in error_lines:
             print_in_color(e,'bold')
-        spec_print(['Result File is: ', result_file, 'Vi and scroll down to the bottomr details!'],'green')
+        spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
