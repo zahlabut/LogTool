@@ -124,13 +124,13 @@ try:
                 else:
                     append_to_file(result_file,v+'\n')
         append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
-        print_in_color('####### Detected lines with "fatal" string:#######', 'red')
+        print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
             print_in_color(f,'bold')
-        print_in_color('####### Detected lines with " ERROR " string:#######', 'red')
+        print_in_color('\n\n\n####### Detected lines with " ERROR " string:#######', 'red')
         for e in error_lines:
             print_in_color(e,'bold')
-        spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
+        spec_print(['Result File is: ', result_file, 'Vi and scroll down to the bottomr details!'],'green')
 
 
     if mode[1]=='Download OSP logs and run LogTool locally':
