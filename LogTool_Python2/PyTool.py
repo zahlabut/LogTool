@@ -90,6 +90,7 @@ try:
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
         error_lines=[]
+        failed_tasks=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
@@ -99,23 +100,27 @@ try:
         log_path=choose_option_from_list(log_path,'Please choose your Ansible deployment log file path: ')
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
+        lines_to_analyze=[]
         for line in data:
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
-                print '\n\n\n\n\n\n\n\n'
                 previous_line=data[data.index(line)-1]
-                print previous_line[previous_line.find('TASK'):previous_line.find('*****')]
+                lines_to_analyze.append(previous_line)
+                lines_to_analyze.append(line)
+                failed_tasks.append(previous_line[previous_line.find('TASK'):previous_line.find('*****')])
 
-                print '\n\n\n\n\n\n\n\n\n'
-                line = line.split('\\n')
-                for item in line:
-                    if 'fatal' in item.lower() and item not in fatal_lines:
-                        fatal_lines.append(item)
-                    append_to_file(result_file,item)
-                    for w in magic_words:
-                        if w in item:
-                            magic_dic_result[w].append(item)
+        for t in failed_tasks:
+            lines_to_analyze.append(t)
+        for line in lines_to_analyze:
+            line = line.split('\\n')
+            for item in line:
+                if 'fatal' in item.lower() and item not in fatal_lines:
+                    fatal_lines.append(item)
+                append_to_file(result_file,item)
+                for w in magic_words:
+                    if w in item:
+                        magic_dic_result[w].append(item)
         append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
