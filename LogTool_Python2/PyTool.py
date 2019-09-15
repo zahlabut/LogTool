@@ -140,6 +140,8 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
+        append_to_file(result_file, '\n\n\n' + '_' * 40 + 'Failed_Tasks' + '_' * 40 + '\n')
+        write_list_to_file(result_file, failed_tasks)
         append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
         print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
@@ -151,7 +153,7 @@ try:
         for t in failed_tasks:
             print_in_color(t, 'bold')
 
-        write_list_to_file(result_file,failed_tasks)
+
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
 
