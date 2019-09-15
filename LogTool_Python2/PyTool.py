@@ -88,6 +88,7 @@ try:
     if mode[1] == 'Undercloud - export "valued" Information from OC deploy log':
         from Extract_On_Node import *
         result_file='Overcloud_Deploy_Script_Readable.txt'
+        fuzzy=0.6
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
@@ -112,7 +113,9 @@ try:
         append_to_file(result_file,'\n'*10+'#'*50+'Unique statistics for these magic keys:'+str(magic_words)+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n' + '_' * 40 + key + '_' * 40+'\n')
-            for v in unique_list_by_fuzzy(magic_dic_result[key], 0.6):
+            if key in ['fatal','FAILED','ERROR']:
+                fuzzy=1
+            for v in unique_list_by_fuzzy(magic_dic_result[key], fuzzy):
                 if key in ['stderr','msg']:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
