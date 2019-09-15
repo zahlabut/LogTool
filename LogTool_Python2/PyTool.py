@@ -120,10 +120,10 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
-        append_to_file(result_file,'\n\n\nSearch for these keys: '+str(magic_words)+' surrounded by underscore\n for example "__stderr__" to see statistics')
-        print_in_color('####### Detected lines with "fatal" string:#######', 'yellow')
+        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example "__stderr__" to find the statistics!!! ###')
+        print_in_color('####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
-            print_in_color(f,'red')
+            print_in_color(f,'bold')
         spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
 
 
