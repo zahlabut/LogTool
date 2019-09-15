@@ -103,6 +103,7 @@ try:
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
+                print line
                 line = line.split('\\n')
                 for item in line:
                     if 'fatal' in item.lower() and item not in fatal_lines:
