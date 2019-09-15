@@ -99,10 +99,10 @@ try:
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
-            if 'fatal: [' in line:
+            if 'fatal: [' or 'ERROR' in line:
                 line = line.split('\\n')
                 for item in line:
-                    if 'fatal' in item.lower() and item not in fatal_lines:
+                    if ('fatal' or 'ERROR') in item.lower() and item not in fatal_lines:
                         fatal_lines.append(item)
                     append_to_file(result_file,item)
                     for w in magic_words:
