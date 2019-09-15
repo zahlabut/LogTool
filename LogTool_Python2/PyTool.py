@@ -90,7 +90,7 @@ try:
         result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
-        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN']
+        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
         for word in magic_words:
