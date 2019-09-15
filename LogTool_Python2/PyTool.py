@@ -113,8 +113,8 @@ try:
 
         print failed_tasks
         for t in failed_tasks:
-            lines_to_analyze.append(t)
-        print lines_to_analyze
+            fatal_lines.append(t)
+
         for line in lines_to_analyze:
             line = line.split('\\n')
             for item in line:
