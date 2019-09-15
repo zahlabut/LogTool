@@ -113,6 +113,7 @@ try:
 
         print failed_tasks
         for t in failed_tasks:
+            print_in_color(t,'blue')
             fatal_lines.append(t)
 
         for line in lines_to_analyze:
