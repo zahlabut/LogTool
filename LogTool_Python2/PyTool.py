@@ -100,7 +100,7 @@ try:
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
-            if ' ERROR ' in line line not in error_lines:
+            if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
                 line = line.split('\\n')
