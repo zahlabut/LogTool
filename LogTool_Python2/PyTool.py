@@ -116,8 +116,8 @@ try:
                 failed_tasks.append(previous_line[previous_line.find('TASK'):previous_line.find('*****')])
 
         for t in failed_tasks:
-            print_in_color(t,'blue')
-            fatal_lines.append(t)
+            if len(t)>1:
+                fatal_lines.append(t.strip())
 
         for line in lines_to_analyze:
             line = line.split('\\n')
