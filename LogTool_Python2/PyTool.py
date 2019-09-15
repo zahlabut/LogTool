@@ -86,7 +86,7 @@ try:
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
     if mode[1] == 'Undercloud - analyze Ansible Deployment log':
         from Extract_On_Node import *
-        result_file='Ansible_Deploy_Log_Readable.txt'
+        result_file='Ansible_Deploy_Log_Result.txt'
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
         error_lines=[]
@@ -96,7 +96,7 @@ try:
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
-        log_path=choose_option_from_list(log_path,'Please chose your deployment log: ')
+        log_path=choose_option_from_list(log_path,'Please choose your Ansible deployment log file path: ')
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
