@@ -104,7 +104,9 @@ try:
                 error_lines.append(line)
             if 'fatal: [' in line:
                 print '\n\n\n\n\n\n\n\n'
-                print data[data.index(line)-1]
+                previous_line=data[data.index(line)-1]
+                print previous_line[previous_line.find('TASK'):previous_line.find('TASK')+100]
+
                 print '\n\n\n\n\n\n\n\n\n'
                 line = line.split('\\n')
                 for item in line:
