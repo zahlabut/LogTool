@@ -140,7 +140,7 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
-        append_to_file(result_file, '\n\n\n' + '*' * 7 + 'Failed_Tasks' + '*' * 7 + '\n')
+        append_to_file(result_file, '\n\n\n' + '*' * 7 + ' Failed_Tasks: ' + '*' * 7)
         write_list_to_file(result_file, failed_tasks, False)
         append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
         print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
