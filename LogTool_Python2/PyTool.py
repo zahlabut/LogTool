@@ -105,7 +105,7 @@ try:
             if 'fatal: [' in line:
                 print '\n\n\n\n\n\n\n\n'
                 previous_line=data[data.index(line)-1]
-                print previous_line[previous_line.find('TASK'):previous_line.find('TASK')+100]
+                print previous_line[previous_line.find('TASK'):previous_line.find('*****')]
 
                 print '\n\n\n\n\n\n\n\n\n'
                 line = line.split('\\n')
