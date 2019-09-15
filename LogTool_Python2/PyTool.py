@@ -110,6 +110,8 @@ try:
                 lines_to_analyze.append(line)
                 failed_tasks.append(previous_line[previous_line.find('TASK'):previous_line.find('*****')])
 
+
+        print failed_tasks
         for t in failed_tasks:
             lines_to_analyze.append(t)
         for line in lines_to_analyze:
