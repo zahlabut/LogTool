@@ -89,7 +89,7 @@ try:
         result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
-        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal','ERROR']
+        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
         for word in magic_words:
@@ -99,10 +99,10 @@ try:
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
-            if 'fatal: [' or ' ERROR ' in line:
+            if 'fatal: [' in line:
                 line = line.split('\\n')
                 for item in line:
-                    if ('fatal' or ' ERROR ') in item.lower() and item not in fatal_lines:
+                    if 'fatal' in item.lower() and item not in fatal_lines:
                         fatal_lines.append(item)
                     append_to_file(result_file,item)
                     for w in magic_words:
@@ -111,7 +111,7 @@ try:
         append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
-            if key in ['fatal','FAILED','ERROR']:
+            if key in ['fatal','FAILED']:
                 fuzzy=1
             else:
                 fuzzy=0.6
