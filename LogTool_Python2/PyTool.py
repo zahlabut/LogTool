@@ -89,6 +89,7 @@ try:
         result_file='Overcloud_Deploy_Script_Readable.txt'
         undercloud_home_path = '/home/stack'
         fatal_lines=[]
+        error_lines=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
@@ -104,6 +105,8 @@ try:
                 for item in line:
                     if 'fatal' in item.lower() and item not in fatal_lines:
                         fatal_lines.append(item)
+                    if ' ERROR ' in item.lower() and item not in error_lines:
+                        error_lines.append(item)
                     append_to_file(result_file,item)
                     for w in magic_words:
                         if w in item:
@@ -124,6 +127,9 @@ try:
         print_in_color('####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
             print_in_color(f,'bold')
+        print_in_color('####### Detected lines with " ERROR " string:#######', 'red')
+        for e in error_lines:
+            print_in_color(e,'bold')
         spec_print(['Result File is: ' + result_file, 'Scroll down to the end of the file for details!'],'green')
 
 
