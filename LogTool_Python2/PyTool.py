@@ -122,8 +122,6 @@ try:
         for line in lines_to_analyze:
             line = line.split('\\n')
             for item in line:
-                if 'TASK' in item:
-                    magic_dic_result['TASK'].append(item)
                 if 'fatal' in item.lower() and item not in fatal_lines:
                     fatal_lines.append(item)
                 append_to_file(result_file,item)
@@ -149,6 +147,11 @@ try:
         print_in_color('\n\n\n####### Detected lines with " ERROR " string:#######', 'red')
         for e in error_lines:
             print_in_color(e,'bold')
+        print_in_color('\n\n\n####### Detected failed TASKs: #######', 'red')
+        for t in failed_tasks:
+            print_in_color(t, 'bold')
+
+        write_list_to_file(result_file,failed_tasks)
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
 
