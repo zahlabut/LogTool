@@ -60,11 +60,11 @@ This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11
 
 **12)  Undercloud - analyze deployment log**
 
-This mode may help you to understand what went wrong while deployment procedure, basing on generated log.
-Deployment logs are generated when --log option is used ib deploy script, for example inside 'overcloud_deplo.sh', the
-problem is that such logs are not friendly enough and it's hard to understand what exactly went during the deployment.
-Especially when verbosity is set to 'vv' or even more, this will make the log not readable with a bunch of data in it.
-This mode will run on your deployment log and will provide details for failed TASKs in its result file.
+This mode may help you to understand what went wrong while OC or UC deployment, basing on generated log.
+Deployment logs are generated when ""--log" option is used, for example inside the "overcloud_deploy.sh" script, the
+problem is that such logs are not "friendly" and it's hard to understand what exactly went wrong, especially
+when verbosity is set to "vv" or more, this will make the log not readable with a bunch of data inside it.
+This mode will provide you some details about all failed TASKs.
 
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud** host with:
