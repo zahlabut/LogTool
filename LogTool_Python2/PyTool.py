@@ -113,11 +113,9 @@ try:
                 previous_line=data[data.index(line)-1]
                 lines_to_analyze.append(previous_line)
                 lines_to_analyze.append(line)
-                failed_tasks.append(previous_line[previous_line.find('TASK'):previous_line.find('*****')])
-
-        for t in failed_tasks:
-            if len(t)>1:
-                fatal_lines.append(t.strip())
+                failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
+                if len(failed_task)!=0:
+                    failed_tasks.append(failed_task)
 
         for line in lines_to_analyze:
             line = line.split('\\n')
