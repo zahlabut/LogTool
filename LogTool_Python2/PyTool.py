@@ -95,7 +95,7 @@ try:
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
-        log_path=choose_option_from_list(log_path,'Please chose your OC deploy log')
+        log_path=choose_option_from_list(log_path,'Please chose your OC deploy log: ')
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         for line in data:
@@ -120,7 +120,7 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
-        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example "__stderr__" to find the statistics!!! ###')
+        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
         print_in_color('####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
             print_in_color(f,'bold')
