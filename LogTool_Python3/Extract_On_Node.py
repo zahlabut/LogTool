@@ -426,6 +426,7 @@ if __name__ == "__main__":
                     append_to_file(result_file, line + '\n')
             #append_to_file(result_file, '~' * 100 + '\n')
 
+
     ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
