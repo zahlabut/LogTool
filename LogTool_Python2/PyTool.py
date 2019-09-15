@@ -121,6 +121,7 @@ try:
                     append_to_file(result_file,'\n'+v+'\n')
                 else:
                     append_to_file(result_file,v+'\n')
+        append_to_file(result_file,'Search for these keys: '+str(magic_words)+' soroynded by underscore\n, for example "__stderr__" to see statistics')
         print_in_color('####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
             print_in_color(f,'red')
