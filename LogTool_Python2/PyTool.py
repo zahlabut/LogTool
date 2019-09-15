@@ -123,7 +123,7 @@ try:
             line = line.split('\\n')
             for item in line:
                 if 'TASK' in item:
-                    magic_dic_result[w].append(item)
+                    magic_dic_result['TASK'].append(item)
                 if 'fatal' in item.lower() and item not in fatal_lines:
                     fatal_lines.append(item)
                 append_to_file(result_file,item)
