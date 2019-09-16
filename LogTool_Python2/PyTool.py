@@ -230,7 +230,6 @@ try:
 
         # Download console.log
         console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
-        print_in_color(console_log_url,'red')
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
 
