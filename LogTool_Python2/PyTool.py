@@ -122,9 +122,9 @@ try:
                 for w in magic_words:
                     if w in item:
                         if w == 'TASK':
-                            magic_dic_result[w].append(item[item.find(w):].replace('*',''))
+                            magic_dic_result[w].append('###'+item[item.find(w):].replace('*','')+'###')
                         else:
-                            magic_dic_result[w].append(item)
+                            magic_dic_result[w].append('###'+item+'###')
         append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
