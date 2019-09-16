@@ -93,7 +93,7 @@ try:
         fatal_lines=[]
         error_lines=[]
         failed_tasks=[]
-        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal','stderr_lines']
+        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
         log_name = 'overcloud_deployment.log'
         for word in magic_words:
@@ -122,9 +122,9 @@ try:
                 for w in magic_words:
                     if w in item:
                         if w == 'TASK':
-                            magic_dic_result[w].append(item[item.find(w):].replace('*','').replace(w,'######'+w+'######'))
+                            magic_dic_result[w].append(item[item.find(w):].replace('*',''))
                         else:
-                            magic_dic_result[w].append(item.replace(w,'######'+w+'######'))
+                            magic_dic_result[w].append(item.replace)
         append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
