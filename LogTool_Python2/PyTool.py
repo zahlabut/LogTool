@@ -168,7 +168,6 @@ try:
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
 
-
         #Download log files
         options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
         option=choose_option_from_list(options,'Please choose your option to download files: ')
@@ -193,6 +192,7 @@ try:
                     tar_gz_files.append(link)
                     link = urlparse.urljoin(artifacts_url, link.get('href'))
                     os.system('wget -P ' + destination_dir + ' ' + link)
+
             if len(tar_gz_files)==0:
                 spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
                 exit('Check your: '+artifacts_url)
@@ -227,6 +227,12 @@ try:
             cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
             print_in_color('Unzipping '+fil+'...', 'bold')
             os.system(cmd)
+
+        # Download console.log
+        console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
+        print_in_color(console_log_url,'red')
+        os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+        shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
 
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
