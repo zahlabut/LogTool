@@ -1,0 +1,33 @@
+---
+
+- name: Install LogTool
+  hosts: undercloud
+  gather_facts: no
+
+  tasks:
+
+  - name: Create LogTool Start Script (logtool.sh)
+    template:
+      src: logtool.sh.j2
+      dest: /home/stack/logtool.sh
+      group: stack
+      mode: 0744
+
+  - name: Execute LogTool Start Script
+    command: /home/stack/logtool.sh
+
+  - name: Check for Report File existence
+    stat:
+     path: /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+    register: report_log_stat
+
+  - name:
+    block:
+      - name: Read content of Report File
+        shell: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+        register: report_log_content
+
+      - name: Print content of Report File
+        debug:
+          var: report_log_content.stdout_lines
+    when: report_log_stat.stat.exists

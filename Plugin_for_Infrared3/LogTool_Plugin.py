@@ -20,10 +20,10 @@ errors_on_execution = {}
 competed_nodes={}
 
 # Runtime Logs #
-empty_file_content('Runtime.log')
-empty_file_content('Error.log')
-sys.stdout=MyOutput('Runtime.log')
-sys.stderr=MyOutput('Error.log')
+#empty_file_content('Runtime.log')
+#empty_file_content('Error.log')
+#sys.stdout=MyOutput('Runtime.log')
+#sys.stderr=MyOutput('Error.log')
 
 ### Check given user_start_time ###
 if check_time(user_start_time)!=True:
@@ -55,10 +55,10 @@ class LogTool(unittest.TestCase):
 
     @staticmethod
     def run_on_node(node):
-        print '-------------------------'
-        print node
-        print '--------------------------'
-        print '\n' + '-' * 40 + 'Remote Overcloud Node -->', str(node) + '-' * 40
+        print('-------------------------')
+        print(node)
+        print('--------------------------')
+        print('\n' + '-' * 40 + 'Remote Overcloud Node -->', str(node) + '-' * 40)
         result_file = node['Name'].replace(' ', '') + '.log'
         s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
         s.ssh_connect_key()
@@ -66,9 +66,9 @@ class LogTool(unittest.TestCase):
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
             user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
-        print 'Executed command on host --> ', command
+        print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
-        print com_result['Stdout']  # Do not delete me!!!
+        print(com_result['Stdout'])  # Do not delete me!!!
         if 'SUCCESS!!!' in com_result['Stdout']:
             print_in_color(str(node) + ' --> OK', 'green')
             competed_nodes[node['Name']] = True
@@ -85,7 +85,7 @@ class LogTool(unittest.TestCase):
 
     """ Start LogTool and export Errors from Overcloud, execution on nodes is running in parallel"""
     def test_1_Export_Overcloud_Errors(self):
-        print '\ntest_1_Export_Overcloud_Errors'
+        print('\ntest_1_Export_Overcloud_Errors')
         mode_start_time = time.time()
 
         threads=[]
@@ -107,13 +107,13 @@ class LogTool(unittest.TestCase):
             else:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
                             'Execution Time: ' + str(script_end_time - mode_start_time) + '[sec]',
-                            'Failed nodes:'] + [k for k in errors_on_execution.keys()], 'yellow')
+                            'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
         if len(competed_nodes)==0:
             self.raise_warning('LogTool execution has failed to be executed on all Overcloud nodes :-(')
 
     """ Start LogTool and export Errors from Undercloud """
     def test_2_Export_Undercloud_Errors(self):
-        print '\ntest_2_Export_Undercloud_Errors'
+        print('\ntest_2_Export_Undercloud_Errors')
         mode_start_time = time.time()
         for dir in undercloud_logs_dir:
             result_file = 'Undercloud'+dir.replace('/','_')+'.log'
@@ -134,7 +134,7 @@ class LogTool(unittest.TestCase):
         content.
     """
     def test_3_create_final_report(self):
-        print '\ntest_3_create_final_report'
+        print('\ntest_3_create_final_report')
         report_file_name = 'LogTool_Report.log'
         if report_file_name in os.listdir('.'):
             os.remove(report_file_name)
@@ -151,6 +151,6 @@ class LogTool(unittest.TestCase):
                     detected_unique_errors+=line
                 detected_unique_errors+='\n'*5
         if len(failed_nodes)!=0:
-            append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(failed_nodes.keys())+
+            append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
                         '\nDetected Unique ERRORs are:'+'\n'*5+detected_unique_errors+
                           '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))

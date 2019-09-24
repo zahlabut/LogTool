@@ -15,6 +15,9 @@ import datetime
 import operator
 import collections
 
+
+
+
 ### Parameters ###
 fuzzy_match = 0.6
 not_supported_logs=['.swp','.login','anaconda-post']
@@ -300,7 +303,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         content_as_list=open('grep.txt','r').read().split('--\n')
     else: #grep.txt is empty
         return {log: unique_messages}
-    content_as_list=[item[0:5000] if len(item)>5000 else item.strip() for item in content_as_list] # If line is bigger than 5000 cut it
+    content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
@@ -325,6 +328,10 @@ def parse_overcloud_install_log(log, string_for_grep):
         if to_add == True:
             unique_messages.append(block)
     return {log:unique_messages}
+
+# import signal
+# signal.signal(signal.SIGALRM, analyze_log)
+# signal.alarm(3)
 
 
 if __name__ == "__main__":
@@ -357,13 +364,12 @@ if __name__ == "__main__":
                 if 'WARNING' in string_for_grep:
                     string_for_grep='WARN'
                 if 'ERROR' in string_for_grep:
-                    string_for_grep='ERROR'
+                    string_for_grep=' ERROR'
                 not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
             else:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
                     analyzed_logs_result.append(log_result)
-
     ### Fill Failed log Section ###
     if len(not_standard_logs)>0:
         print_in_color('Warning - list of NOT STANDARD logs:','yellow')
