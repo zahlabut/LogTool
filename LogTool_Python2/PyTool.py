@@ -24,7 +24,6 @@ log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
 
-
 empty_file_content('Runtime.log')
 empty_file_content('Error.log')
 sys.stdout=MyOutput('Runtime.log')
