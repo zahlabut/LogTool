@@ -315,7 +315,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             string_for_grep='level=error'
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
-        command = "grep -n -C1 '" + string_for_grep + "' " + log + " > grep.txt"
+        command = "grep -n '" + string_for_grep + "' " + log + " > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         content_as_list=open('grep.txt','r').read().split('--\n')
