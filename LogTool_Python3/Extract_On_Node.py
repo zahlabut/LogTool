@@ -106,9 +106,7 @@ def collect_log_paths(log_root_path):
     logs=[]
     for root, dirs, files in os.walk(log_root_path):
         for name in files:
-            if 'messages' in name:
-                logs.append(name)
-            if '.log' in name:
+            if '.log' in name or 'messages' in name:
                 to_add=False
                 file_abs_path=os.path.join(os.path.abspath(root), name)
                 if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
