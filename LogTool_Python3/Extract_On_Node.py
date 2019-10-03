@@ -103,9 +103,11 @@ def to_ranges(iterable):
         yield group[0][1], group[-1][1]
 
 def collect_log_paths(log_root_path):
-    logs=['/var/log/messages']
+    logs=[]
     for root, dirs, files in os.walk(log_root_path):
         for name in files:
+            if '/var/log/messages' in name:
+                logs.append(name)
             if '.log' in name:
                 to_add=False
                 file_abs_path=os.path.join(os.path.abspath(root), name)
@@ -303,9 +305,9 @@ def parse_rabbit_log(log,string_for_grep):
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
-    if log=='/var/log/messages' and 'error' in string_for_grep.lower():
+    if '/var/log/messages' in log and 'error' in string_for_grep.lower():
         string_for_grep='level=error'
-    if log=='/var/log/messages' and 'warn' in string_for_grep.lower():
+    if '/var/log/messages' in log and 'warn' in string_for_grep.lower():
         string_for_grep='level=warn'
     unique_messages = []
     if os.path.exists('grep.txt'):
