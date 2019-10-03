@@ -106,7 +106,7 @@ def collect_log_paths(log_root_path):
     logs=[]
     for root, dirs, files in os.walk(log_root_path):
         for name in files:
-            if '/var/log/messages' in name:
+            if 'messages' in name:
                 logs.append(name)
             if '.log' in name:
                 to_add=False
