@@ -238,7 +238,7 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        command = "python2 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')

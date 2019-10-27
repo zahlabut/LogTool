@@ -318,7 +318,10 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         command = "grep -n '" + string_for_grep + "' " + log + " > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
-        content_as_list=open('grep.txt','r').read().split('--\n')
+        if '--\n' in open('grep.txt','r').read():
+            content_as_list=open('grep.txt','r').read().split('--\n')
+        else:
+            content_as_list = open('grep.txt', 'r').read().split('\n')
     else: #grep.txt is empty
         return {log: unique_messages}
     content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
