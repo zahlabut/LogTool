@@ -94,7 +94,6 @@ try:
         failed_tasks=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
-        log_name = 'overcloud_deployment.log'
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
@@ -105,9 +104,17 @@ try:
         for line in data:
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
+
             if 'fatal: [' in line:
-                previous_line=data[data.index(line)-1]
-                lines_to_analyze.append(previous_line)
+                is_task_line=False
+                counter=1
+                while is_task_line==False:
+                    previous_line=data[data.index(line)-counter]
+                    if 'TASK' in previous_line:
+                        is_task_line=True
+                        lines_to_analyze.append(previous_line)
+                    counter+=1
+
                 lines_to_analyze.append(line)
                 failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
                 if len(failed_task)!=0:

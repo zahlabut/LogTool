@@ -92,7 +92,6 @@ try:
         failed_tasks=[]
         magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
         magic_dic_result = {}
-        log_name = 'overcloud_deployment.log'
         for word in magic_words:
             magic_dic_result[word] = []
         log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
