@@ -104,7 +104,6 @@ try:
         for line in data:
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
-
             if 'fatal: [' in line:
                 is_task_line=False
                 counter=1
@@ -114,7 +113,6 @@ try:
                         is_task_line=True
                         lines_to_analyze.append(previous_line)
                     counter+=1
-
                 lines_to_analyze.append(line)
                 failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
                 if len(failed_task)!=0:
