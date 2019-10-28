@@ -324,6 +324,15 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             content_as_list = open('grep.txt', 'r').read().split('\n')
     else: #grep.txt is empty
         return {log: unique_messages}
+    #Filter out all errors and warnings string that appears somewhere in line and not in first 100 characters
+    relevant_blocks=[]
+    for block in content_as_list:
+        block_lines=block.split('\n')
+        for line in block_lines:
+            if 0<line.lower().find(string_for_grep.lower())<100:
+                relevant_blocks.append(block)
+                break
+    content_as_list=relevant_blocks
     content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
     for block in content_as_list:
         to_add=True
