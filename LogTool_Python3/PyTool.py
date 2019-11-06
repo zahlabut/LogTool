@@ -106,9 +106,9 @@ try:
                 for w in words:
                     if w in line.lower():
                         if len(line) > 100:
-                            print (line[line.find(w):line.find(w) + 100])
+                            append_to_file(result_file,line[line.find(w):line.find(w) + 100]+'\n')
                         else:
-                            print (line.strip())
+                            append_to_file(result_file,line.strip()+'\n')
 
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
