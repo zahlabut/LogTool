@@ -106,9 +106,10 @@ try:
                 for w in words:
                     if w in line.lower():
                         if len(line) > 100:
-                            print line[line.find(w):line.find(w) + 100]
+                            print (line[line.find(w):line.find(w) + 100])
                         else:
-                            print line.strip()
+                            print (line.strip())
+
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
