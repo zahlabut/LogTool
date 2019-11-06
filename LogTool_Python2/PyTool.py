@@ -102,6 +102,14 @@ try:
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
         for line in data:
+            # Print some lines that maybe will be relevant #
+            words=['error','failed','fatal']
+            for w in words:
+                if w in line.lower():
+                    if len(line)>100:
+                        print line[line.find(w):line.find(w)+100]
+                    else:
+                        print line.strip()
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
