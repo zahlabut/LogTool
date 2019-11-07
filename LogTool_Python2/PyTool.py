@@ -107,7 +107,7 @@ try:
             for w in words:
                 if w in line.lower():
                     append_to_file(result_file, '_'*200+'\n')
-                    append_to_file(result_file,'Detected string is: '+w+'\n')
+                    append_to_file(result_file,'Detected string is: "'+w+'"\n')
                     w_index=line.find(w)
                     if len(line) < 5000:
                         append_to_file(result_file, line+'\n')
