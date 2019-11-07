@@ -101,7 +101,7 @@ try:
         lines_to_analyze=[]
         for line in data:
             # Print some lines that might be relevant #
-            words=[' error:',' error ',' failed:',' failed ',' fatal ',' fatal:']
+            words = [' error:', ' error ', ' failed:', ' failed ', ' fatal ', ' fatal:']
             for w in words:
                 if w in line.lower():
                     append_to_file(result_file, '_'*200+'\n')
@@ -110,7 +110,10 @@ try:
                     if len(line) < 5000:
                         append_to_file(result_file, line+'\n')
                     else:
-                        append_to_file(result_file, '...Line is too long ...'+line[w_index:]+'\n')
+                        if w_index+1000<len(line):
+                            append_to_file(result_file, '...Line is too long ...' + line[w_index:w_index+1000] + '...'+'\n')
+                        else:
+                            append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
                     break
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
