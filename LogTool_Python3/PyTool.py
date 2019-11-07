@@ -111,7 +111,7 @@ try:
                         append_to_file(result_file, line+'\n')
                     else:
                         if w_index+1000<len(line):
-                            append_to_file(result_file, '...Line is too long ...' + line[w_index:w_index+1000] + '...Line is too long ...'+'\n')
+                            append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
                         else:
                             append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
                     break
