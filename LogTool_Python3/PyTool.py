@@ -111,6 +111,7 @@ try:
                         append_to_file(result_file, line+'\n')
                     else:
                         append_to_file(result_file, line[0:5000]+'...Line is too long :-( ...'+'\n')
+                    break
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
