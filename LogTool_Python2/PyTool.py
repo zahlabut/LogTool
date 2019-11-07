@@ -112,7 +112,7 @@ try:
                     if len(line) < 5000:
                         append_to_file(result_file, line+'\n')
                     else:
-                        append_to_file(result_file, line[0:5000]+'...Line is too long :-( ...'+'\n')
+                        append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
                     break
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
