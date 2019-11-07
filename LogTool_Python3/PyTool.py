@@ -100,16 +100,17 @@ try:
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
         for line in data:
-            for line in data:
-                # Print some lines that maybe will be relevant #
-                words = ['error', 'failed', 'fatal']
-                for w in words:
-                    if w in line.lower():
-                        if len(line) > 100:
-                            append_to_file(result_file,line[line.find(w):line.find(w) + 100]+'\n')
-                        else:
-                            append_to_file(result_file,line.strip()+'\n')
-
+            # Print some lines that maybe will be relevant #
+            words=['error','failed','fatal']
+            for w in words:
+                if w in line.lower():
+                    append_to_file(result_file, '_'*200+'\n')
+                    append_to_file(result_file,'Detected string is: '+w+'\n')
+                    w_index=line.find(w)
+                    if len(line) < 5000:
+                        append_to_file(result_file, line+'\n')
+                    else:
+                        append_to_file(result_file, line[0:5000]+'...Line is too long :-( ...'+'\n')
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
