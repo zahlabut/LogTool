@@ -100,7 +100,7 @@ try:
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
         for line in data:
-            # Print some lines that maybe will be relevant #
+            # Print some lines that might be relevant #
             words=['error','failed','fatal']
             for w in words:
                 if w in line.lower():

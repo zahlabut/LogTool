@@ -102,7 +102,7 @@ try:
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
         for line in data:
-            # Print some lines that maybe will be relevant #
+            # Print some lines that might be relevant #
             words=['error','failed','fatal']
             for w in words:
                 if w in line.lower():
@@ -143,7 +143,7 @@ try:
         append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
         for key in magic_dic_result:
             append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
-            if key in ['fatal','FAILED']:
+            if key in ['fatal','FAILED','ERROR']:
                 fuzzy=1
             else:
                 fuzzy=0.6
