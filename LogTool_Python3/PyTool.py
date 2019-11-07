@@ -101,7 +101,7 @@ try:
         lines_to_analyze=[]
         for line in data:
             # Print some lines that might be relevant #
-            words=['error','failed','fatal']
+            words=[' error:',' error ',' failed:',' failed ',' fatal ',' fatal:']
             for w in words:
                 if w in line.lower():
                     append_to_file(result_file, '_'*200+'\n')
