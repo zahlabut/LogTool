@@ -22,7 +22,7 @@ Result file is created for each Overcloud node and "Statistic sections" are gene
 
 Follow "Table of content" at the end of the file to get sections' start line indexes.
 
-**2) Download all logs from Overcloud**
+**2) Download all logs from Overcloud nodes**
 
 Logs from all Overcloud nodes will be compressed and downloaded to local directory on your Undercloud host.
 

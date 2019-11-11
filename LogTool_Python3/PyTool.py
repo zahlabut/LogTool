@@ -68,7 +68,7 @@ def run_on_node(node):
 try:
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
            'Export ERRORs/WARNINGs from Overcloud logs',
-           'Download all logs from Overcloud',
+           'Download all logs from Overcloud nodes',
            '"Grep" some string for all Overcloud logs',
            'Check current:CPU,RAM and Disk on Overcloud',
            "Execute user's script",
@@ -87,6 +87,8 @@ try:
         from Extract_On_Node import *
         result_file='Ansible_Deploy_Log_Result.txt'
         undercloud_home_path = '/home/stack'
+        if os.path.exists(undercloud_home_path) is False:
+            undercloud_home_path=input('Enter absolute path to directory containing deployment log: ')
         fatal_lines=[]
         error_lines=[]
         failed_tasks=[]
@@ -410,7 +412,7 @@ try:
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
 
-    if mode[1] == 'Download all logs from Overcloud':
+    if mode[1] == 'Download all logs from Overcloud nodes':
         ### Get all nodes ###
         nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
         nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
