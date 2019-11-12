@@ -205,11 +205,20 @@ try:
             #soup = BeautifulSoup(html)
             soup = BeautifulSoup(html, 'lxml')
             tar_gz_files=[]
+            ir_logs_urls = []
             for link in soup.findAll('a'):
                 if str(link.get('href')).endswith('.tar.gz'):
                     tar_gz_files.append(link)
-                    link = urljoin(artifacts_url, link.get('href'))
-                    os.system('wget -P ' + destination_dir + ' ' + link)
+                    tar_link = urljoin(artifacts_url, link.get('href'))
+                    os.system('wget -P ' + destination_dir + ' ' + tar_link)
+                if str(link.get('href')).endswith('.sh'):
+                    sh_page_link=urljoin(artifacts_url, link.get('href'))
+                    response = urllib.request.urlopen(sh_page_link)
+                    html = response.read()
+                    soup = BeautifulSoup(html)
+                    for link in soup.findAll('a'):
+                        if str(link.get('href')).endswith('.log'):
+                            ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
             if len(tar_gz_files)==0:
                 spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
                 exit('Check your: '+artifacts_url)
@@ -249,6 +258,11 @@ try:
         console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
+
+        # Download Infared Logs .sh, files in .sh directory on Jenkins
+        if len(ir_logs_urls)!=0:
+            for url in ir_logs_urls:
+                os.system('wget -P ' + destination_dir + ' ' + url)
 
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally','bold')

@@ -304,6 +304,9 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
         command = "grep -n '" + string_for_grep + "' " + log + " > grep.txt"
+    if 'consoleFull' in log:
+        string_for_grep=string_for_grep+'\|background:red'
+        command = "grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"
         print_in_color(command)
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
@@ -318,9 +321,15 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     for block in content_as_list:
         block_lines=block.split('\n')
         for line in block_lines:
-            if 0<line.lower().find(string_for_grep.lower())<100:
-                relevant_blocks.append(block)
-                break
+            if '\|' not in string_for_grep:
+                if 0<line.lower().find(string_for_grep.lower())<100:
+                    relevant_blocks.append(block)
+                    break
+            else:
+                for string in string_for_grep.split('\|'):
+                    if line.lower().find(string.lower()):
+                        relevant_blocks.append(block)
+                        break
     content_as_list=relevant_blocks
     content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
     for block in content_as_list:
@@ -372,7 +381,7 @@ if __name__ == "__main__":
             last_line=get_file_last_line(log)
             last_line_date=get_line_date(last_line)
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if last_line_date['Error']!=None:
+            if last_line_date['Error']!=None or '-ir-' in log: #Infrared logs are not standard logs
                 #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
                 # Check if last line contains: proper debug level: INFO or WARN or ERROR string
                 log_last_ten_lines=get_file_last_line(log,'10')
