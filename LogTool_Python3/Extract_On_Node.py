@@ -14,10 +14,11 @@ import gzip
 import datetime
 import operator
 import collections
+from string import digits
 
 ### Parameters ###
-fuzzy_match = 0.6
 not_supported_logs=['.swp','.login','anaconda-post']
+fuzzy_match = 0.6
 
 # Grep by time #
 try:
@@ -45,6 +46,10 @@ try:
     save_raw_data=sys.argv[5]
 except:
     save_raw_data='yes'
+
+def remove_digits_from_string(s):
+    remove_digits = str.maketrans('', '', digits)
+    return s.translate(remove_digits)
 
 def exec_command_line_command(command):
     try:
@@ -92,9 +97,9 @@ def print_in_color(string,color_or_format=None):
 
 def similar(a, b):
     if fuzzy_installed==True:
-        return fuzz.ratio(str(a),str(b))/100.0
+        return fuzz.ratio(remove_digits_from_string(str(a)),remove_digits_from_string(str(b)))/100.0
     else:
-        return difflib.SequenceMatcher(None, str(a), str(b)).ratio()
+        return difflib.SequenceMatcher(None, remove_digits_from_string(str(a)), remove_digits_from_string(str(b))).ratio()
 
 def to_ranges(iterable):
     iterable = sorted(set(iterable))
@@ -319,7 +324,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red'
         command = "grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"
-        print_in_color(command)
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         if '--\n' in open('grep.txt','r').read():

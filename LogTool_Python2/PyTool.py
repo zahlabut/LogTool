@@ -222,9 +222,9 @@ try:
                     for link in soup.findAll('a'):
                         if str(link.get('href')).endswith('.log'):
                             ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
-            if len(tar_gz_files)==0:
-                spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
-                exit('Check your: '+artifacts_url)
+            # if len(tar_gz_files)==0:
+            #     spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
+            #     exit('Check your: '+artifacts_url)
 
 
         if option[1]=="Download files using SCP from: "+log_storage_host:

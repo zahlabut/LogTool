@@ -219,9 +219,9 @@ try:
                     for link in soup.findAll('a'):
                         if str(link.get('href')).endswith('.log'):
                             ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
-            if len(tar_gz_files)==0:
-                spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
-                exit('Check your: '+artifacts_url)
+            # if len(tar_gz_files)==0:
+            #     spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
+            #     exit('Check your: '+artifacts_url)
 
 
         if option[1]=="Download files using SCP from: "+log_storage_host:
@@ -376,17 +376,17 @@ try:
                 s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
                 s.ssh_connect_key()
                 # Check if pip is installed #
-                pip_installed='sudo which pip'
+                pip_installed='sudo which pip3'
                 if len(s.ssh_command(pip_installed)['Stderr'])!=0:
-                    print_in_color('Warning - pip is not installed!','yellow')
-                    print(s.ssh_command('sudo easy_install pip')['Stdout'])
-                    print(s.ssh_command('sudo pip install pip --upgrade'))
+                    print_in_color('Warning - pip3 is not installed!','yellow')
+                    print(s.ssh_command('sudoo easy_install pip3')['Stdout'])
+                    print(s.ssh_command('sudo pip install pip3 --upgrade'))
                 else:
-                    print_in_color('pip OK','green')
+                    print_in_color('pip3 OK','green')
                 # Install FuzzyWuzzy #
-                if len(s.ssh_command('pip freeze | grep fuzzywuzzy')['Stdout'])==0:
+                if len(s.ssh_command('pip3 freeze | grep fuzzywuzzy')['Stdout'])==0:
                     print_in_color('Warning - FuzzyWuzzy is not installed!','yellow')
-                    print(s.ssh_command('sudo pip install fuzzywuzzy'))
+                    print(s.ssh_command('pip3 install fuzzywuzzy --user'))
                 else:
                     print_in_color('FuzzyWuzzy OK','green')
                 s.ssh_close()
