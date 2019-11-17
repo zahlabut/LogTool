@@ -204,8 +204,24 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
             block_lines_to_save = [line for line in block_lines]
-            block_lines=[line.split(string)[1] for  line in block_lines if string in line] # Block lines split by string and save all after ERROR
-             # Raw data to result file
+
+
+            if string==' ERROR':
+                block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
+            if string=='WARN':
+                block_lines=[]
+                for line in block_lines:
+                    if 'WARNING' in line:
+                        block_lines.append(line.split('WARNING')[1])
+                    else:
+                        block_lines.append(line.split(string)[1])#Split by WARN
+
+
+
+
+
+
+            # Raw data to result file
             # Save to file block lines #
             if save_raw_data=='yes':
                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
