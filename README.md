@@ -11,12 +11,15 @@ There are also operation modes when additional scripts are executed directly on 
 
 **1) Export ERRORs/WARNINGs from Overcloud logs**
 
-This mode exports all ERRORs/WARNINGs messages that occurred since some timestamp, which is given by user.
+This mode exports all ERRORs/WARNINGs messages that occurred since given by user timestamp.
 For example, if something went wrong in the last 10 minutes you'll be able to run the tool for this time period only.
-In addition this mode generates "Statistic sections", where you'll find:
-1) The total number of ERRORs/WARNINGs per log.
-2) The amount of  "Unique" ERRORs/WARNINGs messages in each log.
-3) The "Unique" messages in total that have been detected.
+This operation mode generates result file per Overcloud node with "Table of content (Section name --> Line number)",  where you'll find:
+1) Raw Data - extracted Errors/Warnings from standard OSP logs since: <Given Timestamp>
+2) Skipped logs - no debug level string (Error, Info, Debug...) has been detected
+3) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
+4) Statistics - Unique(Fuzzy Matching per standard OSP log file since: <Given Timestamp>
+5) Statistics - Unique messages per NOT STANDARD log file, since ever
+
 
 Result file is created for each Overcloud node and "Statistic sections" are generated in it.
 

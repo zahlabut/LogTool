@@ -405,7 +405,7 @@ if __name__ == "__main__":
         print_in_color('Warning - list of NOT STANDARD logs:','yellow')
         print_list(item['Log'] for item in not_standard_logs)
 
-        append_to_file(result_file,'\n\n\n'+'#'*20+' Warning - NOT STANDARD logs, no debug indication string detected in log content '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
+        append_to_file(result_file,'\n\n\n'+'#'*20+' Skipped logs - no debug level string (Error, Info, Debug...) has been detected '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
         write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
         write_list_of_dict_to_file(result_file,
                                    not_standard_logs,
@@ -457,45 +457,45 @@ if __name__ == "__main__":
             append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
             write_list_to_file(result_file,dir[key])
 
-    ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
-    #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs '+'#'*20+'\n')
-    unique_messages=[]
-    for item in analyzed_logs_result:
-        #print 'LogPath --> '+item['Log']
-        for block in item['AnalyzedBlocks']:
-            block_lines=block['BlockLines']
-            lines_number=block['BlockLinesSize']
-            is_traceback=block['IsTracebackBlock']
-            to_add = True
-            if is_traceback==False:
-                block_lines=unique_list_by_fuzzy(block_lines,fuzzy_match)
-            if is_traceback == True:
-                block_lines=unique_list(block_lines)
-            if lines_number>5:
-                block_lines = [l for l in block_lines[-5:]]
-            for key in unique_messages:
-                if similar(key[1], str(block_lines)) >= fuzzy_match:
-                    to_add = False
-                    break
-            if to_add == True:
-                unique_messages.append([lines_number,block_lines,item['Log'],is_traceback])
-
-    for item in unique_messages:
-        append_to_file(result_file, '\n'+'~' * 40 + item[2] + '~' * 40 + '\n')
-        append_to_file(result_file, '### IsTraceback:'+str(item[3])+'###\n')
-        for line in item[1]:
-            append_to_file(result_file, line + '\n')
+    # ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
+    # #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
+    # append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs '+'#'*20+'\n')
+    # unique_messages=[]
+    # for item in analyzed_logs_result:
+    #     #print 'LogPath --> '+item['Log']
+    #     for block in item['AnalyzedBlocks']:
+    #         block_lines=block['BlockLines']
+    #         lines_number=block['BlockLinesSize']
+    #         is_traceback=block['IsTracebackBlock']
+    #         to_add = True
+    #         if is_traceback==False:
+    #             block_lines=unique_list_by_fuzzy(block_lines,fuzzy_match)
+    #         if is_traceback == True:
+    #             block_lines=unique_list(block_lines)
+    #         if lines_number>5:
+    #             block_lines = [l for l in block_lines[-5:]]
+    #         for key in unique_messages:
+    #             if similar(key[1], str(block_lines)) >= fuzzy_match:
+    #                 to_add = False
+    #                 break
+    #         if to_add == True:
+    #             unique_messages.append([lines_number,block_lines,item['Log'],is_traceback])
+    #
+    # for item in unique_messages:
+    #     append_to_file(result_file, '\n'+'~' * 40 + item[2] + '~' * 40 + '\n')
+    #     append_to_file(result_file, '### IsTraceback:'+str(item[3])+'###\n')
+    #     for line in item[1]:
+    #         append_to_file(result_file, line + '\n')
 
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]
     messages=[
         'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
-        'Warning - NOT STANDARD logs, no debug indication string detected in log content',
+        'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
         'Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep,
         'Statistics - Unique messages per NOT STANDARD log file, since ever',
-        'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
+        #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
         ]
     for msg in messages:
         section_indexes.append({msg:get_file_line_index(result_file,msg)})
