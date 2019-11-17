@@ -25,7 +25,7 @@ fuzzy_match = 0.6
 try:
     time_grep=sys.argv[1].strip()
 except:
-    time_grep='2018-01-01 00:00:00'
+    time_grep='2019-01-01 00:00:00'
 # Log path #
 try:
     log_root_dir=sys.argv[2].strip()
@@ -35,7 +35,7 @@ except:
 try:
     string_for_grep=sys.argv[3].strip()
 except:
-    string_for_grep=' WARNING '
+    string_for_grep=' ERROR '
 # Result file #
 try:
     result_file=sys.argv[4]
@@ -181,14 +181,6 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
         lines=open('grep.txt','r').readlines()
         lines=[line for line in lines if string in line[0:60]] #ignore if ERROR for example is not debug level string
         lines_dic={}
-
-
-
-
-        block_lines=[]
-
-
-
         for line in lines:
             lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
         indexes=[int(line.split(':')[0]) for line in lines]# [1,2,3,....15,26]
@@ -211,30 +203,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
             block_lines_to_save = [line for line in block_lines]
-
-
-
-
-
-
-            if string=='ERROR':
-                block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
-            if string=='WARN':
-                for line in block_lines:
-                    #print line
-                    if 'WARNING' in line:
-                        block_lines.append(line.split('WARNING')[1])
-
-                    # elif 'WARN' in line:
-                    #     block_lines.append(line.split(string)[1])#Split by WARN
-                    # else:
-                    #     block_lines.append(line)
-
-
-
-
-
-
+            block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
             # Raw data to result file
             # Save to file block lines #
             if save_raw_data=='yes':
