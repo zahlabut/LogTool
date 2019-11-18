@@ -436,8 +436,7 @@ if __name__ == "__main__":
         statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
-                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep+'#'*20+'\n'+
-                               'Total Number of Errors/Warnings is:'+str(total_number_of_all_logs_errors)+'\n')
+                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep+'#'*20+'\n')
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
     #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
