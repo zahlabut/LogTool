@@ -290,7 +290,8 @@ try:
         start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
         start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
         if start_time_option[1]=='Custom':
-            print_in_color('Current date on Overcloud is: ' + com_result['Stdout'].strip(), 'blue')
+            com_result=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')
+            print_in_color('Current date on Undercloud is: ' + com_result['Stdout'].strip(), 'blue')
             print_in_color('Use the same date format as in previous output', 'blue')
             start_time = input('And enter your "since time" to extract log messages: ')
         if start_time_option[1]=='10 Minutes ago':
