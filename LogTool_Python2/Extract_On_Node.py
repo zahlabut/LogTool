@@ -70,7 +70,10 @@ def get_file_last_line(log, tail_lines='1'):
     if log.endswith('.gz'):
         return exec_command_line_command('zcat '+log+' | tail -'+tail_lines)['CommandOutput']
     else:
-        return exec_command_line_command('tail -'+tail_lines+' '+log)['CommandOutput']
+        if 'data' in exec_command_line_command('file '+log)['CommandOutput']:
+            return None #File is not a text file
+        else:
+            return exec_command_line_command('tail -'+tail_lines+' '+log)['CommandOutput']
 
 def print_in_color(string,color_or_format=None):
     string=str(string)
