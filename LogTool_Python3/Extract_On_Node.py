@@ -320,7 +320,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         command="grep -in -A7 -B2 '"+string_for_grep+"' "+log+" > grep.txt"
 
     if 'error' in string_for_grep.lower():
-        command+=';'+command.replace(string_for_grep, 'traceback')
+        command+=';'+command.replace(string_for_grep, 'traceback').replace('>','>>')
 
     print command
 
