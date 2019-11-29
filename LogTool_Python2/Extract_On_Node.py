@@ -297,8 +297,6 @@ def unique_list(lis):
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
-    #if 'error' in string_for_grep.lower():
-    #    string_for_grep+='\|traceback'
     unique_messages = []
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
@@ -306,6 +304,12 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         command = "zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" > grep.txt"
     else:
         command="grep -in -A7 -B2 '"+string_for_grep.lower()+"' "+log+" > grep.txt"
+
+    if 'error' in string_for_grep.lower():
+        command+=';'+command.replace(string_for_grep, 'traceback')
+
+    print command
+
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
