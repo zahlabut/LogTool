@@ -302,10 +302,14 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         os.remove('grep.txt')
     if log.endswith('.gz'):
         command = "zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" > grep.txt"
+        if 'error' in string_for_grep.lower():
+            command += ';' + command.replace(string_for_grep, 'traceback').replace('>', '>>')
+            command += ';'+'zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt'
     else:
         command="grep -in -A7 -B2 '"+string_for_grep.lower()+"' "+log+" > grep.txt"
-    if 'error' in string_for_grep.lower():
-        command+=';'+command.replace(string_for_grep, 'traceback').replace('>','>>')
+        if 'error' in string_for_grep.lower():
+            command += ';' + command.replace(string_for_grep, 'traceback').replace('>', '>>')
+            command += ';' + 'grep -in -E ^stderr: -A7 -B2 ' + log + ' >> grep.txt'
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
