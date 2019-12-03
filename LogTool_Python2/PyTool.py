@@ -94,7 +94,7 @@ try:
         fatal_lines=[]
         error_lines=[]
         failed_tasks=[]
-        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal']
+        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal','traceback']
         magic_dic_result = {}
         for word in magic_words:
             magic_dic_result[word] = []
