@@ -54,9 +54,7 @@ def remove_digits_from_string(s):
 
 def exec_command_line_command(command):
     try:
-        command_as_list = command.split(' ')
-        command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True)
         json_output = None
         try:
             json_output = json.loads(result.lower())
@@ -64,7 +62,7 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
+        return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def get_file_last_line(log, tail_lines='1'):
     if log.endswith('.gz'):
@@ -301,25 +299,25 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
     if log.endswith('.gz'):
-        command = "zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" > grep.txt"
+        commands = ["zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
         if 'error' in string_for_grep.lower():
-            command += ';' + command.replace(string_for_grep, 'traceback').replace('>', '>>')
-            command += ';'+'zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt'
+            commands.append("zgrep -in -A7 -B2 traceback " + log+" >> grep.txt")
+            commands.append('zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
     else:
-        command="grep -in -A7 -B2 '"+string_for_grep.lower()+"' "+log+" > grep.txt"
+        commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
         if 'error' in string_for_grep.lower():
-            command += ';' + command.replace(string_for_grep, 'traceback').replace('>', '>>')
-            command += ';' + 'grep -in -E ^stderr: -A7 -B2 ' + log + ' >> grep.txt'
+            commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
+            commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
-        command = "grep -n '" + string_for_grep + "' " + log + " > grep.txt"
+        commands = ["grep -n '" + string_for_grep + "' " + log + " > grep.txt"]
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        command = "grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"
-    command_result=exec_command_line_command(command)
+        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"]
+    command_result=exec_command_line_command(commands)
     if command_result['ReturnCode']==0:
         if '--\n' in open('grep.txt','r').read():
             content_as_list=open('grep.txt','r').read().split('--\n')
@@ -342,7 +340,9 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                         relevant_blocks.append(block)
                         break
     content_as_list=relevant_blocks
-    content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
+    #content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
+    content_as_list = [item[0:5000] + '.........LogTool - Line is to long to be printed here :-(' if len(
+        item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
