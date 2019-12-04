@@ -317,7 +317,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             string_for_grep = 'level=warn'
         command = "grep -n '" + string_for_grep + "' " + log + " > grep.txt"
     if 'consoleFull' in log:
-        string_for_grep=string_for_grep+'\|background:red'
+        string_for_grep=string_for_grep+'\|background:red\|fatal:'
         command = "grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
