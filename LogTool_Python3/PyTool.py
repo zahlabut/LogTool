@@ -170,14 +170,12 @@ try:
 
     if mode[1]=='Download OSP logs and run LogTool locally':
         # Start mode
-        options = ['ERROR', 'WARNING', 'Failed on deployment']
-        option=choose_option_from_list(options,'Please choose debug level or "Failed on deployment" option: ')
+        options = ['ERROR', 'WARNING']
+        option=choose_option_from_list(options,'Please choose debug level option: ')
         if option[1]=='ERROR':
             grep_string=' ERROR '
         if option[1]=='WARNING':
             grep_string=' WARNING '
-        if option[1]=='Failed on deployment':
-            grep_string='FAILED'
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
