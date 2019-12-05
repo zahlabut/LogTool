@@ -372,7 +372,6 @@ def parse_overcloud_install_log(log, string_for_grep):
 # signal.signal(signal.SIGALRM, analyze_log)
 # signal.alarm(3)
 
-
 if __name__ == "__main__":
     not_standard_logs=[]
     analyzed_logs_result=[]
