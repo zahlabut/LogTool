@@ -4,30 +4,19 @@ could probably be the "root cause" of problem you've encountered on your Setup a
 If that's the case, this tool will make your "life" much more easier, at least it will reduce the time you'll need to spent on "donkey work" to acomplish the same manually.
 This tool is a set of Python script and its main module is running on Undercloud host.
 There are also operation modes when additional scripts are executed directly on Overcloud nodes, for example: "Export ERRORs/WARNINGs from Overcloud logs"
-
 **Note**: there are two different versions available: LogTool_Python2 and LogTool_Python3, make sure to CD into the correct directory.
-
 # Operation modes
-
 **1) Export ERRORs/WARNINGs from Overcloud logs**
-
 This mode is used to extract all unique ERRORs/WARNINGs messages from Overcloud nodes, that took place some time ago.
-
 As user you'll be prompted to provide the "Since Time" and debug level that will be used for extraction: Errors or Warnings.
-
 For example, if something went wrong in the last 10 minutes you'll be able to extract Errors/Warnings messages for this time period only.
-
 This operation mode generates result directory containing result files per Overcloud node.
-
 Result file is a simple text file, that is coming compressed (*.gz) in order to reduce time needed for downloading from Overcloud node.
-
 Note: use "zcat" or any other tool to read/convert compressed file to a regular text file, BTW some of "vi" versions supports reading
 compressed data, so you can simply try and use "vi" to read the result file content.
-
 Result file is divided into sections and contains "Table of content" on the bottom.
 
 **Note:**
-
 There are two kinds of log files being detected by LogTool on the fly, "Standard" and "Not Standard" logs.
 "Standard" - each log's line has known and defined structure: timestamp, debug level, msg ...
 "Not Standard" - log's structure is unknown, it could be third parties logs for example.
