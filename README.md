@@ -40,8 +40,6 @@ In "Table of Content" you'll find: "Section name --> Line number" per section, f
 So the **first thing** you'll have to do, is scrolling down to the bottom of result file, to the "Table of content" and then passing through
 its sections (use line indexes mentioned in "Table of Content" to jump into relevant section), where: #3 #4 and #5 are most important.
 
-Follow "Table of content" at the end of the file to get sections' start line indexes.
-
 **2) Download all logs from Overcloud nodes**
 
 Logs from all Overcloud nodes will be compressed and downloaded to local directory on your Undercloud host.
