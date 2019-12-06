@@ -11,17 +11,37 @@ There are also operation modes when additional scripts are executed directly on 
 
 **1) Export ERRORs/WARNINGs from Overcloud logs**
 
-This mode exports all ERRORs/WARNINGs messages that occurred since given by user timestamp.
-For example, if something went wrong in the last 10 minutes you'll be able to run the tool for this time period only.
-This operation mode generates result file per Overcloud node with "Table of content (Section name --> Line number)",  where you'll find:
+This mode is used to extract all unique ERRORs/WARNINGs messages from Overcloud nodes, that took place some time ago.
+As user you'll be prompted to provide the "Since Time" and debug level that will be used for extraction: Errors or Warnings.
+For example, if something went wrong in the last 10 minutes you'll be able to extract Errors/Warnings messages for this time period only.
+This operation mode generates result directory containing result files per Overcloud node.
+Result file is a simple text file, that is coming compressed (*.gz) in order to reduce time needed for downloading from Overcloud node.
+Note: use "zcat" or any other tool to read/convert compressed file to a regular text file, BTW some of "vi" versions supports reading
+compressed data, so you can simply try and use "vi" to read the result file content.
+Result file is divided into sections and contains "Table of content" on the bottom.
+**Note:**
+There are two kinds of log files being detected by LogTool on the fly, "Standard" and "Not Standard" logs.
+"Standard" - each log's line has known and defined structure: timestamp, debug level, msg ...
+"Not Standard" - log's structure is unknown, it could be third parties logs for example.
+In "Table of Content" you'll find: "Section name --> Line number" per section, for example:
 1) Raw Data - extracted Errors/Warnings from standard OSP logs since: <Given Timestamp>
+   In this section you'll find all extracted Errors/Warnings messages as is without being modified or changed by LogTool.
+   Actually these messages are the "Raw Data" used by LogTool for "Fuzzy matching" analysis.
 2) Skipped logs - no debug level string (Error, Info, Debug...) has been detected
+   LogTool is trying to detect debug level string in log's lines, log file will be skipped if detection fails.
+   Actually, such kind of files are just having *.log file extension, but they are definitely not logs in term of log file definition.
 3) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
-4) Statistics - Unique(Fuzzy Matching per standard OSP log file since: <Given Timestamp>
+   In this section, you'll find the amount of Errors/Warnings per Standard log file, this may help you to understand
+   what could be potential component, to search for "Root Cause".
+4) Statistics - Unique messages, per STANDARD OSP log file since: <Given Timestamp>
+   In this section you'll find the unique Errors/Warnings messages since given by you timestamp.
+   For more details about each one of unique Error/Warning you can always search for the same message in "Raw Data" section.
 5) Statistics - Unique messages per NOT STANDARD log file, since ever
-
-
-Result file is created for each Overcloud node and "Statistic sections" are generated in it.
+   In this section you'll find the unique messages per not standard log files, unfortunately LogTool cannot handle such
+   log files in the same manner as standard Log files, therefor "Since Time" provided by you on extraction, will be ignored and
+   you'll see all the unique Errors/Warnings messages since ever.
+So the **FIRST THING** you'll have to do, is scrolling down to the bottom of result file, to the "Table of content" and then passing through
+its sections (use line indexes mentioned in "Table of Content" to jump into relevant section), where: #3 #4 and #5 are most important.
 
 Follow "Table of content" at the end of the file to get sections' start line indexes.
 

@@ -436,7 +436,7 @@ if __name__ == "__main__":
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
     #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep+'#'*20+'\n')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
     for item in analyzed_logs_result:
         #print 'LogPath --> '+item['Log']
         for block in item['AnalyzedBlocks']:
@@ -500,7 +500,7 @@ if __name__ == "__main__":
         'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
         'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
-        'Statistics - Unique(Fuzzy Matching per standard OSP log file since: '+time_grep,
+        'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
         'Statistics - Unique messages per NOT STANDARD log file, since ever',
         #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
         ]
