@@ -5,7 +5,7 @@ an easy stuff, especially when you don't even know which area could have cause t
 If that's the case, LogTool will make your "life" much more easier!
 It will save your time and "donkey work" needed for manually investigation.
 Basing on fuzzy string matching algorithm, LogToll will provide you all the unique Errors/Warnings messages occurred in the past,
-in addition to that, basing on timestamp logged in log's lines, LogTool will apply you to "export" such messages for
+in addition to that, basing on timestamp logged in log's lines, LogTool applying you to "export" such messages for
 particular time period in the past, for example: 10 minutes ago, hour ago a day ago e.t.c.
 LogTool is a set of Python scripts, its main module PyTool.py is executed on Undercloud host.
 Some operation modes are using additional scripts being executed directly on Overcloud nodes, for example:
