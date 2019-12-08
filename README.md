@@ -9,7 +9,8 @@ in addition to that, basing on timestamp logged in log's lines, LogTool will app
 particular time period in the past, for example: 10 minutes ago, hour ago a day ago e.t.c.
 LogTool is a set of Python scripts, its main module PyTool.py is executed on Undercloud host.
 Some operation modes are using additional scripts being executed directly on Overcloud nodes, for example:
-"Export ERRORs/WARNINGs from Overcloud logs"
+"Export ERRORs/WARNINGs from Overcloud logs".
+
 **Note**: LogTool supports Python V2 and V3, change working directory according to your needs: LogTool_Python2 or LogTool_Python3.
 
 # Operation modes
