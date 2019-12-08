@@ -1,10 +1,17 @@
 # General
-It's not an easy stuff to pass through OSP logs and to find out the particular ERROR/WARNING message that
-could probably be the "root cause" of problem you've encountered on your Setup and might want to investigate.
-If that's the case, this tool will make your "life" much more easier, at least it will reduce the time you'll need to spent on "donkey work" to acomplish the same manually.
-This tool is a set of Python script and its main module is running on Undercloud host.
-There are also operation modes when additional scripts are executed directly on Overcloud nodes, for example: "Export ERRORs/WARNINGs from Overcloud logs"
-**Note**: there are two different versions available: LogTool_Python2 and LogTool_Python3, make sure to CD into the correct directory.
+Openstack has a bunch of log files existing and managed on its Overcloud nodes and Undercloud host.
+Therefore, when you encountering into some problem and might want to investigate it basing on OSP log files, it's
+so easy stuff to accomplish that, especially when you don't even know which area could have cause to that problem.
+If that's the case, LogTool will make your "life" much more easier!
+It will save your time and "donkey work" needed for manually investigation.
+Basing on fuzzy string matching algorithm, LogToll will provide you all the unique Errors/Warnings messages occurred in the past,
+in addition to that, basing on timestamp logged in log's lines, LogTool will apply you to "export" such messages for
+particular time period in the past, for example: 10 minutes ago, hour ago a day ago e.t.c.
+LogTool is a set of Python scripts, its main module PyTool.py is executed on Undercloud host.
+Some operation modes are using additional scripts being executed directly on Overcloud nodes, for example:
+"Export ERRORs/WARNINGs from Overcloud logs"
+**Note**: LogTool supports Python V2 and V3, change working directory according to your needs: LogTool_Python2 or LogTool_Python3.
+
 # Operation modes
 **1) Export ERRORs/WARNINGs from Overcloud logs**
 This mode is used to extract all unique ERRORs/WARNINGs messages from Overcloud nodes, that took place some time ago.
