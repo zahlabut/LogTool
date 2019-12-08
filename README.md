@@ -1,7 +1,7 @@
 # General
 Openstack has a bunch of log files existing and managed on its Overcloud nodes and Undercloud host.
-Therefore, when you encountering into some problem and might want to investigate it basing on OSP log files, it's
-so easy stuff to accomplish that, especially when you don't even know which area could have cause to that problem.
+Therefore, when you encountering into some problem and might want to investigate it basing on OSP log files, it's not
+an easy stuff, especially when you don't even know which area could have cause to that problem.
 If that's the case, LogTool will make your "life" much more easier!
 It will save your time and "donkey work" needed for manually investigation.
 Basing on fuzzy string matching algorithm, LogToll will provide you all the unique Errors/Warnings messages occurred in the past,
