@@ -491,7 +491,7 @@ try:
         nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
         print_in_color("1) You can use special characters in your string"
                        "\n2) Ignore case sensitive flag is used by default"
-                       "\n3) It's possible to use additional grep flags, for example '^a' to grep all lines started wit 'a' character",'yellow')
+                       "\n3) It's possible to use additional grep flags, for example '-e ^a' to grep all lines started with 'a' character",'yellow')
         string_to_grep = "'"+raw_input('Please enter your string to grep: ')+"'"
         start_time = time.time()
         result_dir='All_Greped_Strings'
