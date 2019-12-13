@@ -121,7 +121,8 @@ For best performance my suggestion is to use FuzzyWuzzy, follow "Install FuzzyWu
 This module is used in #11 and #13 modes only, where Log files are downloaded using HTTP and it's used to parse the Artifacts HTML
 page to get all links in it. Follow "Install BeautifulSoup" section to install it
 
-**Note**: you can also use "requirements.txt" file to install all the required moduls, by executing:
+**Note**: you can also use "requirements.txt" file to install all the required modules, by executing:
+
     pip install -r requirements.txt
 
 # Configuration
