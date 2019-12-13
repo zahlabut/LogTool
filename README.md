@@ -92,6 +92,13 @@ problem is that such logs are not "friendly" and it's hard to understand what ex
 when verbosity is set to "vv" or more, this will make the log not readable with a bunch of data inside it.
 This mode will provide you some details about all failed TASKs.
 
+**13) Analyze Gerrit(Zuul) failed gate logs**
+
+This mode is used to analyze Gerrit(Zuul) log files.
+It will automatically download all files from remote Gerrit gate (HTTP download) and analyze all
+files locally.
+
+
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud** host with:
 

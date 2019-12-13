@@ -79,9 +79,108 @@ try:
            'Extract NEW (DELTA) messages from Overcloud',
            'Download OSP logs and run LogTool locally',
            'Undercloud - analyze Ansible Deployment log',
+           'Analyze Gerrit(Zuul) failed gate logs',
            '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+    if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
+        # Make sure that BeutifulSoup is installed
+        try:
+            from bs4 import BeautifulSoup
+        except Exception as e:
+            print_in_color(str(e), 'red')
+            print_in_color('Execute "sudo yum install python3-setuptools" to install pip3', 'yellow')
+            print_in_color('Execute "pip3 install beautifulsoup4 --user" to install it!', 'yellow')
+            exit('Install beautifulsoup and rerun!')
+        # Make sure that requests is installed
+        try:
+            import requests
+        except Exception as e:
+            print_in_color(str(e), 'red')
+            print_in_color('Execute "pip3 install requests --user" to install it!', 'yellow')
+            exit('Install requests and rerun!')
+
+        # Function to receive all Urls recursively, works slow :(
+        listUrl = []
+        checked_urls=[]
+        def recursiveUrl(url):
+            if url in checked_urls:
+                return 1
+            checked_urls.append(url)
+            headers = {'Accept-Encoding': 'gzip'}
+            try:
+                page = requests.get(url, headers=headers)
+                soup = BeautifulSoup(page.text, 'html.parser')
+                links = soup.find_all('a')
+                # links=decompresse_data(links)
+                links = [link for link in links if 'href="' in str(links) if '<a href=' in str(link) if
+                         link['href'] != '../']
+            except Exception as e:
+                print(e)
+                links=None
+            if links is None or len(links) == 0:
+                listUrl.append(url)
+                print(url)
+                return 1;
+            else:
+                listUrl.append(url)
+                print(url)
+                for link in links:
+                    # print(url+link['href'][1:])
+                    recursiveUrl(url + link['href'][0:])
+
+        # Start mode
+        options = ['ERROR', 'WARNING']
+        option=choose_option_from_list(options,'Please choose debug level option: ')
+        if option[1]=='ERROR':
+            grep_string=' ERROR '
+        if option[1]=='WARNING':
+            grep_string=' WARNING '
+        destination_dir='Zuul_Log_Files'
+        destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+        zuul_log_url=input("Please enter Log URL, open failed gate, then you'll find it under Summary section in 'log_url':")
+        mode_start_time = time.time()
+        if '//storage' in zuul_log_url:
+            # spec_print(['Warning - "wget -r" (recursively) cannot be used','This storage server is always responding with "gzip" content',
+            #             'causing wget to download index.html only (as gzip compressed file)','Python will be used instead to export all Urls recursievly',
+            #             'works a bit slow :-('],'yellow')
+            recursiveUrl(zuul_log_url)
+            for link in listUrl:
+                #if link.endswith('log.txt.gz'):
+                save_to_path=os.path.join(destination_dir,link.replace('https://','').replace('http://',''))
+                exec_command_line_command('wget -P '+save_to_path+' '+link)
+        else:
+            # Download  Zuul log files with Wget
+            user_agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            download_command='wget --random-wait '+'"'+user_agent+'"'+' -r --no-parent -e robots=off -P '+destination_dir+' '+zuul_log_url
+            return_code=exec_command_line_command(download_command)
+            #if return_code['ReturnCode']!=0:
+            #    print_in_color('Failed to download Zuul logs!', 'red')
+
+        # Run LogTool analyzing
+        print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
+        result_dir='Gerrit_Failed_Gate_'+grep_string.replace(' ','')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
+        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file+" yes 'Analyze Gerrit(Zuul) failed gate logs'"
+        #shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
+        print_in_color('\n --> '+command,'bold')
+        start_time=time.time()
+        com_result=exec_command_line_command(command)
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
 
     if mode[1] == 'Undercloud - analyze Ansible Deployment log':
         from Extract_On_Node import *
@@ -194,7 +293,7 @@ try:
                 print_in_color('Execute "sudo yum install python3-setuptools" to install pip3', 'yellow')
                 print_in_color('Execute "pip3 install beautifulsoup4" to install it!', 'yellow')
                 exit('Install beautifulsoup and rerun!')
-            artifacts_url = input('Copy and paste Jenkins URL to to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
+            artifacts_url = input('Copy and paste Jenkins URL to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
             mode_start_time=time.time()
             response = urllib.request.urlopen(artifacts_url)
             html = response.read()

@@ -47,6 +47,11 @@ try:
     save_raw_data=sys.argv[5]
 except:
     save_raw_data='yes'
+# Operation mode #
+try:
+    operation_mode=sys.argv[6]
+except:
+    operation_mode='None'
 
 
 def remove_digits_from_string(s):
@@ -66,7 +71,11 @@ def exec_command_line_command(command):
 
 def get_file_last_line(log, tail_lines='1'):
     if log.endswith('.gz'):
-        return exec_command_line_command('zcat '+log+' | tail -'+tail_lines)['CommandOutput']
+        try:
+            return exec_command_line_command('zcat '+log+' | tail -'+tail_lines)['CommandOutput']
+        except Exception,e:
+            print e
+            return  ''
     else:
         if 'data' in exec_command_line_command('file '+log)['CommandOutput']:
             return '' #File is not a text file
@@ -119,6 +128,8 @@ def collect_log_paths(log_root_path):
                 if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
                     if 'Jenkins_Job_Files' in file_abs_path:
                         to_add = True
+                    if 'Zuul_Log_Files' in file_abs_path:
+                        to_add=True
                 if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
                     to_add = True
                 for item in not_supported_logs:
@@ -127,6 +138,9 @@ def collect_log_paths(log_root_path):
                         break
                 if to_add==True:
                     logs.append(file_abs_path)
+            if operation_mode=='Analyze Gerrit(Zuul) failed gate logs':
+                file_abs_path = os.path.join(os.path.abspath(root), name)
+                logs.append(file_abs_path)
     logs=list(set(logs))
     if len(logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)

@@ -207,6 +207,3 @@ def check_time(time_string):
 def download_jenkins_job_logs(node_names_list,url):
     response = urllib2.urlopen(url)
     html= response.read(url)
-
-
-
