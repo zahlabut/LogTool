@@ -505,7 +505,7 @@ try:
             print s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py')
             print s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Grep_String.py')
             command='sudo ' + overcloud_home_dir + 'Grep_String.py ' + overcloud_logs_dir + ' ' + string_to_grep + ' ' + output_greps_file
-            print command
+            print_in_color(command,'bold')
             s.ssh_command(command)
             print s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(result_dir), output_greps_file))
             # Clean all #

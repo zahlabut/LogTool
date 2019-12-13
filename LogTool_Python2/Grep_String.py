@@ -66,7 +66,7 @@ if __name__ == "__main__":
             command = "zgrep -in '"+string_for_grep+"' "+log
         else:
             command = "grep -in '"+string_for_grep+"' "+log
-        #print command
+        print command
         com_result=exec_command_line_command(command)
         if com_result['ReturnCode']==0:
             append_to_file(output_greps_file,'\n'+'#'*20+log+'#'*20+'\n'+com_result['CommandOutput'])
