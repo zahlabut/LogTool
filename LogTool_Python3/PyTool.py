@@ -69,7 +69,7 @@ try:
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
            'Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud nodes',
-           '"Grep" some string for all Overcloud logs',
+           '"Grep" some string on all Overcloud logs',
            'Check current:CPU,RAM and Disk on Overcloud',
            "Execute user's script",
            'Download "relevant logs" only, by given timestamp',
@@ -265,7 +265,6 @@ try:
         for t in failed_tasks:
             print_in_color(t, 'bold')
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
-
 
     if mode[1]=='Download OSP logs and run LogTool locally':
         # Start mode
@@ -491,7 +490,7 @@ try:
                 print_in_color('Failed with: '+str(e))
         spec_print(['Completed!!!', 'Execution Time: ' + str(time.time() - start_time) + '[sec]'],'bold')
 
-    if mode[1]=='"Grep" some string for all Overcloud logs':
+    if mode[1]=='"Grep" some string on all Overcloud logs':
         ### Get all nodes ###
         nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
         nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
