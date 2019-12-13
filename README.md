@@ -118,9 +118,11 @@ This module is not mandatory, as Python has its own built in module that is used
 For best performance my suggestion is to use FuzzyWuzzy, follow "Install FuzzyWuzzy" section if you find it relevant.
 
 3)_BeautifulSoup_ - HTML parser
-This module is used in #11 only, where Log files are downloaded using HTTP and it's used to parse the Artifacts HTML
+This module is used in #11 and #13 modes only, where Log files are downloaded using HTTP and it's used to parse the Artifacts HTML
 page to get all links in it. Follow "Install BeautifulSoup" section to install it
 
+** Note **: you can also use "requirements.txt" file to install all the required moduls, by executing:
+"pip install -r requirements.txt"
 
 # Configuration
 All required parameters are set directly inside PyTool.py script, defaults are:
