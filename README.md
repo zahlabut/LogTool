@@ -122,7 +122,7 @@ This module is used in #11 and #13 modes only, where Log files are downloaded us
 page to get all links in it. Follow "Install BeautifulSoup" section to install it
 
 **Note**: you can also use "requirements.txt" file to install all the required moduls, by executing:
-"pip install -r requirements.txt"
+    pip install -r requirements.txt
 
 # Configuration
 All required parameters are set directly inside PyTool.py script, defaults are:
