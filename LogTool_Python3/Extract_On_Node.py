@@ -159,6 +159,7 @@ def collect_log_paths(log_root_path):
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
 
+
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
     f.write('')
