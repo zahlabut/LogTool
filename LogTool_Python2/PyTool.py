@@ -110,10 +110,10 @@ try:
             page = requests.get(url)
             try:
                 soup = BeautifulSoup(page.text)
+                links = soup.findAll('a', recursive=True)
             except Exception, e:
                 print e
                 return 1
-            links = soup.findAll('a', recursive=True)
             if links is None or len(links) == 0:
                 listUrl.append(url)
                 print(url)
@@ -123,6 +123,8 @@ try:
                 print(url)
                 for link in links:
                     # print(url+link['href'][1:])
+                    print url
+                    #print links
                     recursiveUrl(url + link['href'][0:])
 
         # Start mode
