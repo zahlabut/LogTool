@@ -84,7 +84,11 @@ try:
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
+
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
+        wget_exists=exec_command_line_command('wget -h')
+        if wget_exists['ReturnCode']!=0:
+            exit('WGET tool is not installed on your host, please install and rerun this operation mode')
         # Make sure that BeutifulSoup is installed
         try:
             from bs4 import BeautifulSoup
@@ -267,6 +271,9 @@ try:
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
     if mode[1]=='Download Jenkins Job logs and run LogTool locally':
+        wget_exists=exec_command_line_command('wget -h')
+        if wget_exists['ReturnCode']!=0:
+            exit('WGET tool is not installed on your host, please install and rerun this operation mode')
         # Start mode
         options = ['ERROR', 'WARNING']
         option=choose_option_from_list(options,'Please choose debug level option: ')
