@@ -77,7 +77,7 @@ try:
            'Overcloud - check Unhealthy dockers',
            'Extract all logs messages for given time range',
            'Extract NEW (DELTA) messages from Overcloud',
-           'Download OSP logs and run LogTool locally',
+           'Download Jenkins Job logs and run LogTool locally',
            'Undercloud - analyze Ansible Deployment log',
            'Analyze Gerrit(Zuul) failed gate logs',
            '--- Install Python FuzzyWuzzy on Nodes ---',
@@ -266,7 +266,7 @@ try:
             print_in_color(t, 'bold')
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
-    if mode[1]=='Download OSP logs and run LogTool locally':
+    if mode[1]=='Download Jenkins Job logs and run LogTool locally':
         # Start mode
         options = ['ERROR', 'WARNING']
         option=choose_option_from_list(options,'Please choose debug level option: ')

@@ -15,12 +15,12 @@ not_supported_logs=['cinder-rowsflush.log','redis.log','dnsmasq.log']
 try:
     time_start=sys.argv[1].strip()
 except:
-    time_start='2018-10-02 00:04:00'
+    time_start='2018-11-06 00:00:53'
 # Time end #
 try:
     time_end=sys.argv[2].strip()
 except:
-    time_end='2018-10-02 01:04:00'
+    time_end='2018-11-06 00:00:56'
 # Log path #
 try:
     log_root_dir=sys.argv[3].strip()
