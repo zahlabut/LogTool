@@ -135,11 +135,27 @@ class SSH():
     def ssh_close(self):
         self.client.close()
 
+# def exec_command_line_command(command):
+#     try:
+#         command_as_list = command.split(' ')
+#         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
+#         result = subprocess.check_output(command, shell=True)
+#         json_output = None
+#         try:
+#             json_output = json.loads(result.lower())
+#         except:
+#             pass
+#         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
+#     except subprocess.CalledProcessError as e:
+#         print_in_color(str(e),'red')
+#         return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
+
 def exec_command_line_command(command):
     try:
+        print_in_color('--> '+command, 'blue')
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True)
         json_output = None
         try:
             json_output = json.loads(result.lower())
@@ -147,7 +163,8 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        print_in_color(str(e),'red')
+        print_in_color(command,'red')
+        print_in_color(e.output, 'red')
         return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def spec_print(string_list,color=None):

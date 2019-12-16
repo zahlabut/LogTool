@@ -8,11 +8,11 @@ import threading
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
-git_command='cd '+cur_dir+'; git pull --dry-run'
-git_command='git pull --dry-run'
-print(git_command)
-git_result=exec_command_line_command(git_command)
-print (git_result)
+git_command='cd '+cur_dir+'; git pull --dry-run > git_status.txt'
+
+### Check if updated LogTool is available ###
+cur_dir=os.path.abspath('')
+git_result=exec_command_line_command('cd '+cur_dir+'; git pull --dry-run')
 if git_result['CommandOutput']!='':
     spec_print(["-------Important-------","New LogTool version is available","Use 'git pull' command to upgrade!"],'yellow')
 
