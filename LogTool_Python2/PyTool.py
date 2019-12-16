@@ -8,9 +8,9 @@ import threading
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
-git_result=exec_command_line_command('cd '+cur_dir+'; git status')
-if "Your branch is up to date with 'origin/master" not in git_result['CommandOutput']:
-    print_in_color('Updated LogTool version is available, use "git pull" to upgrade!','yellow')
+git_result=exec_command_line_command('cd '+cur_dir+'; git pull --dry-run')
+if git_result['CommandOutput']==None:
+    spec_print(["-------Important-------","New LogTool version is available","Use 'git pull' command to upgrade!"],'yellow')
 
 # Ignore Ctrl+Z if pressed #
 def handler(signum, frame):
