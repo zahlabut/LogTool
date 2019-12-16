@@ -13,6 +13,8 @@ if "Your branch is up to date with 'origin/master" not in git_result['CommandOut
     print_in_color('Updated LogTool version is available, use "git pull" to upgrade!','yellow')
 
 
+
+
 # Ignore Ctrl+Z if pressed #
 def handler(signum, frame):
     print 'Ctrl+Z pressed, but ignored'
