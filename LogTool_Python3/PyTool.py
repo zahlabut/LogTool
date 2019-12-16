@@ -17,7 +17,6 @@ if git_result['CommandOutput']!='':
     spec_print(["-------Important-------","New LogTool version is available","Use 'git pull' command to upgrade!"],'yellow')
 
 
-
 # # Ignore Ctrl+Z if pressed #
 # def handlROR
 #     print('Ctrl+Z pressed, but ignored')
