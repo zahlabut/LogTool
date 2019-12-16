@@ -346,11 +346,13 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         if 'error' in string_for_grep.lower():
             commands.append("zgrep -in -A7 -B2 traceback " + log+" >> grep.txt")
             commands.append('zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
+            commands.append('zgrep -n STDERR -A7 -B2 ' + log + ' >> grep.txt')
     else:
         commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
         if 'error' in string_for_grep.lower():
             commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
             commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
+            commands.append('grep -n STDERR -A7 -B2 ' + log + ' >> grep.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
