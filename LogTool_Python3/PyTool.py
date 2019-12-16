@@ -6,6 +6,11 @@ import random
 import datetime
 import threading
 
+### Check if updated LogTool is available ###
+cur_dir=os.path.abspath('')
+git_result=exec_command_line_command('cd '+cur_dir+'; git status')
+if "Your branch is up to date with 'origin/master" not in git_result['CommandOutput']:
+    print_in_color('Updated LogTool version is available, use "git pull" to upgrade!','yellow')
 
 # # Ignore Ctrl+Z if pressed #
 # def handlROR
@@ -117,7 +122,6 @@ try:
                 page = requests.get(url, headers=headers)
                 soup = BeautifulSoup(page.text, 'html.parser')
                 links = soup.find_all('a')
-                # links=decompresse_data(links)
                 links = [link for link in links if 'href="' in str(links) if '<a href=' in str(link) if
                          link['href'] != '../']
             except Exception as e:
@@ -131,7 +135,6 @@ try:
                 listUrl.append(url)
                 print(url)
                 for link in links:
-                    # print(url+link['href'][1:])
                     recursiveUrl(url + link['href'][0:])
 
         # Start mode

@@ -6,6 +6,12 @@ import signal
 import datetime
 import threading
 
+### Check if updated LogTool is available ###
+cur_dir=os.path.abspath('')
+git_result=exec_command_line_command('cd '+cur_dir+'; git status')
+if "Your branch is up to date with 'origin/master" not in git_result['CommandOutput']:
+    print_in_color('Updated LogTool version is available, use "git pull" to upgrade!','yellow')
+
 
 # Ignore Ctrl+Z if pressed #
 def handler(signum, frame):
@@ -64,6 +70,8 @@ def run_on_node(node):
     except Exception, e:
         spec_print('Failed on node:' + str(node)+'with: '+str(e))
 
+
+
 try:
     ### Operation Modes ###
     #spec_print(['------------- ACHTUNG!!! -------------','By default LogTool is configured for OSP14','"/var/log/containers" is used by default','Change PyTool.py configuration if needed!'],'yellow')
@@ -106,14 +114,20 @@ try:
 
         # Function to receive all Urls recursively, works slow :(
         listUrl = []
+        checked_urls = []
         def recursiveUrl(url):
-            page = requests.get(url)
+            if url in checked_urls:
+                return 1
+            checked_urls.append(url)
             try:
+                page = requests.get(url)
                 soup = BeautifulSoup(page.text)
                 links = soup.findAll('a', recursive=True)
+                links = [link for link in links if 'href="' in str(links) if '<a href=' in str(link) if
+                         link['href'] != '../']
             except Exception, e:
                 print e
-                return 1
+                links = None
             if links is None or len(links) == 0:
                 listUrl.append(url)
                 print(url)
@@ -122,9 +136,6 @@ try:
                 listUrl.append(url)
                 print(url)
                 for link in links:
-                    # print(url+link['href'][1:])
-                    print url
-                    #print links
                     recursiveUrl(url + link['href'][0:])
 
         # Start mode
