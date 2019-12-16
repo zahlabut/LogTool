@@ -18,6 +18,7 @@ if git_result['CommandOutput']!='':
 #     print('Use Ctrl+C to stop execution!')
 # signal.signal(signal.SIGTSTP, handler)
 
+
 # Parameters #
 overcloud_logs_dir = '/var/log'
 overcloud_ssh_user = 'heat-admin'
