@@ -7,7 +7,13 @@ import datetime
 import threading
 
 ### Check if updated LogTool is available ###
+
+print(exec_command_line_command('date'))
+
+
 cur_dir=os.path.abspath('')
+
+
 git_command='cd '+cur_dir+'; git pull --dry-run > git_status.txt'
 
 ### Check if updated LogTool is available ###
