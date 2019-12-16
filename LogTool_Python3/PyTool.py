@@ -153,7 +153,7 @@ try:
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-        zuul_log_url=input("Please enter Log URL, open failed gate, then you'll find it under Summary section in 'log_url':")
+        zuul_log_url=input("Please enter Log URL, open failed gate, then you'll find it under Summary section in 'log_url'\nYour URL: ")
         mode_start_time = time.time()
         if '//storage' in zuul_log_url:
             # spec_print(['Warning - "wget -r" (recursively) cannot be used','This storage server is always responding with "gzip" content',
@@ -167,7 +167,7 @@ try:
         else:
             # Download  Zuul log files with Wget
             user_agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-            download_command='wget --random-wait '+'"'+user_agent+'"'+' -r --no-parent -e robots=off -P '+destination_dir+' '+zuul_log_url
+            download_command='wget -r --random-wait '+'"'+user_agent+'"'+' --no-parent -e robots=off -P '+destination_dir+' '+zuul_log_url
             return_code=exec_command_line_command(download_command)
             #if return_code['ReturnCode']!=0:
             #    print_in_color('Failed to download Zuul logs!', 'red')

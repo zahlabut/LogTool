@@ -140,7 +140,15 @@ def collect_log_paths(log_root_path):
                     logs.append(file_abs_path)
             if operation_mode=='Analyze Gerrit(Zuul) failed gate logs':
                 file_abs_path = os.path.join(os.path.abspath(root), name)
-                logs.append(file_abs_path)
+
+                file_name=(os.path.basename(file_abs_path))
+                if file_name.endswith('.txt.gz') and 'conf' not in file_name.lower():
+                    logs.append(file_abs_path)
+
+
+
+
+
     logs=list(set(logs))
     if len(logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
