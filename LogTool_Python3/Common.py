@@ -138,25 +138,11 @@ class SSH():
     def ssh_close(self):
         self.client.close()
 
-# def exec_command_line_command(command):
-#     try:
-#         command_as_list = command.split(' ')
-#         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-#         result = subprocess.check_output(command, shell=True, encoding='UTF-8')
-#         json_output = None
-#         try:
-#             json_output = json.loads(result.lower())
-#         except:
-#             pass
-#         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
-#     except subprocess.CalledProcessError as e:
-#         return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
-
 def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = str(subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True))
+        result = subprocess.check_output(command, shell=True, encoding='UTF-8', stderr=subprocess.STDOUT, stdin=True)
         json_output = None
         try:
             json_output = json.loads(result.lower())
