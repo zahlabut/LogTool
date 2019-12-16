@@ -12,9 +12,6 @@ git_result=exec_command_line_command('cd '+cur_dir+'; git status')
 if "Your branch is up to date with 'origin/master" not in git_result['CommandOutput']:
     print_in_color('Updated LogTool version is available, use "git pull" to upgrade!','yellow')
 
-
-
-
 # Ignore Ctrl+Z if pressed #
 def handler(signum, frame):
     print 'Ctrl+Z pressed, but ignored'
