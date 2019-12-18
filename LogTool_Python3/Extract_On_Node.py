@@ -52,9 +52,14 @@ try:
 except:
     operation_mode='None'
 
+# String to ignore for Not Standard Log files
+ignore_strings=['completed with no errors','program: Errors behavior:',
+                    'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
+                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ']
+
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
-    return s.translate(remove_digits)
+    return str(s).translate(remove_digits)
 
 # def exec_command_line_command(command):
 #     try:
@@ -120,10 +125,10 @@ def print_in_color(string,color_or_format=None):
         print(string)
 
 def similar(a, b):
-    if fuzzy_installed==True:
-        return fuzz.ratio(remove_digits_from_string(str(a)),remove_digits_from_string(str(b)))/100.0
-    else:
-        return difflib.SequenceMatcher(None, remove_digits_from_string(str(a)), remove_digits_from_string(str(b))).ratio()
+    # if fuzzy_installed==True:
+    #     return fuzz.ratio(remove_digits_from_string(a), remove_digits_from_string(b)) / 100.0
+    # else:
+    return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
 
 def to_ranges(iterable):
     iterable = sorted(set(iterable))
@@ -158,7 +163,6 @@ def collect_log_paths(log_root_path):
     if len(logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return logs
-
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -336,6 +340,14 @@ def parse_rabbit_log(log,string_for_grep):
             unique_messages.append(block)
     return {log:unique_messages}
 
+#This function is used for Non Standard logs only
+def ignore_block(block, ignore_strings=ignore_strings,line_index=2): # Index 2 means line number 3 in Block
+    line=block_lines=block.splitlines()[line_index]
+    for string in ignore_strings:
+        if string.lower() in line.lower():
+            return True
+    return False
+
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
@@ -346,13 +358,13 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         if 'error' in string_for_grep.lower():
             commands.append("zgrep -in -A7 -B2 traceback " + log+" >> grep.txt")
             commands.append('zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
-            commands.append('zgrep -n STDERR -A7 -B2 ' + log + ' >> grep.txt')
+            commands.append('zgrep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
     else:
         commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
         if 'error' in string_for_grep.lower():
             commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
             commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
-            commands.append('grep -n STDERR -A7 -B2 ' + log + ' >> grep.txt')
+            commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -363,31 +375,29 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
         commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"]
     command_result=exec_command_line_command(commands)
+
+    # Read grep.txt and create list of blocks
     if command_result['ReturnCode']==0:
         if '--\n' in open('grep.txt','r').read():
-            content_as_list=open('grep.txt','r').read().split('--\n')
+            list_of_blocks=open('grep.txt','r').read().split('--\n')
         else:
-            content_as_list = open('grep.txt', 'r').read().split('\n')
+            list_of_blocks = [open('grep.txt', 'r').read()]
     else: #grep.txt is empty
         return {log: unique_messages}
-    #Filter out all errors and warnings string that appears somewhere in line and not in first 100 characters
-    relevant_blocks=[]
-    for block in content_as_list:
-        block_lines=block.split('\n')
-        for line in block_lines:
-            if '\|' not in string_for_grep:
-                if 0<line.lower().find(string_for_grep.lower())<100:
+    # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
+    relevant_blocks = []
+    third_lines = []
+    for block in list_of_blocks:
+        block_lines=block.splitlines()
+        if len(block_lines)>=3:# Do nothing if len of blocks is less than 3
+            third_line=remove_digits_from_string(block_lines[2])
+            if ignore_block(block)==False:
+                if third_line not in third_lines:
+                    third_lines.append(third_line)
                     relevant_blocks.append(block)
-                    break
-            else:
-                for string in string_for_grep.split('\|'):
-                    if line.lower().find(string.lower()):
-                        relevant_blocks.append(block)
-                        break
-    content_as_list=relevant_blocks
-    #content_as_list = [item[0:item.find(string_for_grep)+len(string_for_grep)]+'.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
-    content_as_list = [item[0:5000] + '.........LogTool - Line is to long to be printed here :-(' if len(
-        item) > 5000 else item.strip() for item in content_as_list]  # If line is bigger than 5000 cut it
+    # Pass through block's line and split those whos bigger than 5000 characters
+    content_as_list = [item[0:5000] + '.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in relevant_blocks]  # If line is bigger than 5000 cut it
+    # Run fuzzy match
     for block in content_as_list:
         to_add=True
         for key in unique_messages:
