@@ -244,7 +244,7 @@ try:
 
             unique_errors_list=unique_list(lines_to_unique)
             for item in unique_errors_list:
-                append_to_file('-'*100+'\n'+item)
+                append_to_file(result_file,'-'*100+'\n'+item)
 
 
             if ' ERROR ' in line and line not in error_lines:
