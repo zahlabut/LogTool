@@ -215,40 +215,31 @@ try:
 
 
         lines_to_unique=[]
-
-
+        append_to_file(result_file,'#'*40+' Raw Data Lines '+'#'*40+'\n')
         for line in data:
             # Print some lines that might be relevant #
             words = [' error:', ' error ', ' failed:', ' failed ', ' fatal ', ' fatal:']
             for w in words:
                 if w in line.lower():
 
-                    #append_to_file(result_file, '_'*200+'\n')
-                    #append_to_file(result_file,'Detected string is: "'+w+'"\n')
+                    append_to_file(result_file, '_'*200+'\n')
+                    append_to_file(result_file,'Detected string is: "'+w+'"\n')
 
 
 
 
                     w_index=line.find(w)
                     if len(line) < 5000:
-                        #append_to_file(result_file, line+'\n')
+                        append_to_file(result_file, line+'\n')
                         lines_to_unique.append('Detected string is: "' + w + '"\n' + line + '\n')
                     else:
                         if w_index+1000<len(line):
                             lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
-                            #append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
+                            append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
                         else:
-                            #append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
+                            append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
                             lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
                     break
-
-            unique_errors_list=unique_list_by_fuzzy(lines_to_unique,0.6)
-
-
-
-            for item in unique_errors_list:
-                append_to_file(result_file,'-'*100+'\n'+item)
-
 
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
@@ -265,6 +256,16 @@ try:
                 failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
                 if len(failed_task)!=0:
                     failed_tasks.append(failed_task)
+
+
+        # Print unique list into result file
+        append_to_file(result_file, '\n' * 10 + '#' * 7 + ' Unique "problematical" lines ' + '#' * 7 + '\n')
+        unique_errors_list = unique_list_by_fuzzy(lines_to_unique, 0.5)
+        for item in unique_errors_list:
+            append_to_file(result_file, '-' * 100 + '\n' + item)
+
+
+
         for line in lines_to_analyze:
             line = line.split('\\n')
             for item in line:
@@ -288,7 +289,7 @@ try:
                     append_to_file(result_file,v+'\n')
         append_to_file(result_file, '\n\n\n' + '*' * 7 + ' Failed_Tasks: ' + '*' * 7)
         write_list_to_file(result_file, failed_tasks, False)
-        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###\n\n\n')
+        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###')
         print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
         for f in fatal_lines:
             print_in_color(f,'bold')
@@ -298,6 +299,9 @@ try:
         print_in_color('\n\n\n####### Detected failed TASKs: #######', 'red')
         for t in failed_tasks:
             print_in_color(t, 'bold')
+        append_to_file(result_file,'\n*** Check - (Unique "problematical" lines) section as well!')
+
+
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
     if mode[1]=='Download Jenkins Job logs and run LogTool locally':
