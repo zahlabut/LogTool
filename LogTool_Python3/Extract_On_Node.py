@@ -55,7 +55,7 @@ except:
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
-                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ']
+                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0']
 
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
@@ -396,7 +396,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                     third_lines.append(third_line)
                     relevant_blocks.append(block)
     # Pass through block's line and split those whos bigger than 5000 characters
-    content_as_list = [item[0:5000] + '.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in relevant_blocks]  # If line is bigger than 5000 cut it
+    content_as_list = [item[0:1000] + '.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in relevant_blocks]  # If line is bigger than 5000 cut it
     # Run fuzzy match
     for block in content_as_list:
         to_add=True
