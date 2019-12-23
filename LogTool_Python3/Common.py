@@ -215,7 +215,6 @@ def download_jenkins_job_logs(node_names_list,url):
 
 def unique_list_by_fuzzy(lis,fuzzy):
     unique_messages=[]
-
     for item in lis:
         to_add = True
         for key in unique_messages:

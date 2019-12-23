@@ -242,7 +242,7 @@ try:
                             lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
                     break
 
-            unique_errors_list=unique_list(lines_to_unique,0.6)
+            unique_errors_list=unique_list_by_fuzzy(lines_to_unique,0.6)
 
 
 
