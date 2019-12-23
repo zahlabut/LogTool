@@ -242,7 +242,10 @@ try:
                             lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
                     break
 
-            unique_errors_list=unique_list(lines_to_unique)
+            unique_errors_list=unique_list(lines_to_unique,0.6)
+
+
+
             for item in unique_errors_list:
                 append_to_file(result_file,'-'*100+'\n'+item)
 
