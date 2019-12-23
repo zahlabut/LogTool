@@ -212,22 +212,41 @@ try:
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
+
+
+        lines_to_unique=[]
+
+
         for line in data:
             # Print some lines that might be relevant #
             words = [' error:', ' error ', ' failed:', ' failed ', ' fatal ', ' fatal:']
             for w in words:
                 if w in line.lower():
-                    append_to_file(result_file, '_'*200+'\n')
-                    append_to_file(result_file,'Detected string is: "'+w+'"\n')
+
+                    #append_to_file(result_file, '_'*200+'\n')
+                    #append_to_file(result_file,'Detected string is: "'+w+'"\n')
+
+
+
+
                     w_index=line.find(w)
                     if len(line) < 5000:
-                        append_to_file(result_file, line+'\n')
+                        #append_to_file(result_file, line+'\n')
+                        lines_to_unique.append('Detected string is: "' + w + '"\n' + line + '\n')
                     else:
                         if w_index+1000<len(line):
-                            append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
+                            lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
+                            #append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
                         else:
-                            append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
+                            #append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
+                            lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
                     break
+
+            unique_errors_list=unique_list(lines_to_unique)
+            for item in unique_errors_list:
+                append_to_file('-'*100+'\n'+item)
+
+
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:

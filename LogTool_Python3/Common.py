@@ -8,7 +8,8 @@ import re
 import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
 from urllib.parse import urljoin
-
+import difflib
+from string import digits
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -52,7 +53,6 @@ class MyOutput():
     def close(self):
         self.stdout.close()
         self.log.close()
-
 
 def check_ping(ip):
     try:
@@ -213,5 +213,25 @@ def download_jenkins_job_logs(node_names_list,url):
     response = urllib.request.urlopen(url)
     html= response.read(url)
 
+def unique_list_by_fuzzy(lis,fuzzy):
+    unique_messages=[]
 
+    for item in lis:
+        to_add = True
+        for key in unique_messages:
+            if similar(key, str(item)) >= fuzzy:
+                to_add = False
+                break
+        if to_add == True:
+            unique_messages.append(str(item))
+    return unique_messages
 
+def remove_digits_from_string(s):
+    return str(s).translate(None, digits)
+
+def similar(a, b):
+    return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
+
+def remove_digits_from_string(s):
+    remove_digits = str.maketrans('', '', digits)
+    return str(s).translate(remove_digits)

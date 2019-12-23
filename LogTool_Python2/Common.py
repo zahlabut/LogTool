@@ -6,7 +6,9 @@ import json
 import sys
 import re
 import urllib2
+import difflib
 from urllib2 import urlparse
+from string import digits
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -224,3 +226,19 @@ def check_time(time_string):
 def download_jenkins_job_logs(node_names_list,url):
     response = urllib2.urlopen(url)
     html= response.read(url)
+
+def unique_list_by_fuzzy(lis,fuzzy):
+    unique_messages=[]
+
+    for item in lis:
+        to_add = True
+        for key in unique_messages:
+            if similar(key, str(item)) >= fuzzy:
+                to_add = False
+                break
+        if to_add == True:
+            unique_messages.append(str(item))
+    return unique_messages
+
+def similar(a, b):
+    return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
