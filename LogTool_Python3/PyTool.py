@@ -450,7 +450,7 @@ try:
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
-        options=['ERROR','WARNING','failed','fatal']
+        options=['ERROR','WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
         mode_start_time=time.time()
         if option[1]=='ERROR':
