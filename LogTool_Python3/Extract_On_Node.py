@@ -30,7 +30,6 @@ try:
     log_root_dir=sys.argv[2].strip()
 except:
     log_root_dir='/var/log/containers'
-    log_root_dir = '/var/lib'
 # String for Grep #
 try:
     string_for_grep=sys.argv[3].strip()
@@ -56,7 +55,8 @@ except:
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
-                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0']
+                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
+                '0 errors,']
 
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
@@ -397,6 +397,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             list_of_blocks = [open('grep.txt', 'r').read()]
     else: #grep.txt is empty
         return {log: unique_messages}
+
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
     relevant_blocks = []
     third_lines = []
@@ -407,11 +408,14 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             if ignore_block(block)==False:
                 if third_line not in third_lines:
                     third_lines.append(third_line)
+                    block_lines = [item[0:1000] + '.........\n   ^^^ LogTool - the above line is to long to be displayed here :-( ^^^' if len(
+                        item) > 1000 else item.strip() for item in block_lines]
+                    block=''
+                    for line in block_lines:
+                        block+=line+'\n'
                     relevant_blocks.append(block)
-    # Pass through block's line and split those whos bigger than 5000 characters
-    content_as_list = [item[0:1000] + '.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in relevant_blocks]  # If line is bigger than 5000 cut it
     # Run fuzzy match
-    for block in content_as_list:
+    for block in relevant_blocks:
         to_add=True
         for key in unique_messages:
             if similar(key, block) >= fuzzy_match:
@@ -562,7 +566,7 @@ if __name__ == "__main__":
     section_indexes=[]
     messages=[
         'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
-        'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
+        # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
         'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
         'Statistics - Unique messages per NOT STANDARD log file, since ever',

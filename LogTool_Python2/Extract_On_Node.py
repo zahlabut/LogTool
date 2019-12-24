@@ -55,7 +55,8 @@ except:
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
-                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0']
+                    'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
+                '0 errors,']
 
 def remove_digits_from_string(s):
     return str(s).translate(None, digits)
@@ -345,61 +346,65 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
     if log.endswith('.gz'):
-        commands = ["zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
+        commands = ["zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log + " >> grep.txt"]
         if 'error' in string_for_grep.lower():
-            commands.append("zgrep -in -A7 -B2 traceback " + log+" >> grep.txt")
-            commands.append('zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
+            commands.append("zgrep -in -A7 -B2 traceback " + log + " >> grep.txt")
+            commands.append('zgrep -in -E ^stderr: -A7 -B2 ' + log + ' >> grep.txt')
             commands.append('zgrep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
             commands.append('zgrep -in -A7 -B2 failed ' + log + ' >> grep.txt')
     else:
-        commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
+        commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log + " >> grep.txt"]
         if 'error' in string_for_grep.lower():
-            commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
-            commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
+            commands.append("grep -in -A7 -B2 traceback " + log + " >> grep.txt")
+            commands.append('grep -in -E ^stderr: -A7 -B2 ' + log + ' >> grep.txt')
             commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
             commands.append('grep -in -A7 -B2 failed ' + log + ' >> grep.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
-            string_for_grep='level=error'
+            string_for_grep = 'level=error'
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
         commands = ["grep -n '" + string_for_grep + "' " + log + " > grep.txt"]
     if 'consoleFull' in log:
-        string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"]
-    command_result=exec_command_line_command(commands)
+        string_for_grep = string_for_grep + '\|background:red\|fatal:'
+        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ', '') + "' " + log + " > grep.txt"]
+    command_result = exec_command_line_command(commands)
 
     # Read grep.txt and create list of blocks
-    if command_result['ReturnCode']==0:
-        if '--\n' in open('grep.txt','r').read():
-            list_of_blocks=open('grep.txt','r').read().split('--\n')
+    if command_result['ReturnCode'] == 0:
+        if '--\n' in open('grep.txt', 'r').read():
+            list_of_blocks = open('grep.txt', 'r').read().split('--\n')
         else:
             list_of_blocks = [open('grep.txt', 'r').read()]
-    else: #grep.txt is empty
+    else:  # grep.txt is empty
         return {log: unique_messages}
+
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
     relevant_blocks = []
     third_lines = []
     for block in list_of_blocks:
-        block_lines=block.splitlines()
-        if len(block_lines)>=3:# Do nothing if len of blocks is less than 3
-            third_line=remove_digits_from_string(block_lines[2])
-            if ignore_block(block)==False:
+        block_lines = block.splitlines()
+        if len(block_lines) >= 3:  # Do nothing if len of blocks is less than 3
+            third_line = remove_digits_from_string(block_lines[2])
+            if ignore_block(block) == False:
                 if third_line not in third_lines:
                     third_lines.append(third_line)
+                    block_lines = [item[0:1000] + '.........\n   ^^^ LogTool - the above line is to long to be displayed here :-( ^^^' if len(
+                        item) > 1000 else item.strip() for item in block_lines]
+                    block = ''
+                    for line in block_lines:
+                        block += line + '\n'
                     relevant_blocks.append(block)
-    # Pass through block's line and split those whos bigger than 5000 characters
-    content_as_list = [item[0:1000] + '.........LogTool - Line is to long to be printed here :-(' if len(item) > 5000 else item.strip() for item in relevant_blocks]  # If line is bigger than 5000 cut it
     # Run fuzzy match
-    for block in content_as_list:
-        to_add=True
+    for block in relevant_blocks:
+        to_add = True
         for key in unique_messages:
             if similar(key, block) >= fuzzy_match:
                 to_add = False
                 break
         if to_add == True:
             unique_messages.append(block)
-    return {log:unique_messages}
+    return {log: unique_messages}
 
 def parse_overcloud_install_log(log, string_for_grep):
     unique_messages = []
@@ -546,7 +551,7 @@ if __name__ == "__main__":
     section_indexes=[]
     messages=[
         'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
-        'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
+        # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
         'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
         'Statistics - Unique messages per NOT STANDARD log file, since ever',
