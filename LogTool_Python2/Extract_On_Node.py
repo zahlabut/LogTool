@@ -168,6 +168,19 @@ def append_to_file(log_file, msg):
 
 def get_line_date(line):
     line=line[0:50] # Use first 50 characters to get line timestamp
+
+    def get_line_date(line):
+        line = line[0:50]  # Use first 50 characters to get line timestamp
+        # Check that debug level exists in log last line
+        valid_debug_levels = ['INFO', 'WARN', 'DEBUG', 'ERROR']
+        return_error = True
+        for level in valid_debug_levels:
+            if level in line:
+                return_error = False
+                break
+        if return_error == True:
+            return {'Error': 'No valid debug level found in log last line!', 'Line': line.strip(), 'Date': None}
+
     # Delta 27 []
     if line.find(']') - line.find('[') == 27:
         try:

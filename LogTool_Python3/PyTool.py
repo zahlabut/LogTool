@@ -212,8 +212,6 @@ try:
         empty_file_content(result_file)
         data = open(log_path[1], 'r').read().splitlines()
         lines_to_analyze=[]
-
-
         lines_to_unique=[]
         append_to_file(result_file,'#'*40+' Raw Data Lines '+'#'*40+'\n')
         for line in data:
@@ -221,13 +219,8 @@ try:
             words = [' error:', ' error ', ' failed:', ' failed ', ' fatal ', ' fatal:']
             for w in words:
                 if w in line.lower():
-
                     append_to_file(result_file, '_'*200+'\n')
                     append_to_file(result_file,'Detected string is: "'+w+'"\n')
-
-
-
-
                     w_index=line.find(w)
                     if len(line) < 5000:
                         append_to_file(result_file, line+'\n')
@@ -240,7 +233,6 @@ try:
                             append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
                             lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
                     break
-
             if ' ERROR ' in line and line not in error_lines:
                 error_lines.append(line)
             if 'fatal: [' in line:
@@ -257,14 +249,11 @@ try:
                 if len(failed_task)!=0:
                     failed_tasks.append(failed_task)
 
-
         # Print unique list into result file
         append_to_file(result_file, '\n' * 10 + '#' * 7 + ' Unique "problematical" lines ' + '#' * 7 + '\n')
         unique_errors_list = unique_list_by_fuzzy(lines_to_unique, 0.5)
         for item in unique_errors_list:
             append_to_file(result_file, '-' * 100 + '\n' + item)
-
-
 
         for line in lines_to_analyze:
             line = line.split('\\n')
@@ -300,8 +289,6 @@ try:
         for t in failed_tasks:
             print_in_color(t, 'bold')
         append_to_file(result_file,'\n*** Check - (Unique "problematical" lines) section as well!')
-
-
         spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
     if mode[1]=='Download Jenkins Job logs and run LogTool locally':
