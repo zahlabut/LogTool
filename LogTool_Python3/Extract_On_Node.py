@@ -477,12 +477,12 @@ if __name__ == "__main__":
         print_in_color('Warning - list of NOT STANDARD logs:','yellow')
         print_list(item['Log'] for item in not_standard_logs)
 
-        append_to_file(result_file,'\n\n\n'+'#'*20+' Skipped logs - no debug level string (Error, Info, Debug...) has been detected '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
-        write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
-        write_list_of_dict_to_file(result_file,
-                                   not_standard_logs,
-                                   '\n\nMore details for each log:\n',
-                                   msg_delimeter='~'*100+'\n')
+        # append_to_file(result_file,'\n\n\n'+'#'*20+' Skipped logs - no debug level string (Error, Info, Debug...) has been detected '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
+        # write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
+        # write_list_of_dict_to_file(result_file,
+        #                            not_standard_logs,
+        #                            '\n\nMore details for each log:\n',
+        #                            msg_delimeter='~'*100+'\n')
 
     ### Fill statistics section ###
     print_in_color('\nAggregating statistics','bold')

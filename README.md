@@ -32,16 +32,13 @@ In "Table of Content" you'll find: "Section name --> Line number" per section, f
 1) Raw Data - extracted Errors/Warnings from standard OSP logs since: <Given Timestamp>
    In this section you'll find all extracted Errors/Warnings messages as is without being modified or changed by LogTool.
    Actually these messages are the "Raw Data" used by LogTool for "Fuzzy matching" analysis.
-2) Skipped logs - no debug level string (Error, Info, Debug...) has been detected
-   LogTool is trying to detect debug level string in log's lines, log file will be skipped if detection fails.
-   Actually, such kind of files are just having *.log file extension, but they are definitely not logs in term of log file definition.
-3) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
+2) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
    In this section, you'll find the amount of Errors/Warnings per Standard log file, this may help you to understand
    what could be potential component, to search for "Root Cause".
-4) Statistics - Unique messages, per STANDARD OSP log file since: <Given Timestamp>
+3) Statistics - Unique messages, per STANDARD OSP log file since: <Given Timestamp>
    In this section you'll find the unique Errors/Warnings messages since given by you timestamp.
    For more details about each one of unique Error/Warning you can always search for the same message in "Raw Data" section.
-5) Statistics - Unique messages per NOT STANDARD log file, since ever
+4) Statistics - Unique messages per NOT STANDARD log file, since ever
    In this section you'll find the unique messages per not standard log files, unfortunately LogTool cannot handle such
    log files in the same manner as standard Log files, therefor "Since Time" provided by you on extraction, will be ignored and
    you'll see all the unique Errors/Warnings messages since ever.
