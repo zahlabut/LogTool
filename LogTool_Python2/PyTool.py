@@ -42,7 +42,6 @@ sys.stderr=MyOutput('Error.log')
 executed_script_on_overcloud = []
 executed_script_on_undercloud = []
 
-
 def run_on_node(node):
     print '-' * 90
     print 'Remote Overcloud Node -->', str(node)
@@ -72,7 +71,6 @@ def run_on_node(node):
         s.ssh_close()
     except Exception, e:
         spec_print('Failed on node:' + str(node)+'with: '+str(e))
-
 
 
 try:
@@ -408,13 +406,13 @@ try:
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
-        print 'Current date is: '+undercloud_time
+        print('Current date is: '+undercloud_time)
         start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
         start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
         if start_time_option[1]=='Custom':
             print_in_color('Current date on Undercloud is: ' + undercloud_time, 'blue')
             print_in_color('Use the same date format as in previous output', 'blue')
-            start_time = raw_input('And enter your "since time" to extract log messages: ')
+            start_time = input('And enter your "since time" to extract log messages: ')
         if start_time_option[1]=='10 Minutes ago':
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
         if start_time_option[1]=='30 Minutes ago':
@@ -431,11 +429,10 @@ try:
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
         start_time=str(start_time)
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
-        log_root_dir=choose_option_from_list(undercloud_logs,'Plese choose logs path to analyze:')[1]
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
-        options = ['ERROR', 'WARNING']
+        options=['ERROR','WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
         mode_start_time=time.time()
         if option[1]=='ERROR':
@@ -448,12 +445,13 @@ try:
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
-        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log'
-        command="sudo python Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
-        print command
+        result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log.gz'
+        log_root_dir=str(undercloud_logs)
+        command="sudo python2 Extract_On_Node.py '" + str(start_time) + "' " +"'"+ log_root_dir +"'"+ " '" + grep_string + "'" + ' ' + result_file
+        print_in_color(command,'bold')
         executed_script_on_undercloud.append('Extract_On_Node.py')
         com_result=exec_command_line_command(command)
-        shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
+        shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')

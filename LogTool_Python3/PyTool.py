@@ -432,7 +432,6 @@ try:
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
         start_time=str(start_time)
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
-        log_root_dir=choose_option_from_list(undercloud_logs,'Plese choose logs path to analyze:')[1]
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
@@ -450,8 +449,9 @@ try:
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
         result_file='Undercloud'+'_'+grep_string.replace(' ','_')+'.log.gz'
-        command="sudo python3 Extract_On_Node.py '" + str(start_time) + "' " + log_root_dir + " '" + grep_string + "'" + ' ' + result_file
-        print(command)
+        log_root_dir=str(undercloud_logs)
+        command="sudo python3 Extract_On_Node.py '" + str(start_time) + "' " +"'"+ log_root_dir +"'"+ " '" + grep_string + "'" + ' ' + result_file
+        print_in_color(command,'bold')
         executed_script_on_undercloud.append('Extract_On_Node.py')
         com_result=exec_command_line_command(command)
         shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
