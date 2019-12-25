@@ -4,11 +4,6 @@ import itertools
 import json
 import warnings
 warnings.simplefilter("ignore", UserWarning)
-try:
-    from fuzzywuzzy import fuzz
-    fuzzy_installed=True
-except:
-    fuzzy_installed=False
 import difflib
 import gzip
 import datetime
@@ -16,41 +11,22 @@ import operator
 import collections
 from string import digits
 
-### Parameters ###
-not_supported_logs=['.swp','.login','anaconda-post']
-fuzzy_match = 0.6
+def set_default_arg_by_index(index, default):
+    try:
+        value=sys.argv[index]
+        return value.strip()
+    except:
+        return default
 
-# Grep by time #
-try:
-    time_grep=sys.argv[1].strip()
-except:
-    time_grep='2018-01-01 00:00:00'
-# Log path #
-try:
-    log_root_dir=sys.argv[2].strip()
-except:
-    log_root_dir='/var/log/containers'
-# String for Grep #
-try:
-    string_for_grep=sys.argv[3].strip()
-except:
-    string_for_grep=' ERROR '
-# Result file #
-try:
-    result_file=sys.argv[4]
-except:
-    result_file='All_Greps.log'
+### Parameters ###
+fuzzy_match = 0.6
+time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
+log_root_dir=set_default_arg_by_index(2,'/var/log/containers') # Log path #
+string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
+result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
-# Save raw data messages #
-try:
-    save_raw_data=sys.argv[5]
-except:
-    save_raw_data='yes'
-# Operation mode #
-try:
-    operation_mode=sys.argv[6]
-except:
-    operation_mode='None'
+save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
+operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
@@ -62,22 +38,9 @@ def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
     return str(s).translate(remove_digits)
 
-# def exec_command_line_command(command):
-#     try:
-#         command_as_list = command.split(' ')
-#         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-#         result = subprocess.check_output(command, shell=True, encoding='UTF-8')
-#         json_output = None
-#         try:
-#             json_output = json.loads(result.lower())
-#         except:
-#             pass
-#         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
-#     except subprocess.CalledProcessError as e:
-#         return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
-
 def exec_command_line_command(command):
     try:
+        #result = subprocess.check_output(command, shell=True, encoding='UTF-8')
         result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True,encoding='UTF-8')
         json_output = None
         try:
@@ -126,9 +89,6 @@ def print_in_color(string,color_or_format=None):
         print(string)
 
 def similar(a, b):
-    # if fuzzy_installed==True:
-    #     return fuzz.ratio(remove_digits_from_string(a), remove_digits_from_string(b)) / 100.0
-    # else:
     return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
 
 def to_ranges(iterable):
@@ -151,10 +111,6 @@ def collect_log_paths(log_root_path):
                         to_add=True
                 if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
                     to_add = True
-                for item in not_supported_logs:
-                    if item in file_abs_path:
-                        to_add = False
-                        break
                 if to_add==True:
                     logs.append(file_abs_path)
             if operation_mode == 'Analyze Gerrit(Zuul) failed gate logs':
@@ -319,7 +275,6 @@ def is_single_line_file(log):
 
 def unique_list_by_fuzzy(lis,fuzzy):
     unique_messages=[]
-
     for item in lis:
         to_add = True
         for key in unique_messages:
@@ -335,21 +290,6 @@ def get_file_line_index(fil,line):
 
 def unique_list(lis):
     return list(collections.OrderedDict.fromkeys(lis).keys())
-
-# Parsers for NOT STANDARD logs
-def parse_rabbit_log(log,string_for_grep):
-    unique_messages=[]
-    content_as_list=open(log, 'r').read().split('\n\n')
-    content_as_list=[item for item in content_as_list if string_for_grep in item]
-    for block in content_as_list:
-        to_add=True
-        for key in unique_messages:
-            if similar(key, block) >= fuzzy_match:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append(block)
-    return {log:unique_messages}
 
 #This function is used for Non Standard logs only
 def ignore_block(block, ignore_strings=ignore_strings,line_index=2): # Index 2 means line number 3 in Block
@@ -425,21 +365,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             unique_messages.append(block)
     return {log:unique_messages}
 
-def parse_overcloud_install_log(log, string_for_grep):
-    unique_messages = []
-    content_as_list=[item for item in open(log,'r').readlines() if string_for_grep in item]
-    for block in content_as_list:
-        if len(block)>1000:
-            block = block[0:1000]+'... \nLogTool --> The above line is to long!!!'
-        to_add=True
-        for key in unique_messages:
-            if similar(key, block) >= fuzzy_match:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append(block)
-    return {log:unique_messages}
-
 if __name__ == "__main__":
     not_standard_logs=[]
     analyzed_logs_result=[]
@@ -475,18 +400,6 @@ if __name__ == "__main__":
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
                     analyzed_logs_result.append(log_result)
-
-    ### Fill Failed log Section ###
-    if len(not_standard_logs)>0:
-        print_in_color('Warning - list of NOT STANDARD logs:','yellow')
-        print_list(item['Log'] for item in not_standard_logs)
-
-        # append_to_file(result_file,'\n\n\n'+'#'*20+' Skipped logs - no debug level string (Error, Info, Debug...) has been detected '+'#'*20+'\n'+'In Total:'+str(len(not_standard_logs))+'\n')
-        # write_list_to_file(result_file, [item['Log'].strip() for item in not_standard_logs],add_new_line=False)
-        # write_list_of_dict_to_file(result_file,
-        #                            not_standard_logs,
-        #                            '\n\nMore details for each log:\n',
-        #                            msg_delimeter='~'*100+'\n')
 
     ### Fill statistics section ###
     print_in_color('\nAggregating statistics','bold')
@@ -531,36 +444,6 @@ if __name__ == "__main__":
         if len(dir[key])>0:
             append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
             write_list_to_file(result_file,dir[key])
-
-    # ### Fill Statistics - Unique(Fuzzy Matching) for messages in total ###
-    # #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) for all messages in total','bold')
-    # append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs '+'#'*20+'\n')
-    # unique_messages=[]
-    # for item in analyzed_logs_result:
-    #     #print 'LogPath --> '+item['Log']
-    #     for block in item['AnalyzedBlocks']:
-    #         block_lines=block['BlockLines']
-    #         lines_number=block['BlockLinesSize']
-    #         is_traceback=block['IsTracebackBlock']
-    #         to_add = True
-    #         if is_traceback==False:
-    #             block_lines=unique_list_by_fuzzy(block_lines,fuzzy_match)
-    #         if is_traceback == True:
-    #             block_lines=unique_list(block_lines)
-    #         if lines_number>5:
-    #             block_lines = [l for l in block_lines[-5:]]
-    #         for key in unique_messages:
-    #             if similar(key[1], str(block_lines)) >= fuzzy_match:
-    #                 to_add = False
-    #                 break
-    #         if to_add == True:
-    #             unique_messages.append([lines_number,block_lines,item['Log'],is_traceback])
-    #
-    # for item in unique_messages:
-    #     append_to_file(result_file, '\n'+'~' * 40 + item[2] + '~' * 40 + '\n')
-    #     append_to_file(result_file, '### IsTraceback:'+str(item[3])+'###\n')
-    #     for line in item[1]:
-    #         append_to_file(result_file, line + '\n')
 
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]

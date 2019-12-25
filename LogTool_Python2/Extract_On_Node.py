@@ -4,11 +4,6 @@ import itertools
 import json
 import warnings
 warnings.simplefilter("ignore", UserWarning)
-try:
-    from fuzzywuzzy import fuzz
-    fuzzy_installed=True
-except:
-    fuzzy_installed=False
 import difflib
 import gzip
 import datetime
@@ -16,41 +11,22 @@ import operator
 import collections
 from string import digits
 
-### Parameters ###
-not_supported_logs=['.swp','.login','anaconda-post']
-fuzzy_match = 0.6
+def set_default_arg_by_index(index, default):
+    try:
+        value=sys.argv[index]
+        return value.strip()
+    except:
+        return default
 
-# Grep by time #
-try:
-    time_grep=sys.argv[1].strip()
-except:
-    time_grep='2019-01-01 00:00:00'
-# Log path #
-try:
-    log_root_dir=sys.argv[2].strip()
-except:
-    log_root_dir='/var/log/containers'
-# String for Grep #
-try:
-    string_for_grep=sys.argv[3].strip()
-except:
-    string_for_grep=' ERROR '
-# Result file #
-try:
-    result_file=sys.argv[4]
-except:
-    result_file='All_Greps.log'
+### Parameters ###
+fuzzy_match = 0.6
+time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
+log_root_dir=set_default_arg_by_index(2,'/var/log/containers') # Log path #
+string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
+result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
-# Save raw data messages #
-try:
-    save_raw_data=sys.argv[5]
-except:
-    save_raw_data='yes'
-# Operation mode #
-try:
-    operation_mode=sys.argv[6]
-except:
-    operation_mode='None'
+save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
+operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
@@ -111,9 +87,6 @@ def print_in_color(string,color_or_format=None):
         print string
 
 def similar(a, b):
-    # if fuzzy_installed==True:
-    #     return fuzz.ratio(remove_digits_from_string(a), remove_digits_from_string(b)) / 100.0
-    # else:
     return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
 
 def to_ranges(iterable):
@@ -136,10 +109,6 @@ def collect_log_paths(log_root_path):
                         to_add=True
                 if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
                     to_add = True
-                for item in not_supported_logs:
-                    if item in file_abs_path:
-                        to_add = False
-                        break
                 if to_add==True:
                     logs.append(file_abs_path)
             if operation_mode=='Analyze Gerrit(Zuul) failed gate logs':
@@ -405,21 +374,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         if to_add == True:
             unique_messages.append(block)
     return {log: unique_messages}
-
-def parse_overcloud_install_log(log, string_for_grep):
-    unique_messages = []
-    content_as_list=[item for item in open(log,'r').readlines() if string_for_grep in item]
-    for block in content_as_list:
-        if len(block)>1000:
-            block = block[0:1000]+'... \nLogTool --> The above line is to long!!!'
-        to_add=True
-        for key in unique_messages:
-            if similar(key, block) >= fuzzy_match:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append(block)
-    return {log:unique_messages}
 
 # import signalftrace
 # signal.signal(signal.SIGALRM, analyze_log)

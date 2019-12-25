@@ -87,12 +87,11 @@ try:
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Overcloud - check Unhealthy dockers',
-           'Extract all logs messages for given time range',
-           'Extract NEW (DELTA) messages from Overcloud',
+           #'Extract all logs messages for given time range',
+           #'Extract NEW (DELTA) messages from Overcloud',
            'Download Jenkins Job logs and run LogTool locally',
            'Undercloud - analyze Ansible Deployment log',
            'Analyze Gerrit(Zuul) failed gate logs',
-           '--- Install Python FuzzyWuzzy on Nodes ---',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
@@ -486,36 +485,6 @@ try:
             s.ssh_close()
         end_time=time.time()
         spec_print(['Completed!!!', 'Execution Time: ' + str(end_time - start_time) + '[sec]'],'bold')
-
-    if mode[1]=='--- Install Python FuzzyWuzzy on Nodes ---':
-        ### Get all nodes ###
-        start_time = time.time()
-        commands = ['']
-        nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-        nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-        for node in nodes:
-            try:
-                print str(node)
-                s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-                s.ssh_connect_key()
-                # Check if pip is installed #
-                pip_installed='sudo which pip'
-                if len(s.ssh_command(pip_installed)['Stderr'])!=0:
-                    print_in_color('Warning - pip is not installed!','yellow')
-                    print s.ssh_command('sudo easy_install pip')['Stdout']
-                    print s.ssh_command('sudo pip install pip --upgrade')
-                else:
-                    print_in_color('pip OK','green')
-                # Install FuzzyWuzzy #
-                if len(s.ssh_command('pip freeze | grep fuzzywuzzy')['Stdout'])==0:
-                    print_in_color('Warning - FuzzyWuzzy is not installed!','yellow')
-                    print s.ssh_command('sudo pip install fuzzywuzzy')
-                else:
-                    print_in_color('FuzzyWuzzy OK','green')
-                s.ssh_close()
-            except Exception,e:
-                print_in_color('Failed with: '+str(e))
-        spec_print(['Completed!!!', 'Execution Time: ' + str(time.time() - start_time) + '[sec]'],'bold')
 
     if mode[1]=='"Grep" some string on all Overcloud logs':
         ### Get all nodes ###
