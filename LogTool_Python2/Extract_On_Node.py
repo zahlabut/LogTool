@@ -180,12 +180,12 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
     if log.endswith('.gz'):
-        command = "zgrep -n '" + string + "' " + log+" > grep.txt"
+        command = "zgrep -n '" + string + "' " + log+" > zahlabut.txt"
     else:
-        command="grep -n '"+string+"' "+log+" > grep.txt"
+        command="grep -n '"+string+"' "+log+" > zahlabut.txt"
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
-        lines=open('grep.txt','r').readlines()
+        lines=open('zahlabut.txt','r').readlines()
         lines=[line for line in lines if string in line[0:60]] #ignore if ERROR for example is not debug level string
         lines_dic={}
         for line in lines:
@@ -323,34 +323,34 @@ def cut_long_line(line, limit_line_size, limit_detected_string,match_string_list
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
-    if os.path.exists('grep.txt'):
-        os.remove('grep.txt')
-    commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
+    if os.path.exists('zahlabut.txt'):
+        os.remove('zahlabut.txt')
+    commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> zahlabut.txt"]
     if 'error' in string_for_grep.lower():
         use_it_to_cut_long_lines=['error','traceback','stderr','failed']
-        commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
-        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
-        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
-        commands.append('grep -in -A7 -B2 failed ' + log + ' >> grep.txt')
+        commands.append("grep -in -A7 -B2 traceback " + log+" >> zahlabut.txt")
+        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> zahlabut.txt')
+        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> zahlabut.txt')
+        commands.append('grep -in -A7 -B2 failed ' + log + ' >> zahlabut.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
-        commands = ["grep -n '" + string_for_grep + "' " + log + " > grep.txt"]
+        commands = ["grep -n '" + string_for_grep + "' " + log + " > zahlabut.txt"]
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"]
+        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > zahlabut.txt"]
     commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
     command_result=exec_command_line_command(commands)
 
-    # Read grep.txt and create list of blocks
-    if command_result['ReturnCode']==0:
-        if '--\n' in open('grep.txt','r').read():
-            list_of_blocks=open('grep.txt','r').read().split('--\n')
+    # Read zahlabut.txt and create list of blocks
+    if command_result['ReturnCode']==0 and os.path.exists('zahlabut.txt'):
+        if '--\n' in open('zahlabut.txt','r').read():
+            list_of_blocks=open('zahlabut.txt','r').read().split('--\n')
         else:
-            list_of_blocks = [open('grep.txt', 'r').read()]
-    else: #grep.txt is empty
+            list_of_blocks = [open('zahlabut.txt', 'r').read()]
+    else: #zahlabut.txt is empty
         return {log: unique_messages}
 
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
