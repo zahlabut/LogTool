@@ -306,25 +306,31 @@ def ignore_block(block, ignore_strings=ignore_strings,line_index=2): # Index 2 m
             return True
     return False
 
+def cut_long_line(line, limit_line_size, limit_detected_string,match_string_list):
+    if len(line)>limit_line_size:
+        line_to_return= line[0:limit_line_size]+'... --> LogTool, line is too long!'
+        for string in match_string_list:
+            if string in line.lower():
+                part_of_line=line[line.lower().find(string):]
+                if len(part_of_line) > limit_detected_string:
+                    part_of_line = part_of_line[0:limit_detected_string]
+                line_to_return+='\n--> LogTool, "problematical" part of the above line could be: "'+part_of_line+'"'
+        return line_to_return
+    else:
+        return line
+
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
     if os.path.exists('grep.txt'):
         os.remove('grep.txt')
-    if log.endswith('.gz'):
-        commands = ["zgrep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
-        if 'error' in string_for_grep.lower():
-            commands.append("zgrep -in -A7 -B2 traceback " + log+" >> grep.txt")
-            commands.append('zgrep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
-            commands.append('zgrep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
-            commands.append('zgrep -in -A7 -B2 failed ' + log + ' >> grep.txt')
-    else:
-        commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
-        if 'error' in string_for_grep.lower():
-            commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
-            commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
-            commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
-            commands.append('grep -in -A7 -B2 failed ' + log + ' >> grep.txt')
+    commands = ["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> grep.txt"]
+    if 'error' in string_for_grep.lower():
+        use_it_to_cut_long_lines=['error','traceback','stderr','failed']
+        commands.append("grep -in -A7 -B2 traceback " + log+" >> grep.txt")
+        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> grep.txt')
+        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> grep.txt')
+        commands.append('grep -in -A7 -B2 failed ' + log + ' >> grep.txt')
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -334,6 +340,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
         commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > grep.txt"]
+    commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
     command_result=exec_command_line_command(commands)
 
     # Read grep.txt and create list of blocks
@@ -355,12 +362,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             if ignore_block(block)==False:
                 if third_line not in third_lines:
                     third_lines.append(third_line)
-                    block_lines = [item[0:1000] + '.........\n   ^^^ LogTool - the above line is to long to be displayed here :-( ^^^' if len(
-                        item) > 1000 else item.strip() for item in block_lines]
-                    block=''
-                    for line in block_lines:
-                        block+=line+'\n'
                     relevant_blocks.append(block)
+
     # Run fuzzy match
     for block in relevant_blocks:
         to_add=True
@@ -369,6 +372,11 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                 to_add = False
                 break
         if to_add == True:
+            block_lines = block.splitlines()
+            block_lines = [cut_long_line(line, 150, 100, use_it_to_cut_long_lines) for line in block_lines]
+            block = ''
+            for line in block_lines:
+                block += line + '\n'
             unique_messages.append(block)
     return {log:unique_messages}
 
