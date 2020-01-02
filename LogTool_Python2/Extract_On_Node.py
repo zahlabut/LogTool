@@ -300,7 +300,9 @@ def unique_list(lis):
 def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
     block_lines=block.splitlines()
     if len(block_lines)<3:
-        indicator_line=0
+        for string in ignore_strings:
+            if string.lower() in block.lower():
+                return True
     for string in ignore_strings:
         if string.lower() in block_lines[indicator_line].lower():
             return True
