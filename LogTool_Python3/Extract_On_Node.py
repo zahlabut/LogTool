@@ -10,6 +10,7 @@ import datetime
 import operator
 import collections
 from string import digits
+import re
 
 def set_default_arg_by_index(index, default):
     try:
@@ -19,7 +20,7 @@ def set_default_arg_by_index(index, default):
         return default
 
 ### Parameters ###
-fuzzy_match = 0.6
+fuzzy_match = 0.55
 time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
 log_root_dir=set_default_arg_by_index(2,'/var/log/containers') # Log path #
 string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
@@ -27,7 +28,7 @@ result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
-
+magic_words=['error','traceback','stderr','failed','critical','fatal'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -53,17 +54,14 @@ def exec_command_line_command(command):
         return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def get_file_last_line(log, tail_lines='1'):
+    command='cat ' + log + ' | tail -' + tail_lines
     if log.endswith('.gz'):
-        try:
-            return exec_command_line_command('zcat '+log+' | tail -'+tail_lines)['CommandOutput']
-        except Exception as e:
-            print(e)
-            return ''
-    else:
-        if 'data' in exec_command_line_command('file '+log)['CommandOutput']:
-            return '' #File is not a text file
-        else:
-            return exec_command_line_command('tail -'+tail_lines+' '+log)['CommandOutput']
+        command=command.replace('cat','zcat')
+    try:
+        return exec_command_line_command(command)['CommandOutput']
+    except Exception as e:
+        print (e)
+        return ''
 
 def print_in_color(string,color_or_format=None):
     string=str(string)
@@ -179,10 +177,9 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
+    command = "grep -n '" + string + "' " + log + " > zahlabut.txt"
     if log.endswith('.gz'):
-        command = "zgrep -n '" + string + "' " + log+" > zahlabut.txt"
-    else:
-        command="grep -n '"+string+"' "+log+" > zahlabut.txt"
+        command.replace('grep','zgrep')
     command_result=exec_command_line_command(command)
     if command_result['ReturnCode']==0:
         lines=open('zahlabut.txt','r').readlines()
@@ -210,8 +207,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
             block_lines_to_save = [line for line in block_lines]
-            block_lines=[line.split(string)[1] for  line in block_lines if string in line] # Block lines split by string and save all after ERROR
-             # Raw data to result file
+            block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
             # Save to file block lines #
             if save_raw_data=='yes':
                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
@@ -299,38 +295,69 @@ def unique_list(lis):
     return list(collections.OrderedDict.fromkeys(lis).keys())
 
 #This function is used for Non Standard logs only
-def ignore_block(block, ignore_strings=ignore_strings,line_index=2): # Index 2 means line number 3 in Block
-    line=block_lines=block.splitlines()[line_index]
+def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
+    block_lines=block.splitlines()
     for string in ignore_strings:
-        if string.lower() in line.lower():
+        if string.lower() in block_lines[indicator_line].lower():
             return True
     return False
 
-def cut_long_line(line, limit_line_size, limit_detected_string,match_string_list):
-    if len(line)>limit_line_size:
-        line_to_return= line[0:limit_line_size]+'... --> LogTool, line is too long!'
-        for string in match_string_list:
-            if string in line.lower():
-                part_of_line=line[line.lower().find(string):]
-                if len(part_of_line) > limit_detected_string:
-                    part_of_line = part_of_line[0:limit_detected_string]
-                line_to_return+='\n--> LogTool, "problematical" part of the above line could be: "'+part_of_line+'"'
-        return line_to_return
-    else:
-        return line
+def find_all_string_matches_in_line(line, string):
+    return [(m.start(0), m.end(0)) for m in re.finditer(string, line)]
+
+def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=130):
+    block_lines=block.splitlines()
+    new_block=''
+    matches = []
+    for line in block_lines:
+        if len(line) < limit_line_size:
+            new_block += line + '\n'
+        else:
+            new_block+=line[0:limit_line_size]+'... <-- LogTool: THIS LINE IS TOO LONG!\n'
+            for string in magic_words:
+                match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
+                if match_indexes!=[]:
+                    for item in match_indexes:
+                        if item[1]+number_of_characters_after_match<len(line):
+                            matches.append(line[item[0]:item[1]+number_of_characters_after_match])
+                        else:
+                            matches.append(line[item[0]:])
+    if matches!=[]:
+        new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
+        unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
+        for item in unique_matches:
+            new_block+='\t'+item.strip()+'\n'
+
+    # Drop if not relevant block using "ignore_block"
+    if ignore_block(block,ignore_strings)==True:
+        new_block=None
+
+    # If block is too long, cut it
+    if new_block!=None:
+        block_lines = new_block.splitlines()
+        length_new_block=len(block_lines)
+        if length_new_block>20:
+            new_small_block=''
+            for line in block_lines[0:5]:
+                new_small_block+=line+'\n'
+            new_small_block+='...\n...\n...\nLogTool --> THIS BLOCK IS TOO LONG!\n'
+            if "LogTool --> POTENTIAL BLOCK'S ISSUES:" in new_block:
+                new_small_block+=new_block[new_block.find("LogTool --> POTENTIAL BLOCK'S ISSUES:"):]
+            new_block=new_small_block
+    return new_block
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
-    #if os.path.exists('zahlabut.txt'):
-    #    os.remove('zahlabut.txt')
-    commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" > zahlabut.txt"]
+    temp_grep_result_file='zahlabut.txt'
+    if os.path.exists(temp_grep_result_file):
+        os.remove(temp_grep_result_file)
+    commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
     if 'error' in string_for_grep.lower():
-        use_it_to_cut_long_lines=['error','traceback','stderr','failed']
-        commands.append("grep -in -A7 -B2 traceback " + log+" >> zahlabut.txt")
-        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> zahlabut.txt')
-        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> zahlabut.txt')
-        commands.append('grep -in -A7 -B2 failed ' + log + ' >> zahlabut.txt')
+        commands.append("grep -in -A7 -B2 traceback " + log+" >> "+temp_grep_result_file)
+        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file)
+        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file)
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -341,24 +368,10 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
         commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > zahlabut.txt"]
     commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
-    command_result=exec_command_line_command(commands)
-
-
-
-    # for com in commands:
-    #     print (exec_command_line_command(com))
-    # command_result={}
-    # command_result['ReturnCode']=0
-    # if 'ir-openshift-install.log' in log:
-    #     sys.exit(1)
-    #
-    #     #vi gre
-    #     # commands=['ls -la']
-    #     # command_result = exec_command_line_command(commands)
-    #     # print (command_result)
-    #     # sys.exit(1)
-
-
+    command=''
+    for com in commands:
+        command+=com+';'
+    command_result=exec_command_line_command(command)
 
     # Read zahlabut.txt and create list of blocks
     if command_result['ReturnCode']==0 and os.path.exists('zahlabut.txt'):
@@ -369,8 +382,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     else: #zahlabut.txt is empty
         return {log: unique_messages}
 
-
-
+    # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
+    list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
 
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
     relevant_blocks = []
@@ -378,11 +391,11 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     for block in list_of_blocks:
         block_lines=block.splitlines()
         if len(block_lines)>=3:# Do nothing if len of blocks is less than 3
-            third_line=remove_digits_from_string(block_lines[2])
-            if ignore_block(block)==False:
-                if third_line not in third_lines:
-                    third_lines.append(third_line)
-                    relevant_blocks.append(block)
+            third_line=block_lines[2]
+            third_line=remove_digits_from_string(third_line)
+            if third_line not in third_lines:
+                third_lines.append(third_line)
+                relevant_blocks.append(block)
 
     # Run fuzzy match
     for block in relevant_blocks:
@@ -392,11 +405,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                 to_add = False
                 break
         if to_add == True:
-            block_lines = block.splitlines()
-            block_lines = [cut_long_line(line, 150, 100, use_it_to_cut_long_lines) for line in block_lines]
-            block = ''
-            for line in block_lines:
-                block += line + '\n'
             unique_messages.append(block)
     return {log:unique_messages}
 
