@@ -309,7 +309,7 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
 def find_all_string_matches_in_line(line, string):
     return [(m.start(0), m.end(0)) for m in re.finditer(string, line)]
 
-def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=130):
+def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=150):
     block_lines=block.splitlines()
     new_block=''
     matches = []
