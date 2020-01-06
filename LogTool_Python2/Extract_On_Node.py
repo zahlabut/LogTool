@@ -309,7 +309,7 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
 def find_all_string_matches_in_line(line, string):
     return [(m.start(0), m.end(0)) for m in re.finditer(string, line)]
 
-def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=150):
+def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=150,number_of_characters_before_match=50):
     block_lines=block.splitlines()
     new_block=''
     matches = []
@@ -322,10 +322,16 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                 match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
                 if match_indexes!=[]:
                     for item in match_indexes:
-                        if item[1]+number_of_characters_after_match<len(line):
-                            matches.append(line[item[0]:item[1]+number_of_characters_after_match])
+                        if item[0]>number_of_characters_before_match:
+                            if item[1]+number_of_characters_after_match<len(line):
+                                matches.append('"'+line[item[0]:item[1]]+'" in --> '+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match])
+                            else:
+                                matches.append('"'+line[item[0]:item[1]]+'" in --> '+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:])
                         else:
-                            matches.append(line[item[0]:])
+                            if item[1]+number_of_characters_after_match<len(line):
+                                matches.append('"'+line[item[0]:item[1]]+'" in --> '+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match])
+                            else:
+                                matches.append('"'+line[item[0]:item[1]]+'" in --> '+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:])
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
