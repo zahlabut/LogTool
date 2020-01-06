@@ -320,10 +320,17 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                 match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
                 if match_indexes!=[]:
                     for item in match_indexes:
-                        if item[1]+number_of_characters_after_match<len(line):
-                            matches.append(line[item[0]:item[1]+number_of_characters_after_match])
+                        if item[0]>10:
+                            if item[1]+number_of_characters_after_match<len(line):
+                                line[item[0]-10:item[0]]+matches.append(line[item[0]-10:item[1]+number_of_characters_after_match])
+                            else:
+                                line[item[0]-10:item[0]]+matches.append(line[item[0]:])
                         else:
-                            matches.append(line[item[0]:])
+                            if item[1]+number_of_characters_after_match<len(line):
+                                line[0:item[0]]+matches.append(line[item[0]-10:item[1]+number_of_characters_after_match])
+                            else:
+                                line[item[0]-10:item[0]]+matches.append(line[item[0]:])
+
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
