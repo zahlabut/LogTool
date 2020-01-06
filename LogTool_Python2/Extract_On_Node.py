@@ -336,7 +336,7 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
         for item in unique_matches:
-            new_block+='\t'+item.strip()+'\n'
+            new_block+=item.strip()+'\n'
 
     # Drop if not relevant block using "ignore_block"
     if ignore_block(block,ignore_strings)==True:
