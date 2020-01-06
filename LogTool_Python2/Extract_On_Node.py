@@ -177,6 +177,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     if os.path.exists('zahlabut.txt'):
         os.remove('zahlabut.txt')
     command = "grep -n '" + string + "' " + log + " >> zahlabut.txt"
+    strings=[string]
     if string ==' ERROR':
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL']
@@ -184,8 +185,8 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
             command+="grep -n '" +item+ "' " + log + " >> zahlabut.txt;"
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
-    command_result=exec_command_line_command(command)
-    if command_result['ReturnCode']!=None:
+    exec_command_line_command(command)
+    if os.path.getsize('zahlabut.txt')!=0:
         lines=open('zahlabut.txt','r').readlines()
         filtered_lines = []
         for line in lines:
@@ -396,10 +397,10 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     command=''
     for com in commands:
         command+=com+';'
-    command_result=exec_command_line_command(command)
+    exec_command_line_command(command)
 
     # Read zahlabut.txt and create list of blocks
-    if command_result['ReturnCode']==0 and os.path.exists('zahlabut.txt'):
+    if os.path.getsize('zahlabut.txt')!=0:
         if '--\n' in open('zahlabut.txt','r').read():
             list_of_blocks=open('zahlabut.txt','r').read().split('--\n')
         else:
