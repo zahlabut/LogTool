@@ -381,6 +381,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file)
         commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file)
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
