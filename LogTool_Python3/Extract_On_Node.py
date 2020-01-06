@@ -138,7 +138,7 @@ def append_to_file(log_file, msg):
 def get_line_date(line):
     line=line[0:50] # Use first 50 characters to get line timestamp
     # Check that debug level exists in log last line
-    valid_debug_levels=['INFO','WARN','DEBUG','ERROR']
+    valid_debug_levels=['INFO','WARN','DEBUG','ERROR','CRITICAL','FATAL','TRACE','OFF']
     return_error=True
     for level in valid_debug_levels:
         if level in line:
@@ -177,13 +177,25 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
-    command = "grep -n '" + string + "' " + log + " > zahlabut.txt"
+    if os.path.exists('zahlabut.txt'):
+        os.remove('zahlabut.txt')
+    command = "grep -n '" + string + "' " + log + " >> zahlabut.txt"
+    if string ==' ERROR':
+        command=''
+        strings=[' ERROR',' CRITICAL',' FATAL']
+        for item in strings:
+            command+="grep -n '" +item+ "' " + log + " >> zahlabut.txt;"
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     command_result=exec_command_line_command(command)
-    if command_result['ReturnCode']==0:
+    if command_result['ReturnCode']!=None:
         lines=open('zahlabut.txt','r').readlines()
-        lines=[line for line in lines if string in line[0:60]] #ignore if ERROR for example is not debug level string
+        filtered_lines = []
+        for line in lines:
+            for string in strings:
+                if string in line[0:60]:
+                    filtered_lines.append(line)
+        lines=filtered_lines
         lines_dic={}
         for line in lines:
             lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
@@ -207,7 +219,12 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
             block_lines_to_save = [line for line in block_lines]
-            block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
+            filtered_lines=[]
+            for line in block_lines:
+                for string in strings:
+                    if string in line:
+                        filtered_lines.append(line.split(string)[1])
+            block_lines=filtered_lines
             # Save to file block lines #
             if save_raw_data=='yes':
                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')

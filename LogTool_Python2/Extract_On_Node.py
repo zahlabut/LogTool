@@ -134,18 +134,15 @@ def append_to_file(log_file, msg):
 
 def get_line_date(line):
     line=line[0:50] # Use first 50 characters to get line timestamp
-
-    def get_line_date(line):
-        line = line[0:50]  # Use first 50 characters to get line timestamp
-        # Check that debug level exists in log last line
-        valid_debug_levels = ['INFO', 'WARN', 'DEBUG', 'ERROR']
-        return_error = True
-        for level in valid_debug_levels:
-            if level in line:
-                return_error = False
-                break
-        if return_error == True:
-            return {'Error': 'No valid debug level found in log last line!', 'Line': line.strip(), 'Date': None}
+    # Check that debug level exists in log last line
+    valid_debug_levels=['INFO','WARN','DEBUG','ERROR','CRITICAL','FATAL','TRACE','OFF']
+    return_error=True
+    for level in valid_debug_levels:
+        if level in line:
+            return_error=False
+            break
+    if return_error==True:
+        return {'Error': 'No valid debug level found in log last line!', 'Line': line.strip(), 'Date': None}
 
     # Delta 27 []
     if line.find(']') - line.find('[') == 27:
@@ -153,7 +150,7 @@ def get_line_date(line):
             date = line[line.find('[') + 1:line.find(']')]
             date=datetime.datetime.strptime(date.split(' +')[0], "%d/%b/%Y:%H:%M:%S")
             return {'Error': None, 'Date':date.strftime('%Y-%m-%d %H:%M:%S.%f').split('.')[0],'Line':line}
-        except Exception, e:
+        except Exception as e:
             return {'Error': e, 'Line': line.strip(), 'Date':None}
 
     # Delta 32 []
@@ -162,7 +159,7 @@ def get_line_date(line):
             date = line[line.find('[') + 1:line.find(']')]
             date=datetime.datetime.strptime(date.split(' +')[0], "%a %b %d %H:%M:%S.%f %Y")
             return {'Error': None, 'Date': date.strftime('%Y-%m-%d %H:%M:%S.%f').split('.')[0], 'Line': line}
-        except Exception, e:
+        except Exception as e:
             return {'Error': e, 'Line': line.strip(),'Date':None}
 
     else:
@@ -170,20 +167,32 @@ def get_line_date(line):
             date=line[0:19].replace('T',' ')
             date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
             return {'Error': None, 'Date': date.strftime('%Y-%m-%d %H:%M:%S').split('.')[0], 'Line': line}
-        except Exception,e:
+        except Exception as e:
             return {'Error':str(e),'Line':line.strip(),'Date':None}
 
 def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
-    command = "grep -n '" + string + "' " + log + " > zahlabut.txt"
+    if os.path.exists('zahlabut.txt'):
+        os.remove('zahlabut.txt')
+    command = "grep -n '" + string + "' " + log + " >> zahlabut.txt"
+    if string ==' ERROR':
+        command=''
+        strings=[' ERROR',' CRITICAL',' FATAL']
+        for item in strings:
+            command+="grep -n '" +item+ "' " + log + " >> zahlabut.txt;"
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     command_result=exec_command_line_command(command)
-    if command_result['ReturnCode']==0:
+    if command_result['ReturnCode']!=None:
         lines=open('zahlabut.txt','r').readlines()
-        lines=[line for line in lines if string in line[0:60]] #ignore if ERROR for example is not debug level string
+        filtered_lines = []
+        for line in lines:
+            for string in strings:
+                if string in line[0:60]:
+                    filtered_lines.append(line)
+        lines=filtered_lines
         lines_dic={}
         for line in lines:
             lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
@@ -199,16 +208,20 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
             else:
                 print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
-                print '--- Failed block lines are: ---'
+                print('--- Failed block lines are: ---')
                 for l in block_lines:
-                    print l
+                    print(l)
                 continue # Failed on block, continue to another block
             if date < time_grep:
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
             block_lines_to_save = [line for line in block_lines]
-            block_lines=[line.split(string)[1] for line in block_lines if string in line] # Block lines split by string and save all after ERROR
-            # Raw data to result file
+            filtered_lines=[]
+            for line in block_lines:
+                for string in strings:
+                    if string in line:
+                        filtered_lines.append(line.split(string)[1])
+            block_lines=filtered_lines
             # Save to file block lines #
             if save_raw_data=='yes':
                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
