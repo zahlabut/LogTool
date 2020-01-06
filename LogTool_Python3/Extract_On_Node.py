@@ -177,20 +177,20 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
-    if os.path.exists('zahlabut.txt'):
-        os.remove('zahlabut.txt')
-    command = "grep -n '" + string + "' " + log + " >> zahlabut.txt"
+    if os.path.exists(file_to_save):
+        os.remove(file_to_save)
+    command = "grep -n '" + string + "' " + log + " >> "+file_to_save
     strings=[string]
     if string ==' ERROR':
         command=''
-        strings=[' ERROR',' CRITICAL',' FATAL']
+        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE']
         for item in strings:
-            command+="grep -n '" +item+ "' " + log + " >> zahlabut.txt;"
+            command+="grep -n '" +item+ "' " + log + " >> "+file_to_save+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
-    if os.path.getsize('zahlabut.txt')!=0:
-        lines=open('zahlabut.txt','r').readlines()
+    if os.path.getsize(file_to_save)!=0:
+        lines=open(file_to_save,'r').readlines()
         filtered_lines = []
         for line in lines:
             for string in strings:
@@ -224,7 +224,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
             for line in block_lines:
                 for string in strings:
                     if string in line:
-                        filtered_lines.append(line.split(string)[1])
+                        filtered_lines.append(string+line.split(string)[1])
             block_lines=filtered_lines
             # Save to file block lines #
             if save_raw_data=='yes':
@@ -373,9 +373,8 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     return new_block
 
 # Extract WARN or ERROR messages from log and return unique messages #
-def extract_log_unique_greped_lines(log, string_for_grep):
+def extract_log_unique_greped_lines(log, string_for_grep,temp_grep_result_file='Exported.txt'):
     unique_messages = []
-    temp_grep_result_file='zahlabut.txt'
     if os.path.exists(temp_grep_result_file):
         os.remove(temp_grep_result_file)
     commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
