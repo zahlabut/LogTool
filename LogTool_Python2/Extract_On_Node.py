@@ -398,15 +398,14 @@ def extract_log_unique_greped_lines(log, string_for_grep,temp_grep_result_file='
         command+=com+';'
     exec_command_line_command(command)
 
-    # Read zahlabut.txt and create list of blocks
-    if os.path.getsize('zahlabut.txt')!=0:
-        if '--\n' in open('zahlabut.txt','r').read():
-            list_of_blocks=open('zahlabut.txt','r').read().split('--\n')
+    # Read temp_grep_result_file txt and create list of blocks
+    if os.path.getsize(temp_grep_result_file)!=0:
+        if '--\n' in open(temp_grep_result_file,'r').read():
+            list_of_blocks=open(temp_grep_result_file,'r').read().split('--\n')
         else:
-            list_of_blocks = [open('zahlabut.txt', 'r').read()]
+            list_of_blocks = [open(temp_grep_result_file, 'r').read()]
     else: #zahlabut.txt is empty
         return {log: unique_messages}
-
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
     list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
 
