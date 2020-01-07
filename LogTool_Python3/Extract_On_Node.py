@@ -180,7 +180,8 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
     if os.path.exists(file_to_save):
         os.remove(file_to_save)
     command = "grep -n '" + string + "' " + log + " >> "+file_to_save
-    strings=[string]
+    if string=='WARN':
+        strings=['WARNING',string]
     if string ==' ERROR':
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE']
@@ -225,6 +226,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 for string in strings:
                     if string in line:
                         filtered_lines.append(string+line.split(string)[1])
+                        break
             block_lines=filtered_lines
             # Save to file block lines #
             if save_raw_data=='yes':
