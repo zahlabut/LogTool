@@ -205,6 +205,15 @@ def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
         for block in blocks:
             if block[0]==block[1]:# Single line
                 block_lines=[lines_dic[str(block[0])]]
+            elif block[1]-block[0]>100:
+                block_lines=[]
+                for indx in range(block[0],block[0]+15):
+                    block_lines.append(lines_dic[str(indx)])
+                block_lines.append('.../n'*3)
+                block_lines.append('LogTool --> This block is too long!')
+                block_lines.append('.../n' * 3)
+                for indx in range(block[1]-15,block[1]+1):
+                    block_lines.append(lines_dic[str(indx)])
             else:
                 block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1])]
             block_date=get_line_date(block_lines[0]) # Check date only for first line
@@ -225,7 +234,6 @@ def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
                 for string in strings:
                     if string in line:
                         filtered_lines.append(string+line.split(string)[1])
-                        filtered_lines.append(string + line.split(string)[1])
                         break
             block_lines=filtered_lines
             # Save to file block lines #
