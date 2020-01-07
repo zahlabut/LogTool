@@ -222,16 +222,13 @@ def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
             if date < time_grep:
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
-            block_lines_to_save = [line if len(line)>1000 else line[0:1000]+'... <--LogTool: This line is too long!' for line in block_lines]
+            block_lines_to_save = [line for line in block_lines]
             filtered_lines=[]
             for line in block_lines:
                 for string in strings:
                     if string in line:
                         filtered_lines.append(string+line.split(string)[1])
-                        if len(line)<1000:
-                            filtered_lines.append(string + line.split(string)[1])
-                        else:
-                            filtered_lines.append(string + line.split(string)[1][0:1000]+'... <--LogTool: This line is too long!')
+                        filtered_lines.append(string + line.split(string)[1])
                         break
             block_lines=filtered_lines
             # Save to file block lines #
