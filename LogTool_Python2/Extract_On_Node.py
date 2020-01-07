@@ -170,25 +170,27 @@ def get_line_date(line):
         except Exception as e:
             return {'Error':str(e),'Line':line.strip(),'Date':None}
 
-def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
+def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
+    grep_file='zahlabut.txt'
+    strings=[]
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
-    if os.path.exists(file_to_save):
-        os.remove(file_to_save)
-    command = "grep -n '" + string + "' " + log + " >> "+file_to_save
+    if os.path.exists(grep_file):
+        os.remove(grep_file)
+    command = "grep -n '" + string + "' " + log + " >> "+grep_file
     if string=='WARN':
         strings=['WARNING',string]
     if string ==' ERROR':
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE']
         for item in strings:
-            command+="grep -n '" +item+ "' " + log + " >> "+file_to_save+';'
+            command+="grep -n '" +item+ "' " + log + " >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
-    if os.path.getsize(file_to_save)!=0:
-        lines=open(file_to_save,'r').readlines()
+    if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
+        lines=open(grep_file,'r').readlines()
         filtered_lines = []
         for line in lines:
             for string in strings:
@@ -217,12 +219,16 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
             if date < time_grep:
                 continue
             LogDataDic['TotalNumberOfErrors']+=1
-            block_lines_to_save = [line for line in block_lines]
+            block_lines_to_save = [line if len(line)>1000 else line[0:1000]+'... <--LogTool: This line is too long!' for line in block_lines]
             filtered_lines=[]
             for line in block_lines:
                 for string in strings:
                     if string in line:
                         filtered_lines.append(string+line.split(string)[1])
+                        if len(line)<1000:
+                            filtered_lines.append(string + line.split(string)[1])
+                        else:
+                            filtered_lines.append(string + line.split(string)[1][0:1000]+'... <--LogTool: This line is too long!')
                         break
             block_lines=filtered_lines
             # Save to file block lines #
@@ -231,7 +237,7 @@ def analyze_log(log, string, time_grep, file_to_save='Exported.txt'):
                 append_to_file(file_to_save, 'Block_Date:'+str(date)+'\n')
                 append_to_file(file_to_save, 'BlockLinesTuple:'+str(block)+'\n')
                 for l in block_lines_to_save:
-                    append_to_file(file_to_save,l+'\n')
+                    append_to_file(result_file,l+'\n')
             # Check fuzzy match and count matches #
             to_add = True
             is_trace = False
@@ -401,7 +407,7 @@ def extract_log_unique_greped_lines(log, string_for_grep,temp_grep_result_file='
     exec_command_line_command(command)
 
     # Read temp_grep_result_file txt and create list of blocks
-    if os.path.getsize(temp_grep_result_file)!=0:
+    if os.path.exists(temp_grep_result_file) and os.path.getsize(temp_grep_result_file)!=0:
         if '--\n' in open(temp_grep_result_file,'r').read():
             list_of_blocks=open(temp_grep_result_file,'r').read().split('--\n')
         else:
