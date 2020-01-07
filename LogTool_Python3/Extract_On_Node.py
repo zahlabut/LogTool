@@ -381,7 +381,8 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     return new_block
 
 # Extract WARN or ERROR messages from log and return unique messages #
-def extract_log_unique_greped_lines(log, string_for_grep,temp_grep_result_file='Exported.txt'):
+def extract_log_unique_greped_lines(log, string_for_grep):
+    temp_grep_result_file = 'zahlabut.txt'
     unique_messages = []
     if os.path.exists(temp_grep_result_file):
         os.remove(temp_grep_result_file)
