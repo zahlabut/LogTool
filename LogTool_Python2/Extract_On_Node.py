@@ -215,7 +215,7 @@ def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
                 for indx in range(block[1]-15,block[1]+1):
                     block_lines.append(lines_dic[str(indx)])
             else:
-                block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1])]
+                block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1]+1)]
             block_date=get_line_date(block_lines[0]) # Check date only for first line
             if block_date['Error']==None:
                 date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
