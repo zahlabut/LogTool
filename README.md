@@ -43,8 +43,9 @@ In "Table of Content" you'll find: "Section name --> Line number" per section, f
    In this section you'll find the unique messages per not standard log files, unfortunately LogTool cannot handle such
    log files in the same manner as standard Log files, therefor "Since Time" provided by you on extraction, will be ignored and
    you'll see all the unique Errors/Warnings messages since ever.
+
 So the **first thing** you'll have to do, is scrolling down to the bottom of result file, to the "Table of content" and then passing through
-its sections (use line indexes mentioned in "Table of Content" to jump into relevant section), where: #3 #4 and #5 are most important.
+its sections (use line indexes mentioned in "Table of Content" to jump into relevant section), where: #2 #3 and #4 are most important.
 
 **2) Download all logs from Overcloud nodes**
 
