@@ -336,6 +336,23 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
 def find_all_string_matches_in_line(line, string):
     return [(m.start(0), m.end(0)) for m in re.finditer(string, line)]
 
+def create_underline(line, list_of_strings):
+    underline=''
+    length=len(line)
+    line = line.lower()
+    lis_line=[' ' for char in line]
+    strings=[string.lower() for string in list_of_strings]
+    for string in strings:
+        if line.find(string)>0:
+            start=line.find(string)
+            for char in string:
+                lis_line[start]='^'
+                start+=1
+    underline=''
+    for c in lis_line:
+        underline+=c
+    return underline
+
 def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
     block_lines=block.splitlines()
     new_block=''
@@ -351,19 +368,22 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                     for item in match_indexes:
                         if item[0]>number_of_characters_before_match:
                             if item[1]+number_of_characters_after_match<len(line):
-                                matches.append(' "'+line[item[0]:item[1]]+'" in --> ...'+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...')
+                                match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
                             else:
-                                matches.append(' "'+line[item[0]:item[1]]+'" in --> ...'+line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:])
+                                match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:]
                         else:
                             if item[1]+number_of_characters_after_match<len(line):
-                                matches.append(' "'+line[item[0]:item[1]]+'" in --> '+line[0:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...')
+                                match_line=line[0:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
                             else:
-                                matches.append(' "'+line[item[0]:item[1]]+'" in --> '+line[0:item[0]]+line[item[0]:])
+                                match_line=line[0:item[0]]+line[item[0]:]
+                        matches.append(' --> '+match_line)
+
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
         for item in unique_matches:
-            new_block+=item.strip()+'\n'
+            new_block+=item+'\n'
+            new_block+=create_underline(item,magic_words)+'\n'
 
     # Drop if not relevant block using "ignore_block"
     if ignore_block(block,ignore_strings)==True:
