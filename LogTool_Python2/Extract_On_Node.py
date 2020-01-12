@@ -339,7 +339,7 @@ def find_all_string_matches_in_line(line, string):
 def create_underline(line, list_of_strings):
     underline=''
     length=len(line)
-    line = str(line).lower().replace('^','_')
+    line = line.lower()
     lis_line=[' ' for char in line]
     strings=[string.lower() for string in list_of_strings]
     for string in strings:
@@ -376,7 +376,7 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                                 match_line=line[0:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
                             else:
                                 match_line=line[0:item[0]]+line[item[0]:]
-                        matches.append(' --> '+match_line)
+                        matches.append(match_line)
 
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
