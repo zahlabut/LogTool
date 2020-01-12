@@ -341,7 +341,7 @@ def find_all_string_matches_in_line(line, string):
 def create_underline(line, list_of_strings):
     underline=''
     length=len(line)
-    line = line.lower()
+    line = str(line).lower()
     lis_line=[' ' for char in line]
     strings=[string.lower() for string in list_of_strings]
     for string in strings:
