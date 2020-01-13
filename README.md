@@ -63,6 +63,8 @@ This mode will display the current: CPU, RAM and Disk info, on each Overcloud no
 
 This mode provides user the ability to run his own script on Overcloud nodes.
 Create your own script and save it in UserScripts directory, set proper interpreter in it (for example: #!/usr/bin/bash).
+Let's say that Overcloud deployment failed and that you need to execute the same procedure on each Controller node to fix that.
+So, you can implement "work around" script and to run this script on Controllers using this mode.
 
 **6) Download "relevant logs" only, by given timestamp**
 
