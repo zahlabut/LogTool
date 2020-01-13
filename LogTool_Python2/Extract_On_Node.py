@@ -497,6 +497,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         os.remove(temp_grep_result_file)
     return {log:unique_messages}
 
+
 # import signalftrace
 # signal.signal(signal.SIGALRM, analyze_log)
 # signal.alarm(3)
