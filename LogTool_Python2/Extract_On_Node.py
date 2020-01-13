@@ -351,28 +351,30 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
     return False
 
 def find_all_string_matches_in_line(line, string):
-    return [(m.start(0), m.end(0)) for m in re.finditer(string, line)]
+    line,string=line.lower(),string.lower()
+    return [(i.start(),i.start()+len(string)) for i in re.finditer(string, line)]
 
 def create_underline(line, list_of_strings):
     underline=''
-    length=len(line)
-    line = line.lower()
-    lis_line=[' ' for char in line]
+    line = str(line).lower()
+    lis_line=[' ' if char!='\t' else '\t' for char in line]
     strings=[string.lower() for string in list_of_strings]
     for string in strings:
-        if line.find(string)>0:
-            start=line.find(string)
-            for char in string:
+        matches=find_all_string_matches_in_line(line,string)
+        for match in matches:
+            for start in range(match[0],match[1]):
                 lis_line[start]='^'
-                start+=1
     underline=''
     for c in lis_line:
         underline+=c
     return underline
 
+def escape_ansi(line):
+    ansi_escape =re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    return ansi_escape.sub('', line)
+
 def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
     block_lines=block.splitlines()
-
     # Check if not Jumbo block
     if len(block_lines)>5000:
         new_block='LogTool --> this block is a Jumbo block and its size is: '+str(len(block_lines))+' lines!\n'
@@ -381,10 +383,9 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
         for line in block_lines[-100:-1]:
             new_block += line + '\n'
         block=new_block
-
-
     # Normilize block
     block_lines=block.splitlines()
+    block_lines=[escape_ansi(line) for line in block_lines]
     new_block=''
     matches = []
     for line in block_lines:
@@ -407,18 +408,15 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                             else:
                                 match_line=line[0:item[0]]+line[item[0]:]
                         matches.append(match_line)
-
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
         for item in unique_matches:
             new_block+=item+'\n'
             new_block+=create_underline(item,magic_words)+'\n'
-
     # Drop if not relevant block using "ignore_block"
     if ignore_block(block,ignore_strings)==True:
         new_block=None
-
     # If block is too long, cut it
     if new_block!=None:
         block_lines = new_block.splitlines()
