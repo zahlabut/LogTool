@@ -188,7 +188,7 @@ def get_line_date(line):
         except Exception as e:
             return {'Error':str(e),'Line':line.strip(),'Date':None}
 
-def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
+def analyze_log(log, string, time_grep, file_to_save):
     grep_file='zahlabut.txt'
     strings=[]
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
@@ -286,6 +286,8 @@ def analyze_log(log, string, time_grep, file_to_save = 'Exported.txt'):
         dic['BlockTuple']=i[3]
         dic['BlockLinesSize']=i[4]
         LogDataDic['AnalyzedBlocks'].append(dic)
+    if os.path.exists(grep_file):
+        os.remove(grep_file)
     return LogDataDic
 
 def print_list(lis):
@@ -355,9 +357,8 @@ def find_all_string_matches_in_line(line, string):
 
 def create_underline(line, list_of_strings):
     underline=''
-    length=len(line)
-    line = line.lower()
-    lis_line=[' ' for char in line]
+    line = str(line).lower()
+    lis_line=[' ' if char!='\t' else '\t' for char in line]
     strings=[string.lower() for string in list_of_strings]
     for string in strings:
         if line.find(string)>0:
@@ -371,6 +372,19 @@ def create_underline(line, list_of_strings):
     return underline
 
 def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
+    block_lines=block.splitlines()
+
+    # Check if not Jumbo block
+    if len(block_lines)>5000:
+        new_block='LogTool --> this block is a Jumbo block and its size is: '+str(len(block_lines))+' lines!\n'
+        for line in block_lines[0:100]:
+            new_block+=line+'\n'
+        for line in block_lines[-100:-1]:
+            new_block += line + '\n'
+        block=new_block
+
+
+    # Normilize block
     block_lines=block.splitlines()
     new_block=''
     matches = []
@@ -482,6 +496,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
                 break
         if to_add == True:
             unique_messages.append(block)
+    if os.path.exists(temp_grep_result_file):
+        os.remove(temp_grep_result_file)
     return {log:unique_messages}
 
 if __name__ == "__main__":
