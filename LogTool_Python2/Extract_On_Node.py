@@ -450,10 +450,10 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             string_for_grep='level=error'
         if 'warn' in string_for_grep.lower():
             string_for_grep = 'level=warn'
-        commands = ["grep -n '" + string_for_grep + "' " + log + " > zahlabut.txt"]
+        commands = ["grep -n '" + string_for_grep + "' " + log + " > "+temp_grep_result_file]
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > zahlabut.txt"]
+        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > "+temp_grep_result_file]
     commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
     command=''
     for com in commands:
@@ -468,10 +468,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             list_of_blocks = [open(temp_grep_result_file, 'r').read()]
     else: #zahlabut.txt is empty
         return {log: unique_messages}
-
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
     list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
-
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
     relevant_blocks = []
     third_lines = []
@@ -483,7 +481,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             if third_line not in third_lines:
                 third_lines.append(third_line)
                 relevant_blocks.append(block)
-
     # Run fuzzy match
     for block in relevant_blocks:
         to_add=True
@@ -513,6 +510,14 @@ if __name__ == "__main__":
         logs=collect_log_paths(log_root_dir)
         #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
         for log in logs:
+            # Skip log file if bigger than 500MB, save this information into not standard logs section
+            log_size = os.path.getsize(log)
+            if log_size > 1024 * 1024 * 1024 / 2:  # 500MB
+                print_in_color(log + ' size is too big, skipped!!!', 'yellow')
+                analysis_result={log: ['LogTool --> WARNING the size of: ' + log
+                                       + ' is: '+ str(log_size /(1024.0*1024.0*1024.0)) + ' [GB]\nLogTool is hardcoded to support log files up to 500[MB]\nThis log was skipped!']}
+                not_standard_logs_unique_messages.append(analysis_result)
+                continue
             print_in_color('--> '+log, 'bold')
             Log_Analyze_Info = {}
             Log_Analyze_Info['Log']=log
