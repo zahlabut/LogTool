@@ -150,3 +150,9 @@ On your Undercloud execute the following commands:
 # Troubleshooting
 There are two log files created on runtime: _"Error.log"_ and _"Runtime.log"_.
 Please add the content of both into the description of issue you'd like to open.
+
+
+# Limitations
+1) LogTool is hardcoded to handle log files up to 500[MB].
+
+
