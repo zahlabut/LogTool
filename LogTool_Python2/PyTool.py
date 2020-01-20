@@ -567,6 +567,10 @@ try:
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
 
     if mode[1] == 'Download "relevant logs" only, by given timestamp':
+        # Change log path if needed #
+        osp_versions=['Older than OSP13?', "Newer than OSP13?"]
+        if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':
+            overcloud_logs_dir=os.path.join(overcloud_logs_dir,'containers')
         ### Get all nodes ###
         nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
         nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
