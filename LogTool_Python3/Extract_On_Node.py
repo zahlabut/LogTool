@@ -49,6 +49,7 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,']
+logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
 
 
 def remove_digits_from_string(s):
@@ -111,7 +112,7 @@ def to_ranges(iterable):
         group = list(group)
         yield group[0][1], group[-1][1]
 
-def collect_log_paths(log_root_path):
+def collect_log_paths(log_root_path,black_list=logs_to_ignore):
     logs=[]
     if '[' in log_root_path:
         log_root_path=log_root_path.replace('[','').replace(']','').replace(' ','')
@@ -137,9 +138,19 @@ def collect_log_paths(log_root_path):
                     file_abs_path = os.path.join(os.path.abspath(root), name)
                     logs.append(file_abs_path)
     logs=list(set(logs))
-    if len(logs)==0:
+    # Remove all logs that are in black list
+    filtered_logs=[]
+    for log in logs:
+        to_add=True
+        for path in black_list:
+            if path in log:
+                to_add=False
+                break
+        if to_add==True:
+            filtered_logs.append(log)
+    if len(filtered_logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
-    return logs
+    return filtered_logs
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
