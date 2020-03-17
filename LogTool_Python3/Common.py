@@ -123,7 +123,7 @@ class SSH():
 
     def ssh_command_only(self, command):
         self.stdin,self.stdout,self.stderr=self.client.exec_command(command)
-        return {'Stdout':self.stdout.read(),'Stderr':self.stderr.read().decode()}
+        return {'Stdout':self.stdout.read().decode(),'Stderr':self.stderr.read().decode()}
 
     def scp_upload(self, src_abs_path, dst_abs_path):
         try:
