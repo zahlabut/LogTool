@@ -448,14 +448,14 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
     if os.path.exists(temp_grep_result_file):
         os.remove(temp_grep_result_file)
-    commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
+    commands=["grep -in A-15 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
     if 'error' in string_for_grep.lower():
-        commands.append("grep -in -A7 -B2 traceback " + log+" >> "+temp_grep_result_file)
-        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file)
-        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file)
-        commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file)
-        commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file)
-        commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file)
+        commands.append("grep -in A-15 -B2 traceback " + log+" >> "+temp_grep_result_file)
+        commands.append('grep -in -E ^stderr: A-15 -B2 '+log+' >> '+temp_grep_result_file)
+        commands.append('grep -n A-15 -B2 STDERR ' + log + ' >> '+temp_grep_result_file)
+        commands.append('grep -in A-15 -B2 failed ' + log + ' >> '+temp_grep_result_file)
+        commands.append('grep -in A-15 -B2 fatal ' + log + ' >> ' + temp_grep_result_file)
+        commands.append('grep -in A-15 -B2 critical ' + log + ' >> ' + temp_grep_result_file)
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -464,7 +464,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands = ["grep -n '" + string_for_grep + "' " + log + " > "+temp_grep_result_file]
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > "+temp_grep_result_file]
+        commands = ["grep -n A-15 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > "+temp_grep_result_file]
     commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
     command=''
     for com in commands:
