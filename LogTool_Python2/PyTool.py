@@ -20,6 +20,9 @@ import random
 import signal
 import datetime
 import threading
+from urlparse import urljoin
+import urllib2
+import  urllib
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
@@ -345,6 +348,16 @@ try:
             tar_gz_files=[]
             ir_logs_urls = []
             for link in soup.findAll('a'):
+                if 'tempest-results' in link:
+                    tempest_results_url=urljoin(artifacts_url, link.get('href'))
+                    tempest_response = urllib2.urlopen(tempest_results_url)
+                    html = tempest_response.read()
+                    soup = BeautifulSoup(html)
+                    for link in soup.findAll('a'):
+                        if str(link.get('href')).endswith('.html'):
+                            tempest_html=link.get('href')
+                            tempest_log_url=urljoin(artifacts_url,'tempest-results')+'/'+tempest_html
+                            break
                 if str(link.get('href')).endswith('.tar.gz'):
                     tar_gz_files.append(link)
                     tar_link = urlparse.urljoin(artifacts_url, link.get('href'))
@@ -401,6 +414,11 @@ try:
         if len(ir_logs_urls)!=0:
             for url in ir_logs_urls:
                 os.system('wget -P ' + destination_dir + ' ' + url)
+
+        # Download tempest log (html #)
+        if tempest_log_url!=None:
+            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+            shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
 
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally','bold')

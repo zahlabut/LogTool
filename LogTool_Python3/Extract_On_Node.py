@@ -37,7 +37,7 @@ def set_default_arg_by_index(index, default):
 ### Parameters ###
 fuzzy_match = 0.55
 time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
-log_root_dir=set_default_arg_by_index(2,'/var/log/containers') # Log path #
+log_root_dir=set_default_arg_by_index(2,'/var/log') # Log path #
 string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
@@ -50,6 +50,17 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,']
 logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+
+python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
+                   'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
+                   'EOFError','ImportError','ModuleNotFoundError','LookupError','IndexError','KeyError',
+                   'MemoryError','NameError','UnboundLocalError','OSError','BlockingIOError',
+                   'ChildProcessError','ConnectionError','BrokenPipeError','ConnectionAbortedError',
+                   'ConnectionRefusedError','ConnectionResetError','FileExistsError','FileNotFoundError',
+                   'InterruptedError','IsADirectoryError','NotADirectoryError','PermissionError',
+                   'ProcessLookupError','TimeoutError','ReferenceError','RuntimeError','NotImplementedError',
+                   'RecursionError','SyntaxError','IndentationError','TabError','SystemError','TypeError',
+                   'ValueError','UnicodeError','UnicodeDecodeError','UnicodeEncodeError','UnicodeTranslateError']
 
 
 def remove_digits_from_string(s):
@@ -213,8 +224,9 @@ def analyze_log(log, string, time_grep, file_to_save):
     if string ==' ERROR':
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE']
+        strings=strings+python_exceptions
         for item in strings:
-            command+="grep -n '" +item+ "' " + log + " >> "+grep_file+';'
+            command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -406,7 +418,7 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
             new_block += line + '\n'
         else:
             new_block+=line[0:limit_line_size]+'... <-- LogTool: THIS LINE IS TOO LONG!\n'
-            for string in magic_words:
+            for string in magic_words+python_exceptions:
                 match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
                 if match_indexes!=[]:
                     for item in match_indexes:
@@ -452,12 +464,15 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         os.remove(temp_grep_result_file)
     commands=["grep -in -A15 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
     if 'error' in string_for_grep.lower():
-        commands.append("grep -in -A15 -B2 traceback " + log+" >> "+temp_grep_result_file)
-        commands.append('grep -in -E ^stderr: -A15 -B2 '+log+' >> '+temp_grep_result_file)
-        commands.append('grep -n -A15 -B2 STDERR ' + log + ' >> '+temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 failed ' + log + ' >> '+temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 fatal ' + log + ' >> ' + temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 critical ' + log + ' >> ' + temp_grep_result_file)
+        commands.append("grep -in -A15 -B2 traceback " + log+" >> "+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -E ^stderr: -A15 -B2 '+log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -n -A15 -B2 STDERR ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A15 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A15 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A15 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        for string in python_exceptions:
+            commands.append(
+                'grep -n -A15 -B2 '+string+' ' + log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -472,7 +487,6 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     for com in commands:
         command+=com+';'
     exec_command_line_command(command)
-
     # Read temp_grep_result_file txt and create list of blocks
     if os.path.exists(temp_grep_result_file) and os.path.getsize(temp_grep_result_file)!=0:
         if '--\n' in open(temp_grep_result_file,'r').read():

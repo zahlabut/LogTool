@@ -349,7 +349,19 @@ try:
             soup = BeautifulSoup(html, 'lxml')
             tar_gz_files=[]
             ir_logs_urls = []
+            # Create tempest log url #
+            tempest_log_url = None
             for link in soup.findAll('a'):
+                if 'tempest-results' in link:
+                    tempest_results_url=urljoin(artifacts_url, link.get('href'))
+                    tempest_response = urllib.request.urlopen(tempest_results_url)
+                    html = tempest_response.read()
+                    soup = BeautifulSoup(html, 'lxml')
+                    for link in soup.findAll('a'):
+                        if str(link.get('href')).endswith('.html'):
+                            tempest_html=link.get('href')
+                            tempest_log_url=urljoin(artifacts_url,'tempest-results')+'/'+tempest_html
+                            break
                 if str(link.get('href')).endswith('.tar.gz'):
                     tar_gz_files.append(link)
                     tar_link = urljoin(artifacts_url, link.get('href'))
@@ -406,6 +418,11 @@ try:
         if len(ir_logs_urls)!=0:
             for url in ir_logs_urls:
                 os.system('wget -P ' + destination_dir + ' ' + url)
+
+        # Download tempest log (html #)
+        if tempest_log_url!=None:
+            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+            shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
 
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
@@ -569,7 +586,7 @@ try:
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
 
-    if mode[1] == 'Download "relevant logs" only, by given timestamp':
+    if mode[1] == 'F':
         # Change log path if needed #
         osp_versions=['Older than OSP13?', "Newer than OSP13?"]
         if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':
