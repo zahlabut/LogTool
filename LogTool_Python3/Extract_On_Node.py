@@ -377,7 +377,7 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
 
 def find_all_string_matches_in_line(line, string):
     line,string=line.lower(),string.lower()
-    return [(i.start(),i.start()+len(string)) for i in re.finditer(string, line)]
+    return [(i.start(),i.start()+len(string)) for i in re.finditer(string.lower(), line.lower())]
 
 def create_underline(line, list_of_strings):
     underline=''
@@ -489,10 +489,11 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     exec_command_line_command(command)
     # Read temp_grep_result_file txt and create list of blocks
     if os.path.exists(temp_grep_result_file) and os.path.getsize(temp_grep_result_file)!=0:
-        if '--\n' in open(temp_grep_result_file,'r').read():
-            list_of_blocks=open(temp_grep_result_file,'r').read().split('--\n')
+        temp_data=open(temp_grep_result_file,'r').read()
+        if '--\n' in temp_data:
+            list_of_blocks=temp_data.split('--\n')
         else:
-            list_of_blocks = [open(temp_grep_result_file, 'r').read()]
+            list_of_blocks = [temp_data]
     else: #zahlabut.txt is empty
         return {log: unique_messages}
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
