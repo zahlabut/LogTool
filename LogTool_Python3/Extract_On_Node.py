@@ -446,13 +446,17 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     if new_block!=None:
         block_lines = new_block.splitlines()
         length_new_block=len(block_lines)
-        if length_new_block>20:
+        if length_new_block>50:
             new_small_block=''
-            for line in block_lines[0:5]:
+            for line in block_lines[0:20]:
                 new_small_block+=line+'\n'
             new_small_block+='...\n...\n...\nLogTool --> THIS BLOCK IS TOO LONG!\n'
             if "LogTool --> POTENTIAL BLOCK'S ISSUES:" in new_block:
                 new_small_block+=new_block[new_block.find("LogTool --> POTENTIAL BLOCK'S ISSUES:"):]
+            else:
+                new_small_block+='...\n'*3
+                for line in block_lines[-20:-1]:
+                    new_small_block += line + '\n'
             new_block=new_small_block
     return new_block
 
