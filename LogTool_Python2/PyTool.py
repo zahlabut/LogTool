@@ -347,6 +347,7 @@ try:
             soup = BeautifulSoup(html)
             tar_gz_files=[]
             ir_logs_urls = []
+            tempest_log_url=None
             for link in soup.findAll('a'):
                 if 'tempest-results' in link:
                     tempest_results_url=urljoin(artifacts_url, link.get('href'))
