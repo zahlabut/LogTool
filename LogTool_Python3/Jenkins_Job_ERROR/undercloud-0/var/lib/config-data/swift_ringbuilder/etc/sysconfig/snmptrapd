@@ -1,3 +1,0 @@
-# snmptrapd command line options
-# '-f' is implicitly added by snmptrapd systemd unit file
-# OPTIONS="-Lsd"

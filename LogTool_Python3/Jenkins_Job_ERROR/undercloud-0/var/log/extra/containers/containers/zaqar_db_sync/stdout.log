@@ -1,9 +1,0 @@
-INFO  [alembic.runtime.migration] Context impl MySQLImpl.
-INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-INFO  [alembic.runtime.migration] Running upgrade  -> 001, Liberty release
-INFO  [alembic.runtime.migration] Running upgrade 001 -> 002, placeholder
-INFO  [alembic.runtime.migration] Running upgrade 002 -> 003, placeholder
-INFO  [alembic.runtime.migration] Running upgrade 003 -> 004, placeholder
-INFO  [alembic.runtime.migration] Running upgrade 004 -> 005, placeholder
-INFO  [alembic.runtime.migration] Running upgrade 005 -> 006, Queens release
-INFO  [alembic.runtime.migration] Running upgrade 006 -> 007, Stein release

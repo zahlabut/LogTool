@@ -1,4 +1,0 @@
-+ command -v python3
-+ python3 /container-config-scripts/nova_wait_for_compute_service.py
-INFO:nova_wait_for_compute_service:Waiting for nova-compute service to register
-INFO:nova_wait_for_compute_service:Nova-compute service registered

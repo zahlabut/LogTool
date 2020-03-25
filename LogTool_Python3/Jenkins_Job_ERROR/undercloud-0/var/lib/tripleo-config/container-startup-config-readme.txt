@@ -1,1 +1,0 @@
-Container startup configs moved to /var/lib/tripleo-config/container-startup-config

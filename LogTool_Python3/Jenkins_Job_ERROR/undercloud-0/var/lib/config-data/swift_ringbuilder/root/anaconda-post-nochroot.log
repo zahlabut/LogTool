@@ -1,2 +1,0 @@
-+ umount /mnt/sysimage/run
-+ chroot /mnt/sysimage install -d /run/lock -m 0755 -o root -g root

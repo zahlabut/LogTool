@@ -1,5 +1,0 @@
-{
-  "deploy_stdout": "The clouds.yaml file is at /home/stack/.config/openstack/clouds.yaml\nThe clouds.yaml file is at /etc/openstack/clouds.yaml\n",
-  "deploy_stderr": "",
-  "deploy_status_code": 0
-}

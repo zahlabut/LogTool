@@ -1,5 +1,0 @@
-{
-  "deploy_stdout": "INFO: Undercloud Post - Nova configuration completed successfully.\nINFO: Undercloud post - Mistral workbooks configured successfully.\nINFO: Undercloud post - Mistral environment configured successfully.\nINFO: Undercloud post - Default plan overcloud created.\nINFO: Undercloud post - SSH Keys for TripleO Validations deployed.\n",
-  "deploy_stderr": "",
-  "deploy_status_code": 0
-}
