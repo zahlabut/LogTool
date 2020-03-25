@@ -446,14 +446,14 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
         length_new_block=len(block_lines)
         if length_new_block>40:
             new_small_block=''
-            for line in block_lines[0:10]:
+            for line in block_lines[0:5]:
                 new_small_block+=line+'\n'
             new_small_block+='...\n...\n...\nLogTool --> THIS BLOCK IS TOO LONG!\n'
             if "LogTool --> POTENTIAL BLOCK'S ISSUES:" in new_block:
                 new_small_block+=new_block[new_block.find("LogTool --> POTENTIAL BLOCK'S ISSUES:"):]
             else:
                 new_small_block+='...\n'*3
-                for line in block_lines[-10:-1]:
+                for line in block_lines[-5:-1]:
                     new_small_block += line + '\n'
             new_block=new_small_block
     return new_block
@@ -465,17 +465,17 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     unique_messages = []
     if os.path.exists(temp_grep_result_file):
         os.remove(temp_grep_result_file)
-    commands=["grep -in -A15 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
+    commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + log+" >> "+temp_grep_result_file]
     if 'error' in string_for_grep.lower():
-        commands.append("grep -in -A15 -B2 traceback " + log+" >> "+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -E ^stderr: -A15 -B2 '+log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -n -A15 -B2 STDERR ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -A15 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append("grep -in -A7 -B2 traceback " + log+" >> "+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         for string in python_exceptions:
             commands.append(
-                'grep -n -A15 -B2 '+string+' ' + log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
+                'grep -n -A7 -B2 '+string+' ' + log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
     if '/var/log/messages' in log:
         if 'error' in string_for_grep.lower():
             string_for_grep='level=error'
@@ -484,7 +484,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands = ["grep -n '" + string_for_grep + "' " + log + " > "+temp_grep_result_file]
     if 'consoleFull' in log:
         string_for_grep=string_for_grep+'\|background:red\|fatal:'
-        commands = ["grep -n -A15 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > "+temp_grep_result_file]
+        commands = ["grep -n -A7 -B2 '" + string_for_grep.replace(' ','') + "' " + log + " > "+temp_grep_result_file]
     commands=[command.replace('grep','zgrep') if log.endswith('.gz') else command for command in commands]
     command=''
     for com in commands:
