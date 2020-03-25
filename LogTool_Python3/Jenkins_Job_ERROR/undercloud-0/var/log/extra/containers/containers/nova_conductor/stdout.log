@@ -1,0 +1,101 @@
++ sudo -E kolla_set_configs
+INFO:__main__:Loading config file at /var/lib/kolla/config_files/config.json
+INFO:__main__:Validating config file
+INFO:__main__:Kolla config strategy set to: COPY_ALWAYS
+INFO:__main__:Copying service configuration files
+INFO:__main__:Creating directory /etc/httpd
+INFO:__main__:Creating directory /etc/httpd/conf.d
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/10-nova_api_wsgi.conf to /etc/httpd/conf.d/10-nova_api_wsgi.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/access_compat.load to /etc/httpd/conf.d/access_compat.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/actions.load to /etc/httpd/conf.d/actions.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/alias.conf to /etc/httpd/conf.d/alias.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/alias.load to /etc/httpd/conf.d/alias.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/auth_basic.load to /etc/httpd/conf.d/auth_basic.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/auth_digest.load to /etc/httpd/conf.d/auth_digest.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authn_anon.load to /etc/httpd/conf.d/authn_anon.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authn_core.load to /etc/httpd/conf.d/authn_core.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authn_dbm.load to /etc/httpd/conf.d/authn_dbm.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authn_file.load to /etc/httpd/conf.d/authn_file.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_core.load to /etc/httpd/conf.d/authz_core.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_dbm.load to /etc/httpd/conf.d/authz_dbm.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_groupfile.load to /etc/httpd/conf.d/authz_groupfile.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_host.load to /etc/httpd/conf.d/authz_host.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_owner.load to /etc/httpd/conf.d/authz_owner.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/authz_user.load to /etc/httpd/conf.d/authz_user.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/autoindex.conf to /etc/httpd/conf.d/autoindex.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/autoindex.load to /etc/httpd/conf.d/autoindex.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/cache.load to /etc/httpd/conf.d/cache.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/cgi.load to /etc/httpd/conf.d/cgi.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/dav.load to /etc/httpd/conf.d/dav.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/dav_fs.conf to /etc/httpd/conf.d/dav_fs.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/dav_fs.load to /etc/httpd/conf.d/dav_fs.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/deflate.conf to /etc/httpd/conf.d/deflate.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/deflate.load to /etc/httpd/conf.d/deflate.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/dir.conf to /etc/httpd/conf.d/dir.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/dir.load to /etc/httpd/conf.d/dir.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/env.load to /etc/httpd/conf.d/env.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/expires.load to /etc/httpd/conf.d/expires.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/ext_filter.load to /etc/httpd/conf.d/ext_filter.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/filter.load to /etc/httpd/conf.d/filter.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/include.load to /etc/httpd/conf.d/include.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/log_config.load to /etc/httpd/conf.d/log_config.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/logio.load to /etc/httpd/conf.d/logio.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/mime.conf to /etc/httpd/conf.d/mime.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/mime.load to /etc/httpd/conf.d/mime.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/mime_magic.conf to /etc/httpd/conf.d/mime_magic.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/mime_magic.load to /etc/httpd/conf.d/mime_magic.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/negotiation.conf to /etc/httpd/conf.d/negotiation.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/negotiation.load to /etc/httpd/conf.d/negotiation.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/prefork.conf to /etc/httpd/conf.d/prefork.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/prefork.load to /etc/httpd/conf.d/prefork.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/rewrite.load to /etc/httpd/conf.d/rewrite.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/setenvif.conf to /etc/httpd/conf.d/setenvif.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/setenvif.load to /etc/httpd/conf.d/setenvif.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/socache_shmcb.load to /etc/httpd/conf.d/socache_shmcb.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/speling.load to /etc/httpd/conf.d/speling.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/ssl.conf to /etc/httpd/conf.d/ssl.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/ssl.load to /etc/httpd/conf.d/ssl.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/status.conf to /etc/httpd/conf.d/status.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/status.load to /etc/httpd/conf.d/status.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/substitute.load to /etc/httpd/conf.d/substitute.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/suexec.load to /etc/httpd/conf.d/suexec.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/systemd.load to /etc/httpd/conf.d/systemd.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/unixd.load to /etc/httpd/conf.d/unixd.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/usertrack.load to /etc/httpd/conf.d/usertrack.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/version.load to /etc/httpd/conf.d/version.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/vhost_alias.load to /etc/httpd/conf.d/vhost_alias.load
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/wsgi.conf to /etc/httpd/conf.d/wsgi.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf.d/wsgi.load to /etc/httpd/conf.d/wsgi.load
+INFO:__main__:Creating directory /etc/httpd/conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf/httpd.conf to /etc/httpd/conf/httpd.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/httpd/conf/ports.conf to /etc/httpd/conf/ports.conf
+INFO:__main__:Creating directory /etc/my.cnf.d
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/my.cnf.d/tripleo.cnf to /etc/my.cnf.d/tripleo.cnf
+INFO:__main__:Deleting /etc/nova/nova.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/nova/nova.conf to /etc/nova/nova.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/var/spool/cron/nova to /var/spool/cron/nova
+INFO:__main__:Creating directory /var/www
+INFO:__main__:Creating directory /var/www/cgi-bin
+INFO:__main__:Creating directory /var/www/cgi-bin/nova
+INFO:__main__:Copying /var/lib/kolla/config_files/src/var/www/cgi-bin/nova/nova-api to /var/www/cgi-bin/nova/nova-api
+INFO:__main__:Writing out command to execute
+INFO:__main__:Setting permission for /var/log/nova
+INFO:__main__:Setting permission for /var/log/nova/nova-manage.log
+++ cat /run_command
++ CMD='/usr/bin/nova-conductor '
++ ARGS=
++ sudo kolla_copy_cacerts
++ [[ ! -n '' ]]
++ . kolla_extend_start
+++ [[ ! -d /var/log/kolla/nova ]]
+++ mkdir -p /var/log/kolla/nova
++++ stat -c %a /var/log/kolla/nova
+++ [[ 2755 != \7\5\5 ]]
+++ chmod 755 /var/log/kolla/nova
+++ . /usr/local/bin/kolla_nova_extend_start
++++ [[ -n '' ]]
++++ [[ -n '' ]]
++++ [[ -n '' ]]
++ echo 'Running command: '\''/usr/bin/nova-conductor '\'''
+Running command: '/usr/bin/nova-conductor '
++ exec /usr/bin/nova-conductor

@@ -1,0 +1,27 @@
+{
+  "command": "/usr/bin/bootstrap_host_exec zaqar_api su zaqar -s /bin/bash -c 'zaqar-sql-db-manage upgrade head'",
+  "detach": false,
+  "environment": {
+    "TRIPLEO_DEPLOY_IDENTIFIER": "1583290741",
+    "TRIPLEO_CONFIG_HASH": "3b7e34eb6296c5e45e624de311b0d9d0"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1",
+  "net": "host",
+  "privileged": false,
+  "user": "root",
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/config-data/zaqar/etc/zaqar/:/etc/zaqar/:ro",
+    "/var/log/containers/zaqar:/var/log/zaqar",
+    "/var/log/containers/httpd/zaqar:/var/log/httpd"
+  ]
+}

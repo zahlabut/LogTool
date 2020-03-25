@@ -1,0 +1,7 @@
++ command -v python3
++ python3 /container-config-scripts/nova_statedir_ownership.py
+INFO:nova_statedir:Applying nova statedir ownership
+INFO:nova_statedir:Target ownership for /var/lib/nova: 42436:42436
+INFO:nova_statedir:Checking uid: 0 gid: 0 path: /var/lib/nova/
+INFO:nova_statedir:Changing ownership of /var/lib/nova from 0:0 to 42436:42436
+INFO:nova_statedir:Nova statedir ownership complete

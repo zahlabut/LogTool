@@ -1,0 +1,132 @@
+==== Bridge name - br-int ====
+OFPT_FEATURES_REPLY (xid=0x2): dpid:0000b668b492d541
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(int-br-ctlplane): addr:0e:82:aa:6e:59:b2
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+ 2(tapd987db8f-6f): addr:fa:16:3e:94:d9:97
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+ LOCAL(br-int): addr:b6:68:b4:92:d5:41
+     config:     PORT_DOWN
+     state:      LINK_DOWN
+     speed: 0 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+NXST_FLOW reply (xid=0x4):
+ cookie=0xe999aa66bbe92ea0, duration=1846.834s, table=0, n_packets=0, n_bytes=0, idle_age=1846, priority=65535,vlan_tci=0x0fff/0x1fff actions=drop
+ cookie=0xe999aa66bbe92ea0, duration=1700.076s, table=0, n_packets=3399, n_bytes=183562, idle_age=1, priority=3,in_port=1,vlan_tci=0x0000/0x1fff actions=mod_vlan_vid:1,resubmit(,60)
+ cookie=0xe999aa66bbe92ea0, duration=1846.804s, table=0, n_packets=294, n_bytes=15876, idle_age=1700, priority=2,in_port=1 actions=drop
+ cookie=0xe999aa66bbe92ea0, duration=1846.838s, table=0, n_packets=5, n_bytes=446, idle_age=1698, priority=0 actions=resubmit(,60)
+ cookie=0xe999aa66bbe92ea0, duration=1846.840s, table=23, n_packets=0, n_bytes=0, idle_age=1846, priority=0 actions=drop
+ cookie=0xe999aa66bbe92ea0, duration=1846.835s, table=24, n_packets=0, n_bytes=0, idle_age=1846, priority=0 actions=drop
+ cookie=0xe999aa66bbe92ea0, duration=1846.836s, table=60, n_packets=3404, n_bytes=184008, idle_age=1, priority=3 actions=NORMAL
+ cookie=0xe999aa66bbe92ea0, duration=1846.832s, table=61, n_packets=0, n_bytes=0, idle_age=1846, priority=3 actions=NORMAL
+
+==== Bridge name - br-ctlplane ====
+OFPT_FEATURES_REPLY (xid=0x2): dpid:00005254002de30f
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(eth0): addr:52:54:00:2d:e3:0f
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+ 2(phy-br-ctlplane): addr:36:69:2a:9a:91:b4
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+ LOCAL(br-ctlplane): addr:52:54:00:2d:e3:0f
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+NXST_FLOW reply (xid=0x4):
+ cookie=0xbbb065de2f5eddd, duration=1700.086s, table=0, n_packets=4, n_bytes=356, idle_age=1698, priority=4,in_port=2,dl_vlan=1 actions=strip_vlan,NORMAL
+ cookie=0xbbb065de2f5eddd, duration=1846.810s, table=0, n_packets=1, n_bytes=90, idle_age=1700, priority=2,in_port=2 actions=drop
+ cookie=0xbbb065de2f5eddd, duration=1846.821s, table=0, n_packets=4616, n_bytes=247434, idle_age=1, priority=0 actions=NORMAL
+
+AutoAttach table
+_uuid mappings system_description system_name
+----- -------- ------------------ -----------
+
+Bridge table
+_uuid                                auto_attach controller                             datapath_id        datapath_type datapath_version external_ids            fail_mode flood_vlans flow_tables ipfix mcast_snooping_enable mirrors name        netflow other_config                                         ports                                                                                                              protocols                    rstp_enable rstp_status sflow status stp_enable
+------------------------------------ ----------- -------------------------------------- ------------------ ------------- ---------------- ----------------------- --------- ----------- ----------- ----- --------------------- ------- ----------- ------- ---------------------------------------------------- ------------------------------------------------------------------------------------------------------------------ ---------------------------- ----------- ----------- ----- ------ ----------
+e3bf0480-04e5-4442-91c0-85a9839f3f57 []          [509b42ca-f357-4063-8d77-2f538642b1ce] "00005254002de30f" system        "<unknown>"      {bridge-id=br-ctlplane} secure    []          {}          []    false                 []      br-ctlplane []      {hwaddr="52:54:00:2d:e3:0f", mac-table-size="50000"} [28b2e498-5819-4607-80aa-6490444d35b1, b24f2d3a-adfa-486b-8a28-bda439494375, b2ed012c-01d2-49ac-bcc0-2561bf063cf2] ["OpenFlow10", "OpenFlow13"] false       {}          []    {}     false
+92b468b6-0215-41d5-8108-91c323e9a381 []          [9e0e3d5b-ec1b-42d5-8ddd-bf7e1757c9f6] "0000b668b492d541" system        "<unknown>"      {}                      secure    []          {}          []    false                 []      br-int      []      {mac-table-size="50000"}                             [4c440ba7-b5ee-491c-9415-e8a1bd317f58, 831bb4d5-4131-4cfd-a29b-fe2aa30fa156, d0257512-1bfc-4866-8b86-0561573af852] ["OpenFlow10", "OpenFlow13"] false       {}          []    {}     false
+
+Controller table
+_uuid                                connection_mode controller_burst_limit controller_rate_limit enable_async_messages external_ids inactivity_probe is_connected local_gateway local_ip local_netmask max_backoff other_config role  status                                   target
+------------------------------------ --------------- ---------------------- --------------------- --------------------- ------------ ---------------- ------------ ------------- -------- ------------- ----------- ------------ ----- ---------------------------------------- --------------------
+509b42ca-f357-4063-8d77-2f538642b1ce out-of-band     []                     []                    []                    {}           10000            true         []            []       []            []          {}           other {sec_since_connect="1846", state=ACTIVE} "tcp:127.0.0.1:6633"
+9e0e3d5b-ec1b-42d5-8ddd-bf7e1757c9f6 out-of-band     []                     []                    []                    {}           10000            true         []            []       []            []          {}           other {sec_since_connect="1846", state=ACTIVE} "tcp:127.0.0.1:6633"
+
+Flow_Sample_Collector_Set table
+_uuid bridge external_ids id ipfix
+----- ------ ------------ -- -----
+
+Flow_Table table
+_uuid external_ids flow_limit groups name overflow_policy prefixes
+----- ------------ ---------- ------ ---- --------------- --------
+
+IPFIX table
+_uuid cache_active_timeout cache_max_flows external_ids obs_domain_id obs_point_id other_config sampling targets
+----- -------------------- --------------- ------------ ------------- ------------ ------------ -------- -------
+
+Interface table
+_uuid                                admin_state bfd bfd_status cfm_fault cfm_fault_status cfm_flap_count cfm_health cfm_mpid cfm_remote_mpids cfm_remote_opstate duplex error external_ids                                                                                             ifindex ingress_policing_burst ingress_policing_rate lacp_current link_resets link_speed link_state lldp mac mac_in_use          mtu  mtu_request name             ofport ofport_request options                other_config statistics                                                                                                                                                                             status                                                                type
+------------------------------------ ----------- --- ---------- --------- ---------------- -------------- ---------- -------- ---------------- ------------------ ------ ----- -------------------------------------------------------------------------------------------------------- ------- ---------------------- --------------------- ------------ ----------- ---------- ---------- ---- --- ------------------- ---- ----------- ---------------- ------ -------------- ---------------------- ------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------- --------
+143129c1-81fa-4ee9-9056-01ac122c506c down        {}  {}         []        []               []             []         []       []               []                 []     []    {}                                                                                                       7       0                      0                     []           0           []         down       {}   []  "b6:68:b4:92:d5:41" 1500 []          br-int           65534  []             {}                     {}           {collisions=0, rx_bytes=0, rx_crc_err=0, rx_dropped=3404, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=0, tx_bytes=0, tx_dropped=0, tx_errors=0, tx_packets=0}               {driver_name=openvswitch}                                             internal
+6de31779-a780-4650-8edb-603438121c2d up          {}  {}         []        []               []             []         []       []               []                 []     []    {}                                                                                                       0       0                      0                     []           0           []         up         {}   []  "0e:82:aa:6e:59:b2" []   []          int-br-ctlplane  1      []             {peer=phy-br-ctlplane} {}           {rx_bytes=199438, rx_packets=3693, tx_bytes=446, tx_packets=5}                                                                                                                         {}                                                                    patch
+18e2dd48-5574-4038-bfc9-d913143551cd up          {}  {}         []        []               []             []         []       []               []                 []     []    {}                                                                                                       0       0                      0                     []           0           []         up         {}   []  "36:69:2a:9a:91:b4" []   []          phy-br-ctlplane  2      []             {peer=int-br-ctlplane} {}           {rx_bytes=446, rx_packets=5, tx_bytes=199438, tx_packets=3693}                                                                                                                         {}                                                                    patch
+e9e772a8-00c1-416c-ada8-21a0885e3552 up          {}  {}         []        []               []             []         []       []               []                 []     []    {}                                                                                                       2       0                      0                     []           0           []         up         {}   []  "52:54:00:2d:e3:0f" 1500 []          "eth0"           1      []             {}                     {}           {collisions=0, rx_bytes=86216, rx_crc_err=0, rx_dropped=450, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=1658, tx_bytes=279726, tx_dropped=0, tx_errors=0, tx_packets=5005} {driver_name=virtio_net, driver_version="1.0.0", firmware_version=""} ""
+ee26cd0c-2f56-4324-b6cb-64a841e0200b up          {}  {}         []        []               []             []         []       []               []                 []     []    {}                                                                                                       6       0                      0                     []           1           []         up         {}   []  "52:54:00:2d:e3:0f" 1500 []          br-ctlplane      65534  []             {}                     {}           {collisions=0, rx_bytes=300, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=4, tx_bytes=266126, tx_dropped=0, tx_errors=0, tx_packets=4923}        {driver_name=openvswitch}                                             internal
+3b426bbd-a72d-45fa-8e76-27334866a0eb up          {}  {}         []        []               []             []         []       []               []                 []     []    {attached-mac="fa:16:3e:94:d9:97", iface-id="d987db8f-6f93-4b42-bceb-2a5f89cc438e", iface-status=active} 0       0                      0                     []           1           []         up         {}   []  "fa:16:3e:94:d9:97" 1500 []          "tapd987db8f-6f" 2      []             {}                     {}           {collisions=0, rx_bytes=135976, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=3399, tx_bytes=446, tx_dropped=0, tx_errors=0, tx_packets=5}        {driver_name=openvswitch}                                             internal
+
+Manager table
+_uuid                                connection_mode external_ids inactivity_probe is_connected max_backoff other_config status                                                                                  target
+------------------------------------ --------------- ------------ ---------------- ------------ ----------- ------------ --------------------------------------------------------------------------------------- ---------------------
+88fccd4b-0b9d-47d5-9db4-5f89ed8cd856 []              {}           []               true         []          {}           {bound_port="6640", n_connections="3", sec_since_connect="0", sec_since_disconnect="0"} "ptcp:6640:127.0.0.1"
+
+Mirror table
+_uuid external_ids name output_port output_vlan select_all select_dst_port select_src_port select_vlan snaplen statistics
+----- ------------ ---- ----------- ----------- ---------- --------------- --------------- ----------- ------- ----------
+
+NetFlow table
+_uuid active_timeout add_id_to_interface engine_id engine_type external_ids targets
+----- -------------- ------------------- --------- ----------- ------------ -------
+
+Open_vSwitch table
+_uuid                                bridges                                                                      cur_cfg datapath_types   db_version dpdk_initialized dpdk_version   external_ids                                                                                                            iface_types                                                                                  manager_options                        next_cfg other_config ovs_version ssl statistics system_type system_version
+------------------------------------ ---------------------------------------------------------------------------- ------- ---------------- ---------- ---------------- -------------- ----------------------------------------------------------------------------------------------------------------------- -------------------------------------------------------------------------------------------- -------------------------------------- -------- ------------ ----------- --- ---------- ----------- --------------
+4966300b-f8a9-4384-ab8a-948f8e33310f [92b468b6-0215-41d5-8108-91c323e9a381, e3bf0480-04e5-4442-91c0-85a9839f3f57] 24      [netdev, system] "7.16.1"   false            "DPDK 18.11.5" {hostname="undercloud-0.redhat.local", rundir="/var/run/openvswitch", system-id="37250328-8194-4f7b-860c-d313b2f517a4"} [erspan, geneve, gre, internal, "ip6erspan", "ip6gre", lisp, patch, stt, system, tap, vxlan] [88fccd4b-0b9d-47d5-9db4-5f89ed8cd856] 24       {}           "2.11.0"    []  {}         rhel        "8.1"
+
+Port table
+_uuid                                bond_active_slave bond_downdelay bond_fake_iface bond_mode bond_updelay cvlans external_ids fake_bridge interfaces                             lacp mac name             other_config                                                                                             protected qos rstp_statistics rstp_status statistics status tag trunks vlan_mode
+------------------------------------ ----------------- -------------- --------------- --------- ------------ ------ ------------ ----------- -------------------------------------- ---- --- ---------------- -------------------------------------------------------------------------------------------------------- --------- --- --------------- ----------- ---------- ------ --- ------ ---------
+b24f2d3a-adfa-486b-8a28-bda439494375 []                0              false           []        0            []     {}           false       [ee26cd0c-2f56-4324-b6cb-64a841e0200b] []   []  br-ctlplane      {}                                                                                                       false     []  {}              {}          {}         {}     []  []     []
+4c440ba7-b5ee-491c-9415-e8a1bd317f58 []                0              false           []        0            []     {}           false       [143129c1-81fa-4ee9-9056-01ac122c506c] []   []  br-int           {}                                                                                                       false     []  {}              {}          {}         {}     []  []     []
+28b2e498-5819-4607-80aa-6490444d35b1 []                0              false           []        0            []     {}           false       [e9e772a8-00c1-416c-ada8-21a0885e3552] []   []  "eth0"           {}                                                                                                       false     []  {}              {}          {}         {}     []  []     []
+831bb4d5-4131-4cfd-a29b-fe2aa30fa156 []                0              false           []        0            []     {}           false       [6de31779-a780-4650-8edb-603438121c2d] []   []  int-br-ctlplane  {}                                                                                                       false     []  {}              {}          {}         {}     []  []     []
+b2ed012c-01d2-49ac-bcc0-2561bf063cf2 []                0              false           []        0            []     {}           false       [18e2dd48-5574-4038-bfc9-d913143551cd] []   []  phy-br-ctlplane  {}                                                                                                       false     []  {}              {}          {}         {}     []  []     []
+d0257512-1bfc-4866-8b86-0561573af852 []                0              false           []        0            []     {}           false       [3b426bbd-a72d-45fa-8e76-27334866a0eb] []   []  "tapd987db8f-6f" {net_uuid="e02e99e9-750a-4c24-8aa4-e17cb29fd7fa", network_type=flat, physical_network=ctlplane, tag="1"} false     []  {}              {}          {}         {}     1   []     []
+
+QoS table
+_uuid external_ids other_config queues type
+----- ------------ ------------ ------ ----
+
+Queue table
+_uuid dscp external_ids other_config
+----- ---- ------------ ------------
+
+SSL table
+_uuid bootstrap_ca_cert ca_cert certificate external_ids private_key
+----- ----------------- ------- ----------- ------------ -----------
+
+sFlow table
+_uuid agent external_ids header polling sampling targets
+----- ----- ------------ ------ ------- -------- -------

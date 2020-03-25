@@ -1,0 +1,27 @@
+{
+  "environment": {
+    "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+    "TRIPLEO_CONFIG_HASH": "5a1519727886b5a3ce50a67000069419"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-haproxy:20200226.1",
+  "net": "host",
+  "restart": "always",
+  "security_opt": "label=disable",
+  "start_order": 1,
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/kolla/config_files/haproxy.json:/var/lib/kolla/config_files/config.json:ro",
+    "/var/lib/config-data/puppet-generated/haproxy/:/var/lib/kolla/config_files/src:ro",
+    "/var/lib/haproxy:/var/lib/haproxy:rw,z",
+    "/etc/pki/tls/private/overcloud_endpoint.pem:/var/lib/kolla/config_files/src-tls//etc/pki/tls/private/overcloud_endpoint.pem:ro,shared"
+  ]
+}

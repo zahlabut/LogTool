@@ -1,0 +1,12 @@
+{
+    "action": "exec",
+    "command": [
+        "keystone",
+        "pkill",
+        "--signal",
+        "USR1",
+        "httpd"
+    ],
+    "start_order": 1,
+    "user": "root"
+}

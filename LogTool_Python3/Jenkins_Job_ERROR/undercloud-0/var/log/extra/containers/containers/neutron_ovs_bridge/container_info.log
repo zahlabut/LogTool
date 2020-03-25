@@ -1,0 +1,598 @@
++ podman top neutron_ovs_bridge user pid ppid pcpu vsz tty state time etime args
+Error: top can only be used on running containers
++ podman exec --user root neutron_ovs_bridge top -bwn1
+Error: cannot exec into container that is not running: container state improper
++ podman inspect neutron_ovs_bridge
+[
+    {
+        "Id": "798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff",
+        "Created": "2020-03-04T03:14:24.103521299Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--single-child",
+            "--",
+            "puppet",
+            "apply",
+            "--modulepath",
+            "/etc/puppet/modules:/usr/share/openstack-puppet/modules",
+            "--tags",
+            "file,file_line,concat,augeas,neutron::plugins::ovs::bridge,vs_config",
+            "-v",
+            "-e",
+            "include neutron::agents::ml2::ovs"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:14:24.220145603Z",
+            "FinishedAt": "2020-03-04T03:14:38.852799347Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "6d0694a956685b747e084e920857baecb5e5f0b14971d84685fba4d9811543f2",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "/var/run/containers/storage/overlay-containers/798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff/userdata/resolv.conf",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff/userdata/hostname",
+        "HostsPath": "/var/run/containers/storage/overlay-containers/798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff/userdata/hosts",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/neutron_ovs_bridge.log",
+        "ConmonPidFile": "/var/run/neutron_ovs_bridge.pid",
+        "Name": "neutron_ovs_bridge",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c301,c457",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_DAC_READ_SEARCH",
+            "CAP_FOWNER",
+            "CAP_FSETID",
+            "CAP_KILL",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETPCAP",
+            "CAP_LINUX_IMMUTABLE",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_NET_BROADCAST",
+            "CAP_NET_ADMIN",
+            "CAP_NET_RAW",
+            "CAP_IPC_LOCK",
+            "CAP_IPC_OWNER",
+            "CAP_SYS_MODULE",
+            "CAP_SYS_RAWIO",
+            "CAP_SYS_CHROOT",
+            "CAP_SYS_PTRACE",
+            "CAP_SYS_PACCT",
+            "CAP_SYS_ADMIN",
+            "CAP_SYS_BOOT",
+            "CAP_SYS_NICE",
+            "CAP_SYS_RESOURCE",
+            "CAP_SYS_TIME",
+            "CAP_SYS_TTY_CONFIG",
+            "CAP_MKNOD",
+            "CAP_LEASE",
+            "CAP_AUDIT_WRITE",
+            "CAP_AUDIT_CONTROL",
+            "CAP_SETFCAP",
+            "CAP_MAC_OVERRIDE",
+            "CAP_MAC_ADMIN",
+            "CAP_SYSLOG",
+            "CAP_WAKE_ALARM",
+            "CAP_BLOCK_SUSPEND",
+            "CAP_AUDIT_READ"
+        ],
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_DAC_READ_SEARCH",
+            "CAP_FOWNER",
+            "CAP_FSETID",
+            "CAP_KILL",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETPCAP",
+            "CAP_LINUX_IMMUTABLE",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_NET_BROADCAST",
+            "CAP_NET_ADMIN",
+            "CAP_NET_RAW",
+            "CAP_IPC_LOCK",
+            "CAP_IPC_OWNER",
+            "CAP_SYS_MODULE",
+            "CAP_SYS_RAWIO",
+            "CAP_SYS_CHROOT",
+            "CAP_SYS_PTRACE",
+            "CAP_SYS_PACCT",
+            "CAP_SYS_ADMIN",
+            "CAP_SYS_BOOT",
+            "CAP_SYS_NICE",
+            "CAP_SYS_RESOURCE",
+            "CAP_SYS_TIME",
+            "CAP_SYS_TTY_CONFIG",
+            "CAP_MKNOD",
+            "CAP_LEASE",
+            "CAP_AUDIT_WRITE",
+            "CAP_AUDIT_CONTROL",
+            "CAP_SETFCAP",
+            "CAP_MAC_OVERRIDE",
+            "CAP_MAC_ADMIN",
+            "CAP_SYSLOG",
+            "CAP_WAKE_ALARM",
+            "CAP_BLOCK_SUSPEND",
+            "CAP_AUDIT_READ"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/d4095e5134e789a5183202e267fdcea389e89d340c6a4bdf7cd76d8e6c8e4c8a/diff:/var/lib/containers/storage/overlay/f08bf243d20495f7a41d08e92f611b68869852f00e9379a45a8fb2a55456974f/diff:/var/lib/containers/storage/overlay/39231f0c35ac6b5018875a08df285edbceeeb29ab1a6185f125c5bd1d90be658/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "UpperDir": "/var/lib/containers/storage/overlay/d8ed818267976b137d9ebe06bb6f9af73eb01ea26de1fdc03e36ed39017aeb99/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/d8ed818267976b137d9ebe06bb6f9af73eb01ea26de1fdc03e36ed39017aeb99/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/extracted",
+                "Destination": "/etc/pki/ca-trust/extracted",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/lib/modules",
+                "Destination": "/lib/modules",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/ssh/ssh_known_hosts",
+                "Destination": "/etc/ssh/ssh_known_hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/puppet",
+                "Destination": "/etc/puppet",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/run/openvswitch",
+                "Destination": "/var/run/openvswitch",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "shared"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/usr/share/openstack-puppet/modules",
+                "Destination": "/usr/share/openstack-puppet/modules",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/run/openvswitch",
+                "Destination": "/run/openvswitch",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "nosuid",
+                    "nodev",
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "shared"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/localtime",
+                "Destination": "/etc/localtime",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/kolla/config_files/neutron_ovs_agent.json",
+                "Destination": "/var/lib/kolla/config_files/config.json",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/hosts",
+                "Destination": "/etc/hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/config-data/puppet-generated/neutron",
+                "Destination": "/var/lib/kolla/config_files/src",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/source/anchors",
+                "Destination": "/etc/pki/ca-trust/source/anchors",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/cert.pem",
+                "Destination": "/etc/pki/tls/cert.pem",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/dev/log",
+                "Destination": "/dev/log",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "nosuid",
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "798bd5c6fc0d66108ced5c97d6017c3954adfa0eb97ec56ef8ae9ec73e8682ff"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "undercloud-0.redhat.local",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=undercloud-0.redhat.local",
+                "container=oci",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "TRIPLEO_DEPLOY_IDENTIFIER=1583290741",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "KOLLA_CONFIG_STRATEGY=COPY_ALWAYS",
+                "LANG=en_US.UTF-8",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_BASE_ARCH=x86_64",
+                "TRIPLEO_CONFIG_HASH=8fbef02dac2607b7edf65e15cd6de816",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "puppet",
+                "apply",
+                "--modulepath",
+                "/etc/puppet/modules:/usr/share/openstack-puppet/modules",
+                "--tags",
+                "file,file_line,concat,augeas,neutron::plugins::ovs::bridge,vs_config",
+                "-v",
+                "-e",
+                "include neutron::agents::ml2::ovs"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --single-child --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T18:50:16.952486",
+                "com.redhat.build-host": "cpt-1004.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-neutron-server-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"command\": [\"puppet\", \"apply\", \"--modulepath\", \"/etc/puppet/modules:/usr/share/openstack-puppet/modules\", \"--tags\", \"file,file_line,concat,augeas,neutron::plugins::ovs::bridge,vs_config\", \"-v\", \"-e\", \"include neutron::agents::ml2::ovs\"], \"detach\": false, \"environment\": {\"KOLLA_CONFIG_STRATEGY\": \"COPY_ALWAYS\", \"TRIPLEO_DEPLOY_IDENTIFIER\": \"1583290741\", \"TRIPLEO_CONFIG_HASH\": \"8fbef02dac2607b7edf65e15cd6de816\"}, \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1\", \"net\": \"host\", \"pid\": \"host\", \"privileged\": true, \"security_opt\": \"label=disable\", \"user\": \"root\", \"volumes\": [\"/etc/hosts:/etc/hosts:ro\", \"/etc/localtime:/etc/localtime:ro\", \"/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro\", \"/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro\", \"/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro\", \"/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro\", \"/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro\", \"/dev/log:/dev/log\", \"/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro\", \"/etc/puppet:/etc/puppet:ro\", \"/var/lib/kolla/config_files/neutron_ovs_agent.json:/var/lib/kolla/config_files/config.json:ro\", \"/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro\", \"/lib/modules:/lib/modules:ro\", \"/run/openvswitch:/run/openvswitch:shared,z\", \"/var/run/openvswitch/:/var/run/openvswitch/:shared,z\", \"/usr/share/openstack-puppet/modules/:/usr/share/openstack-puppet/modules/:ro\"]}",
+                "config_id": "tripleo_step3",
+                "container_name": "neutron_ovs_bridge",
+                "description": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-neutron-server",
+                "release": "81",
+                "summary": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-neutron-server/images/16.0-81",
+                "vcs-ref": "6bb13e4af5911fc0819649f16af492f5fa8bfbb1",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:14:24.103521299Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.label": "disable",
+                "io.podman.annotations.privileged": "TRUE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro,rprivate,rbind",
+                "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro,rprivate,rbind",
+                "/lib/modules:/lib/modules:ro,rprivate,rbind",
+                "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro,rprivate,rbind",
+                "/etc/puppet:/etc/puppet:ro,rprivate,rbind",
+                "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro,rprivate,rbind",
+                "/var/run/openvswitch:/var/run/openvswitch:shared,rw,rbind",
+                "/usr/share/openstack-puppet/modules:/usr/share/openstack-puppet/modules:ro,rprivate,rbind",
+                "/run/openvswitch:/run/openvswitch:shared,rw,nosuid,nodev,rbind",
+                "/etc/localtime:/etc/localtime:ro,rprivate,rbind",
+                "/var/lib/kolla/config_files/neutron_ovs_agent.json:/var/lib/kolla/config_files/config.json:ro,rprivate,rbind",
+                "/etc/hosts:/etc/hosts:ro,rprivate,rbind",
+                "/var/lib/config-data/puppet-generated/neutron:/var/lib/kolla/config_files/src:ro,rprivate,rbind",
+                "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro,rprivate,rbind",
+                "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro,rprivate,rbind",
+                "/dev/log:/dev/log:rw,rprivate,nosuid,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "host",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "host",
+            "Privileged": true,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [
+                "label=disable"
+            ],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root neutron_ovs_bridge /usr/bin/rpm -qa
+Error: cannot exec into container that is not running: container state improper

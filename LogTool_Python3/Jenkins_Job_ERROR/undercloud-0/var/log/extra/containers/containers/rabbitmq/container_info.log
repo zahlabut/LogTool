@@ -1,0 +1,964 @@
++ podman top rabbitmq user pid ppid pcpu vsz tty state time etime args
+USER       PID   PPID   %CPU    VSZ       TTY   STATE   TIME   ELAPSED            COMMAND
+rabbitmq   1     0      0.000   4204      ?     S       0s     43m12.283978042s   dumb-init --single-child -- kolla_start 
+rabbitmq   7     1      0.000   14948     ?     S       0s     43m11.284085291s   /bin/sh /usr/lib/rabbitmq/bin/rabbitmq-server 
+rabbitmq   116   1      0.000   44680     ?     S       0s     43m11.284174668s   /usr/lib64/erlang/erts-10.3.5.5/bin/epmd -daemon 
+rabbitmq   184   7      0.772   5690260   ?     S       20s    43m11.28425699s    /usr/lib64/erlang/erts-10.3.5.5/bin/beam.smp -W w -A 128 -MBas ageffcbf -MHas ageffcbf -MBlmbcs 512 -MHlmbcs 512 -MMmcs 30 -K true -P 1048576 -K true -sbwt none -B i -- -root /usr/lib64/erlang -progname erl -- -home /var/lib/rabbitmq -- -pa /usr/lib/rabbitmq/lib/rabbitmq_server-3.7.23/ebin  -noshell -noinput -s rabbit boot -sname rabbit@undercloud-0 -boot start_sasl -config /etc/rabbitmq/rabbitmq -kernel inet_default_connect_options [{nodelay,true}] -kernel inet_default_connect_options [{nodelay,true}] -sasl errlog_type error -sasl sasl_error_logger false -rabbit lager_log_root "/var/log/rabbitmq" -rabbit lager_default_file "/var/log/rabbitmq/rabbit@undercloud-0.log" -rabbit lager_upgrade_file "/var/log/rabbitmq/rabbit@undercloud-0_upgrade.log" -rabbit feature_flags_file "/var/lib/rabbitmq/mnesia/rabbit@undercloud-0-feature_flags" -rabbit enabled_plugins_file "/etc/rabbitmq/enabled_plugins" -rabbit plugins_dir "/usr/lib/rabbitmq/plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.7.23/plugins" -rabbit plugins_expand_dir "/var/lib/rabbitmq/mnesia/rabbit@undercloud-0-plugins-expand" -os_mon start_cpu_sup false -os_mon start_disksup false -os_mon start_memsup false -mnesia dir "/var/lib/rabbitmq/mnesia/rabbit@undercloud-0" 
+rabbitmq   352   184    0.000   4340      ?     S       0s     43m10.284346148s   erl_child_setup 1048576 
+rabbitmq   387   352    0.000   12096     ?     S       0s     43m7.284431276s    inet_gethost 4 
+rabbitmq   388   387    0.000   14216     ?     S       0s     43m7.284519549s    inet_gethost 4 
++ podman exec --user root rabbitmq top -bwn1
+top - 03:54:30 up 57 min,  0 users,  load average: 1.49, 0.96, 0.94
+Tasks:   8 total,   1 running,   7 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  1.6 us,  0.8 sy,  0.0 ni, 97.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  23939.7 total,   1757.7 free,   7520.7 used,  14661.4 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15942.3 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 rabbitmq  20   0    4204    816    752 S   0.0   0.0   0:00.21 dumb-init
+      7 rabbitmq  20   0   14948   3500   3064 S   0.0   0.0   0:00.02 rabbitmq-server
+    116 rabbitmq  20   0   44680    300      0 S   0.0   0.0   0:00.01 epmd
+    184 rabbitmq  20   0 5690772 134392   8788 S   0.0   0.5   0:20.65 beam.smp
+    352 rabbitmq  20   0    4340   1468   1388 S   0.0   0.0   0:00.46 erl_child_setup
+    387 rabbitmq  20   0   12096   1052    956 S   0.0   0.0   0:00.00 inet_gethost
+    388 rabbitmq  20   0   14216   1660   1524 S   0.0   0.0   0:00.01 inet_gethost
+   6429 root      20   0   51216   4072   3532 R   0.0   0.0   0:00.17 top
++ podman inspect rabbitmq
+[
+    {
+        "Id": "d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5",
+        "Created": "2020-03-04T03:11:19.221705062Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--single-child",
+            "--",
+            "kolla_start"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 33505,
+            "ConmonPid": 33492,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:11:19.81481907Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "c40afeea817bec5c0652bb5394fa513319f643b75b8677862757a15733edd72e",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "/var/run/containers/storage/overlay-containers/d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5/userdata/resolv.conf",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5/userdata/hostname",
+        "HostsPath": "/var/run/containers/storage/overlay-containers/d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5/userdata/hosts",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/rabbitmq.log",
+        "ConmonPidFile": "/var/run/rabbitmq.pid",
+        "Name": "rabbitmq",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c386,c890",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c386,c890",
+        "AppArmorProfile": "",
+        "EffectiveCaps": null,
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/b69785ebd5450cada72441ec9e35235026157bdcc8b1e2a3f2ad3cec06c20933/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "MergedDir": "/var/lib/containers/storage/overlay/b3541c02b0db8751e557f73922b9248438152f062867b15bd8aaea45c4613ba5/merged",
+                "UpperDir": "/var/lib/containers/storage/overlay/b3541c02b0db8751e557f73922b9248438152f062867b15bd8aaea45c4613ba5/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/b3541c02b0db8751e557f73922b9248438152f062867b15bd8aaea45c4613ba5/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/config-data/puppet-generated/rabbitmq",
+                "Destination": "/var/lib/kolla/config_files/src",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/ssh/ssh_known_hosts",
+                "Destination": "/etc/ssh/ssh_known_hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/source/anchors",
+                "Destination": "/etc/pki/ca-trust/source/anchors",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/rabbitmq",
+                "Destination": "/var/log/rabbitmq",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/dev/log",
+                "Destination": "/dev/log",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "nosuid",
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/cert.pem",
+                "Destination": "/etc/pki/tls/cert.pem",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/hosts",
+                "Destination": "/etc/hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/puppet",
+                "Destination": "/etc/puppet",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/rabbitmq",
+                "Destination": "/var/lib/rabbitmq",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/localtime",
+                "Destination": "/etc/localtime",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/extracted",
+                "Destination": "/etc/pki/ca-trust/extracted",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/kolla/config_files/rabbitmq.json",
+                "Destination": "/var/lib/kolla/config_files/config.json",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "d9b45f3c69557d275e5a2e59d822cbb9978c61cf412669d6cef6071c1230d1c5"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "undercloud-0.redhat.local",
+            "Domainname": "",
+            "User": "rabbitmq",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=undercloud-0.redhat.local",
+                "container=oci",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "KOLLA_BASE_ARCH=x86_64",
+                "LANG=en_US.UTF-8",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "KOLLA_CONFIG_STRATEGY=COPY_ALWAYS",
+                "TRIPLEO_CONFIG_HASH=f29ffb78c5d6092297ca9b44eac272c2",
+                "HOME=/var/lib/rabbitmq"
+            ],
+            "Cmd": [
+                "kolla_start"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --single-child --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T17:00:10.288164",
+                "com.redhat.build-host": "cpt-1003.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-rabbitmq-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"environment\": {\"KOLLA_CONFIG_STRATEGY\": \"COPY_ALWAYS\", \"TRIPLEO_CONFIG_HASH\": \"f29ffb78c5d6092297ca9b44eac272c2\"}, \"healthcheck\": {\"test\": \"/openstack/healthcheck\"}, \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1\", \"net\": \"host\", \"privileged\": false, \"restart\": \"always\", \"start_order\": 2, \"stop_grace_period\": 60, \"volumes\": [\"/etc/hosts:/etc/hosts:ro\", \"/etc/localtime:/etc/localtime:ro\", \"/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro\", \"/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro\", \"/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro\", \"/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro\", \"/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro\", \"/dev/log:/dev/log\", \"/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro\", \"/etc/puppet:/etc/puppet:ro\", \"/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro\", \"/var/lib/config-data/puppet-generated/rabbitmq/:/var/lib/kolla/config_files/src:ro\", \"/var/lib/rabbitmq:/var/lib/rabbitmq:z\", \"/var/log/containers/rabbitmq:/var/log/rabbitmq:z\"]}",
+                "config_id": "tripleo_step1",
+                "container_name": "rabbitmq",
+                "description": "Red Hat OpenStack Platform 16.0 rabbitmq",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 rabbitmq",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 rabbitmq",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-rabbitmq",
+                "release": "89",
+                "summary": "Red Hat OpenStack Platform 16.0 rabbitmq",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-rabbitmq/images/16.0-89",
+                "vcs-ref": "6d762935c9f48154e77b3c41bbedba00b8f3bd74",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:11:19.221705062Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/var/lib/config-data/puppet-generated/rabbitmq:/var/lib/kolla/config_files/src:ro,rprivate,rbind",
+                "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro,rprivate,rbind",
+                "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro,rprivate,rbind",
+                "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro,rprivate,rbind",
+                "/var/log/containers/rabbitmq:/var/log/rabbitmq:rw,rprivate,rbind",
+                "/dev/log:/dev/log:rw,rprivate,nosuid,rbind",
+                "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro,rprivate,rbind",
+                "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro,rprivate,rbind",
+                "/etc/hosts:/etc/hosts:ro,rprivate,rbind",
+                "/etc/puppet:/etc/puppet:ro,rprivate,rbind",
+                "/var/lib/rabbitmq:/var/lib/rabbitmq:rw,rprivate,rbind",
+                "/etc/localtime:/etc/localtime:ro,rprivate,rbind",
+                "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro,rprivate,rbind",
+                "/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro,rprivate,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "host",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root rabbitmq /usr/bin/rpm -qa
+puppet-corosync-6.0.2-0.20191004103159.961add3.el8ost.noarch
+python3-pip-wheel-9.0.3-15.el8.noarch
+puppet-kibana3-0.0.5-0.20191002144605.6ca9631.el8ost.noarch
+filesystem-3.8-2.el8.x86_64
+puppet-horizon-15.4.1-0.20191014143128.620e8f6.el8ost.noarch
+pcre2-10.32-1.el8.x86_64
+puppet-auditd-2.2.1-0.20191002163110.189b22b.el8ost.noarch
+glibc-common-2.28-72.el8_1.1.x86_64
+puppet-keepalived-0.0.2-0.20191002154205.bbca37a.el8ost.noarch
+zlib-1.2.11-10.el8.x86_64
+puppet-rabbitmq-9.1.1-0.20191004100807.75574b8.el8ost.noarch
+libxml2-2.9.7-5.el8.x86_64
+puppet-cinder-15.4.1-0.20191028225029.f4aa29e.el8ost.noarch
+popt-1.16-14.el8.x86_64
+puppet-octavia-15.4.1-0.20191123040214.8d86546.el8ost.noarch
+libffi-3.1-21.el8.x86_64
+puppet-ceilometer-15.4.1-0.20191014134249.de7b6a1.el8ost.noarch
+readline-7.0-10.el8.x86_64
+puppet-gnocchi-15.4.1-0.20191017040010.b462302.el8ost.noarch
+coreutils-single-8.30-6.el8.x86_64
+puppet-placement-2.4.1-0.20191019044656.afddd56.el8ost.noarch
+libsmartcols-2.32.1-17.el8.x86_64
+puppet-aodh-15.4.1-0.20191014131853.8beb87a.el8ost.noarch
+chkconfig-1.11-1.el8.x86_64
+puppet-etcd-1.12.3-0.20191022053823.123d2af.el8ost.noarch
+libcap-ng-0.7.9-4.el8.x86_64
+puppet-nssdb-1.0.2-0.20191002154951.2ed2a2d.el8ost.noarch
+file-libs-5.33-8.el8.x86_64
+puppet-sensu-2.62.4-0.20191002175556.20361a4.el8ost.noarch
+p11-kit-trust-0.23.14-5.el8_0.x86_64
+puppet-kmod-2.3.2-0.20191004134845.41e2a2b.el8ost.noarch
+dbus-libs-1.12.8-9.el8.x86_64
+openstack-tripleo-common-container-base-11.3.3-0.20200206225551.18d4fbc.el8ost.noarch
+libdb-5.3.28-37.el8.x86_64
+rsync-3.1.3-6.el8.x86_64
+libarchive-3.3.2-8.el8_1.x86_64
+dumb-init-1.1.3-18.el8ost.x86_64
+libsemanage-2.9-1.el8.x86_64
+perl-libs-5.26.3-416.el8.x86_64
+libfdisk-2.32.1-17.el8.x86_64
+nspr-4.21.0-2.el8_0.x86_64
+mpfr-3.1.6-1.el8.x86_64
+corosynclib-3.0.2-3.el8_1.1.x86_64
+json-glib-1.4.4-1.el8.x86_64
+libldb-1.5.4-2.el8.x86_64
+libcomps-0.1.11-2.el8.x86_64
+samba-common-4.10.4-101.el8_1.noarch
+dmidecode-3.2-3.el8.x86_64
+keyutils-1.5.10-6.el8.x86_64
+iptables-libs-1.8.2-16.el8.x86_64
+samba-client-libs-4.10.4-101.el8_1.x86_64
+libverto-0.3.0-5.el8.x86_64
+libevent-2.1.8-5.el8.x86_64
+platform-python-pip-9.0.3-15.el8.noarch
+liberation-fonts-common-2.00.3-4.el8.noarch
+libpwquality-1.4.0-9.el8.x86_64
+nss-sysinit-3.44.0-9.el8_1.x86_64
+python3-dateutil-2.6.1-6.el8.noarch
+libknet1-crypto-openssl-plugin-1.10-1.el8_1.2.x86_64
+python3-libcomps-0.1.11-2.el8.x86_64
+libknet1-compress-lzma-plugin-1.10-1.el8_1.2.x86_64
+python3-gobject-base-3.28.3-1.el8.x86_64
+perl-threads-2.21-2.el8.x86_64
+openldap-2.4.46-11.el8_1.x86_64
+perl-PathTools-3.74-1.el8.x86_64
+libyaml-0.1.7-5.el8.x86_64
+perl-Socket-2.027-3.el8.x86_64
+gpgme-1.10.0-6.el8.x86_64
+clufter-common-0.77.1-5.el8.noarch
+libssh-config-0.9.0-4.el8.noarch
+net-snmp-libs-5.8-12.el8_1.x86_64
+python3-librepo-1.10.3-3.el8.x86_64
+openssl-1.1.1c-2.el8.x86_64
+libsolv-0.7.4-3.el8.x86_64
+diffutils-3.6-5.el8.x86_64
+libreport-filesystem-2.9.5-9.el8.x86_64
+python3-asn1crypto-0.24.0-3.el8.noarch
+device-mapper-1.02.163-5.el8.x86_64
+python3-cryptography-2.3-2.el8.x86_64
+elfutils-libs-0.176-5.el8.x86_64
+fuse-libs-2.9.7-12.el8.x86_64
+rpm-build-libs-4.14.2-25.el8.x86_64
+erlang-erts-21.3.8.7-1.el8ost.x86_64
+python3-dnf-plugins-core-4.0.8-3.el8.noarch
+erlang-compiler-21.3.8.7-1.el8ost.x86_64
+yum-4.2.7-7.el8_1.noarch
+erlang-snmp-21.3.8.7-1.el8ost.x86_64
+findutils-4.6.0-20.el8.x86_64
+erlang-ssl-21.3.8.7-1.el8ost.x86_64
+gpg-pubkey-d4082792-5b32db75
+erlang-otp_mibs-21.3.8.7-1.el8ost.x86_64
+gdb-gdbserver-8.2-6.el8_0.x86_64
+lzo-2.08-14.el8.x86_64
+boost-thread-1.66.0-6.el8.x86_64
+logrotate-3.14.0-3.el8.x86_64
+boost-filesystem-1.66.0-6.el8.x86_64
+nfs-utils-2.3.3-26.el8.x86_64
+boost-locale-1.66.0-6.el8.x86_64
+pacemaker-cli-2.0.2-3.el8_1.2.x86_64
+rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch
+python3-pycurl-7.43.0.2-3.el8.x86_64
+cpp-hocon-0.1.8-2.el8ost.x86_64
+rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.x86_64
+device-mapper-event-1.02.163-5.el8.x86_64
+iptables-1.8.2-16.el8.x86_64
+cronie-1.5.2-4.el8.x86_64
+glibc-langpack-en-2.28-72.el8_1.1.x86_64
+libselinux-utils-2.9-2.1.el8.x86_64
+augeas-libs-1.12.0-2.el8.x86_64
+yaml-cpp-0.6.1-8.el8ost.x86_64
+puppet-5.5.10-5.el8ost.noarch
+puppet-apache-5.1.0-0.20191004100623.1fa9b1c.el8ost.noarch
+puppet-memcached-3.4.0-0.20191002174507.66d3a66.el8ost.noarch
+puppet-vcsrepo-3.0.0-0.20191004152414.b06d5d3.el8ost.noarch
+puppet-zookeeper-0.9.0-0.20191017160909.5877cbf.el8ost.noarch
+python3-setuptools-wheel-39.2.0-5.el8.noarch
+puppet-git-0.5.0-0.20191002154952.4e4498e.el8ost.noarch
+setup-2.12.2-2.el8_1.1.noarch
+puppet-openstack_extras-15.4.1-0.20191014142330.8ba5522.el8ost.noarch
+ncurses-base-6.1-7.20180224.el8.noarch
+puppet-pacemaker-0.8.1-0.20200203145608.83d23b3.el8ost.noarch
+glibc-minimal-langpack-2.28-72.el8_1.1.x86_64
+puppet-collectd-11.0.1-0.20191004151223.785a71b.el8ost.noarch
+libsepol-2.9-1.el8.x86_64
+puppet-ssh-6.0.1-0.20191004101612.65570a3.el8ost.noarch
+libgpg-error-1.31-1.el8.x86_64
+puppet-openstacklib-15.4.1-0.20191014170135.94b2016.el8ost.noarch
+libxcrypt-4.1.1-4.el8.x86_64
+puppet-glance-15.4.1-0.20191127040410.69c10c4.el8ost.noarch
+expat-2.2.5-3.el8.x86_64
+puppet-veritas_hyperscale-1.0.0-0.20191002162020.7c7868a.el8ost.noarch
+libuuid-2.32.1-17.el8.x86_64
+puppet-ceph-3.0.1-0.20191002213425.55a0f94.el8ost.noarch
+libacl-2.2.53-1.el8.x86_64
+puppet-heat-15.4.1-0.20191014145528.68b7e29.el8ost.noarch
+sed-4.5-1.el8.x86_64
+puppet-sahara-15.4.1-0.20191014141333.5d28c21.el8ost.noarch
+p11-kit-0.23.14-5.el8_0.x86_64
+puppet-mistral-15.4.1-0.20191014143431.c733b8a.el8ost.noarch
+libgcrypt-1.8.3-4.el8.x86_64
+puppet-fdio-18.2-0.20191002164401.6fd1c8e.el8ost.noarch
+libassuan-2.5.1-3.el8.x86_64
+puppet-ovn-15.4.1-0.20191014133046.192ac4e.el8ost.noarch
+libtasn1-4.13-3.el8.x86_64
+puppet-snmp-3.9.1-0.20191002162020.5d73485.el8ost.noarch
+puppet-remote-10.0.0-0.20191002155842.7420908.el8ost.noarch
+openssl-libs-1.1.1c-2.el8.x86_64
+lvm2-2.03.05-5.el8.x86_64
+kmod-libs-25-13.el8.x86_64
+ncurses-6.1-7.20180224.el8.x86_64
+gdbm-1.18-1.el8.x86_64
+crudini-0.9-6.el8ost.noarch
+libpsl-0.20.2-5.el8.x86_64
+libknet1-1.10-1.el8_1.2.x86_64
+acl-2.2.53-1.el8.x86_64
+nss-util-3.44.0-9.el8_1.x86_64
+glib2-2.56.4-7.el8.x86_64
+perl-Scalar-List-Utils-1.49-2.el8.x86_64
+gobject-introspection-1.56.1-1.el8.x86_64
+python3-lxml-4.2.3-1.el8.x86_64
+brotli-1.0.6-1.el8.x86_64
+avahi-libs-0.7-19.el8.x86_64
+libpcap-1.9.0-3.el8.x86_64
+fontpackages-filesystem-1.44-22.el8.noarch
+gawk-4.2.1-1.el8.x86_64
+samba-common-libs-4.10.4-101.el8_1.x86_64
+libnsl2-1.2.0-2.20180605git4a062cf.el8.x86_64
+libverto-libevent-0.3.0-5.el8.x86_64
+python3-libs-3.6.8-15.1.el8.x86_64
+liberation-sans-fonts-2.00.3-4.el8.noarch
+python3-six-1.11.0-8.el8.noarch
+nss-3.44.0-9.el8_1.x86_64
+python3-ethtool-0.14-3.el8.x86_64
+libknet1-crypto-plugins-all-1.10-1.el8_1.2.x86_64
+python3-decorator-4.2.1-2.el8.noarch
+perl-macros-5.26.3-416.el8.x86_64
+cyrus-sasl-lib-2.1.27-1.el8.x86_64
+perl-threads-shared-1.58-2.el8.x86_64
+usermode-1.113-1.el8.x86_64
+perl-constant-1.33-396.el8.noarch
+gnupg2-2.2.9-1.el8.x86_64
+perl-Time-Local-1.280-1.el8.noarch
+virt-what-1.18-6.el8.x86_64
+clufter-bin-0.77.1-5.el8.x86_64
+librepo-1.10.3-3.el8.x86_64
+corosync-3.0.2-3.el8_1.1.x86_64
+rpm-libs-4.14.2-25.el8.x86_64
+xfsprogs-5.0.0-1.el8.x86_64
+python3-hawkey-0.35.1-9.el8_1.x86_64
+policycoreutils-2.9-3.el8_1.1.x86_64
+dbus-daemon-1.12.8-9.el8.x86_64
+python3-ply-3.9-7.el8.noarch
+elfutils-default-yama-scope-0.176-5.el8.noarch
+python3-pyOpenSSL-18.0.0-1.el8.noarch
+dbus-1.12.8-9.el8.x86_64
+e2fsprogs-1.44.6-3.el8.x86_64
+dnf-4.2.7-7.el8_1.noarch
+erlang-kernel-21.3.8.7-1.el8ost.x86_64
+subscription-manager-1.25.17-1.el8.x86_64
+erlang-syntax_tools-21.3.8.7-1.el8ost.x86_64
+vim-minimal-8.0.1763-13.el8.x86_64
+erlang-asn1-21.3.8.7-1.el8ost.x86_64
+gpg-pubkey-fd431d51-4ae0493b
+erlang-tools-21.3.8.7-1.el8ost.x86_64
+systemd-239-18.el8_1.4.x86_64
+erlang-os_mon-21.3.8.7-1.el8ost.x86_64
+boost-chrono-1.66.0-6.el8.x86_64
+libknet1-compress-lzo2-plugin-1.10-1.el8_1.2.x86_64
+boost-date-time-1.66.0-6.el8.x86_64
+libpath_utils-0.2.1-39.el8.x86_64
+libicu-60.3-1.el8.x86_64
+resource-agents-4.1.1-33.el8.x86_64
+ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64
+pacemaker-remote-2.0.2-3.el8_1.2.x86_64
+boost-program-options-1.66.0-6.el8.x86_64
+pcs-0.10.2-4.el8.x86_64
+rubygem-rgen-0.6.6-2.1.el8ost.noarch
+leatherman-1.4.5-4.el8ost.x86_64
+libnftnl-1.1.1-4.el8.x86_64
+libselinux-ruby-2.9-2.1.el8.x86_64
+kmod-25-13.el8.x86_64
+python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64
+iscsi-initiator-utils-6.2.0.877-1.gitf71581b.el8.x86_64
+lsof-4.91-2.el8.x86_64
+puppet-headless-5.5.10-5.el8ost.noarch
+puppet-concat-6.1.0-0.20191004093433.9baa8fc.el8ost.noarch
+puppet-sysctl-0.0.13-0.20191002173418.a3d160d.el8ost.noarch
+puppet-staging-1.0.5-0.20191002153419.b466d93.el8ost.noarch
+puppet-tomcat-3.1.0-0.20191004111140.a3f92d1.el8ost.noarch
+puppet-rsync-1.1.2-0.20191002175500.a7d4f84.el8ost.noarch
+tzdata-2019c-1.el8.noarch
+puppet-module-data-0.5.1-0.20191002153420.28dafce.el8ost.noarch
+redhat-release-8.1-3.3.el8.x86_64
+puppet-n1k-vsm-0.0.2-0.20191002180648.92401b8.el8ost.noarch
+publicsuffix-list-dafsa-20180723-1.el8.noarch
+puppet-kafka-5.3.1-0.20191004150127.88aa866.el8ost.noarch
+ncurses-libs-6.1-7.20180224.el8.x86_64
+puppet-dns-6.2.1-0.20191004115034.2ae1cd7.el8ost.noarch
+bash-4.4.19-10.el8.x86_64
+puppet-contrail-1.0.1-0.20191002163109.6f87929.el8ost.noarch
+bzip2-libs-1.0.6-26.el8.x86_64
+puppet-oslo-15.4.1-0.20191014135439.00f661d.el8ost.noarch
+libcap-2.26-1.el8.x86_64
+puppet-nova-15.4.1-0.20191215120134.721ca2a.el8ost.noarch
+sqlite-libs-3.26.0-4.el8_1.x86_64
+puppet-manila-15.4.1-0.20191014132051.bd3540c.el8ost.noarch
+libcom_err-1.44.6-3.el8.x86_64
+puppet-designate-15.5.1-0.20191014152945.4fc5214.el8ost.noarch
+libattr-2.4.48-3.el8.x86_64
+puppet-ironic-15.4.1-0.20191022165413.8fe6978.el8ost.noarch
+libmount-2.32.1-17.el8.x86_64
+puppet-swift-15.4.1-0.20191014152413.654e964.el8ost.noarch
+lua-libs-5.3.4-11.el8.x86_64
+puppet-zaqar-15.4.1-0.20191014144423.88b97ec.el8ost.noarch
+libidn2-2.2.0-1.el8.x86_64
+puppet-fluentd-0.10.0-0.20191002160933.4dfc15a.el8ost.noarch
+lz4-libs-1.8.1.2-4.el8.x86_64
+puppet-qdr-4.4.1-0.20191014131155.d141271.el8ost.noarch
+keyutils-libs-1.5.10-6.el8.x86_64
+puppet-timezone-5.1.2-0.20191004104756.21b4a58.el8ost.noarch
+grep-3.1-6.el8.x86_64
+puppet-systemd-2.6.1-0.20191004105758.f0ce6f0.el8ost.noarch
+ca-certificates-2019.2.32-80.0.el8_1.noarch
+iproute-4.18.0-15.el8.x86_64
+libdb-utils-5.3.28-37.el8.x86_64
+procps-ng-3.3.15-1.el8.x86_64
+libusbx-1.0.22-1.el8.x86_64
+perl-Carp-1.42-396.el8.noarch
+libutempter-1.1.6-14.el8.x86_64
+libqb-1.0.3-10.el8.x86_64
+cracklib-2.9.6-15.el8.x86_64
+libtalloc-2.1.16-3.el8.x86_64
+gnutls-3.6.8-8.el8.x86_64
+libtdb-1.3.18-2.el8.x86_64
+dbus-glib-0.110-2.el8.x86_64
+perl-parent-0.237-1.el8.noarch
+libksba-1.3.5-7.el8.x86_64
+cups-libs-2.2.6-28.el8.x86_64
+libnl3-3.4.0-5.el8.x86_64
+jansson-2.11-3.el8.x86_64
+libsigsegv-2.11-5.el8.x86_64
+libbasicobjects-0.1.1-39.el8.x86_64
+libtirpc-1.1.4-4.el8.x86_64
+cifs-utils-6.8-2.el8.x86_64
+platform-python-3.6.8-15.1.el8.x86_64
+nss-softokn-freebl-3.44.0-9.el8_1.x86_64
+util-linux-2.32.1-17.el8.x86_64
+libknet1-crypto-nss-plugin-1.10-1.el8_1.2.x86_64
+python3-dbus-1.2.4-15.el8.x86_64
+libknet1-compress-lz4-plugin-1.10-1.el8_1.2.x86_64
+python3-dmidecode-3.12.2-15.el8.x86_64
+perl-Errno-1.28-416.el8.x86_64
+python3-syspurpose-1.25.17-1.el8.x86_64
+perl-Text-Tabs+Wrap-2013.0523-395.el8.noarch
+passwd-0.80-2.el8.x86_64
+perl-IO-1.38-416.el8.x86_64
+npth-1.5-4.el8.x86_64
+perl-TimeDate-2.30-13.el8.noarch
+which-2.21-10.el8.x86_64
+python3-clufter-0.77.1-5.el8.noarch
+libcurl-7.61.1-11.el8.x86_64
+libnfsidmap-2.3.3-26.el8.x86_64
+rpm-4.14.2-25.el8.x86_64
+quota-nls-4.04-10.el8.noarch
+python3-libdnf-0.35.1-9.el8_1.x86_64
+rpcbind-1.2.5-4.el8.x86_64
+dbus-common-1.12.8-9.el8.noarch
+python3-pycparser-2.14-14.el8.noarch
+cryptsetup-libs-2.2.0-2.el8.x86_64
+bzip2-1.0.6-26.el8.x86_64
+lksctp-tools-1.0.18-3.el8.x86_64
+python3-dnf-4.2.7-7.el8_1.noarch
+erlang-stdlib-21.3.8.7-1.el8ost.x86_64
+python3-subscription-manager-rhsm-1.25.17-1.el8.x86_64
+erlang-mnesia-21.3.8.7-1.el8ost.x86_64
+tar-1.30-4.el8.x86_64
+erlang-public_key-21.3.8.7-1.el8ost.x86_64
+rootfiles-8.1-22.el8.noarch
+erlang-sasl-21.3.8.7-1.el8ost.x86_64
+systemd-pam-239-18.el8_1.4.x86_64
+erlang-sd_notify-1.0-7.el8ost.x86_64
+boost-system-1.66.0-6.el8.x86_64
+libknet1-compress-plugins-all-1.10-1.el8_1.2.x86_64
+boost-atomic-1.66.0-6.el8.x86_64
+libini_config-1.3.1-39.el8.x86_64
+device-mapper-event-libs-1.02.163-5.el8.x86_64
+pacemaker-schemas-2.0.2-3.el8_1.2.noarch
+rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.x86_64
+pacemaker-cluster-libs-2.0.2-3.el8_1.2.x86_64
+libnfnetlink-1.0.1-13.el8.x86_64
+rabbitmq-server-3.7.23-2.el8ost.x86_64
+rubygem-pathspec-0.2.1-4.el8ost.noarch
+boost-log-1.66.0-6.el8.x86_64
+device-mapper-persistent-data-0.8.5-2.el8.x86_64
+ruby-shadow-2.5.0-3.el8ost.x86_64
+cronie-anacron-1.5.2-4.el8.x86_64
+python3-pip-9.0.3-15.el8.noarch
+iscsi-initiator-utils-iscsiuio-6.2.0.877-1.gitf71581b.el8.x86_64
+hostname-3.20-6.el8.x86_64
+ruby-facter-3.9.3-9.el8ost.x86_64
+puppet-inifile-3.1.0-0.20191004095713.91efced.el8ost.noarch
+puppet-firewall-2.1.1-0.20191004122614.4f4437a.el8ost.noarch
+puppet-datacat-0.6.3-0.20191002155944.5cce8f2.el8ost.noarch
+puppet-mysql-6.2.1-0.20191016083905.6fabbcb.el8ost.noarch
+libgcc-8.3.1-4.5.el8.x86_64
+puppet-cassandra-2.7.4-0.20191004150835.9954256.el8ost.noarch
+subscription-manager-rhsm-certificates-1.25.17-1.el8.x86_64
+puppet-midonet-1.0.0-0.20191002180647.a8cec1d.el8ost.noarch
+basesystem-11-5.el8.noarch
+puppet-elasticsearch-6.4.1-0.20191004142247.725afd6.el8ost.noarch
+libselinux-2.9-2.1.el8.x86_64
+puppet-opendaylight-8.4.3-0.20191002173417.bbe7ce5.el8ost.noarch
+glibc-2.28-72.el8_1.1.x86_64
+puppet-haproxy-4.1.1-0.20191004123506.df96ffc.el8ost.noarch
+xz-libs-5.2.4-3.el8.x86_64
+puppet-archive-4.2.1-0.20191004094640.0538163.el8ost.noarch
+info-6.5-4.el8.x86_64
+puppet-keystone-15.4.1-0.20191019043505.e57542a.el8ost.noarch
+elfutils-libelf-0.176-5.el8.x86_64
+puppet-neutron-15.4.1-0.20191105131130.1111e3d.el8ost.noarch
+json-c-0.13.1-0.2.el8.x86_64
+puppet-barbican-15.4.1-0.20191014134242.00a75aa.el8ost.noarch
+gmp-6.1.2-10.el8.x86_64
+puppet-ec2api-15.4.1-0.20191014133252.e38e26c.el8ost.noarch
+libblkid-2.32.1-17.el8.x86_64
+puppet-panko-15.4.1-0.20191014140134.49b7b3e.el8ost.noarch
+libstdc++-8.3.1-4.5.el8.x86_64
+puppet-trove-15.4.1-0.20191014140632.4710735.el8ost.noarch
+libunistring-0.9.9-3.el8.x86_64
+puppet-certmonger-2.4.0-0.20191002174506.a198870.el8ost.noarch
+audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
+puppet-ipaclient-2.5.2-0.20191002160932.b086731.el8ost.noarch
+gdbm-libs-1.18-1.el8.x86_64
+puppet-redis-4.2.2-0.20191004102502.be8d097.el8ost.noarch
+pcre-8.42-4.el8.x86_64
+puppet-uchiwa-2.1.1-0.20191002164306.837c669.el8ost.noarch
+crypto-policies-20190807-1.git9b1477b.el8.noarch
+puppet-tripleo-11.4.1-0.20200205150840.71ff36d.el8ost.noarch
+ima-evm-utils-1.1-5.el8.x86_64
+sudo-1.8.25p1-8.el8_1.1.x86_64
+dbus-tools-1.12.8-9.el8.x86_64
+socat-1.7.3.2-6.el8.x86_64
+shadow-utils-4.6-8.el8.x86_64
+perl-Exporter-5.72-396.el8.noarch
+gzip-1.9-9.el8.x86_64
+libxslt-1.1.32-3.el8.x86_64
+nettle-3.4.1-1.el8.x86_64
+libtevent-0.9.39-2.el8.x86_64
+librhsm-0.0.3-3.el8.x86_64
+psmisc-23.1-3.el8.x86_64
+libmetalink-0.1.3-7.el8.x86_64
+e2fsprogs-libs-1.44.6-3.el8.x86_64
+libnghttp2-1.33.0-1.el8_0.1.x86_64
+libcollection-0.7.0-39.el8.x86_64
+libseccomp-2.4.1-1.el8.x86_64
+libwbclient-4.10.4-101.el8_1.x86_64
+krb5-libs-1.17-9.el8.x86_64
+libref_array-0.1.5-39.el8.x86_64
+platform-python-setuptools-39.2.0-5.el8.noarch
+overpass-fonts-3.0.2-3.el8.noarch
+pam-1.3.1-4.el8.x86_64
+nss-softokn-3.44.0-9.el8_1.x86_64
+python3-iniparse-0.4-31.el8.noarch
+libknet1-compress-bzip2-plugin-1.10-1.el8_1.2.x86_64
+python3-libxml2-2.9.7-5.el8.x86_64
+libknet1-compress-zlib-plugin-1.10-1.el8_1.2.x86_64
+python3-inotify-0.9.6-13.el8.noarch
+perl-Unicode-Normalize-1.25-396.el8.x86_64
+libuser-0.62-23.el8.x86_64
+perl-File-Path-2.15-2.el8.noarch
+libmodulemd1-1.8.11-4.el8_1.x86_64
+perl-interpreter-5.26.3-416.el8.x86_64
+python3-gpg-1.10.0-6.el8.x86_64
+libnozzle1-1.10-1.el8_1.2.x86_64
+libssh-0.9.0-4.el8.x86_64
+redhat-logos-81.1-1.el8.x86_64
+curl-7.61.1-11.el8.x86_64
+libss-1.44.6-3.el8.x86_64
+libdnf-0.35.1-9.el8_1.x86_64
+quota-4.04-10.el8.x86_64
+dnf-data-4.2.7-7.el8_1.noarch
+python3-idna-2.5-5.el8.noarch
+device-mapper-libs-1.02.163-5.el8.x86_64
+python3-cffi-1.11.5-5.el8.x86_64
+net-tools-2.0-0.51.20160912git.el8.x86_64
+python3-rpm-4.14.2-25.el8.x86_64
+erlang-crypto-21.3.8.7-1.el8ost.x86_64
+dnf-plugin-subscription-manager-1.25.17-1.el8.x86_64
+erlang-hipe-21.3.8.7-1.el8ost.x86_64
+erlang-runtime_tools-21.3.8.7-1.el8ost.x86_64
+langpacks-en-1.0-12.el8.noarch
+erlang-inets-21.3.8.7-1.el8ost.x86_64
+systemd-libs-239-18.el8_1.4.x86_64
+erlang-eldap-21.3.8.7-1.el8ost.x86_64
+ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64
+erlang-xmerl-21.3.8.7-1.el8ost.x86_64
+libmnl-1.0.4-6.el8.x86_64
+libknet1-plugins-all-1.10-1.el8_1.2.x86_64
+libaio-0.3.112-1.el8.x86_64
+gssproxy-0.8.0-14.el8.x86_64
+boost-regex-1.66.0-6.el8.x86_64
+pacemaker-libs-2.0.2-3.el8_1.2.x86_64
+rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.x86_64
+pacemaker-2.0.2-3.el8_1.2.x86_64
+libnetfilter_conntrack-1.0.6-5.el8.x86_64
+hiera-3.3.1-5.el8ost.noarch
+lvm2-libs-2.03.05-5.el8.x86_64
+iptables-services-1.8.2-16.el8.x86_64
+crontabs-1.11-16.20150630git.el8.noarch
+python3-setuptools-39.2.0-5.el8.noarch
+isns-utils-libs-0.99-1.el8.x86_64
+ruby-augeas-0.5.0-3.el8ost.x86_64
+facter-3.9.3-9.el8ost.x86_64
+puppet-stdlib-6.1.0-0.20191003115605.5aa891c.el8ost.noarch
+puppet-java-5.0.1-0.20191004145038.e57cbc8.el8ost.noarch
+puppet-xinetd-3.3.1-0.20191004094526.d768da2.el8ost.noarch
+puppet-vswitch-11.4.1-0.20191014172742.4fc423f.el8ost.noarch

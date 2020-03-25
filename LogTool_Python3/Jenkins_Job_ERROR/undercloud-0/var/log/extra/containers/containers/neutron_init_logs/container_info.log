@@ -1,0 +1,333 @@
++ podman top neutron_init_logs user pid ppid pcpu vsz tty state time etime args
+Error: top can only be used on running containers
++ podman exec --user root neutron_init_logs top -bwn1
+Error: cannot exec into container that is not running: container state improper
++ podman inspect neutron_init_logs
+[
+    {
+        "Id": "a2f391d623353db912726ca29a8127b0db2f04dbd7b4220581ff1d50d0ce17ab",
+        "Created": "2020-03-04T03:12:06.737716379Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--single-child",
+            "--",
+            "/bin/bash",
+            "-c",
+            "chown -R neutron:neutron /var/log/neutron"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:12:07.055359133Z",
+            "FinishedAt": "2020-03-04T03:12:07.099580976Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "6d0694a956685b747e084e920857baecb5e5f0b14971d84685fba4d9811543f2",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/a2f391d623353db912726ca29a8127b0db2f04dbd7b4220581ff1d50d0ce17ab/userdata/hostname",
+        "HostsPath": "",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/a2f391d623353db912726ca29a8127b0db2f04dbd7b4220581ff1d50d0ce17ab/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/a2f391d623353db912726ca29a8127b0db2f04dbd7b4220581ff1d50d0ce17ab/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/neutron_init_logs.log",
+        "ConmonPidFile": "/var/run/neutron_init_logs.pid",
+        "Name": "neutron_init_logs",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c218,c538",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c218,c538",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/d4095e5134e789a5183202e267fdcea389e89d340c6a4bdf7cd76d8e6c8e4c8a/diff:/var/lib/containers/storage/overlay/f08bf243d20495f7a41d08e92f611b68869852f00e9379a45a8fb2a55456974f/diff:/var/lib/containers/storage/overlay/39231f0c35ac6b5018875a08df285edbceeeb29ab1a6185f125c5bd1d90be658/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "UpperDir": "/var/lib/containers/storage/overlay/463e1a5395ddd73b7df150e3edf28084fecc77e99c5b34576888a905b435e0ba/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/463e1a5395ddd73b7df150e3edf28084fecc77e99c5b34576888a905b435e0ba/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/httpd/neutron-api",
+                "Destination": "/var/log/httpd",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/neutron",
+                "Destination": "/var/log/neutron",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "a2f391d623353db912726ca29a8127b0db2f04dbd7b4220581ff1d50d0ce17ab"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "a2f391d62335",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=a2f391d62335",
+                "container=oci",
+                "LANG=en_US.UTF-8",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "KOLLA_BASE_ARCH=x86_64",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "/bin/bash",
+                "-c",
+                "chown -R neutron:neutron /var/log/neutron"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --single-child --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T18:50:16.952486",
+                "com.redhat.build-host": "cpt-1004.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-neutron-server-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"command\": [\"/bin/bash\", \"-c\", \"chown -R neutron:neutron /var/log/neutron\"], \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1\", \"net\": \"none\", \"privileged\": false, \"user\": \"root\", \"volumes\": [\"/var/log/containers/neutron:/var/log/neutron:z\", \"/var/log/containers/httpd/neutron-api:/var/log/httpd:z\"]}",
+                "config_id": "tripleo_step2",
+                "container_name": "neutron_init_logs",
+                "description": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-neutron-server",
+                "release": "81",
+                "summary": "Red Hat OpenStack Platform 16.0 neutron-server",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-neutron-server/images/16.0-81",
+                "vcs-ref": "6bb13e4af5911fc0819649f16af492f5fa8bfbb1",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:12:06.737716379Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/var/log/containers/httpd/neutron-api:/var/log/httpd:rw,rprivate,rbind",
+                "/var/log/containers/neutron:/var/log/neutron:rw,rprivate,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root neutron_init_logs /usr/bin/rpm -qa
+Error: cannot exec into container that is not running: container state improper

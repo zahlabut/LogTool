@@ -1,0 +1,332 @@
++ podman top mysql_init_logs user pid ppid pcpu vsz tty state time etime args
+Error: top can only be used on running containers
++ podman exec --user root mysql_init_logs top -bwn1
+Error: cannot exec into container that is not running: container state improper
++ podman inspect mysql_init_logs
+[
+    {
+        "Id": "785335f6778bec870a7eec19a9cf728ae9f2ee7b22dd633c31defea8f0a0c39c",
+        "Created": "2020-03-04T03:11:16.101058212Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--",
+            "/bin/bash",
+            "-c",
+            "chown -R mysql:mysql /var/log/mariadb /var/lib/mysql"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:11:16.431427571Z",
+            "FinishedAt": "2020-03-04T03:11:16.461842919Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "8d5d9ee4b240711010e4ade2b79b83b4fc3214664bebaf95e0bbefabe9b1f153",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/785335f6778bec870a7eec19a9cf728ae9f2ee7b22dd633c31defea8f0a0c39c/userdata/hostname",
+        "HostsPath": "",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/785335f6778bec870a7eec19a9cf728ae9f2ee7b22dd633c31defea8f0a0c39c/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/785335f6778bec870a7eec19a9cf728ae9f2ee7b22dd633c31defea8f0a0c39c/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/mysql_init_logs.log",
+        "ConmonPidFile": "/var/run/mysql_init_logs.pid",
+        "Name": "mysql_init_logs",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c805,c931",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c805,c931",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/778fa9bbce152867b102f0a9f38fe504bc307ad321c4f5ac68e7131c0c5cbfa2/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "UpperDir": "/var/lib/containers/storage/overlay/2ce5edeb6e223c1e3690ce4d9357d83aa7b96580665def6bfd09c0bbb5c60f9c/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/2ce5edeb6e223c1e3690ce4d9357d83aa7b96580665def6bfd09c0bbb5c60f9c/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/mysql",
+                "Destination": "/var/lib/mysql",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/mysql",
+                "Destination": "/var/log/mariadb",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "785335f6778bec870a7eec19a9cf728ae9f2ee7b22dd633c31defea8f0a0c39c"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "785335f6778b",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=785335f6778b",
+                "container=oci",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "LANG=en_US.UTF-8",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_BASE_ARCH=x86_64",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "/bin/bash",
+                "-c",
+                "chown -R mysql:mysql /var/log/mariadb /var/lib/mysql"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T16:43:09.722480",
+                "com.redhat.build-host": "cpt-1001.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-mariadb-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"command\": [\"/bin/bash\", \"-c\", \"chown -R mysql:mysql /var/log/mariadb /var/lib/mysql\"], \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1\", \"net\": \"none\", \"privileged\": false, \"user\": \"root\", \"volumes\": [\"/var/log/containers/mysql:/var/log/mariadb:z\", \"/var/lib/mysql:/var/lib/mysql:z\"]}",
+                "config_id": "tripleo_step1",
+                "container_name": "mysql_init_logs",
+                "description": "Red Hat OpenStack Platform 16.0 mariadb",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 mariadb",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 mariadb",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-mariadb",
+                "release": "90",
+                "summary": "Red Hat OpenStack Platform 16.0 mariadb",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-mariadb/images/16.0-90",
+                "vcs-ref": "1ee7e4702bb48b4779753defc9dc4c9b4be68490",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:11:16.101058212Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/var/lib/mysql:/var/lib/mysql:rw,rprivate,rbind",
+                "/var/log/containers/mysql:/var/log/mariadb:rw,rprivate,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root mysql_init_logs /usr/bin/rpm -qa
+Error: cannot exec into container that is not running: container state improper

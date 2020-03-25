@@ -1,0 +1,14 @@
+{
+  "command": [
+    "chown",
+    "-R",
+    "swift:",
+    "/srv/node"
+  ],
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1",
+  "net": "none",
+  "user": "root",
+  "volumes": [
+    "/srv/node:/srv/node:z"
+  ]
+}

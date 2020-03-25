@@ -1,0 +1,229 @@
+CONTAINER ID  IMAGE                                                                                                   COMMAND               CREATED         STATUS                     PORTS  NAMES                                                       SIZE
+435ff98a543f  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-dhcp-agent:20200226.1         /usr/sbin/dnsmasq...  29 minutes ago  Up 29 minutes ago                 neutron-dnsmasq-qdhcp-e02e99e9-750a-4c24-8aa4-e17cb29fd7fa  0B (virtual 1.02GB)
+006db7e5f2b8  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic:20200226.1        /container-config...  30 minutes ago  Exited (0) 29 minutes ago         nova_wait_for_compute_service                               0B (virtual 1.95GB)
+888b4fb4b013  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic:20200226.1        kolla_start           30 minutes ago  Up 30 minutes ago                 nova_compute                                                234kB (virtual 1.95GB)
+075c95cc5b45  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api:20200226.1                /usr/bin/bootstra...  30 minutes ago  Exited (0) 30 minutes ago         mistral_db_populate                                         12.4MB (virtual 1.07GB)
+cfa33d8dd895  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           kolla_start           31 minutes ago  Up 31 minutes ago                 ironic_inspector_dnsmasq                                    867kB (virtual 673MB)
+51e89d95ac96  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           kolla_start           31 minutes ago  Up 31 minutes ago                 ironic_inspector                                            79.9kB (virtual 673MB)
+70af3013ce28  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-pxe:20200226.1                 kolla_start           31 minutes ago  Up 31 minutes ago                 ironic_pxe_http                                             162kB (virtual 772MB)
+9cea7e96f265  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-pxe:20200226.1                 /bin/bash -c BIND...  31 minutes ago  Up 31 minutes ago                 ironic_pxe_tftp                                             0B (virtual 772MB)
+65d02440d235  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-neutron-agent:20200226.1       kolla_start           31 minutes ago  Up 31 minutes ago                 ironic_neutron_agent                                        88kB (virtual 875MB)
+5249b95b4f24  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-conductor:20200226.1           kolla_start           31 minutes ago  Up 31 minutes ago                 ironic_conductor                                            162kB (virtual 874MB)
+44bf9aade2af  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-conductor:20200226.1           /usr/bin/bootstra...  31 minutes ago  Exited (0) 31 minutes ago         create_swift_temp_url_key                                   0B (virtual 874MB)
+820681e12330  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api:20200226.1                kolla_start           31 minutes ago  Up 31 minutes ago                 mistral_api                                                 13.9kB (virtual 1.07GB)
+abb2e926f771  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-openvswitch-agent:20200226.1  kolla_start           31 minutes ago  Up 31 minutes ago                 neutron_ovs_agent                                           71.4kB (virtual 875MB)
+d4df8e7f04b3  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-l3-agent:20200226.1           kolla_start           31 minutes ago  Up 31 minutes ago                 neutron_l3_agent                                            71.7kB (virtual 1.02GB)
+6ede94bea82d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-dhcp-agent:20200226.1         kolla_start           31 minutes ago  Up 31 minutes ago                 neutron_dhcp                                                71.7kB (virtual 1.02GB)
+f5ee068b31ed  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-api:20200226.1                 kolla_start           32 minutes ago  Up 32 minutes ago                 ironic_api                                                  162kB (virtual 767MB)
+ea2f3d28ee9e  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   kolla_start           32 minutes ago  Up 32 minutes ago                 nova_api_cron                                               234kB (virtual 1.1GB)
+73701dc6d711  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   /usr/bin/bootstra...  32 minutes ago  Exited (0) 31 minutes ago         nova_wait_for_api_service                                   12.4MB (virtual 1.1GB)
+8bfb6378cb3d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server:20200226.1         kolla_start           32 minutes ago  Up 32 minutes ago                 swift_proxy                                                 46.9kB (virtual 793MB)
+10ec67228092  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1              /usr/bin/bootstra...  32 minutes ago  Exited (0) 32 minutes ago         placement_wait_for_service                                  12.4MB (virtual 635MB)
+cb1e727214a5  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   kolla_start           32 minutes ago  Up 32 minutes ago                 nova_api                                                    234kB (virtual 1.1GB)
+a222e8c45df7  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-glance-api:20200226.1                 kolla_start           32 minutes ago  Up 32 minutes ago                 glance_api                                                  291kB (virtual 995MB)
+fcf46eae97f3  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1              kolla_start           32 minutes ago  Up 32 minutes ago                 placement_api                                               38.8kB (virtual 635MB)
+07c1419bd5bf  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1                 kolla_start           32 minutes ago  Up 32 minutes ago                 zaqar_websocket                                             70.7kB (virtual 698MB)
+dc5f24bf4208  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1                 kolla_start           32 minutes ago  Up 32 minutes ago                 zaqar                                                       70.7kB (virtual 698MB)
+43eb448165cc  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1               kolla_start           32 minutes ago  Up 32 minutes ago                 swift_rsync                                                 46.9kB (virtual 749MB)
+068a87355056  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1               kolla_start           32 minutes ago  Up 32 minutes ago                 swift_object_updater                                        46.9kB (virtual 749MB)
+6024705f549d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1               kolla_start           32 minutes ago  Up 32 minutes ago                 swift_object_server                                         46.9kB (virtual 749MB)
+69a14b09a7e3  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server:20200226.1         kolla_start           32 minutes ago  Up 32 minutes ago                 swift_object_expirer                                        46.9kB (virtual 793MB)
+917ac6b78bc1  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-container:20200226.1            kolla_start           32 minutes ago  Up 32 minutes ago                 swift_container_updater                                     46.9kB (virtual 749MB)
+35da696c27c2  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-container:20200226.1            kolla_start           32 minutes ago  Up 32 minutes ago                 swift_container_server                                      46.9kB (virtual 749MB)
+014414117c2d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1              kolla_start           32 minutes ago  Up 32 minutes ago                 swift_account_server                                        46.9kB (virtual 749MB)
+9f91511b9fbb  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1              kolla_start           32 minutes ago  Up 32 minutes ago                 swift_account_reaper                                        46.9kB (virtual 749MB)
+fe6817ad5001  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-scheduler:20200226.1             kolla_start           32 minutes ago  Up 32 minutes ago                 nova_scheduler                                              234kB (virtual 1.17GB)
+98fe79433c64  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-conductor:20200226.1             kolla_start           32 minutes ago  Up 32 minutes ago                 nova_conductor                                              234kB (virtual 995MB)
+b06367ecc8f3  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1             kolla_start           32 minutes ago  Up 32 minutes ago                 neutron_api                                                 71.7kB (virtual 972MB)
+b0ddb72ada74  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-executor:20200226.1           kolla_start           32 minutes ago  Up 32 minutes ago                 mistral_executor                                            13.9kB (virtual 1.44GB)
+2240be5ca4b1  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-event-engine:20200226.1       kolla_start           32 minutes ago  Up 32 minutes ago                 mistral_event_engine                                        14kB (virtual 1.05GB)
+b02d88db28c8  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-engine:20200226.1             kolla_start           32 minutes ago  Up 32 minutes ago                 mistral_engine                                              13.9kB (virtual 1.05GB)
+ccd37161c860  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-cron:20200226.1                       kolla_start           32 minutes ago  Up 32 minutes ago                 logrotate_crond                                             1.02kB (virtual 414MB)
+5dbb9b6a5853  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-engine:20200226.1                kolla_start           32 minutes ago  Up 32 minutes ago                 heat_engine                                                 69.8kB (virtual 849MB)
+9369be2bb082  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-api:20200226.1                   kolla_start           32 minutes ago  Up 32 minutes ago                 heat_api_cron                                               82kB (virtual 849MB)
+e0d1b4daa03e  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-api:20200226.1                   kolla_start           32 minutes ago  Up 32 minutes ago                 heat_api                                                    82kB (virtual 849MB)
+ee8770489b06  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-conductor:20200226.1             /usr/bin/bootstra...  37 minutes ago  Exited (0) 37 minutes ago         nova_db_sync                                                12.4MB (virtual 995MB)
+608b2f0eed65  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   /usr/bin/bootstra...  37 minutes ago  Exited (0) 37 minutes ago         nova_api_ensure_default_cell                                12.4MB (virtual 1.1GB)
+f1b9c62a66d2  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1                   kolla_start           37 minutes ago  Up 37 minutes ago                 keystone                                                    118kB (virtual 745MB)
+252c36ca5466  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-iscsid:20200226.1                     kolla_start           37 minutes ago  Up 37 minutes ago                 iscsid                                                      69B (virtual 433MB)
+02a00574fa3b  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           true                  37 minutes ago  Exited (0) 37 minutes ago         ironic_inspector_get_ipa                                    0B (virtual 673MB)
+0b4af83ebbe6  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           /usr/bin/bootstra...  37 minutes ago  Exited (0) 37 minutes ago         ironic_inspector_db_sync                                    12.4MB (virtual 673MB)
+eee83da6254f  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1              /usr/bin/bootstra...  37 minutes ago  Exited (0) 37 minutes ago         placement_api_db_sync                                       12.4MB (virtual 635MB)
+679be1a8f4df  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   /usr/bin/bootstra...  37 minutes ago  Exited (0) 37 minutes ago         nova_api_map_cell0                                          12.4MB (virtual 1.1GB)
+84aad9b45fb6  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           /bin/bash -c chow...  37 minutes ago  Exited (0) 37 minutes ago         ironic_inspector_init_dnsmasq_dhcp_hostsdir                 0B (virtual 673MB)
+9ba6bbdd5040  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-api:20200226.1                 /usr/bin/bootstra...  38 minutes ago  Exited (0) 37 minutes ago         ironic_db_sync                                              12.4MB (virtual 767MB)
+7cfbb48b177e  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1                 /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         zaqar_db_sync                                               12.4MB (virtual 698MB)
+149ba4631e7a  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1              chown -R swift: /...  38 minutes ago  Exited (0) 38 minutes ago         swift_setup_srv                                             0B (virtual 749MB)
+dd1d909c9c9f  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1               /bin/bash -c sed ...  38 minutes ago  Exited (0) 38 minutes ago         swift_rsync_fix                                             0B (virtual 749MB)
+601a3cd5ba74  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server:20200226.1         /bin/bash -c cp -...  38 minutes ago  Exited (0) 38 minutes ago         swift_copy_rings                                            0B (virtual 793MB)
+712e8cd5fa6b  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1              /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         placement_api_db_extract_data_from_nova_api                 12.4MB (virtual 635MB)
+ff7c9109e799  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic:20200226.1        /container-config...  38 minutes ago  Exited (0) 38 minutes ago         nova_statedir_owner                                         0B (virtual 1.95GB)
+f804b8155c1d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         nova_api_db_sync                                            12.4MB (virtual 1.1GB)
+798bd5c6fc0d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1             puppet apply --mo...  38 minutes ago  Exited (0) 38 minutes ago         neutron_ovs_bridge                                          1.75MB (virtual 972MB)
+ca71ec975bab  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1             /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         neutron_db_sync                                             0B (virtual 972MB)
+b1077bbb8afe  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api:20200226.1                /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         mistral_db_sync                                             12.4MB (virtual 1.07GB)
+950ed8952366  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1                   /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         keystone_db_sync                                            118kB (virtual 745MB)
+dd55097bfa86  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1           /bin/bash -c chow...  38 minutes ago  Exited (0) 38 minutes ago         ironic_inspector_init_log                                   0B (virtual 673MB)
+0b7207b84c31  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-engine:20200226.1                /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         heat_engine_db_sync                                         12.4MB (virtual 849MB)
+9fa553bc7ae6  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-glance-api:20200226.1                 /usr/bin/bootstra...  38 minutes ago  Exited (0) 38 minutes ago         glance_api_db_sync                                          12.7MB (virtual 995MB)
+89c1f846d19e  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1                    kolla_start           40 minutes ago  Up 40 minutes ago                 mysql                                                       1.69kB (virtual 759MB)
+8f2e8f1165fc  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1              /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         placement_init_log                                          0B (virtual 635MB)
+a0aaaccf28ed  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1                    bash -ec if [ -e ...  40 minutes ago  Exited (0) 40 minutes ago         mysql_bootstrap                                             1.93kB (virtual 759MB)
+85e2f83a7354  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1                   /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         keystone_init_log                                           0B (virtual 745MB)
+e0017e8d92eb  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-l3-agent:20200226.1           /container_puppet...  40 minutes ago  Exited (0) 40 minutes ago         create_keepalived_wrapper                                   1.81MB (virtual 1.02GB)
+d36e75e3745b  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-dhcp-agent:20200226.1         /container_puppet...  40 minutes ago  Exited (0) 40 minutes ago         create_dnsmasq_wrapper                                      1.8MB (virtual 1.02GB)
+222bc8be7afe  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1                 /bin/bash -c chmo...  40 minutes ago  Exited (0) 40 minutes ago         zaqar_init_log                                              0B (virtual 698MB)
+c9e0438e5ec8  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-tempest:20200226.1                    /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         tempest_init_logs                                           0B (virtual 884MB)
+7fb609b0a46c  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-conductor:20200226.1             /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         nova_conductor_init_log                                     0B (virtual 995MB)
+402c21b9c906  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1                   /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         nova_api_init_logs                                          0B (virtual 1.1GB)
+a2f391d62335  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1             /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         neutron_init_logs                                           0B (virtual 972MB)
+9550c1139d0c  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api:20200226.1                /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         mistral_init_logs                                           0B (virtual 1.07GB)
+733e458b4bec  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-api:20200226.1                 /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         ironic_init_logs                                            0B (virtual 767MB)
+2d66700110ba  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-engine:20200226.1                /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         heat_init_log                                               0B (virtual 849MB)
+7fe743022bdc  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-glance-api:20200226.1                 /bin/bash -c chow...  40 minutes ago  Exited (0) 40 minutes ago         glance_init_logs                                            0B (virtual 995MB)
+d9b45f3c6955  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1                   kolla_start           41 minutes ago  Up 41 minutes ago                 rabbitmq                                                    1.51kB (virtual 588MB)
+5d043bfe452f  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1                   kolla_start           41 minutes ago  Exited (0) 41 minutes ago         rabbitmq_bootstrap                                          1.51kB (virtual 588MB)
+907f493881d8  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-haproxy:20200226.1                    kolla_start           41 minutes ago  Up 41 minutes ago                 haproxy                                                     11.5kB (virtual 546MB)
+4bfda65ed3a4  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1                   /bin/bash -c chow...  41 minutes ago  Exited (0) 41 minutes ago         rabbitmq_init_logs                                          0B (virtual 588MB)
+785335f6778b  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1                    /bin/bash -c chow...  41 minutes ago  Exited (0) 41 minutes ago         mysql_init_logs                                             0B (virtual 759MB)
+2ded39faf540  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-memcached:20200226.1                  /bin/bash -c sour...  41 minutes ago  Up 41 minutes ago                 memcached                                                   0B (virtual 434MB)
+b150e2617c4d  undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keepalived:20200226.1                 /usr/local/bin/ko...  41 minutes ago  Up 41 minutes ago                 keepalived                                                  1.09kB (virtual 428MB)
+REPOSITORY                                                                                    TAG          IMAGE ID       CREATED      SIZE
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server              20200226.1   6d0694a95668   6 days ago   1.04 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api                 20200226.1   8c40bb592ba8   6 days ago   1.13 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-l3-agent            20200226.1   ceb6d3d9ea5c   6 days ago   1.07 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-openvswitch-agent   20200226.1   394cfe63ee5e   6 days ago   925 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi                  20200226.1   0bc144e9c690   6 days ago   737 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object                20200226.1   f2cf30a04b40   6 days ago   788 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-conductor            20200226.1   2dd011788eed   6 days ago   931 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-scheduler              20200226.1   149794501fb3   6 days ago   1.23 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api                    20200226.1   3e6638c90131   6 days ago   1.15 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone                    20200226.1   2d39eacbbf4a   6 days ago   786 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server          20200226.1   70fa70339d02   6 days ago   836 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-dhcp-agent          20200226.1   027dab4e0e8f   6 days ago   1.07 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-glance-api                  20200226.1   5a43edc85fec   6 days ago   1.04 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-engine              20200226.1   3666beb77613   6 days ago   1.11 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-engine                 20200226.1   b8865a7726e6   6 days ago   894 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account               20200226.1   f9c49b420b87   6 days ago   788 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-executor            20200226.1   e91272eaf36f   6 days ago   1.51 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-pxe                  20200226.1   c5930e0e0457   6 days ago   814 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-container             20200226.1   30f1b8861344   6 days ago   788 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-api                    20200226.1   65f9fa38acf0   6 days ago   894 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-neutron-agent        20200226.1   6e9a16c4933a   6 days ago   925 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-api                  20200226.1   a82f36768cfd   6 days ago   809 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-conductor              20200226.1   f65a909e334d   6 days ago   1.05 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic         20200226.1   34b04b138aa9   6 days ago   2.01 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-event-engine        20200226.1   aca0d7ee2a3f   6 days ago   1.11 GB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector            20200226.1   0cc2092d93ad   6 days ago   711 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api               20200226.1   e1cf4edb9996   6 days ago   663 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-tempest                     20200226.1   681dc5037699   6 days ago   943 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keepalived                  20200226.1   a33927990cc5   6 days ago   448 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq                    20200226.1   c40afeea817b   6 days ago   616 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-haproxy                     20200226.1   30653ad92cb4   6 days ago   572 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-memcached                   20200226.1   768efc2e35c2   6 days ago   455 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-cron                        20200226.1   60009a28824e   6 days ago   434 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-iscsid                      20200226.1   eedf7243b5d0   6 days ago   453 MB
+undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb                     20200226.1   8d5d9ee4b240   6 days ago   787 MB
+ID             NAME                                                         CPU %   MEM USAGE / LIMIT   MEM %   NET IO    BLOCK IO            PIDS
+014414117c2d   swift_account_server                                         5.26%   53.07MB / 25.1GB    0.21%   -- / --   0B / 453.1kB        4
+068a87355056   swift_object_updater                                         --      32.99MB / 25.1GB    0.13%   -- / --   -- / --             2
+07c1419bd5bf   zaqar_websocket                                              --      70.7MB / 25.1GB     0.28%   -- / --   -- / --             2
+2240be5ca4b1   mistral_event_engine                                         --      106MB / 25.1GB      0.42%   -- / --   -- / --             7
+252c36ca5466   iscsid                                                       --      6.443MB / 25.1GB    0.03%   -- / --   -- / --             2
+2ded39faf540   memcached                                                    --      19.01MB / 25.1GB    0.08%   -- / --   4.096kB / 0B        16
+35da696c27c2   swift_container_server                                       4.39%   86.39MB / 25.1GB    0.34%   -- / --   0B / 1.085MB        44
+435ff98a543f   neutron-dnsmasq-qdhcp-e02e99e9-750a-4c24-8aa4-e17cb29fd7fa   --      2.224MB / 25.1GB    0.01%   -- / --   0B / 12.8kB         2
+43eb448165cc   swift_rsync                                                  --      5.407MB / 25.1GB    0.02%   -- / --   -- / --             2
+51e89d95ac96   ironic_inspector                                             --      89.87MB / 25.1GB    0.36%   -- / --   0B / 295.4kB        2
+5249b95b4f24   ironic_conductor                                             --      110MB / 25.1GB      0.44%   -- / --   8.192kB / 0B        2
+5dbb9b6a5853   heat_engine                                                  5.52%   308.5MB / 25.1GB    1.23%   -- / --   -- / --             6
+6024705f549d   swift_object_server                                          5.39%   97.85MB / 25.1GB    0.39%   -- / --   6.545MB / 1.29GB    44
+65d02440d235   ironic_neutron_agent                                         --      102.5MB / 25.1GB    0.41%   -- / --   0B / 34.82kB        2
+69a14b09a7e3   swift_object_expirer                                         --      33.82MB / 25.1GB    0.13%   -- / --   -- / --             2
+6ede94bea82d   neutron_dhcp                                                 3.23%   202.9MB / 25.1GB    0.81%   -- / --   0B / 587.8kB        15
+70af3013ce28   ironic_pxe_http                                              --      15.67MB / 25.1GB    0.06%   -- / --   172kB / 0B          10
+820681e12330   mistral_api                                                  6.14%   166MB / 25.1GB      0.66%   -- / --   -- / --             3
+888b4fb4b013   nova_compute                                                 --      124.9MB / 25.1GB    0.50%   -- / --   213kB / 0B          2
+89c1f846d19e   mysql                                                        --      383.3MB / 25.1GB    1.53%   -- / --   135.2kB / 710MB     107
+8bfb6378cb3d   swift_proxy                                                  4.88%   119.8MB / 25.1GB    0.48%   -- / --   110.6kB / 0B        4
+907f493881d8   haproxy                                                      --      16.57MB / 25.1GB    0.07%   -- / --   -- / --             3
+917ac6b78bc1   swift_container_updater                                      --      30.83MB / 25.1GB    0.12%   -- / --   0B / 687.1kB        2
+9369be2bb082   heat_api_cron                                                --      6.291MB / 25.1GB    0.03%   -- / --   -- / --             2
+98fe79433c64   nova_conductor                                               5.68%   374.9MB / 25.1GB    1.49%   -- / --   -- / --             6
+9cea7e96f265   ironic_pxe_tftp                                              --      7.537MB / 25.1GB    0.03%   -- / --   1.028MB / 0B        3
+9f91511b9fbb   swift_account_reaper                                         --      28.46MB / 25.1GB    0.11%   -- / --   -- / --             2
+a222e8c45df7   glance_api                                                   5.35%   157.9MB / 25.1GB    0.63%   -- / --   4.096kB / 0B        6
+abb2e926f771   neutron_ovs_agent                                            --      153.1MB / 25.1GB    0.61%   -- / --   -- / --             8
+b02d88db28c8   mistral_engine                                               --      150.8MB / 25.1GB    0.60%   -- / --   172kB / 0B          7
+b06367ecc8f3   neutron_api                                                  --      846.2MB / 25.1GB    3.37%   -- / --   1.036MB / 0B        12
+b0ddb72ada74   mistral_executor                                             --      161.6MB / 25.1GB    0.64%   -- / --   249.9kB / 0B        2
+b150e2617c4d   keepalived                                                   --      11.69MB / 25.1GB    0.05%   -- / --   4.231MB / 0B        3
+cb1e727214a5   nova_api                                                     --      539.8MB / 25.1GB    2.15%   -- / --   0B / 4.096kB        26
+ccd37161c860   logrotate_crond                                              --      5.747MB / 25.1GB    0.02%   -- / --   -- / --             2
+cfa33d8dd895   ironic_inspector_dnsmasq                                     --      11.49MB / 25.1GB    0.05%   -- / --   4.456MB / 0B        2
+d4df8e7f04b3   neutron_l3_agent                                             --      167.7MB / 25.1GB    0.67%   -- / --   528.4kB / 0B        5
+d9b45f3c6955   rabbitmq                                                     --      155.2MB / 25.1GB    0.62%   -- / --   290.8kB / 753.2kB   165
+dc5f24bf4208   zaqar                                                        --      315.3MB / 25.1GB    1.26%   -- / --   -- / --             26
+e0d1b4daa03e   heat_api                                                     --      366.7MB / 25.1GB    1.46%   -- / --   2.281MB / 0B        34
+ea2f3d28ee9e   nova_api_cron                                                --      6.455MB / 25.1GB    0.03%   -- / --   -- / --             2
+f1b9c62a66d2   keystone                                                     --      424.4MB / 25.1GB    1.69%   -- / --   3.457MB / 4.096kB   30
+f5ee068b31ed   ironic_api                                                   --      423.3MB / 25.1GB    1.69%   -- / --   -- / --             83
+fcf46eae97f3   placement_api                                                --      108.9MB / 25.1GB    0.43%   -- / --   -- / --             17
+fe6817ad5001   nova_scheduler                                               5.29%   216.6MB / 25.1GB    0.86%   -- / --   -- / --             11
+host:
+  BuildahVersion: 1.12.0-dev
+  CgroupVersion: v1
+  Conmon:
+    package: conmon-2.0.6-1.module+el8.1.1+5259+bcdd613a.x86_64
+    path: /usr/bin/conmon
+    version: 'conmon version 2.0.6, commit: 6ffbb2ec70dbe5ba56e4bfde946fb04f19dd8bbf'
+  Distribution:
+    distribution: '"rhel"'
+    version: "8.1"
+  MemFree: 1938042880
+  MemTotal: 25102581760
+  OCIRuntime:
+    name: runc
+    package: runc-1.0.0-64.rc9.module+el8.1.1+5259+bcdd613a.x86_64
+    path: /usr/bin/runc
+    version: 'runc version spec: 1.0.1-dev'
+  SwapFree: 0
+  SwapTotal: 0
+  arch: amd64
+  cpus: 8
+  eventlogger: journald
+  hostname: undercloud-0.redhat.local
+  kernel: 4.18.0-147.5.1.el8_1.x86_64
+  os: linux
+  rootless: false
+  uptime: 56m 21.46s
+registries:
+  blocked: null
+  insecure:
+  - undercloud-0.ctlplane.redhat.local
+  - 192.168.24.1
+  - 192.168.24.3
+  - rhos-qe-mirror-tlv.usersys.redhat.com:5002
+  - docker-registry.upshift.redhat.com
+  - registry.access.redhat.com
+  search:
+  - registry.access.redhat.com
+  - registry.fedoraproject.org
+  - registry.centos.org
+  - docker.io
+store:
+  ConfigFile: /etc/containers/storage.conf
+  ContainerStore:
+    number: 89
+  GraphDriverName: overlay
+  GraphOptions: {}
+  GraphRoot: /var/lib/containers/storage
+  GraphStatus:
+    Backing Filesystem: xfs
+    Native Overlay Diff: "true"
+    Supports d_type: "true"
+    Using metacopy: "false"
+  ImageStore:
+    number: 35
+  RunRoot: /var/run/containers/storage
+  VolumePath: /var/lib/containers/storage/volumes

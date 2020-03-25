@@ -1,0 +1,12 @@
+{
+    "command": "/container-config-scripts/pyshim.sh /container-config-scripts/nova_statedir_ownership.py",
+    "detach": false,
+    "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic:20200226.1",
+    "net": "none",
+    "privileged": false,
+    "user": "root",
+    "volumes": [
+        "/var/lib/nova:/var/lib/nova:shared,z",
+        "/var/lib/container-config-scripts/:/container-config-scripts/"
+    ]
+}

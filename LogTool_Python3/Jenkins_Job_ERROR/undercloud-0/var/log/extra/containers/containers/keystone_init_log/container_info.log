@@ -1,0 +1,333 @@
++ podman top keystone_init_log user pid ppid pcpu vsz tty state time etime args
+Error: top can only be used on running containers
++ podman exec --user root keystone_init_log top -bwn1
+Error: cannot exec into container that is not running: container state improper
++ podman inspect keystone_init_log
+[
+    {
+        "Id": "85e2f83a735462e8a4761818ea39db2b8c16dbc4b261ddfef5c934de0751d20a",
+        "Created": "2020-03-04T03:12:43.020049994Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--single-child",
+            "--",
+            "/bin/bash",
+            "-c",
+            "chown -R keystone:keystone /var/log/keystone"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:12:43.347849487Z",
+            "FinishedAt": "2020-03-04T03:12:43.382377308Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "2d39eacbbf4a908aaf1cfbba04bcd59266a4874906c5b55cb20f8475f6ad4cbd",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/85e2f83a735462e8a4761818ea39db2b8c16dbc4b261ddfef5c934de0751d20a/userdata/hostname",
+        "HostsPath": "",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/85e2f83a735462e8a4761818ea39db2b8c16dbc4b261ddfef5c934de0751d20a/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/85e2f83a735462e8a4761818ea39db2b8c16dbc4b261ddfef5c934de0751d20a/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/keystone_init_log.log",
+        "ConmonPidFile": "/var/run/keystone_init_log.pid",
+        "Name": "keystone_init_log",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c124,c211",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c124,c211",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/0cd8f7b218949be3aa357e3d57783ba4d46a39a109f64ee6c13f52b213e84117/diff:/var/lib/containers/storage/overlay/7a9a7086b99de6a09a1fe9688c26b520be01caee0282d6ed5b216245698440e2/diff:/var/lib/containers/storage/overlay/39231f0c35ac6b5018875a08df285edbceeeb29ab1a6185f125c5bd1d90be658/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "UpperDir": "/var/lib/containers/storage/overlay/77181f323ec071be4813baa3229fd351b71cc3d264f1cb978e5fae0eaa328950/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/77181f323ec071be4813baa3229fd351b71cc3d264f1cb978e5fae0eaa328950/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/keystone",
+                "Destination": "/var/log/keystone",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/log/containers/httpd/keystone",
+                "Destination": "/var/log/httpd",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "85e2f83a735462e8a4761818ea39db2b8c16dbc4b261ddfef5c934de0751d20a"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "85e2f83a7354",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=85e2f83a7354",
+                "container=oci",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "LANG=en_US.UTF-8",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "KOLLA_BASE_ARCH=x86_64",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "/bin/bash",
+                "-c",
+                "chown -R keystone:keystone /var/log/keystone"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --single-child --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T18:39:05.354541",
+                "com.redhat.build-host": "cpt-1007.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-keystone-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"command\": [\"/bin/bash\", \"-c\", \"chown -R keystone:keystone /var/log/keystone\"], \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keystone:20200226.1\", \"net\": \"none\", \"start_order\": 1, \"user\": \"root\", \"volumes\": [\"/var/log/containers/keystone:/var/log/keystone:z\", \"/var/log/containers/httpd/keystone:/var/log/httpd:z\"]}",
+                "config_id": "tripleo_step2",
+                "container_name": "keystone_init_log",
+                "description": "Red Hat OpenStack Platform 16.0 keystone",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 keystone",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 keystone",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-keystone",
+                "release": "82",
+                "summary": "Red Hat OpenStack Platform 16.0 keystone",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-keystone/images/16.0-82",
+                "vcs-ref": "0187184073bc50a566ffcf9d77103943550a21aa",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:12:43.020049994Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/var/log/containers/keystone:/var/log/keystone:rw,rprivate,rbind",
+                "/var/log/containers/httpd/keystone:/var/log/httpd:rw,rprivate,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root keystone_init_log /usr/bin/rpm -qa
+Error: cannot exec into container that is not running: container state improper

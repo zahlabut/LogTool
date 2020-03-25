@@ -1,0 +1,35 @@
+{
+  "environment": {
+    "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+    "TRIPLEO_CONFIG_HASH": "620ee63dcdfab38fa7e9fc64ce4e9f61"
+  },
+  "healthcheck": {
+    "test": "/openstack/healthcheck 5672"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-compute-ironic:20200226.1",
+  "net": "host",
+  "privileged": true,
+  "restart": "always",
+  "start_order": 100,
+  "user": "root",
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/kolla/config_files/nova_ironic.json:/var/lib/kolla/config_files/config.json:ro",
+    "/var/lib/config-data/puppet-generated/nova/:/var/lib/kolla/config_files/src:ro",
+    "/etc/iscsi:/var/lib/kolla/config_files/src-iscsid:ro",
+    "/run:/run",
+    "/dev:/dev",
+    "/var/lib/iscsi:/var/lib/iscsi:z",
+    "/var/log/containers/nova:/var/log/nova:z",
+    "/var/lib/nova:/var/lib/nova:shared,z"
+  ]
+}

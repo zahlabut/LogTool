@@ -1,0 +1,48 @@
+{
+  "config": "#!/usr/libexec/platform-python\n# Licensed under the Apache License, Version 2.0 (the \"License\"); you may\n# not use this file except in compliance with the License. You may obtain\n# a copy of the License at\n#\n#      http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT\n# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the\n# License for the specific language governing permissions and limitations\n# under the License.\n\nimport json\nimport openstack\nimport os\nimport subprocess\n\nfrom keystoneauth1 import exceptions as ks_exceptions\nfrom mistralclient.api import base as mistralclient_exc\nfrom mistralclient.api import client as mistralclient\n\n\nCONF = json.loads(os.environ['config'])\nWORKBOOK_PATH = '/usr/share/openstack-tripleo-common/workbooks'\nTHT_DIR = '/usr/share/openstack-tripleo-heat-templates'\n\n\ndef _run_command(args, env=None, name=None):\n    \"\"\"Run the command defined by args and return its output\n\n    :param args: List of arguments for the command to be run.\n    :param env: Dict defining the environment variables. Pass None to use\n        the current environment.\n    :param name: User-friendly name for the command being run. A value of\n        None will cause args[0] to be used.\n    \"\"\"\n    if name is None:\n        name = args[0]\n\n    if env is None:\n        env = os.environ\n    env = env.copy()\n\n    # When running a localized python script, we need to tell it that we're\n    # using utf-8 for stdout, otherwise it can't tell because of the pipe.\n    env['PYTHONIOENCODING'] = 'utf8'\n\n    try:\n        return subprocess.check_output(args,\n                                       stderr=subprocess.STDOUT,\n                                       env=env).decode('utf-8')\n    except subprocess.CalledProcessError as ex:\n        print('ERROR: %s failed: %s' % (name, ex.output))\n        raise\n\n\ndef _configure_nova(sdk):\n    \"\"\"Disable nova quotas\"\"\"\n    sdk.set_compute_quotas('admin', cores='-1', instances='-1', ram='-1')\n\n    # Configure flavors.\n    sizings = {'ram': 4096, 'vcpus': 1, 'disk': 40}\n    extra_specs = {'resources:CUSTOM_BAREMETAL': 1,\n                   'resources:VCPU': 0,\n                   'resources:MEMORY_MB': 0,\n                   'resources:DISK_GB': 0}\n    profiles = ['control', 'compute', 'ceph-storage', 'block-storage',\n                'swift-storage', 'baremetal']\n    flavors = [flavor.name for flavor in sdk.list_flavors()]\n    for profile in profiles:\n        if profile not in flavors:\n            flavor = sdk.create_flavor(profile, **sizings)\n            if profile != 'baremetal':\n                extra_specs.update({'capabilities:profile': profile})\n            else:\n                extra_specs.pop('capabilities:profile', None)\n            sdk.set_flavor_specs(flavor.id, extra_specs)\n        else:\n            flavor = sdk.get_flavor(profile)\n            # In place to migrate flavors from rocky too stein\n            if flavor.extra_specs.get('capabilities:boot_option') == 'local':\n                sdk.unset_flavor_specs(flavor.id, ['capabilities:boot_option'])\n    print('INFO: Undercloud Post - Nova configuration completed successfully.')\n\n\ndef _create_default_keypair(sdk):\n    \"\"\"Set up a default keypair.\"\"\"\n    ssh_dir = os.path.join(CONF['home_dir'], '.ssh')\n    public_key_file = os.path.join(ssh_dir, 'id_rsa.pub')\n    if (not [True for kp in sdk.compute.keypairs() if kp.name == 'default'] and\n            os.path.isfile(public_key_file)):\n        with open(public_key_file, 'r') as pub_key_file:\n            sdk.compute.create_keypair(name='default',\n                                       public_key=pub_key_file.read())\n\n\ndef _configure_workbooks_and_workflows(mistral):\n    for workbook in [w for w in mistral.workbooks.list()\n                     if w.name.startswith('tripleo')]:\n        mistral.workbooks.delete(workbook.name)\n    managed_tag = 'tripleo-common-managed'\n    all_workflows = mistral.workflows.list()\n    workflows_delete = [w.name for w in all_workflows\n                        if managed_tag in w.tags]\n    # in order to delete workflows they should have no triggers associated\n    for trigger in [t for t in mistral.cron_triggers.list()\n                    if t.workflow_name in workflows_delete]:\n        mistral.cron_triggers.delete(trigger.name)\n    for workflow_name in workflows_delete:\n        mistral.workflows.delete(workflow_name)\n    for workbook in [f for f in os.listdir(WORKBOOK_PATH)\n                     if os.path.isfile(os.path.join(WORKBOOK_PATH, f))]:\n        mistral.workbooks.create(os.path.join(WORKBOOK_PATH, workbook))\n    print('INFO: Undercloud post - Mistral workbooks configured successfully.')\n\n\ndef _store_passwords_in_mistral_env(mistral):\n    \"\"\"Store required passwords in a mistral environment\"\"\"\n    env_name = 'tripleo.undercloud-config'\n    config_data = {\n        'undercloud_ceilometer_snmpd_password':\n            CONF['snmp_readonly_user_password'],\n        'undercloud_db_password':\n            CONF['undercloud_db_password'],\n        'undercloud_db_host':\n            CONF['undercloud_db_host']\n    }\n    try:\n        mistral.environments.get(env_name).variables\n        mistral.environments.update(\n            name=env_name,\n            description='Undercloud configuration parameters',\n            variables=json.dumps(config_data, sort_keys=True))\n    except (ks_exceptions.NotFound, mistralclient_exc.APIException):\n        # The environment is not created, we need to create it\n        mistral.environments.create(\n            name=env_name,\n            description='Undercloud configuration parameters',\n            variables=json.dumps(config_data, sort_keys=True))\n    print('INFO: Undercloud post - Mistral environment configured '\n          'successfully.')\n\n\ndef _prepare_ssh_environment(mistral):\n    mistral.executions.create('tripleo.validations.v1.copy_ssh_key')\n\n\ndef _create_default_plan(mistral):\n    plan_exists = [True for c in sdk.list_containers() if\n                   c['name'] == 'overcloud']\n    if not plan_exists and os.path.isdir(THT_DIR):\n        mistral.executions.create(\n            'tripleo.plan_management.v1.create_deployment_plan',\n            workflow_input={'container': 'overcloud',\n                            'use_default_templates': True})\n        print('INFO: Undercloud post - Default plan overcloud created.')\n\n\nnova_api_enabled = 'true' in _run_command(\n    ['hiera', 'nova_api_enabled']).lower()\nmistral_api_enabled = 'true' in _run_command(\n    ['hiera', 'mistral_api_enabled']).lower()\ntripleo_validations_enabled = 'true' in _run_command(\n    ['hiera', 'tripleo_validations_enabled']).lower()\n\nif not nova_api_enabled:\n    print('WARNING: Undercloud Post - Nova API is disabled.')\nif not mistral_api_enabled:\n    print('WARNING: Undercloud Post - Mistral API is disabled.')\nif not tripleo_validations_enabled:\n    print('WARNING: Undercloud Post - Tripleo validations is disabled.')\n\nsdk = openstack.connect(CONF['cloud_name'])\n\ntry:\n    if nova_api_enabled:\n        _configure_nova(sdk)\n        _create_default_keypair(sdk)\n    if mistral_api_enabled:\n        mistral = mistralclient.client(mistral_url=sdk.workflow.get_endpoint(),\n                                       session=sdk.session)\n        _configure_workbooks_and_workflows(mistral)\n        _store_passwords_in_mistral_env(mistral)\n        _create_default_plan(mistral)\n        if tripleo_validations_enabled:\n            _prepare_ssh_environment(mistral)\n            print(\"INFO: Undercloud post - \"\n                  \"SSH Keys for TripleO Validations deployed.\")\nexcept Exception:\n    print('ERROR: Undercloud Post - Failed.')\n    raise\n",
+  "creation_time": "2020-03-04T03:03:08Z",
+  "deployment_name": "UndercloudPostPyDeployment",
+  "group": "script",
+  "id": "5fcb851f-b801-4d4c-aa24-3776e6379ed5",
+  "inputs": [
+    {
+      "name": "config",
+      "description": null,
+      "type": "String",
+      "value": "{\"cloud_name\": \"undercloud\", \"home_dir\": \"/home/stack\", \"snmp_readonly_user_password\": \"HBf8DxDGya9gewjzjD0ZD5fpM\", \"undercloud_db_host\": \"192.168.24.3\", \"undercloud_db_password\": \"itBcO9nHJa\"}"
+    },
+    {
+      "name": "deploy_server_id",
+      "description": "ID of the server being deployed to",
+      "type": "String",
+      "value": "1e6ea2e1-c44d-4e40-b09e-10d94ca508c0"
+    },
+    {
+      "name": "deploy_action",
+      "description": "Name of the current action being deployed",
+      "type": "String",
+      "value": "CREATE"
+    },
+    {
+      "name": "deploy_stack_id",
+      "description": "ID of the stack this deployment belongs to",
+      "type": "String",
+      "value": "undercloud-AllNodesDeploySteps-zuuy36jjpozg-UndercloudExtraConfigPost-chemsis6sbys-UndercloudPostPyDeployment-5fsozrvjmdrf-0-7nzwspl3gzz2/bf904c69-98e9-4374-b094-6e34964cbb82"
+    },
+    {
+      "name": "deploy_resource_name",
+      "description": "Name of this deployment resource in the stack",
+      "type": "String",
+      "value": "TripleOSoftwareDeployment"
+    },
+    {
+      "name": "deploy_signal_transport",
+      "description": "How the server should signal to heat with the deployment output values.",
+      "type": "String",
+      "value": "NO_SIGNAL"
+    }
+  ],
+  "name": "deployment_resource",
+  "options": {},
+  "outputs": null
+}

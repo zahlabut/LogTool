@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/bin/bash",
+    "-c",
+    "chown -R rabbitmq:rabbitmq /var/log/rabbitmq"
+  ],
+  "detach": false,
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+  "net": "none",
+  "privileged": false,
+  "start_order": 0,
+  "user": "root",
+  "volumes": [
+    "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+  ]
+}

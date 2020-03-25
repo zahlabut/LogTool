@@ -1,0 +1,29 @@
+{
+    "detach": false,
+    "environment": {
+        "KOLLA_BOOTSTRAP": true,
+        "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+        "RABBITMQ_CLUSTER_COOKIE": "rBqTrDUYiwnwqazr2rMr",
+        "TRIPLEO_DEPLOY_IDENTIFIER": "1583290741"
+    },
+    "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+    "net": "host",
+    "privileged": false,
+    "start_order": 1,
+    "volumes": [
+        "/etc/hosts:/etc/hosts:ro",
+        "/etc/localtime:/etc/localtime:ro",
+        "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+        "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+        "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+        "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+        "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+        "/dev/log:/dev/log",
+        "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+        "/etc/puppet:/etc/puppet:ro",
+        "/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro",
+        "/var/lib/config-data/puppet-generated/rabbitmq/:/var/lib/kolla/config_files/src:ro",
+        "/var/lib/rabbitmq:/var/lib/rabbitmq:z",
+        "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+    ]
+}

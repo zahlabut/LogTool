@@ -1,0 +1,17 @@
++ sudo -E kolla_set_configs
+INFO:__main__:Loading config file at /var/lib/kolla/config_files/config.json
+INFO:__main__:Validating config file
+INFO:__main__:Kolla config strategy set to: COPY_ALWAYS
+INFO:__main__:Copying service configuration files
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/logrotate-crond.conf to /etc/logrotate-crond.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/var/spool/cron/root to /var/spool/cron/root
+INFO:__main__:Writing out command to execute
+++ cat /run_command
++ CMD='/usr/sbin/crond -s -n'
++ ARGS=
++ sudo kolla_copy_cacerts
++ [[ ! -n '' ]]
++ . kolla_extend_start
++ echo 'Running command: '\''/usr/sbin/crond -s -n'\'''
+Running command: '/usr/sbin/crond -s -n'
++ exec /usr/sbin/crond -s -n

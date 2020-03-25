@@ -1,0 +1,37 @@
+FROM sha256:ee54f5aefacfe1f9ced6737d9e914380a4f8641238649f999d7b3a28f72be885
+
+
+LABEL description="Red Hat OpenStack Platform 16.0 swift-proxy-server"
+LABEL io.openshift.tags="rhosp osp openstack osp-16.0"
+LABEL summary="Red Hat OpenStack Platform 16.0 swift-proxy-server"
+LABEL io.k8s.display-name="Red Hat OpenStack Platform 16.0 swift-proxy-server"
+LABEL com.redhat.component="openstack-swift-proxy-server-container"
+LABEL name="rhosp16/openstack-swift-proxy-server"
+LABEL version="16.0"
+LABEL batch="20200226.1"
+
+
+
+
+    
+        
+    
+
+RUN dnf -y install openstack-swift-proxy openstack-ceilometer-common httpd mod_ssl python3-ceilometermiddleware \
+    && dnf clean all && rm -rf /var/cache/dnf
+
+
+
+
+RUN mkdir -p /openstack && \
+    ln -s /usr/share/openstack-tripleo-common/healthcheck/swift-proxy /openstack/healthcheck && \
+    chmod a+rx /openstack/healthcheck && \
+    sed -i -r 's,^(Listen 80),#\1,' /etc/httpd/conf/httpd.conf && \
+    sed -i -r 's,^(Listen 443),#\1,' /etc/httpd/conf.d/ssl.conf && \
+    echo "if [[ "\$\(whoami\)" == 'root' ]]; then rm -rf /var/run/httpd/* /run/httpd/* /tmp/httpd*; fi" >> /usr/local/bin/kolla_extend_start
+
+
+
+USER swift
+
+LABEL "io.k8s.description"="Red Hat OpenStack Platform 16.0 swift-proxy-server" "authoritative-source-url"="registry.access.redhat.com" "distribution-scope"="public" "vendor"="Red Hat, Inc." "url"="https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-swift-proxy-server/images/16.0-78" "vcs-type"="git" "architecture"="x86_64" "release"="78" "build-date"="2020-02-26T18:36:46.434901" "com.redhat.license_terms"="https://www.redhat.com/en/about/red-hat-end-user-license-agreements" "com.redhat.build-host"="cpt-1003.osbs.prod.upshift.rdu2.redhat.com" "vcs-ref"="041d52efa6b54cdcd1fdd4c2d6f02281d318bd68"

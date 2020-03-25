@@ -1,0 +1,43 @@
++ sudo -E kolla_set_configs
+INFO:__main__:Loading config file at /var/lib/kolla/config_files/config.json
+INFO:__main__:Validating config file
+INFO:__main__:Kolla config strategy set to: COPY_ALWAYS
+INFO:__main__:Copying service configuration files
+INFO:__main__:Creating directory /etc/rabbitmq/ssl
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/rabbitmq/enabled_plugins to /etc/rabbitmq/enabled_plugins
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/rabbitmq/inetrc to /etc/rabbitmq/inetrc
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/rabbitmq/rabbitmq-env.conf to /etc/rabbitmq/rabbitmq-env.conf
+INFO:__main__:Deleting /etc/rabbitmq/rabbitmq.config
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/rabbitmq/rabbitmq.config to /etc/rabbitmq/rabbitmq.config
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/security/limits.d/rabbitmq-server.conf to /etc/security/limits.d/rabbitmq-server.conf
+INFO:__main__:Creating directory /etc/systemd/system/rabbitmq-server.service.d
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/systemd/system/rabbitmq-server.service.d/90-limits.conf to /etc/systemd/system/rabbitmq-server.service.d/90-limits.conf
+INFO:__main__:Writing out command to execute
+INFO:__main__:Setting permission for /var/lib/rabbitmq
+INFO:__main__:Setting permission for /var/lib/rabbitmq/.erlang.cookie
+++ cat /run_command
++ CMD=/usr/lib/rabbitmq/bin/rabbitmq-server
++ ARGS=
++ sudo kolla_copy_cacerts
++ [[ ! -n '' ]]
++ . kolla_extend_start
+++ : /var/log/kolla/rabbitmq
+++ [[ -n '' ]]
+++ [[ ! -d /var/log/kolla/rabbitmq ]]
+++ mkdir -p /var/log/kolla/rabbitmq
++++ stat -c %a /var/log/kolla/rabbitmq
+++ [[ 2755 != \7\5\5 ]]
+++ chmod 755 /var/log/kolla/rabbitmq
+Running command: '/usr/lib/rabbitmq/bin/rabbitmq-server'
++ echo 'Running command: '\''/usr/lib/rabbitmq/bin/rabbitmq-server'\'''
++ exec /usr/lib/rabbitmq/bin/rabbitmq-server
+
+  ##  ##
+  ##  ##      RabbitMQ 3.7.23. Copyright (C) 2007-2019 Pivotal Software, Inc.
+  ##########  Licensed under the MPL.  See https://www.rabbitmq.com/
+  ######  ##
+  ##########  Logs: /var/log/rabbitmq/rabbit@undercloud-0.log
+                    /var/log/rabbitmq/rabbit@undercloud-0_upgrade.log
+
+              Starting broker...
+ completed with 3 plugins.

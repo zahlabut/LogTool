@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/bin/bash",
+    "-c",
+    "source /etc/sysconfig/memcached; /usr/bin/memcached -p ${PORT} -u ${USER} -m ${CACHESIZE} -c ${MAXCONN} $OPTIONS"
+  ],
+  "healthcheck": {
+    "test": "/openstack/healthcheck"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-memcached:20200226.1",
+  "net": "host",
+  "privileged": false,
+  "restart": "always",
+  "start_order": 0,
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/config-data/memcached/etc/sysconfig/memcached:/etc/sysconfig/memcached:ro"
+  ],
+  "environment": {
+    "TRIPLEO_CONFIG_HASH": "dcd8dc13e4f64ee76a4a2a89512c8917"
+  }
+}

@@ -1,0 +1,4 @@
+/usr/lib/python3.6/site-packages/pymysql/cursors.py:165: Warning: (1831, 'Duplicate index `block_device_mapping_instance_uuid_virtual_name_device_name_idx`. This is deprecated and will be disallowed in a future release')
+  result = self._query(query)
+/usr/lib/python3.6/site-packages/pymysql/cursors.py:165: Warning: (1831, 'Duplicate index `uniq_instances0uuid`. This is deprecated and will be disallowed in a future release')
+  result = self._query(query)

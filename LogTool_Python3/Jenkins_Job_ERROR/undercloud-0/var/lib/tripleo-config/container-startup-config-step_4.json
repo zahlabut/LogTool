@@ -1,0 +1,1210 @@
+{
+    "create_swift_temp_url_key": {
+        "command": "/usr/bin/bootstrap_host_exec ironic_conductor /create_swift_temp_url_key.sh",
+        "detach": false,
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-conductor:20200226.1",
+        "net": "host",
+        "start_order": 70,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/config-data/puppet-generated/ironic/etc/ironic:/etc/ironic:ro",
+            "/var/lib/container-config-scripts/create_swift_temp_url_key.sh:/create_swift_temp_url_key.sh:ro"
+        ]
+    },
+    "glance_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-glance-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 2,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/glance:/var/log/glance:z",
+            "/var/log/containers/httpd/glance:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/glance_api.json:/var/lib/kolla/config_files/config.json",
+            "/var/lib/config-data/puppet-generated/glance_api/:/var/lib/kolla/config_files/src:ro",
+            "/etc/ceph:/var/lib/kolla/config_files/src-ceph:ro",
+            "/var/lib/glance:/var/lib/glance:slave"
+        ]
+    },
+    "heat_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/heat:/var/log/heat:z",
+            "/var/log/containers/httpd/heat-api:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/heat_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/heat_api/:/var/lib/kolla/config_files/src:ro",
+            "",
+            ""
+        ]
+    },
+    "heat_api_cron": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/usr/share/openstack-tripleo-common/healthcheck/cron heat"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/heat:/var/log/heat:z",
+            "/var/log/containers/httpd/heat-api:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/heat_api_cron.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/heat_api/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "heat_engine": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-heat-engine:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "stop_grace_period": 60,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/heat:/var/log/heat:z",
+            "/usr/lib/heat:/usr/lib/heat:ro",
+            "/var/lib/kolla/config_files/heat_engine.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/heat/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "ironic_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-api:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "start_order": 10,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic_api/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/ironic:/var/log/ironic:z",
+            "/var/log/containers/httpd/ironic-api:/var/log/httpd:z",
+            "",
+            ""
+        ]
+    },
+    "ironic_conductor": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-conductor:20200226.1",
+        "net": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 80,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_conductor.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic/:/var/lib/kolla/config_files/src:ro",
+            "/lib/modules:/lib/modules:ro",
+            "/sys:/sys",
+            "/dev:/dev",
+            "/run:/run",
+            "/var/lib/ironic:/var/lib/ironic:z",
+            "/var/log/containers/ironic:/var/log/ironic:z"
+        ]
+    },
+    "ironic_inspector": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1",
+        "net": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 92,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_inspector.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic_inspector/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/ironic:/var/lib/ironic:shared,z",
+            "/var/log/containers/ironic-inspector:/var/log/ironic-inspector:z",
+            "/var/lib/ironic-inspector/dhcp-hostsdir:/var/lib/ironic-inspector/dhcp-hostsdir:shared,z"
+        ]
+    },
+    "ironic_inspector_dnsmasq": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1",
+        "net": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 93,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_inspector_dnsmasq.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic_inspector/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/ironic-inspector:/var/log/ironic-inspector:z",
+            "/var/lib/ironic-inspector/dhcp-hostsdir:/var/lib/ironic-inspector/dhcp-hostsdir:shared,z"
+        ]
+    },
+    "ironic_neutron_agent": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-neutron-agent:20200226.1",
+        "net": "host",
+        "pid": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 80,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/neutron:/var/log/neutron:z",
+            "/var/lib/kolla/config_files/ironic_neutron_agent.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "ironic_pxe_http": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-pxe:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "security_opt": "label=disable",
+        "start_order": 91,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_pxe_http.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/ironic:/var/lib/ironic/:shared,z",
+            "/var/log/containers/ironic:/var/log/ironic:z",
+            "/var/log/containers/httpd/ironic-pxe:/var/log/httpd:z"
+        ]
+    },
+    "ironic_pxe_tftp": {
+        "command": [
+            "/bin/bash",
+            "-c",
+            "BIND_HOST=$(hiera ironic::pxe::tftp_bind_host -c /etc/puppet/hiera.yaml); /usr/sbin/in.tftpd --foreground --user root --address $BIND_HOST:69 --map-file /var/lib/ironic/tftpboot/map-file /var/lib/ironic/tftpboot"
+        ],
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-pxe:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 90,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/ironic_pxe_tftp.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/ironic/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/ironic:/var/lib/ironic/:shared,z",
+            "/var/log/containers/ironic:/var/log/ironic:z",
+            "/var/log/containers/httpd/ironic-pxe:/var/log/httpd:z"
+        ]
+    },
+    "keystone_refresh": {
+        "action": "exec",
+        "command": [
+            "keystone",
+            "pkill",
+            "--signal",
+            "USR1",
+            "httpd"
+        ],
+        "start_order": 1,
+        "user": "root"
+    },
+    "logrotate_crond": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/usr/share/openstack-tripleo-common/healthcheck/cron"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-cron:20200226.1",
+        "net": "none",
+        "pid": "host",
+        "privileged": true,
+        "restart": "always",
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/logrotate-crond.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/crond/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers:/var/log/containers:z"
+        ]
+    },
+    "mistral_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 15,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/mistral_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/mistral/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/mistral:/var/log/mistral:z"
+        ]
+    },
+    "mistral_engine": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-engine:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/run:/run",
+            "/var/lib/kolla/config_files/mistral_engine.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/mistral/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/mistral:/var/log/mistral:z",
+            "/var/lib/mistral:/var/lib/mistral:ro",
+            "/usr/share/ansible/:/usr/share/ansible/:ro",
+            "/usr/share/openstack-tripleo-validations:/usr/share/openstack-tripleo-validations:ro"
+        ]
+    },
+    "mistral_event_engine": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-event-engine:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/run:/run",
+            "/var/lib/kolla/config_files/mistral_event_engine.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/mistral/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/mistral:/var/log/mistral:z",
+            "/var/lib/mistral:/var/lib/mistral:ro",
+            "/usr/share/ansible/:/usr/share/ansible/:ro",
+            "/usr/share/openstack-tripleo-validations:/usr/share/openstack-tripleo-validations:ro"
+        ]
+    },
+    "mistral_executor": {
+        "env_file": "/etc/environment",
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mistral-executor:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "ulimit": [
+            "nofile=1024"
+        ],
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/mistral_executor.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/mistral/:/var/lib/kolla/config_files/src:ro",
+            "/run:/run",
+            "/var/log/containers/mistral:/var/log/mistral:z",
+            "/var/lib/mistral:/var/lib/mistral:z",
+            "/usr/share/ansible/:/usr/share/ansible/:ro",
+            "/var/lib/config-data/puppet-generated:/var/lib/config-data/puppet-generated:ro",
+            "/usr/share/openstack-tripleo-validations:/usr/share/openstack-tripleo-validations:ro",
+            "/usr/share/openstack-tripleo-heat-templates:/usr/share/openstack-tripleo-heat-templates:ro",
+            "/var/lib/config-data/nova/etc/nova:/etc/nova:ro",
+            "/home/tripleo-admin:/home/tripleo-admin"
+        ]
+    },
+    "neutron_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 0,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/neutron:/var/log/neutron:z",
+            "/var/log/containers/httpd/neutron-api:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/neutron_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "neutron_dhcp": {
+        "depends_on": [
+            "openvswitch.service"
+        ],
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-dhcp-agent:20200226.1",
+        "net": "host",
+        "pid": "host",
+        "privileged": true,
+        "restart": "always",
+        "security_opt": "label=disable",
+        "start_order": 10,
+        "ulimit": [
+            "nofile=16384"
+        ],
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/neutron:/var/log/neutron:z",
+            "/var/lib/kolla/config_files/neutron_dhcp.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro",
+            "/lib/modules:/lib/modules:ro",
+            "/run/openvswitch:/run/openvswitch:shared,z",
+            "/var/lib/neutron:/var/lib/neutron:shared,z",
+            "/run/netns:/run/netns:shared",
+            "/var/lib/neutron/kill_scripts:/etc/neutron/kill_scripts:shared,z",
+            "/var/lib/neutron/dnsmasq_wrapper:/usr/local/bin/dnsmasq:ro",
+            "/var/lib/neutron/dhcp_haproxy_wrapper:/usr/local/bin/haproxy:ro"
+        ]
+    },
+    "neutron_l3_agent": {
+        "depends_on": [
+            "openvswitch.service"
+        ],
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-l3-agent:20200226.1",
+        "net": "host",
+        "pid": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 10,
+        "ulimit": [
+            "nofile=16384"
+        ],
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/neutron:/var/log/neutron:z",
+            "/var/lib/kolla/config_files/neutron_l3_agent.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro",
+            "/lib/modules:/lib/modules:ro",
+            "/run/openvswitch:/run/openvswitch:shared,z",
+            "/var/lib/neutron:/var/lib/neutron:shared,z",
+            "/run/netns:/run/netns:shared",
+            "/var/lib/neutron/kill_scripts:/etc/neutron/kill_scripts:shared,z",
+            "/var/lib/neutron/keepalived_wrapper:/usr/local/bin/keepalived:ro",
+            "/var/lib/neutron/l3_haproxy_wrapper:/usr/local/bin/haproxy:ro",
+            "/var/lib/neutron/dibbler_wrapper:/usr/local/bin/dibbler_client:ro"
+        ]
+    },
+    "neutron_ovs_agent": {
+        "depends_on": [
+            "openvswitch.service"
+        ],
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-openvswitch-agent:20200226.1",
+        "net": "host",
+        "pid": "host",
+        "privileged": true,
+        "restart": "always",
+        "security_opt": "label=disable",
+        "start_order": 10,
+        "ulimit": [
+            "nofile=16384"
+        ],
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/neutron:/var/log/neutron:z",
+            "/var/lib/kolla/config_files/neutron_ovs_agent.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/container-config-scripts/neutron_ovs_agent_launcher.sh:/neutron_ovs_agent_launcher.sh:ro",
+            "/lib/modules:/lib/modules:ro",
+            "/run/openvswitch:/run/openvswitch:shared,z"
+        ]
+    },
+    "nova_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 2,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/nova:/var/log/nova:z",
+            "/var/log/containers/httpd/nova-api:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/nova_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/nova/:/var/lib/kolla/config_files/src:ro",
+            "",
+            ""
+        ]
+    },
+    "nova_api_cron": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/usr/share/openstack-tripleo-common/healthcheck/cron nova"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 4,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/nova:/var/log/nova:z",
+            "/var/log/containers/httpd/nova-api:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/nova_api_cron.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/nova/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "nova_conductor": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-conductor:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/nova:/var/log/nova",
+            "/var/lib/kolla/config_files/nova_conductor.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/nova/:/var/lib/kolla/config_files/src:ro"
+        ]
+    },
+    "nova_scheduler": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck 5672"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-scheduler:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/nova:/var/log/nova",
+            "/var/lib/kolla/config_files/nova_scheduler.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/nova/:/var/lib/kolla/config_files/src:ro",
+            "/run:/run"
+        ]
+    },
+    "nova_wait_for_api_service": {
+        "command": "/usr/bin/bootstrap_host_exec nova_api su nova -s /bin/bash -c '/container-config-scripts/pyshim.sh /container-config-scripts/nova_wait_for_api_service.py'",
+        "detach": false,
+        "environment": {
+            "__OS_DEBUG": "true"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "start_order": 3,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/config-data/nova/etc/my.cnf.d/:/etc/my.cnf.d/:ro",
+            "/var/lib/config-data/nova/etc/nova/:/etc/nova/:ro",
+            "/var/log/containers/nova:/var/log/nova",
+            "/var/lib/container-config-scripts/:/container-config-scripts/:z"
+        ]
+    },
+    "placement_api": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "start_order": 1,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/placement:/var/log/placement:z",
+            "/var/log/containers/httpd/placement:/var/log/httpd:z",
+            "/var/lib/kolla/config_files/placement_api.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/placement/:/var/lib/kolla/config_files/src:ro",
+            "",
+            ""
+        ]
+    },
+    "placement_wait_for_service": {
+        "command": "/usr/bin/bootstrap_host_exec placement su placement -s /bin/bash -c '/container-config-scripts/pyshim.sh /container-config-scripts/placement_wait_for_service.py'",
+        "detach": false,
+        "environment": {
+            "__OS_DEBUG": "true"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-placement-api:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "start_order": 2,
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/log/containers/placement:/var/log/placement:z",
+            "/var/log/containers/httpd/placement:/var/log/httpd:z",
+            "/var/lib/config-data/placement/etc/my.cnf.d/tripleo.cnf:/etc/my.cnf.d/tripleo.cnf:ro",
+            "/var/lib/config-data/placement/etc/placement/:/etc/placement/:ro",
+            "/var/lib/container-config-scripts/:/container-config-scripts/:z"
+        ]
+    },
+    "swift_account_reaper": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_account_reaper.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node:z",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift:z",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_account_server": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-account:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_account_server.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_container_server": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-container:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_container_server.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_container_updater": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-container:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_container_updater.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_object_expirer": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_object_expirer.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_object_server": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_object_server.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_object_updater": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_object_updater.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/cache/swift:/var/cache/swift",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_proxy": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-proxy-server:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "start_order": 2,
+        "user": "swift",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_proxy.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/run:/run",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "swift_rsync": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-swift-object:20200226.1",
+        "net": "host",
+        "privileged": true,
+        "restart": "always",
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/swift_rsync.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/swift/:/var/lib/kolla/config_files/src:ro",
+            "/srv/node:/srv/node",
+            "/dev:/dev",
+            "/var/log/containers/swift:/var/log/swift:z"
+        ]
+    },
+    "zaqar": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/usr/share/openstack-tripleo-common/healthcheck/zaqar-api"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "user": "root",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/zaqar.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/zaqar/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/zaqar:/var/log/zaqar",
+            "/var/log/containers/httpd/zaqar:/var/log/httpd",
+            "",
+            ""
+        ]
+    },
+    "zaqar_websocket": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/usr/share/openstack-tripleo-common/healthcheck/zaqar-api 9000"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/zaqar_websocket.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/zaqar/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/zaqar:/var/log/zaqar",
+            "/var/log/containers/httpd/zaqar:/var/log/httpd"
+        ]
+    }
+}

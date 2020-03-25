@@ -1,0 +1,131 @@
++ sudo -E kolla_set_configs
+INFO:__main__:Loading config file at /var/lib/kolla/config_files/config.json
+INFO:__main__:Validating config file
+INFO:__main__:Kolla config strategy set to: COPY_ALWAYS
+INFO:__main__:Copying service configuration files
+INFO:__main__:Deleting /etc/my.cnf.d/galera.cnf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/my.cnf.d/galera.cnf to /etc/my.cnf.d/galera.cnf
+INFO:__main__:Creating directory /etc/systemd/system/mariadb.service.d
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/systemd/system/mariadb.service.d/90-limits.conf to /etc/systemd/system/mariadb.service.d/90-limits.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/root/.my.cnf to /root/.my.cnf
+INFO:__main__:Writing out command to execute
+INFO:__main__:Setting permission for /var/lib/mysql
+INFO:__main__:Setting permission for /var/lib/mysql/mysql
+INFO:__main__:Setting permission for /var/lib/mysql/performance_schema
+INFO:__main__:Setting permission for /var/lib/mysql/ibdata1
+INFO:__main__:Setting permission for /var/lib/mysql/ib_logfile1
+INFO:__main__:Setting permission for /var/lib/mysql/ib_logfile0
+INFO:__main__:Setting permission for /var/lib/mysql/aria_log_control
+INFO:__main__:Setting permission for /var/lib/mysql/aria_log.00000001
+INFO:__main__:Setting permission for /var/lib/mysql/multi-master.info
+INFO:__main__:Setting permission for /var/lib/mysql/ib_buffer_pool
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/db.opt
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/db.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/db.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/db.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/host.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/host.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/host.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/user.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/user.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/user.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/roles_mapping.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/roles_mapping.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/roles_mapping.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/func.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/func.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/func.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/plugin.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/plugin.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/plugin.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/servers.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/servers.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/servers.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/tables_priv.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/tables_priv.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/tables_priv.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/columns_priv.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/columns_priv.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/columns_priv.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_topic.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_topic.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_topic.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_category.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_category.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_category.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_relation.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_relation.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_relation.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_keyword.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_keyword.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/help_keyword.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_name.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_name.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_name.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition_type.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition_type.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_transition_type.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_leap_second.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_leap_second.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/time_zone_leap_second.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proc.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proc.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proc.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/procs_priv.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/procs_priv.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/procs_priv.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/general_log.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/general_log.CSM
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/general_log.CSV
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/slow_log.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/slow_log.CSM
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/slow_log.CSV
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/event.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/event.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/event.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/innodb_table_stats.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/innodb_table_stats.ibd
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/innodb_index_stats.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/innodb_index_stats.ibd
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/transaction_registry.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/transaction_registry.ibd
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proxies_priv.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proxies_priv.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/proxies_priv.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/table_stats.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/table_stats.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/table_stats.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/column_stats.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/column_stats.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/column_stats.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/index_stats.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/index_stats.MYI
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/index_stats.MYD
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/gtid_slave_pos.frm
+INFO:__main__:Setting permission for /var/lib/mysql/mysql/gtid_slave_pos.ibd
+INFO:__main__:Setting permission for /var/lib/mysql/performance_schema/db.opt
+++ cat /run_command
++ CMD='/usr/libexec/mysqld --user=mysql'
++ ARGS=
++ sudo kolla_copy_cacerts
++ [[ ! -n '' ]]
++ . kolla_extend_start
+++ : /var/log/kolla/mariadb
+++ [[ ! -d /var/log/kolla/mariadb ]]
+++ mkdir -p /var/log/kolla/mariadb
++++ stat -c %a /var/log/kolla/mariadb
+++ [[ 2755 != \7\5\5 ]]
+++ chmod 755 /var/log/kolla/mariadb
+++ [[ -n '' ]]
+++ [[ -n '' ]]
+++ [[ -n '' ]]
++ echo 'Running command: '\''/usr/libexec/mysqld --user=mysql'\'''
+Running command: '/usr/libexec/mysqld --user=mysql'
++ exec /usr/libexec/mysqld --user=mysql
+2020-03-04  3:12:53 0 [Note] /usr/libexec/mysqld (mysqld 10.3.17-MariaDB) starting as process 7 ...

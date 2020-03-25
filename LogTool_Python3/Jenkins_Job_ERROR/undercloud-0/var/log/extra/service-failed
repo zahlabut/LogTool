@@ -1,0 +1,10 @@
+-- Logs begin at Wed 2020-03-04 02:46:27 UTC, end at Wed 2020-03-04 03:51:51 UTC. --
+Mar 04 02:46:30 localhost.localdomain systemd[1]: Starting Network Manager Wait Online...
+Mar 04 02:47:01 localhost.localdomain systemd[1]: NetworkManager-wait-online.service: Main process exited, code=exited, status=1/FAILURE
+Mar 04 02:47:01 localhost.localdomain systemd[1]: NetworkManager-wait-online.service: Failed with result 'exit-code'.
+Mar 04 02:47:01 localhost.localdomain systemd[1]: Failed to start Network Manager Wait Online.
+-- Reboot --
+Mar 04 02:56:44 undercloud-0.redhat.local systemd[1]: Starting Network Manager Wait Online...
+Mar 04 02:57:14 undercloud-0.redhat.local systemd[1]: NetworkManager-wait-online.service: Main process exited, code=exited, status=1/FAILURE
+Mar 04 02:57:14 undercloud-0.redhat.local systemd[1]: NetworkManager-wait-online.service: Failed with result 'exit-code'.
+Mar 04 02:57:14 undercloud-0.redhat.local systemd[1]: Failed to start Network Manager Wait Online.

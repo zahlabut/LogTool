@@ -1,0 +1,4 @@
++ pcs status
+/bin/sh: line 2: pcs: command not found
++ pcs config
+/bin/sh: line 4: pcs: command not found

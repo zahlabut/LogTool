@@ -1,0 +1,174 @@
+{
+    "haproxy": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-haproxy:20200226.1",
+        "net": "host",
+        "restart": "always",
+        "security_opt": "label=disable",
+        "start_order": 1,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/haproxy.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/haproxy/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/haproxy:/var/lib/haproxy:rw,z",
+            "/etc/pki/tls/private/overcloud_endpoint.pem:/var/lib/kolla/config_files/src-tls//etc/pki/tls/private/overcloud_endpoint.pem:ro,shared"
+        ]
+    },
+    "keepalived": {
+        "command": "/usr/local/bin/kolla_start",
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keepalived:20200226.1",
+        "net": "host",
+        "privileged": true,
+        "restart": "always",
+        "start_order": 0,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/keepalived.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/keepalived/:/var/lib/kolla/config_files/src:ro",
+            "/var/log/containers/keepalived/:/var/log/:z",
+            "/lib/modules/:/lib/modules/:ro",
+            "/var/lib/haproxy/:/var/lib/haproxy/:z"
+        ]
+    },
+    "memcached": {
+        "command": [
+            "/bin/bash",
+            "-c",
+            "source /etc/sysconfig/memcached; /usr/bin/memcached -p ${PORT} -u ${USER} -m ${CACHESIZE} -c ${MAXCONN} $OPTIONS"
+        ],
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-memcached:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 0,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/config-data/memcached/etc/sysconfig/memcached:/etc/sysconfig/memcached:ro"
+        ]
+    },
+    "mysql_init_logs": {
+        "command": [
+            "/bin/bash",
+            "-c",
+            "chown -R mysql:mysql /var/log/mariadb /var/lib/mysql"
+        ],
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-mariadb:20200226.1",
+        "net": "none",
+        "privileged": false,
+        "user": "root",
+        "volumes": [
+            "/var/log/containers/mysql:/var/log/mariadb:z",
+            "/var/lib/mysql:/var/lib/mysql:z"
+        ]
+    },
+    "rabbitmq": {
+        "environment": {
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+        },
+        "healthcheck": {
+            "test": "/openstack/healthcheck"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "restart": "always",
+        "start_order": 2,
+        "stop_grace_period": 60,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/rabbitmq/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/rabbitmq:/var/lib/rabbitmq:z",
+            "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+        ]
+    },
+    "rabbitmq_bootstrap": {
+        "detach": false,
+        "environment": {
+            "KOLLA_BOOTSTRAP": true,
+            "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+            "RABBITMQ_CLUSTER_COOKIE": "rBqTrDUYiwnwqazr2rMr",
+            "TRIPLEO_DEPLOY_IDENTIFIER": "1583290741"
+        },
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+        "net": "host",
+        "privileged": false,
+        "start_order": 1,
+        "volumes": [
+            "/etc/hosts:/etc/hosts:ro",
+            "/etc/localtime:/etc/localtime:ro",
+            "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+            "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+            "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+            "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+            "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+            "/dev/log:/dev/log",
+            "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+            "/etc/puppet:/etc/puppet:ro",
+            "/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro",
+            "/var/lib/config-data/puppet-generated/rabbitmq/:/var/lib/kolla/config_files/src:ro",
+            "/var/lib/rabbitmq:/var/lib/rabbitmq:z",
+            "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+        ]
+    },
+    "rabbitmq_init_logs": {
+        "command": [
+            "/bin/bash",
+            "-c",
+            "chown -R rabbitmq:rabbitmq /var/log/rabbitmq"
+        ],
+        "detach": false,
+        "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+        "net": "none",
+        "privileged": false,
+        "start_order": 0,
+        "user": "root",
+        "volumes": [
+            "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+        ]
+    }
+}

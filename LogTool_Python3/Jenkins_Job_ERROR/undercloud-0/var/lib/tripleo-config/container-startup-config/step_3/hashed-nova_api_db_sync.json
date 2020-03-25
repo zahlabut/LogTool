@@ -1,0 +1,28 @@
+{
+  "command": "/usr/bin/bootstrap_host_exec nova_api su nova -s /bin/bash -c '/usr/bin/nova-manage api_db sync'",
+  "detach": false,
+  "environment": {
+    "TRIPLEO_DEPLOY_IDENTIFIER": "1583290741",
+    "TRIPLEO_CONFIG_HASH": "e236c5533442aac9a3c2b06601787b59-e236c5533442aac9a3c2b06601787b59"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-nova-api:20200226.1",
+  "net": "host",
+  "start_order": 0,
+  "user": "root",
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/log/containers/nova:/var/log/nova:z",
+    "/var/log/containers/httpd/nova-api:/var/log/httpd:z",
+    "/var/lib/config-data/nova/etc/my.cnf.d/tripleo.cnf:/etc/my.cnf.d/tripleo.cnf:ro",
+    "/var/lib/config-data/nova/etc/nova/:/etc/nova/:ro"
+  ]
+}

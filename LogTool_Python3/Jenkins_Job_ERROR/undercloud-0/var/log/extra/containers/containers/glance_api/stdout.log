@@ -1,0 +1,36 @@
++ sudo -E kolla_set_configs
+INFO:__main__:Loading config file at /var/lib/kolla/config_files/config.json
+INFO:__main__:Validating config file
+INFO:__main__:Kolla config strategy set to: COPY_ALWAYS
+INFO:__main__:Copying service configuration files
+INFO:__main__:Deleting /etc/glance/glance-api.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/glance/glance-api.conf to /etc/glance/glance-api.conf
+INFO:__main__:Deleting /etc/glance/glance-cache.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/glance/glance-cache.conf to /etc/glance/glance-cache.conf
+INFO:__main__:Deleting /etc/glance/glance-image-import.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/glance/glance-image-import.conf to /etc/glance/glance-image-import.conf
+INFO:__main__:Deleting /etc/glance/glance-swift.conf
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/glance/glance-swift.conf to /etc/glance/glance-swift.conf
+INFO:__main__:Creating directory /etc/my.cnf.d
+INFO:__main__:Copying /var/lib/kolla/config_files/src/etc/my.cnf.d/tripleo.cnf to /etc/my.cnf.d/tripleo.cnf
+INFO:__main__:Writing out command to execute
+INFO:__main__:Setting permission for /var/lib/glance
+++ cat /run_command
++ CMD='/usr/bin/glance-api --config-file /usr/share/glance/glance-api-dist.conf --config-file /etc/glance/glance-api.conf --config-file /etc/glance/glance-image-import.conf'
++ ARGS=
++ sudo kolla_copy_cacerts
++ [[ ! -n '' ]]
++ . kolla_extend_start
+++ [[ ! -d /var/log/kolla/glance ]]
+++ mkdir -p /var/log/kolla/glance
++++ stat -c %a /var/log/kolla/glance
+++ [[ 2755 != \7\5\5 ]]
+++ chmod 755 /var/log/kolla/glance
+++ . /usr/local/bin/kolla_glance_extend_start
++++ [[ -n '' ]]
++++ [[ -n '' ]]
+++++ whoami
++++ [[ glance == \r\o\o\t ]]
++ echo 'Running command: '\''/usr/bin/glance-api --config-file /usr/share/glance/glance-api-dist.conf --config-file /etc/glance/glance-api.conf --config-file /etc/glance/glance-image-import.conf'\'''
+Running command: '/usr/bin/glance-api --config-file /usr/share/glance/glance-api-dist.conf --config-file /etc/glance/glance-api.conf --config-file /etc/glance/glance-image-import.conf'
++ exec /usr/bin/glance-api --config-file /usr/share/glance/glance-api-dist.conf --config-file /etc/glance/glance-api.conf --config-file /etc/glance/glance-image-import.conf

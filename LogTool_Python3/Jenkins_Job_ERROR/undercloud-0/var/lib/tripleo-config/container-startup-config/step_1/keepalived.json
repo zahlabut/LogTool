@@ -1,0 +1,28 @@
+{
+    "command": "/usr/local/bin/kolla_start",
+    "environment": {
+        "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS"
+    },
+    "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-keepalived:20200226.1",
+    "net": "host",
+    "privileged": true,
+    "restart": "always",
+    "start_order": 0,
+    "volumes": [
+        "/etc/hosts:/etc/hosts:ro",
+        "/etc/localtime:/etc/localtime:ro",
+        "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+        "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+        "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+        "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+        "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+        "/dev/log:/dev/log",
+        "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+        "/etc/puppet:/etc/puppet:ro",
+        "/var/lib/kolla/config_files/keepalived.json:/var/lib/kolla/config_files/config.json:ro",
+        "/var/lib/config-data/puppet-generated/keepalived/:/var/lib/kolla/config_files/src:ro",
+        "/var/log/containers/keepalived/:/var/log/:z",
+        "/lib/modules/:/lib/modules/:ro",
+        "/var/lib/haproxy/:/var/lib/haproxy/:z"
+    ]
+}

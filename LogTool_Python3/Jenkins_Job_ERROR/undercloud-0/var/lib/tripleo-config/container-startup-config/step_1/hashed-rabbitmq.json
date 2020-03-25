@@ -1,0 +1,31 @@
+{
+  "environment": {
+    "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+    "TRIPLEO_CONFIG_HASH": "f29ffb78c5d6092297ca9b44eac272c2"
+  },
+  "healthcheck": {
+    "test": "/openstack/healthcheck"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-rabbitmq:20200226.1",
+  "net": "host",
+  "privileged": false,
+  "restart": "always",
+  "start_order": 2,
+  "stop_grace_period": 60,
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/kolla/config_files/rabbitmq.json:/var/lib/kolla/config_files/config.json:ro",
+    "/var/lib/config-data/puppet-generated/rabbitmq/:/var/lib/kolla/config_files/src:ro",
+    "/var/lib/rabbitmq:/var/lib/rabbitmq:z",
+    "/var/log/containers/rabbitmq:/var/log/rabbitmq:z"
+  ]
+}

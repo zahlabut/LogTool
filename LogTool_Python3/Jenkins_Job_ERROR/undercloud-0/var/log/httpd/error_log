@@ -1,0 +1,6 @@
+[Tue Mar 03 22:04:28.329111 2020] [core:notice] [pid 15342:tid 140289551898880] SELinux policy enabled; httpd running as context system_u:system_r:httpd_t:s0
+[Tue Mar 03 22:04:28.330034 2020] [suexec:notice] [pid 15342:tid 140289551898880] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Tue Mar 03 22:04:28.342011 2020] [lbmethod_heartbeat:notice] [pid 15342:tid 140289551898880] AH02282: No slotmem from mod_heartmonitor
+[Tue Mar 03 22:04:28.342605 2020] [http2:warn] [pid 15342:tid 140289551898880] AH02951: mod_ssl does not seem to be enabled
+[Tue Mar 03 22:04:28.344742 2020] [mpm_event:notice] [pid 15342:tid 140289551898880] AH00489: Apache/2.4.37 (Red Hat Enterprise Linux) configured -- resuming normal operations
+[Tue Mar 03 22:04:28.344763 2020] [core:notice] [pid 15342:tid 140289551898880] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'

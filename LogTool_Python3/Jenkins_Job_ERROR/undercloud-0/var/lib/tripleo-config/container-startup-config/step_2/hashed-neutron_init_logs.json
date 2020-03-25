@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/bin/bash",
+    "-c",
+    "chown -R neutron:neutron /var/log/neutron"
+  ],
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+  "net": "none",
+  "privileged": false,
+  "user": "root",
+  "volumes": [
+    "/var/log/containers/neutron:/var/log/neutron:z",
+    "/var/log/containers/httpd/neutron-api:/var/log/httpd:z"
+  ]
+}

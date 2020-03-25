@@ -1,0 +1,50 @@
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 2581ebaf0cb2, initial migration
+INFO  [alembic.runtime.migration] Running upgrade 2581ebaf0cb2 -> 21b331f883ef, Add provision_updated_at
+INFO  [alembic.runtime.migration] Running upgrade 21b331f883ef -> 3cb628139ea4, Nodes add console enabled
+INFO  [alembic.runtime.migration] Running upgrade 3cb628139ea4 -> 31baaf680d2b, Add Node instance info
+INFO  [alembic.runtime.migration] Running upgrade 31baaf680d2b -> 3bea56f25597, add unique constraint to instance_uuid
+INFO  [alembic.runtime.migration] Running upgrade 3bea56f25597 -> 487deb87cc9d, add conductor_affinity and online
+INFO  [alembic.runtime.migration] Running upgrade 487deb87cc9d -> 242cc6a923b3, Add Node.maintenance_reason
+INFO  [alembic.runtime.migration] Running upgrade 242cc6a923b3 -> 5674c57409b9, replace NOSTATE with AVAILABLE
+INFO  [alembic.runtime.migration] Running upgrade 5674c57409b9 -> bb59b63f55a, add_node_driver_internal_info
+INFO  [alembic.runtime.migration] Running upgrade bb59b63f55a -> 3ae36a5f5131, add_logical_name
+INFO  [alembic.runtime.migration] Running upgrade 3ae36a5f5131 -> 1e1d5ace7dc6, add inspection_started_at and inspection_finished_at
+INFO  [alembic.runtime.migration] Running upgrade 1e1d5ace7dc6 -> 4f399b21ae71, Add node.clean_step
+INFO  [alembic.runtime.migration] Running upgrade 4f399b21ae71 -> 2fb93ffd2af1, increase-node-name-length
+INFO  [alembic.runtime.migration] Running upgrade 2fb93ffd2af1 -> 789acc877671, Add node.raid_config and node.target_raid_config
+INFO  [alembic.runtime.migration] Running upgrade 789acc877671 -> 516faf1bb9b1, Resizing column nodes.driver
+INFO  [alembic.runtime.migration] Running upgrade 516faf1bb9b1 -> 48d6c242bb9b, add node tags
+INFO  [alembic.runtime.migration] Running upgrade 48d6c242bb9b -> 5ea1b0d310e, Added portgroups table and altered ports
+INFO  [alembic.runtime.migration] Running upgrade 5ea1b0d310e -> f6fdb920c182, Set Port.pxe_enabled to True if NULL
+INFO  [alembic.runtime.migration] Running upgrade f6fdb920c182 -> e294876e8028, add-node-network-interface
+INFO  [alembic.runtime.migration] Running upgrade e294876e8028 -> 10b163d4481e, add port portgroup internal info
+INFO  [alembic.runtime.migration] Running upgrade 10b163d4481e -> dd34e1f1303b, add resource_class to node
+INFO  [alembic.runtime.migration] Running upgrade dd34e1f1303b -> c14cef6dfedf, Populate node.network_interface
+INFO  [alembic.runtime.migration] Running upgrade c14cef6dfedf -> 60cf717201bc, add_standalone_ports_supported_to_portgroup
+INFO  [alembic.runtime.migration] Running upgrade 60cf717201bc -> bcdd431ba0bf, Add fields for all interfaces
+INFO  [alembic.runtime.migration] Running upgrade bcdd431ba0bf -> daa1ba02d98, Add volume_connectors table
+INFO  [alembic.runtime.migration] Running upgrade daa1ba02d98 -> 1a59178ebdf6, Add volume_targets table
+INFO  [alembic.runtime.migration] Running upgrade 1a59178ebdf6 -> 493d8f27f235, add portgroup configuration fields
+INFO  [alembic.runtime.migration] Running upgrade 493d8f27f235 -> 1d6951876d68, Add storage_interface DB field and object
+INFO  [alembic.runtime.migration] Running upgrade 1d6951876d68 -> 2353895ecfae, Add conductor_hardware_interfaces table
+INFO  [alembic.runtime.migration] Running upgrade 2353895ecfae -> dbefd6bdaa2c, Add default column to ConductorHardwareInterfaces
+INFO  [alembic.runtime.migration] Running upgrade dbefd6bdaa2c -> 3d86a077a3f2, add port physical network
+INFO  [alembic.runtime.migration] Running upgrade 3d86a077a3f2 -> 868cb606a74a, add version field in base class
+INFO  [alembic.runtime.migration] Running upgrade 868cb606a74a -> 405cfe08f18d, add rescue interface to nodes
+INFO  [alembic.runtime.migration] Running upgrade 405cfe08f18d -> b4130a7fc904, Create node_traits table
+INFO  [alembic.runtime.migration] Running upgrade b4130a7fc904 -> e918ff30eb42, resize column nodes instance_info
+INFO  [alembic.runtime.migration] Running upgrade e918ff30eb42 -> 82c315d60161, add bios settings
+INFO  [alembic.runtime.migration] Running upgrade 82c315d60161 -> 2d13bc3d6bba, add bios interface
+INFO  [alembic.runtime.migration] Running upgrade 2d13bc3d6bba -> fb3f10dd262e, add fault to node table
+INFO  [alembic.runtime.migration] Running upgrade fb3f10dd262e -> b9117ac17882, add deploy_step to node
+INFO  [alembic.runtime.migration] Running upgrade b9117ac17882 -> 664f85c2f622, add conductor_group to nodes/conductors
+INFO  [alembic.runtime.migration] Running upgrade 664f85c2f622 -> d2b036ae9378, Add automated_clean field
+INFO  [alembic.runtime.migration] Running upgrade d2b036ae9378 -> 93706939026c, Add Node.protected field
+INFO  [alembic.runtime.migration] Running upgrade 93706939026c -> f190f9d00a11, add_node_owner
+INFO  [alembic.runtime.migration] Running upgrade f190f9d00a11 -> dd67b91a1981, Add Allocations table
+INFO  [alembic.runtime.migration] Running upgrade dd67b91a1981 -> 9cbeefa3763f, add is_smartnic port attribute
+INFO  [alembic.runtime.migration] Running upgrade 9cbeefa3763f -> 28c44432c9c3, add node description
+INFO  [alembic.runtime.migration] Running upgrade 28c44432c9c3 -> 2aac7e0872f6, Create deploy_templates and deploy_template_steps tables.
+INFO  [alembic.runtime.migration] Running upgrade 2aac7e0872f6 -> 1e15e7122cc9, add extra column to deploy_templates

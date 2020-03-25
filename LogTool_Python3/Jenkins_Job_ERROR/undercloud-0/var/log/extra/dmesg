@@ -1,0 +1,748 @@
+[    0.000000] Linux version 4.18.0-147.5.1.el8_1.x86_64 (mockbuild@x86-vm-07.build.eng.bos.redhat.com) (gcc version 8.3.1 20190507 (Red Hat 8.3.1-4) (GCC)) #1 SMP Tue Jan 14 15:50:19 UTC 2020
+[    0.000000] Command line: BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-147.5.1.el8_1.x86_64 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c ro console=ttyS0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffd8fff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bffd9000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000063fffffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: cpu 0, msr 420601001, primary cpu clock
+[    0.000000] kvm-clock: using sched offset of 615505407723 cycles
+[    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000000] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[    0.000000] e820: remove [mem 0x000a0000-0x000fffff] usable
+[    0.000000] last_pfn = 0x640000 max_arch_pfn = 0x400000000
+[    0.000000] MTRR default type: write-back
+[    0.000000] MTRR fixed ranges enabled:
+[    0.000000]   00000-9FFFF write-back
+[    0.000000]   A0000-BFFFF uncachable
+[    0.000000]   C0000-FFFFF write-protect
+[    0.000000] MTRR variable ranges enabled:
+[    0.000000]   0 base 0000C0000000 mask 3FFFC0000000 uncachable
+[    0.000000]   1 disabled
+[    0.000000]   2 disabled
+[    0.000000]   3 disabled
+[    0.000000]   4 disabled
+[    0.000000]   5 disabled
+[    0.000000]   6 disabled
+[    0.000000]   7 disabled
+[    0.000000] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.000000] last_pfn = 0xbffd9 max_arch_pfn = 0x400000000
+[    0.000000] found SMP MP-table at [mem 0x000f62e0-0x000f62ef] mapped at [(____ptrval____)]
+[    0.000000] Base memory trampoline at [(____ptrval____)] 99000 size 24576
+[    0.000000] Using GB pages for direct mapping
+[    0.000000] BRK [0x420801000, 0x420801fff] PGTABLE
+[    0.000000] BRK [0x420802000, 0x420802fff] PGTABLE
+[    0.000000] BRK [0x420803000, 0x420803fff] PGTABLE
+[    0.000000] BRK [0x420804000, 0x420804fff] PGTABLE
+[    0.000000] BRK [0x420805000, 0x420805fff] PGTABLE
+[    0.000000] BRK [0x420806000, 0x420806fff] PGTABLE
+[    0.000000] RAMDISK: [mem 0x32075000-0x35032fff]
+[    0.000000] ACPI: Early table checksum verification disabled
+[    0.000000] ACPI: RSDP 0x00000000000F6290 000014 (v00 BOCHS )
+[    0.000000] ACPI: RSDT 0x00000000BFFE129F 00002C (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: FACP 0x00000000BFFE117B 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+[    0.000000] ACPI: DSDT 0x00000000BFFDFB80 0015FB (v01 BOCHS  BXPCDSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: FACS 0x00000000BFFDFB40 000040
+[    0.000000] ACPI: APIC 0x00000000BFFE11EF 0000B0 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+[    0.000000] ACPI: Local APIC address 0xfee00000
+[    0.000000] No NUMA configuration found
+[    0.000000] Faking a node at [mem 0x0000000000000000-0x000000063fffffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0x63ffd6000-0x63fffffff]
+[    0.000000] Using crashkernel=auto, the size chosen is a best effort estimation.
+[    0.000000] Reserving 160MB of memory at 2896MB for crashkernel (System RAM: 24575MB)
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.000000]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.000000]   Normal   [mem 0x0000000100000000-0x000000063fffffff]
+[    0.000000]   Device   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.000000]   node   0: [mem 0x0000000000100000-0x00000000bffd8fff]
+[    0.000000]   node   0: [mem 0x0000000100000000-0x000000063fffffff]
+[    0.000000] Zeroed struct page in unavailable ranges: 137 pages
+[    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x000000063fffffff]
+[    0.000000] On node 0 totalpages: 6291319
+[    0.000000]   DMA zone: 64 pages used for memmap
+[    0.000000]   DMA zone: 21 pages reserved
+[    0.000000]   DMA zone: 3998 pages, LIFO batch:0
+[    0.000000]   DMA32 zone: 12224 pages used for memmap
+[    0.000000]   DMA32 zone: 782297 pages, LIFO batch:31
+[    0.000000]   Normal zone: 86016 pages used for memmap
+[    0.000000]   Normal zone: 5505024 pages, LIFO batch:31
+[    0.000000] ACPI: PM-Timer IO Port: 0x608
+[    0.000000] ACPI: Local APIC address 0xfee00000
+[    0.000000] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.000000] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.000000] ACPI: IRQ0 used by override.
+[    0.000000] ACPI: IRQ5 used by override.
+[    0.000000] ACPI: IRQ9 used by override.
+[    0.000000] ACPI: IRQ10 used by override.
+[    0.000000] ACPI: IRQ11 used by override.
+[    0.000000] Using ACPI (MADT) for SMP configuration information
+[    0.000000] smpboot: Allowing 8 CPUs, 0 hotplug CPUs
+[    0.000000] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.000000] PM: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+[    0.000000] PM: Registered nosave memory: [mem 0x000a0000-0x000effff]
+[    0.000000] PM: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+[    0.000000] PM: Registered nosave memory: [mem 0xbffd9000-0xbfffffff]
+[    0.000000] PM: Registered nosave memory: [mem 0xc0000000-0xfeffbfff]
+[    0.000000] PM: Registered nosave memory: [mem 0xfeffc000-0xfeffffff]
+[    0.000000] PM: Registered nosave memory: [mem 0xff000000-0xfffbffff]
+[    0.000000] PM: Registered nosave memory: [mem 0xfffc0000-0xffffffff]
+[    0.000000] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+[    0.000000] Booting paravirtualized kernel on KVM
+[    0.000000] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.000000] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:8 nr_cpu_ids:8 nr_node_ids:1
+[    0.000000] percpu: Embedded 47 pages/cpu s155648 r8192 d28672 u262144
+[    0.000000] pcpu-alloc: s155648 r8192 d28672 u262144 alloc=1*2097152
+[    0.000000] pcpu-alloc: [0] 0 1 2 3 4 5 6 7 
+[    0.000000] KVM setup async PF for cpu 0
+[    0.000000] kvm-stealtime: cpu 0, msr 627a25040
+[    0.000000] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 6192994
+[    0.000000] Policy zone: Normal
+[    0.000000] Kernel command line: BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-147.5.1.el8_1.x86_64 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c ro console=ttyS0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
+[    0.000000] Specific versions of hardware are certified with Red Hat Enterprise Linux 8. Please see the list of hardware certified with Red Hat Enterprise Linux 8 at https://access.redhat.com/ecosystem.
+[    0.000000] Memory: 2997904K/25165276K available (12292K kernel code, 2117K rwdata, 3780K rodata, 2368K init, 6348K bss, 706700K reserved, 0K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] Kernel/User page tables isolation: enabled
+[    0.000000] ftrace: allocating 35730 entries in 140 pages
+[    0.001000] rcu: Hierarchical RCU implementation.
+[    0.001000] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=8.
+[    0.001000] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.001000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    0.001000] NR_IRQS: 524544, nr_irqs: 488, preallocated irqs: 16
+[    0.001000] random: get_random_bytes called from start_kernel+0x36b/0x55b with crng_init=0
+[    0.001000] Console: colour VGA+ 80x25
+[    0.001000] console [ttyS0] enabled
+[    0.001000] ACPI: Core revision 20180531
+[    0.001005] APIC: Switch to symmetric I/O mode setup
+[    0.002340] x2apic enabled
+[    0.003004] Switched APIC routing to physical x2apic.
+[    0.006670] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.007000] tsc: Detected 2199.998 MHz processor
+[    0.007009] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x1fb63109b96, max_idle_ns: 440795265316 ns
+[    0.008003] Calibrating delay loop (skipped) preset value.. 4399.99 BogoMIPS (lpj=2199998)
+[    0.009003] pid_max: default: 32768 minimum: 301
+[    0.010029] Security Framework initialized
+[    0.011002] Yama: becoming mindful.
+[    0.012005] SELinux:  Initializing.
+[    0.024696] Dentry cache hash table entries: 4194304 (order: 13, 33554432 bytes)
+[    0.030512] Inode-cache hash table entries: 2097152 (order: 12, 16777216 bytes)
+[    0.032083] Mount-cache hash table entries: 65536 (order: 7, 524288 bytes)
+[    0.035097] Mountpoint-cache hash table entries: 65536 (order: 7, 524288 bytes)
+[    0.038029] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+[    0.039002] Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+[    0.040002] FEATURE SPEC_CTRL Present
+[    0.041001] FEATURE IBPB_SUPPORT Present
+[    0.042002] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.043009] Spectre V2 : Mitigation: Full generic retpoline
+[    0.044001] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.045001] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    0.048001] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.049002] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl and seccomp
+[    0.052001] MDS: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.053002] TAA: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.068144] Freeing SMP alternatives memory: 32K
+[    0.071000] TSC deadline timer enabled
+[    0.071000] smpboot: CPU0: Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz (family: 0x6, model: 0x4f, stepping: 0x1)
+[    0.071132] Performance Events: Broadwell events, Intel PMU driver.
+[    0.072008] ... version:                2
+[    0.073004] ... bit width:              48
+[    0.074003] ... generic registers:      4
+[    0.075004] ... value mask:             0000ffffffffffff
+[    0.076003] ... max period:             000000007fffffff
+[    0.077003] ... fixed-purpose events:   3
+[    0.078003] ... event mask:             000000070000000f
+[    0.079061] rcu: Hierarchical SRCU implementation.
+[    0.080701] smp: Bringing up secondary CPUs ...
+[    0.081142] x86: Booting SMP configuration:
+[    0.082006] .... node  #0, CPUs:      #1
+[    0.001000] kvm-clock: cpu 1, msr 420601041, secondary cpu clock
+[    0.084023] KVM setup async PF for cpu 1
+[    0.085000] kvm-stealtime: cpu 1, msr 627a65040
+[    0.088157]  #2
+[    0.001000] kvm-clock: cpu 2, msr 420601081, secondary cpu clock
+[    0.090022] KVM setup async PF for cpu 2
+[    0.091000] kvm-stealtime: cpu 2, msr 627aa5040
+[    0.094158]  #3
+[    0.001000] kvm-clock: cpu 3, msr 4206010c1, secondary cpu clock
+[    0.096027] KVM setup async PF for cpu 3
+[    0.097000] kvm-stealtime: cpu 3, msr 627ae5040
+[    0.100158]  #4
+[    0.001000] kvm-clock: cpu 4, msr 420601101, secondary cpu clock
+[    0.102025] KVM setup async PF for cpu 4
+[    0.103000] kvm-stealtime: cpu 4, msr 627b25040
+[    0.106153]  #5
+[    0.001000] kvm-clock: cpu 5, msr 420601141, secondary cpu clock
+[    0.108025] KVM setup async PF for cpu 5
+[    0.109000] kvm-stealtime: cpu 5, msr 627b65040
+[    0.112133]  #6
+[    0.001000] kvm-clock: cpu 6, msr 420601181, secondary cpu clock
+[    0.114026] KVM setup async PF for cpu 6
+[    0.115000] kvm-stealtime: cpu 6, msr 627ba5040
+[    0.118140]  #7
+[    0.001000] kvm-clock: cpu 7, msr 4206011c1, secondary cpu clock
+[    0.120024] KVM setup async PF for cpu 7
+[    0.121000] kvm-stealtime: cpu 7, msr 627be5040
+[    0.123009] smp: Brought up 1 node, 8 CPUs
+[    0.124006] smpboot: Max logical packages: 8
+[    0.125004] smpboot: Total of 8 processors activated (35199.96 BogoMIPS)
+[    0.370018] node 0 initialised, 5365168 pages in 244ms
+[    0.372510] devtmpfs: initialized
+[    0.373078] x86/mm: Memory block size: 128MB
+[    0.376113] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.378031] futex hash table entries: 2048 (order: 5, 131072 bytes)
+[    0.380198] pinctrl core: initialized pinctrl subsystem
+[    0.382990] NET: Registered protocol family 16
+[    0.384129] audit: initializing netlink subsys (disabled)
+[    0.385025] audit: type=2000 audit(1583290599.174:1): state=initialized audit_enabled=0 res=1
+[    0.388006] cpuidle: using governor menu
+[    0.389372] ACPI: bus type PCI registered
+[    0.390005] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.392187] PCI: Using configuration type 1 for base access
+[    0.396070] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.397010] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.399121] cryptd: max_cpu_qlen set to 1000
+[    0.401133] ACPI: Added _OSI(Module Device)
+[    0.402004] ACPI: Added _OSI(Processor Device)
+[    0.403003] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.404004] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.406004] ACPI: Added _OSI(Linux-Dell-Video)
+[    0.407628] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.409962] ACPI: Interpreter enabled
+[    0.411013] ACPI: (supports S0 S5)
+[    0.411906] ACPI: Using IOAPIC for interrupt routing
+[    0.413015] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.415105] ACPI: Enabled 2 GPEs in block 00 to 0F
+[    0.418804] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.421009] acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+[    0.422012] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+[    0.425347] acpiphp: Slot [3] registered
+[    0.426029] acpiphp: Slot [4] registered
+[    0.427041] acpiphp: Slot [5] registered
+[    0.428046] acpiphp: Slot [7] registered
+[    0.429028] acpiphp: Slot [8] registered
+[    0.430028] acpiphp: Slot [9] registered
+[    0.431033] acpiphp: Slot [10] registered
+[    0.432029] acpiphp: Slot [11] registered
+[    0.433044] acpiphp: Slot [12] registered
+[    0.434026] acpiphp: Slot [13] registered
+[    0.435026] acpiphp: Slot [14] registered
+[    0.436042] acpiphp: Slot [15] registered
+[    0.437047] acpiphp: Slot [16] registered
+[    0.439032] acpiphp: Slot [17] registered
+[    0.440026] acpiphp: Slot [18] registered
+[    0.441026] acpiphp: Slot [19] registered
+[    0.442026] acpiphp: Slot [20] registered
+[    0.443025] acpiphp: Slot [21] registered
+[    0.444031] acpiphp: Slot [22] registered
+[    0.445026] acpiphp: Slot [23] registered
+[    0.446030] acpiphp: Slot [24] registered
+[    0.447026] acpiphp: Slot [25] registered
+[    0.448026] acpiphp: Slot [26] registered
+[    0.449025] acpiphp: Slot [27] registered
+[    0.450046] acpiphp: Slot [28] registered
+[    0.451027] acpiphp: Slot [29] registered
+[    0.452026] acpiphp: Slot [30] registered
+[    0.453034] acpiphp: Slot [31] registered
+[    0.454020] PCI host bridge to bus 0000:00
+[    0.455005] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.457004] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.458022] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.460012] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.462004] pci_bus 0000:00: root bus resource [mem 0x640000000-0x6bfffffff window]
+[    0.464004] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.465060] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+[    0.465862] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
+[    0.466917] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
+[    0.471772] pci 0000:00:01.1: reg 0x20: [io  0xc180-0xc18f]
+[    0.473052] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+[    0.475004] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+[    0.476004] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+[    0.478005] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+[    0.480265] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+[    0.481083] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.483018] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.485389] pci 0000:00:02.0: [1013:00b8] type 00 class 0x030000
+[    0.486512] pci 0000:00:02.0: reg 0x10: [mem 0xfc000000-0xfdffffff pref]
+[    0.487503] pci 0000:00:02.0: reg 0x14: [mem 0xfebd0000-0xfebd0fff]
+[    0.493575] pci 0000:00:02.0: reg 0x30: [mem 0xfebc0000-0xfebcffff pref]
+[    0.493995] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+[    0.496005] pci 0000:00:03.0: reg 0x10: [io  0xc080-0xc09f]
+[    0.497005] pci 0000:00:03.0: reg 0x14: [mem 0xfebd1000-0xfebd1fff]
+[    0.501005] pci 0000:00:03.0: reg 0x20: [mem 0xfe000000-0xfe003fff 64bit pref]
+[    0.502004] pci 0000:00:03.0: reg 0x30: [mem 0xfeb00000-0xfeb3ffff pref]
+[    0.503114] pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000
+[    0.504005] pci 0000:00:04.0: reg 0x10: [io  0xc0a0-0xc0bf]
+[    0.505005] pci 0000:00:04.0: reg 0x14: [mem 0xfebd2000-0xfebd2fff]
+[    0.509005] pci 0000:00:04.0: reg 0x20: [mem 0xfe004000-0xfe007fff 64bit pref]
+[    0.510465] pci 0000:00:04.0: reg 0x30: [mem 0xfeb40000-0xfeb7ffff pref]
+[    0.511609] pci 0000:00:05.0: [1af4:1000] type 00 class 0x020000
+[    0.513501] pci 0000:00:05.0: reg 0x10: [io  0xc0c0-0xc0df]
+[    0.514005] pci 0000:00:05.0: reg 0x14: [mem 0xfebd3000-0xfebd3fff]
+[    0.516506] pci 0000:00:05.0: reg 0x20: [mem 0xfe008000-0xfe00bfff 64bit pref]
+[    0.517439] pci 0000:00:05.0: reg 0x30: [mem 0xfeb80000-0xfebbffff pref]
+[    0.518463] pci 0000:00:06.0: [8086:2934] type 00 class 0x0c0300
+[    0.521648] pci 0000:00:06.0: reg 0x20: [io  0xc0e0-0xc0ff]
+[    0.522714] pci 0000:00:06.1: [8086:2935] type 00 class 0x0c0300
+[    0.524588] pci 0000:00:06.1: reg 0x20: [io  0xc100-0xc11f]
+[    0.525498] pci 0000:00:06.2: [8086:2936] type 00 class 0x0c0300
+[    0.528428] pci 0000:00:06.2: reg 0x20: [io  0xc120-0xc13f]
+[    0.529566] pci 0000:00:06.7: [8086:293a] type 00 class 0x0c0320
+[    0.530005] pci 0000:00:06.7: reg 0x10: [mem 0xfebd4000-0xfebd4fff]
+[    0.533389] pci 0000:00:07.0: [1af4:1003] type 00 class 0x078000
+[    0.534543] pci 0000:00:07.0: reg 0x10: [io  0xc000-0xc03f]
+[    0.535548] pci 0000:00:07.0: reg 0x14: [mem 0xfebd5000-0xfebd5fff]
+[    0.539642] pci 0000:00:07.0: reg 0x20: [mem 0xfe00c000-0xfe00ffff 64bit pref]
+[    0.541765] pci 0000:00:08.0: [1af4:1001] type 00 class 0x010000
+[    0.543466] pci 0000:00:08.0: reg 0x10: [io  0xc040-0xc07f]
+[    0.544392] pci 0000:00:08.0: reg 0x14: [mem 0xfebd6000-0xfebd6fff]
+[    0.546966] pci 0000:00:08.0: reg 0x20: [mem 0xfe010000-0xfe013fff 64bit pref]
+[    0.549587] pci 0000:00:09.0: [1af4:1002] type 00 class 0x00ff00
+[    0.550383] pci 0000:00:09.0: reg 0x10: [io  0xc140-0xc15f]
+[    0.553005] pci 0000:00:09.0: reg 0x20: [mem 0xfe014000-0xfe017fff 64bit pref]
+[    0.555687] pci 0000:00:0a.0: [1af4:1005] type 00 class 0x00ff00
+[    0.556324] pci 0000:00:0a.0: reg 0x10: [io  0xc160-0xc17f]
+[    0.559712] pci 0000:00:0a.0: reg 0x20: [mem 0xfe018000-0xfe01bfff 64bit pref]
+[    0.561955] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+[    0.563136] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+[    0.565130] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+[    0.567144] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+[    0.568078] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+[    0.570549] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.571000] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.574007] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.576003] vgaarb: loaded
+[    0.576865] SCSI subsystem initialized
+[    0.577033] ACPI: bus type USB registered
+[    0.578022] usbcore: registered new interface driver usbfs
+[    0.580014] usbcore: registered new interface driver hub
+[    0.581103] usbcore: registered new device driver usb
+[    0.583055] pps_core: LinuxPPS API ver. 1 registered
+[    0.584003] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.586006] PTP clock support registered
+[    0.587060] EDAC MC: Ver: 3.0.0
+[    0.589036] PCI: Using ACPI for IRQ routing
+[    0.590005] PCI: pci_cache_line_size set to 64 bytes
+[    0.590468] e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+[    0.590469] e820: reserve RAM buffer [mem 0xbffd9000-0xbfffffff]
+[    0.591002] NetLabel: Initializing
+[    0.591004] NetLabel:  domain hash size = 128
+[    0.593003] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.594016] NetLabel:  unlabeled traffic allowed by default
+[    0.596003] clocksource: Switched to clocksource kvm-clock
+[    0.612064] VFS: Disk quotas dquot_6.6.0
+[    0.613075] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.614816] pnp: PnP ACPI init
+[    0.615612] pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+[    0.615636] pnp 00:01: Plug and Play ACPI device, IDs PNP0303 (active)
+[    0.615656] pnp 00:02: Plug and Play ACPI device, IDs PNP0f13 (active)
+[    0.615663] pnp 00:03: [dma 2]
+[    0.615672] pnp 00:03: Plug and Play ACPI device, IDs PNP0700 (active)
+[    0.615749] pnp 00:04: Plug and Play ACPI device, IDs PNP0501 (active)
+[    0.615971] pnp: PnP ACPI: found 5 devices
+[    0.623854] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.626012] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.626013] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.626014] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.626015] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+[    0.626016] pci_bus 0000:00: resource 8 [mem 0x640000000-0x6bfffffff window]
+[    0.626072] NET: Registered protocol family 2
+[    0.627441] tcp_listen_portaddr_hash hash table entries: 16384 (order: 6, 262144 bytes)
+[    0.629529] TCP established hash table entries: 262144 (order: 9, 2097152 bytes)
+[    0.631695] TCP bind hash table entries: 65536 (order: 8, 1048576 bytes)
+[    0.633504] TCP: Hash tables configured (established 262144 bind 65536)
+[    0.635239] UDP hash table entries: 16384 (order: 7, 524288 bytes)
+[    0.636841] UDP-Lite hash table entries: 16384 (order: 7, 524288 bytes)
+[    0.638627] NET: Registered protocol family 1
+[    0.639722] NET: Registered protocol family 44
+[    0.640827] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.642317] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.643756] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+[    0.645342] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.667821] PCI Interrupt Link [LNKB] enabled at IRQ 10
+[    0.689508] pci 0000:00:06.0: quirk_usb_early_handoff+0x0/0x6c5 took 41063 usecs
+[    0.711574] PCI Interrupt Link [LNKC] enabled at IRQ 11
+[    0.733201] pci 0000:00:06.1: quirk_usb_early_handoff+0x0/0x6c5 took 40845 usecs
+[    0.755227] PCI Interrupt Link [LNKD] enabled at IRQ 11
+[    0.776421] pci 0000:00:06.2: quirk_usb_early_handoff+0x0/0x6c5 took 40417 usecs
+[    0.797539] PCI Interrupt Link [LNKA] enabled at IRQ 10
+[    0.818435] pci 0000:00:06.7: quirk_usb_early_handoff+0x0/0x6c5 took 39312 usecs
+[    0.820285] PCI: CLS 0 bytes, default 64
+[    0.820322] Unpacking initramfs...
+[    1.344284] Freeing initrd memory: 48888K
+[    1.345525] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    1.347085] software IO TLB: mapped [mem 0xb1000000-0xb5000000] (64MB)
+[    1.348705] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1fb63109b96, max_idle_ns: 440795265316 ns
+[    1.354687] Initialise system trusted keyrings
+[    1.355887] Key type blacklist registered
+[    1.357088] workingset: timestamp_bits=36 max_order=23 bucket_order=0
+[    1.360612] zbud: loaded
+[    1.361627] pstore: using deflate compression
+[    1.363941] Platform Keyring initialized
+[    1.406101] NET: Registered protocol family 38
+[    1.407259] Key type asymmetric registered
+[    1.408287] Asymmetric key parser 'x509' registered
+[    1.409519] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+[    1.411464] io scheduler mq-deadline registered
+[    1.412645] io scheduler kyber registered
+[    1.413761] io scheduler bfq registered
+[    1.415020] atomic64_test: passed for x86-64 platform with CX8 and with SSE
+[    1.416832] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    1.418464] intel_idle: Please enable MWAIT in BIOS SETUP
+[    1.418531] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    1.420396] ACPI: Power Button [PWRF]
+[    1.566402] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.593996] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    1.596113] Non-volatile memory driver v1.3
+[    1.597789] random: fast init done
+[    1.600064] random: crng init done
+[    1.600259] rdac: device handler registered
+[    1.602214] hp_sw: device handler registered
+[    1.603339] emc: device handler registered
+[    1.604590] alua: device handler registered
+[    1.605835] libphy: Fixed MDIO Bus: probed
+[    1.606940] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.608422] ehci-pci: EHCI PCI platform driver
+[    1.628554] ehci-pci 0000:00:06.7: EHCI Host Controller
+[    1.629853] ehci-pci 0000:00:06.7: new USB bus registered, assigned bus number 1
+[    1.632323] ehci-pci 0000:00:06.7: irq 10, io mem 0xfebd4000
+[    1.640033] ehci-pci 0000:00:06.7: USB 2.0 started, EHCI 1.00
+[    1.641453] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 4.18
+[    1.643337] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.644991] usb usb1: Product: EHCI Host Controller
+[    1.646114] usb usb1: Manufacturer: Linux 4.18.0-147.5.1.el8_1.x86_64 ehci_hcd
+[    1.647737] usb usb1: SerialNumber: 0000:00:06.7
+[    1.648901] hub 1-0:1.0: USB hub found
+[    1.649795] hub 1-0:1.0: 6 ports detected
+[    1.651030] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    1.652520] ohci-pci: OHCI PCI platform driver
+[    1.653592] uhci_hcd: USB Universal Host Controller Interface driver
+[    1.674260] uhci_hcd 0000:00:06.0: UHCI Host Controller
+[    1.675593] uhci_hcd 0000:00:06.0: new USB bus registered, assigned bus number 2
+[    1.677313] uhci_hcd 0000:00:06.0: detected 2 ports
+[    1.678509] uhci_hcd 0000:00:06.0: irq 10, io base 0x0000c0e0
+[    1.679989] usb usb2: New USB device found, idVendor=1d6b, idProduct=0001, bcdDevice= 4.18
+[    1.681956] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.683600] usb usb2: Product: UHCI Host Controller
+[    1.684710] usb usb2: Manufacturer: Linux 4.18.0-147.5.1.el8_1.x86_64 uhci_hcd
+[    1.686423] usb usb2: SerialNumber: 0000:00:06.0
+[    1.687631] hub 2-0:1.0: USB hub found
+[    1.688590] hub 2-0:1.0: 2 ports detected
+[    1.709030] uhci_hcd 0000:00:06.1: UHCI Host Controller
+[    1.710383] uhci_hcd 0000:00:06.1: new USB bus registered, assigned bus number 3
+[    1.712166] uhci_hcd 0000:00:06.1: detected 2 ports
+[    1.713490] uhci_hcd 0000:00:06.1: irq 11, io base 0x0000c100
+[    1.714913] usb usb3: New USB device found, idVendor=1d6b, idProduct=0001, bcdDevice= 4.18
+[    1.716877] usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.718561] usb usb3: Product: UHCI Host Controller
+[    1.721085] usb usb3: Manufacturer: Linux 4.18.0-147.5.1.el8_1.x86_64 uhci_hcd
+[    1.722749] usb usb3: SerialNumber: 0000:00:06.1
+[    1.723959] hub 3-0:1.0: USB hub found
+[    1.724904] hub 3-0:1.0: 2 ports detected
+[    1.745272] uhci_hcd 0000:00:06.2: UHCI Host Controller
+[    1.746627] uhci_hcd 0000:00:06.2: new USB bus registered, assigned bus number 4
+[    1.748419] uhci_hcd 0000:00:06.2: detected 2 ports
+[    1.749677] uhci_hcd 0000:00:06.2: irq 11, io base 0x0000c120
+[    1.751244] usb usb4: New USB device found, idVendor=1d6b, idProduct=0001, bcdDevice= 4.18
+[    1.753179] usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.754867] usb usb4: Product: UHCI Host Controller
+[    1.756038] usb usb4: Manufacturer: Linux 4.18.0-147.5.1.el8_1.x86_64 uhci_hcd
+[    1.757723] usb usb4: SerialNumber: 0000:00:06.2
+[    1.759010] hub 4-0:1.0: USB hub found
+[    1.760066] hub 4-0:1.0: 2 ports detected
+[    1.761227] usbcore: registered new interface driver usbserial_generic
+[    1.762893] usbserial: USB Serial support registered for generic
+[    1.764448] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.767487] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.768692] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.770146] mousedev: PS/2 mouse device common for all mice
+[    1.771815] rtc_cmos 00:00: RTC can wake from S4
+[    1.773773] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+[    1.775099] rtc_cmos 00:00: registered as rtc0
+[    1.777389] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+[    1.777658] rtc_cmos 00:00: alarms up to one day, y3k, 114 bytes nvram
+[    1.780348] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+[    1.782315] hidraw: raw HID events driver (C) Jiri Kosina
+[    1.785224] usbcore: registered new interface driver usbhid
+[    1.786648] usbhid: USB HID core driver
+[    1.787721] drop_monitor: Initializing network drop monitor service
+[    1.789395] Initializing XFRM netlink socket
+[    1.790611] NET: Registered protocol family 10
+[    1.792157] Segment Routing with IPv6
+[    1.793086] NET: Registered protocol family 17
+[    1.794260] mpls_gso: MPLS GSO support
+[    1.795988] core: Using 10 MCE banks
+[    1.796901] AVX2 version of gcm_enc/dec engaged.
+[    1.797997] AES CTR mode by8 optimization enabled
+[    1.815760] sched_clock: Marking stable (1815748270, 0)->(2366597998, -550849728)
+[    1.818282] registered taskstats version 1
+[    1.819416] Loading compiled-in X.509 certificates
+[    1.858831] Loaded X.509 cert 'Red Hat Enterprise Linux kernel signing key: 8d23edc57945f592c734cd7781ed6cab5cbb9ec0'
+[    1.861817] Loaded X.509 cert 'Red Hat Enterprise Linux Driver Update Program (key 3): bf57f3e87362bc7229d9f465321773dfd1f77a80'
+[    1.865156] Loaded X.509 cert 'Red Hat Enterprise Linux kpatch signing key: 4d38fd864ebe18c5f0b72e3852e2014c3a676fc8'
+[    1.867750] zswap: loaded using pool lzo/zbud
+[    1.874405] Key type big_key registered
+[    1.878161] Key type encrypted registered
+[    1.879238] ima: No TPM chip found, activating TPM-bypass!
+[    1.880639] ima: Allocated hash algorithm: sha1
+[    1.881806] evm: Initialising EVM extended attributes:
+[    1.883148] evm: security.selinux
+[    1.884009] evm: security.ima
+[    1.884784] evm: security.capability
+[    1.885697] evm: HMAC attrs: 0x1
+[    1.887019] rtc_cmos 00:00: setting system clock to 2020-03-04 02:56:40 UTC (1583290600)
+[    1.969066] usb 1-1: new high-speed USB device number 2 using ehci-pci
+[    2.101361] usb 1-1: New USB device found, idVendor=0627, idProduct=0001, bcdDevice= 0.00
+[    2.106422] usb 1-1: New USB device strings: Mfr=1, Product=3, SerialNumber=5
+[    2.108223] usb 1-1: Product: QEMU USB Tablet
+[    2.109309] usb 1-1: Manufacturer: QEMU
+[    2.110330] usb 1-1: SerialNumber: 42
+[    2.113178] input: QEMU QEMU USB Tablet as /devices/pci0000:00/0000:00:06.7/usb1/1-1/1-1:1.0/0003:0627:0001.0001/input/input5
+[    2.116076] hid-generic 0003:0627:0001.0001: input,hidraw0: USB HID v0.01 Mouse [QEMU QEMU USB Tablet] on usb-0000:00:06.7-1/input0
+[    2.193709] Freeing unused decrypted memory: 2040K
+[    2.547646] Freeing unused kernel memory: 2368K
+[    2.550080] Write protecting the kernel read-only data: 18432k
+[    2.553167] Freeing unused kernel memory: 2020K
+[    2.555032] Freeing unused kernel memory: 316K
+[    2.565938] systemd[1]: systemd 239 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2 default-hierarchy=legacy)
+[    2.570837] systemd[1]: Detected virtualization kvm.
+[    2.572030] systemd[1]: Detected architecture x86-64.
+[    2.573216] systemd[1]: Running in initial RAM disk.
+[    2.581712] systemd[1]: No hostname configured.
+[    2.582897] systemd[1]: Set hostname to <localhost>.
+[    2.584222] systemd[1]: Initializing machine ID from KVM UUID.
+[    2.632272] systemd[1]: Listening on udev Control Socket.
+[    2.634735] systemd[1]: Listening on Journal Socket.
+[    2.636925] systemd[1]: Reached target Swap.
+[    2.847295] device-mapper: uevent: version 1.0.3
+[    2.848540] device-mapper: ioctl: 4.39.0-ioctl (2018-04-03) initialised: dm-devel@redhat.com
+[    2.892362] RPC: Registered named UNIX socket transport module.
+[    2.893985] RPC: Registered udp transport module.
+[    2.895238] RPC: Registered tcp transport module.
+[    2.896494] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    3.300493] virtio_blk virtio4: [vda] 209715200 512-byte logical blocks (107 GB/100 GiB)
+[    3.310775]  vda: vda1
+[    3.312577] libata version 3.00 loaded.
+[    3.316959] ata_piix 0000:00:01.1: version 2.13
+[    3.318554] scsi host0: ata_piix
+[    3.319614] scsi host1: ata_piix
+[    3.320524] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc180 irq 14
+[    3.322252] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc188 irq 15
+[    3.962145] SGI XFS with ACLs, security attributes, no debug enabled
+[    3.966161] XFS (vda1): Mounting V5 Filesystem
+[    3.973538] XFS (vda1): Ending clean mount
+[    4.339368] systemd-journald[250]: Received SIGTERM from PID 1 (systemd).
+[    4.366935] systemd: 27 output lines suppressed due to ratelimiting
+[    4.380864] audit: type=1404 audit(1583290602.993:2): enforcing=1 old_enforcing=0 auid=4294967295 ses=4294967295 enabled=1 old-enabled=1 lsm=selinux res=1
+[    4.820731] SELinux:  policy capability network_peer_controls=1
+[    4.822141] SELinux:  policy capability open_perms=1
+[    4.823299] SELinux:  policy capability extended_socket_class=1
+[    4.824648] SELinux:  policy capability always_check_network=0
+[    4.825977] SELinux:  policy capability cgroup_seclabel=1
+[    4.827208] SELinux:  policy capability nnp_nosuid_transition=1
+[    4.850082] audit: type=1403 audit(1583290603.462:3): auid=4294967295 ses=4294967295 lsm=selinux res=1
+[    4.853047] systemd[1]: Successfully loaded SELinux policy in 472.444ms.
+[    4.866205] systemd[1]: Failed to insert module 'ip_tables': Operation not permitted
+[    4.894789] systemd[1]: Relabelled /dev, /run and /sys/fs/cgroup in 23.407ms.
+[    4.897843] systemd[1]: systemd 239 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2 default-hierarchy=legacy)
+[    4.902262] systemd[1]: Detected virtualization kvm.
+[    4.903330] systemd[1]: Detected architecture x86-64.
+[    4.906985] systemd[1]: Set hostname to <undercloud-0.redhat.local>.
+[    4.996339] systemd[1]: Stopped Switch Root.
+[    4.998442] systemd[1]: systemd-journald.service: Service has no hold-off time (RestartSec=0), scheduling restart.
+[    5.000861] systemd[1]: systemd-journald.service: Scheduled restart job, restart counter is at 1.
+[    5.002874] systemd[1]: Stopped Journal Service.
+[    5.005512] systemd[1]: Starting Journal Service...
+[    5.008725] systemd[1]: Stopped target Switch Root.
+[    5.244584] systemd-journald[1190]: Received request to flush runtime journal from PID 1
+[    5.389026] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0x700, revision 0
+[    5.393876] input: PC Speaker as /devices/platform/pcspkr/input/input6
+[    5.557098] cirrus 0000:00:02.0: vgaarb: deactivate vga console
+[    5.576324] Console: switching to colour dummy device 80x25
+[    5.600259] [TTM] Zone  kernel: Available graphics memory: 12257120 kiB
+[    5.601947] [TTM] Zone   dma32: Available graphics memory: 2097152 kiB
+[    5.603527] [TTM] Initializing pool allocator
+[    5.605327] [TTM] Initializing DMA pool allocator
+[    5.607405] [drm] fb mappable at 0xFC000000
+[    5.608618] [drm] vram aper at 0xFC000000
+[    5.609625] [drm] size 33554432
+[    5.610514] [drm] fb depth is 16
+[    5.611342] [drm]    pitch is 2048
+[    5.613668] fbcon: cirrusdrmfb (fb0) is primary device
+[    5.624972] Console: switching to colour frame buffer device 128x48
+[    5.629543] cirrus 0000:00:02.0: fb0: cirrusdrmfb frame buffer device
+[    5.650054] [drm] Initialized cirrus 1.0.0 20110418 for 0000:00:02.0 on minor 0
+[    5.682355] EDAC sbridge: Seeking for: PCI ID 8086:6fa0
+[    5.682359] EDAC sbridge:  Ver: 1.1.2 
+[    5.975363] IPv6: ADDRCONF(NETDEV_UP): eth1: link is not ready
+[    5.993358] IPv6: ADDRCONF(NETDEV_UP): eth2: link is not ready
+[    5.996770] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  113.089669] SELinux:  Converting 2326 SID table entries...
+[  114.694846] SELinux:  policy capability network_peer_controls=1
+[  114.698603] SELinux:  policy capability open_perms=1
+[  114.699705] SELinux:  policy capability extended_socket_class=1
+[  114.700997] SELinux:  policy capability always_check_network=0
+[  114.702278] SELinux:  policy capability cgroup_seclabel=1
+[  114.703472] SELinux:  policy capability nnp_nosuid_transition=1
+[  443.296226] openvswitch: Open vSwitch switching datapath
+[  443.345981] device ovs-system entered promiscuous mode
+[  443.361398] device br-ctlplane entered promiscuous mode
+[  447.674551] device eth0 entered promiscuous mode
+[  455.719752] SELinux:  Converting 2360 SID table entries...
+[  457.496109] SELinux:  policy capability network_peer_controls=1
+[  457.499633] SELinux:  policy capability open_perms=1
+[  457.500746] SELinux:  policy capability extended_socket_class=1
+[  457.502074] SELinux:  policy capability always_check_network=0
+[  457.503378] SELinux:  policy capability cgroup_seclabel=1
+[  457.504584] SELinux:  policy capability nnp_nosuid_transition=1
+[  458.988977] SELinux:  Converting 2360 SID table entries...
+[  461.006859] SELinux:  policy capability network_peer_controls=1
+[  461.008442] SELinux:  policy capability open_perms=1
+[  461.009710] SELinux:  policy capability extended_socket_class=1
+[  461.011231] SELinux:  policy capability always_check_network=0
+[  461.012729] SELinux:  policy capability cgroup_seclabel=1
+[  461.014097] SELinux:  policy capability nnp_nosuid_transition=1
+[  480.571965] Loading iSCSI transport class v2.0-870.
+[  480.584641] iscsi: registered transport (tcp)
+[  489.386095] IPVS: Registered protocols (TCP, UDP, SCTP, AH, ESP)
+[  489.387637] IPVS: Connection hash table configured (size=4096, memory=64Kbytes)
+[  489.389412] IPVS: ipvs loaded.
+[  494.706625] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[  494.712389] Bridge firewalling registered
+[  791.581330] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  791.585669] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  791.606097] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  791.642424] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  791.651585] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  791.679427] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  800.781129] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  802.863001] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  815.632340] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  815.668593] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  815.692556] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  815.741915] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  817.960693] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  827.148315] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  846.958919] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  847.000461] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  847.010653] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  847.111390] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  851.144064] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  851.173419] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  860.360606] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  875.362741] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  876.114534] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  877.036559] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  877.681903] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  878.681238] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  879.313629] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  880.419091] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  924.615785] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  925.650333] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  926.314431] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  927.023123] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  927.662473] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  928.310648] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  928.980396] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  929.620254] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  930.311563] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  930.940504] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  947.517057] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  963.953991] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  964.610032] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  972.534903] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  973.497756] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  978.878508] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[  978.916048] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1038.027535] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1044.764373] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1047.467018] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1048.096298] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1053.845325] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1057.764056] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1065.033186] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1080.138088] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1085.376175] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1086.119335] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1089.234103] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1090.012969] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1090.765315] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1091.460244] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1093.673108] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1096.623729] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1097.981727] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1101.893308] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1104.121435] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1106.061602] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1108.180190] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1109.253981] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1120.387569] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1139.604594] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1139.676099] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1139.679350] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1401.815738] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1403.225459] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1404.631093] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1406.042984] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1407.239638] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1408.788951] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1410.187688] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1411.626832] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1413.125465] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1414.596712] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1426.721379] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1428.295108] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1430.743074] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1432.437113] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1434.139293] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1435.171441] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1435.476733] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1442.630534] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1455.471717] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1457.196225] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1459.073118] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1460.901427] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1462.799118] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1464.683661] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1466.138538] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1466.623413] capability: warning: `privsep-helper' uses deprecated v2 capabilities in a way that may be insecure
+[ 1468.021479] device br-int entered promiscuous mode
+[ 1505.518127] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1507.201342] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1508.964884] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1510.812431] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1512.434435] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1518.191304] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1518.256275] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1518.289058] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1549.605976] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1561.698502] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1579.575998] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1579.577543] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1579.647358] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 1614.438050] device tapd987db8f-6f entered promiscuous mode
+[ 1615.293973] SELinux: mount invalid.  Same superblock, different security settings for (dev mqueue, type mqueue)
+[ 2051.404754] TECH PREVIEW: Running as a nested hypervisor may not be fully supported.
+               Please review provided documentation for limitations.

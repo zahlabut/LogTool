@@ -1,0 +1,39 @@
+==== qdhcp-e02e99e9-750a-4c24-8aa4-e17cb29fd7fa ====
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+8: tapd987db8f-6f: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether fa:16:3e:94:d9:97 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.24.5/24 brd 192.168.24.255 scope global tapd987db8f-6f
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fe94:d997/64 scope link 
+       valid_lft forever preferred_lft forever
+default via 192.168.24.1 dev tapd987db8f-6f proto static 
+192.168.24.0/24 dev tapd987db8f-6f proto kernel scope link src 192.168.24.5 
+Object "iptables-save" is unknown, try "ip help".
+error: unknown gnu long option
+
+Usage:
+ ps [options]
+
+ Try 'ps --help <simple|list|output|threads|misc|all>'
+  or 'ps --help <s|l|o|t|m|a>'
+ for additional help text.
+
+For more details see ps(1).
+
+==== (id: ====
+Cannot open network namespace "(id:": No such file or directory
+Cannot open network namespace "(id:": No such file or directory
+Cannot open network namespace "(id:": No such file or directory
+Cannot open network namespace: No such file or directory
+
+==== 0) ====
+Cannot open network namespace "0)": No such file or directory
+Cannot open network namespace "0)": No such file or directory
+Cannot open network namespace "0)": No such file or directory
+Cannot open network namespace: No such file or directory
+

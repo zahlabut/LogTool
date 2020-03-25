@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/bin/bash",
+    "-c",
+    "chmod 2755 /var/log/zaqar; touch /var/log/zaqar/zaqar-server.log; chown -R zaqar:zaqar /var/log/zaqar"
+  ],
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-zaqar-wsgi:20200226.1",
+  "net": "none",
+  "user": "root",
+  "volumes": [
+    "/var/log/containers/zaqar:/var/log/zaqar",
+    "/var/log/containers/httpd/zaqar:/var/log/httpd"
+  ]
+}

@@ -1,0 +1,1819 @@
+2019-10-29T16:33:37Z INFO --- logging initialized ---
+2019-10-29T16:33:37Z DDEBUG timer: config: 6 ms
+2019-10-29T16:33:38Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, product-id, repoclosure, repodiff, repograph, repomanage, reposync, subscription-manager, uploadprofile
+2019-10-29T16:33:38Z INFO Updating Subscription Management repositories.
+2019-10-29T16:33:38Z INFO Unable to read consumer identity
+2019-10-29T16:33:38Z INFO This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.
+2019-10-29T16:33:38Z DEBUG DNF version: 4.2.7
+2019-10-29T16:33:38Z DDEBUG Command: dnf -C -y remove linux-firmware 
+2019-10-29T16:33:38Z DDEBUG Installroot: /
+2019-10-29T16:33:38Z DDEBUG Releasever: 8
+2019-10-29T16:33:38Z DEBUG cachedir: /var/cache/dnf
+2019-10-29T16:33:38Z DDEBUG Base command: remove
+2019-10-29T16:33:38Z DDEBUG Extra commands: ['-C', '-y', 'remove', 'linux-firmware']
+2019-10-29T16:33:38Z DEBUG No module defaults found
+2019-10-29T16:33:38Z DDEBUG timer: sack setup: 220 ms
+2019-10-29T16:33:38Z DEBUG Completion plugin: Generating completion cache...
+2019-10-29T16:33:38Z DEBUG --> Starting dependency resolution
+2019-10-29T16:33:38Z DEBUG --> Finding unneeded leftover dependencies
+2019-10-29T16:33:38Z DEBUG ---> Package linux-firmware.noarch 20190516-94.git711d3297.el8 will be erased
+2019-10-29T16:33:38Z DEBUG --> Finished dependency resolution
+2019-10-29T16:33:38Z DDEBUG timer: depsolve: 82 ms
+2019-10-29T16:33:38Z INFO Dependencies resolved.
+2019-10-29T16:33:38Z INFO ================================================================================
+ Package           Arch      Version                         Repository    Size
+================================================================================
+Removing:
+ linux-firmware    noarch    20190516-94.git711d3297.el8     @anaconda    328 M
+
+Transaction Summary
+================================================================================
+Remove  1 Package
+
+2019-10-29T16:33:38Z INFO Freed space: 328 M
+2019-10-29T16:33:38Z INFO Running transaction check
+2019-10-29T16:33:38Z INFO Transaction check succeeded.
+2019-10-29T16:33:38Z INFO Running transaction test
+2019-10-29T16:33:38Z INFO Transaction test succeeded.
+2019-10-29T16:33:38Z DDEBUG timer: transaction test: 73 ms
+2019-10-29T16:33:38Z INFO Running transaction
+2019-10-29T16:33:38Z DDEBUG RPM transaction start.
+2019-10-29T16:33:39Z DDEBUG RPM transaction over.
+2019-10-29T16:33:39Z DDEBUG timer: verify transaction: 200 ms
+2019-10-29T16:33:39Z DDEBUG timer: transaction: 928 ms
+2019-10-29T16:33:39Z DEBUG Completion plugin: Generating completion cache...
+2019-10-29T16:33:40Z INFO Installed products updated.
+2019-10-29T16:33:40Z INFO 
+Removed:
+  linux-firmware-20190516-94.git711d3297.el8.noarch                             
+
+2019-10-29T16:33:40Z INFO Complete!
+2019-10-29T16:33:40Z DDEBUG Cleaning up.
+2019-10-29T16:33:40Z INFO --- logging initialized ---
+2019-10-29T16:33:40Z DDEBUG timer: config: 4 ms
+2019-10-29T16:33:41Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, product-id, repoclosure, repodiff, repograph, repomanage, reposync, subscription-manager, uploadprofile
+2019-10-29T16:33:41Z INFO Updating Subscription Management repositories.
+2019-10-29T16:33:41Z INFO Unable to read consumer identity
+2019-10-29T16:33:41Z INFO This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.
+2019-10-29T16:33:41Z DEBUG DNF version: 4.2.7
+2019-10-29T16:33:41Z DDEBUG Command: dnf -C -y remove firewalld --setopt=clean_requirements_on_remove=1 
+2019-10-29T16:33:41Z DDEBUG Installroot: /
+2019-10-29T16:33:41Z DDEBUG Releasever: 8
+2019-10-29T16:33:41Z DEBUG cachedir: /var/cache/dnf
+2019-10-29T16:33:41Z DDEBUG Base command: remove
+2019-10-29T16:33:41Z DDEBUG Extra commands: ['-C', '-y', 'remove', 'firewalld', '--setopt=clean_requirements_on_remove=1']
+2019-10-29T16:33:41Z DEBUG No module defaults found
+2019-10-29T16:33:41Z DDEBUG timer: sack setup: 204 ms
+2019-10-29T16:33:41Z DEBUG --> Starting dependency resolution
+2019-10-29T16:33:41Z DEBUG --> Finding unneeded leftover dependencies
+2019-10-29T16:33:41Z DEBUG ---> Package firewalld.noarch 0.7.0-5.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package firewalld-filesystem.noarch 0.7.0-5.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package ipset.x86_64 7.1-1.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package ipset-libs.x86_64 7.1-1.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package iptables.x86_64 1.8.2-16.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package iptables-ebtables.x86_64 1.8.2-16.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package libnetfilter_conntrack.x86_64 1.0.6-5.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package libnfnetlink.x86_64 1.0.1-13.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package libnftnl.x86_64 1.1.1-4.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package nftables.x86_64 1:0.9.0-14.el8 will be erased
+2019-10-29T16:33:41Z DEBUG ---> Package python3-firewall.noarch 0.7.0-5.el8 will be erased
+2019-10-29T16:33:41Z DEBUG --> Finished dependency resolution
+2019-10-29T16:33:41Z DDEBUG timer: depsolve: 56 ms
+2019-10-29T16:33:41Z INFO Dependencies resolved.
+2019-10-29T16:33:41Z INFO ================================================================================
+ Package                    Arch       Version              Repository     Size
+================================================================================
+Removing:
+ firewalld                  noarch     0.7.0-5.el8          @anaconda     1.9 M
+Removing unused dependencies:
+ firewalld-filesystem       noarch     0.7.0-5.el8          @anaconda     239  
+ ipset                      x86_64     7.1-1.el8            @anaconda      67 k
+ ipset-libs                 x86_64     7.1-1.el8            @anaconda     258 k
+ iptables                   x86_64     1.8.2-16.el8         @anaconda     2.3 M
+ iptables-ebtables          x86_64     1.8.2-16.el8         @anaconda      14 k
+ libnetfilter_conntrack     x86_64     1.0.6-5.el8          @anaconda     159 k
+ libnfnetlink               x86_64     1.0.1-13.el8         @anaconda      51 k
+ libnftnl                   x86_64     1.1.1-4.el8          @anaconda     235 k
+ nftables                   x86_64     1:0.9.0-14.el8       @anaconda     851 k
+ python3-firewall           noarch     0.7.0-5.el8          @anaconda     1.7 M
+
+Transaction Summary
+================================================================================
+Remove  11 Packages
+
+2019-10-29T16:33:41Z INFO Freed space: 7.5 M
+2019-10-29T16:33:41Z INFO Running transaction check
+2019-10-29T16:33:41Z INFO Transaction check succeeded.
+2019-10-29T16:33:41Z INFO Running transaction test
+2019-10-29T16:33:41Z INFO Transaction test succeeded.
+2019-10-29T16:33:41Z DDEBUG timer: transaction test: 130 ms
+2019-10-29T16:33:41Z INFO Running transaction
+2019-10-29T16:33:41Z DDEBUG RPM transaction start.
+2019-10-29T16:33:44Z DDEBUG RPM transaction over.
+2019-10-29T16:33:44Z DDEBUG timer: verify transaction: 279 ms
+2019-10-29T16:33:44Z DDEBUG timer: transaction: 2792 ms
+2019-10-29T16:33:44Z DEBUG Completion plugin: Generating completion cache...
+2019-10-29T16:33:44Z INFO Installed products updated.
+2019-10-29T16:33:44Z INFO 
+Removed:
+  firewalld-0.7.0-5.el8.noarch                                                  
+  firewalld-filesystem-0.7.0-5.el8.noarch                                       
+  ipset-7.1-1.el8.x86_64                                                        
+  ipset-libs-7.1-1.el8.x86_64                                                   
+  iptables-1.8.2-16.el8.x86_64                                                  
+  iptables-ebtables-1.8.2-16.el8.x86_64                                         
+  libnetfilter_conntrack-1.0.6-5.el8.x86_64                                     
+  libnfnetlink-1.0.1-13.el8.x86_64                                              
+  libnftnl-1.1.1-4.el8.x86_64                                                   
+  nftables-1:0.9.0-14.el8.x86_64                                                
+  python3-firewall-0.7.0-5.el8.noarch                                           
+
+2019-10-29T16:33:44Z INFO Complete!
+2019-10-29T16:33:44Z DDEBUG Cleaning up.
+2019-10-29T16:33:45Z INFO --- logging initialized ---
+2019-10-29T16:33:45Z DDEBUG timer: config: 4 ms
+2019-10-29T16:33:45Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2019-10-29T16:33:45Z DEBUG DNF version: 4.2.7
+2019-10-29T16:33:45Z DDEBUG Command: dnf clean all 
+2019-10-29T16:33:45Z DDEBUG Installroot: /
+2019-10-29T16:33:45Z DDEBUG Releasever: 8
+2019-10-29T16:33:45Z DEBUG cachedir: /var/cache/dnf
+2019-10-29T16:33:45Z DDEBUG Base command: clean
+2019-10-29T16:33:45Z DDEBUG Extra commands: ['clean', 'all']
+2019-10-29T16:33:45Z DEBUG Cleaning data: dbcache packages metadata
+2019-10-29T16:33:45Z INFO 0 files removed
+2019-10-29T16:33:45Z DDEBUG Cleaning up.
+2020-03-04T02:45:11Z INFO --- logging initialized ---
+2020-03-04T02:45:11Z DDEBUG timer: config: 55 ms
+2020-03-04T02:45:12Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:45:12Z DEBUG DNF version: 4.2.7
+2020-03-04T02:45:12Z DDEBUG Command: yum remove -y cloud-init* 
+2020-03-04T02:45:12Z DDEBUG Installroot: /
+2020-03-04T02:45:12Z DDEBUG Releasever: 8
+2020-03-04T02:45:12Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:45:12Z DDEBUG Base command: remove
+2020-03-04T02:45:12Z DDEBUG Extra commands: ['remove', '-y', 'cloud-init*']
+2020-03-04T02:45:12Z DEBUG No module defaults found
+2020-03-04T02:45:12Z DDEBUG timer: sack setup: 364 ms
+2020-03-04T02:45:12Z DEBUG --> Starting dependency resolution
+2020-03-04T02:45:12Z DEBUG --> Finding unneeded leftover dependencies
+2020-03-04T02:45:12Z DEBUG ---> Package cloud-init.noarch 18.5-7.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package net-tools.x86_64 2.0-0.51.20160912git.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-babel.noarch 2.5.1-5.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-jinja2.noarch 2.10.1-2.el8_0 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-jsonpatch.noarch 1.21-2.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-jsonpointer.noarch 1.10-11.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-jwt.noarch 1.6.1-2.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-markupsafe.x86_64 0.23-19.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-oauthlib.noarch 2.1.0-1.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-prettytable.noarch 0.7.2-14.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-pyserial.noarch 3.1.1-8.el8 will be erased
+2020-03-04T02:45:12Z DEBUG ---> Package python3-pytz.noarch 2017.2-9.el8 will be erased
+2020-03-04T02:45:12Z DEBUG --> Finished dependency resolution
+2020-03-04T02:45:12Z DDEBUG timer: depsolve: 37 ms
+2020-03-04T02:45:12Z INFO Dependencies resolved.
+2020-03-04T02:45:12Z INFO ================================================================================
+ Package              Arch    Version                   Repository         Size
+================================================================================
+Removing:
+ cloud-init           noarch  18.5-7.el8                @koji-override-1  2.7 M
+Removing unused dependencies:
+ net-tools            x86_64  2.0-0.51.20160912git.el8  @anaconda         1.0 M
+ python3-babel        noarch  2.5.1-5.el8               @koji-override-1   20 M
+ python3-jinja2       noarch  2.10.1-2.el8_0            @koji-override-1  2.5 M
+ python3-jsonpatch    noarch  1.21-2.el8                @koji-override-1   55 k
+ python3-jsonpointer  noarch  1.10-11.el8               @koji-override-1   32 k
+ python3-jwt          noarch  1.6.1-2.el8               @anaconda          88 k
+ python3-markupsafe   x86_64  0.23-19.el8               @koji-override-1   76 k
+ python3-oauthlib     noarch  2.1.0-1.el8               @anaconda         737 k
+ python3-prettytable  noarch  0.7.2-14.el8              @koji-override-1  167 k
+ python3-pyserial     noarch  3.1.1-8.el8               @koji-override-1  672 k
+ python3-pytz         noarch  2017.2-9.el8              @koji-override-1  175 k
+
+Transaction Summary
+================================================================================
+Remove  12 Packages
+
+2020-03-04T02:45:12Z INFO Freed space: 28 M
+2020-03-04T02:45:12Z INFO Running transaction check
+2020-03-04T02:45:12Z INFO Transaction check succeeded.
+2020-03-04T02:45:12Z INFO Running transaction test
+2020-03-04T02:45:13Z INFO Transaction test succeeded.
+2020-03-04T02:45:13Z DDEBUG timer: transaction test: 182 ms
+2020-03-04T02:45:13Z INFO Running transaction
+2020-03-04T02:45:13Z DDEBUG RPM transaction start.
+2020-03-04T02:45:13Z DDEBUG RPM transaction over.
+2020-03-04T02:45:14Z DDEBUG timer: verify transaction: 102 ms
+2020-03-04T02:45:14Z DDEBUG timer: transaction: 942 ms
+2020-03-04T02:45:14Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:45:14Z INFO 
+Removed:
+  cloud-init-18.5-7.el8.noarch        net-tools-2.0-0.51.20160912git.el8.x86_64
+  python3-babel-2.5.1-5.el8.noarch    python3-jinja2-2.10.1-2.el8_0.noarch     
+  python3-jsonpatch-1.21-2.el8.noarch python3-jsonpointer-1.10-11.el8.noarch   
+  python3-jwt-1.6.1-2.el8.noarch      python3-markupsafe-0.23-19.el8.x86_64    
+  python3-oauthlib-2.1.0-1.el8.noarch python3-prettytable-0.7.2-14.el8.noarch  
+  python3-pyserial-3.1.1-8.el8.noarch python3-pytz-2017.2-9.el8.noarch         
+
+2020-03-04T02:45:14Z INFO Complete!
+2020-03-04T02:45:14Z DDEBUG Cleaning up.
+2020-03-04T02:48:20Z INFO --- logging initialized ---
+2020-03-04T02:48:20Z DDEBUG timer: config: 2 ms
+2020-03-04T02:48:20Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:48:20Z DEBUG DNF version: 4.2.7
+2020-03-04T02:48:20Z DDEBUG Command: dnf -y -e 0 install dnf-utils 
+2020-03-04T02:48:20Z DDEBUG Installroot: /
+2020-03-04T02:48:20Z DDEBUG Releasever: 8
+2020-03-04T02:48:20Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:48:20Z DDEBUG Base command: install
+2020-03-04T02:48:20Z DDEBUG Extra commands: ['-y', '-e', '0', 'install', 'dnf-utils']
+2020-03-04T02:48:20Z DEBUG repo: downloading from remote: rhos-release
+2020-03-04T02:48:21Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 01:27:47 PM EST.
+2020-03-04T02:48:21Z DEBUG repo: downloading from remote: rhos-release-extras
+2020-03-04T02:48:21Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 08:14:18 AM EDT.
+2020-03-04T02:48:21Z DEBUG No module defaults found
+2020-03-04T02:48:21Z DDEBUG timer: sack setup: 1475 ms
+2020-03-04T02:48:21Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:48:21Z INFO Package yum-utils-4.0.8-3.el8.noarch is already installed.
+2020-03-04T02:48:21Z DEBUG --> Starting dependency resolution
+2020-03-04T02:48:21Z DEBUG --> Finished dependency resolution
+2020-03-04T02:48:21Z DDEBUG timer: depsolve: 5 ms
+2020-03-04T02:48:21Z INFO Dependencies resolved.
+2020-03-04T02:48:21Z INFO Nothing to do.
+2020-03-04T02:48:21Z INFO Complete!
+2020-03-04T02:48:21Z DDEBUG Cleaning up.
+2020-03-04T02:48:23Z INFO --- logging initialized ---
+2020-03-04T02:48:23Z DDEBUG timer: config: 1 ms
+2020-03-04T02:48:23Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:48:23Z DEBUG DNF version: 4.2.7
+2020-03-04T02:48:23Z DDEBUG Command: dnf -y module disable virt:rhel 
+2020-03-04T02:48:23Z DDEBUG Installroot: /
+2020-03-04T02:48:23Z DDEBUG Releasever: 8
+2020-03-04T02:48:23Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:48:23Z DDEBUG Base command: module
+2020-03-04T02:48:23Z DDEBUG Extra commands: ['-y', 'module', 'disable', 'virt:rhel']
+2020-03-04T02:48:24Z DEBUG repo: downloading from remote: rhelosp-16.0
+2020-03-04T02:48:25Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 02:10:59 PM EST.
+2020-03-04T02:48:25Z DEBUG repo: downloading from remote: rhelosp-16.0-image-build-override
+2020-03-04T02:48:26Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 10:18:29 AM EDT.
+2020-03-04T02:48:26Z DEBUG repo: downloading from remote: rhelosp-ceph-4-mon
+2020-03-04T02:48:26Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:48:26Z DEBUG repo: downloading from remote: rhelosp-ceph-4-tools
+2020-03-04T02:48:27Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 12:03:34 PM EST.
+2020-03-04T02:48:27Z DEBUG repo: downloading from remote: rhelosp-ceph-4.0-mon-pending
+2020-03-04T02:48:28Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 10:50:10 AM EST.
+2020-03-04T02:48:28Z DEBUG repo: downloading from remote: rhelosp-ceph-4.0-tools-pending
+2020-03-04T02:48:29Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:48:29Z DEBUG repo: downloading from remote: rhelosp-ceph-4-osd
+2020-03-04T02:48:29Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:48:29Z DEBUG repo: downloading from remote: rhelosp-ceph-4.0-osd-pending
+2020-03-04T02:48:30Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:48:30Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-baseos
+2020-03-04T02:48:41Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 10:31:54 AM EST.
+2020-03-04T02:48:41Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-appstream
+2020-03-04T02:48:55Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 08:31:04 AM EST.
+2020-03-04T02:48:55Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-ha
+2020-03-04T02:48:59Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 12:35:31 AM EST.
+2020-03-04T02:48:59Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-av
+2020-03-04T02:49:01Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 01:50:54 PM EST.
+2020-03-04T02:49:01Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-ansible
+2020-03-04T02:49:04Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 11:44:14 AM EST.
+2020-03-04T02:49:04Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-fdp
+2020-03-04T02:49:06Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Tue 21 Jan 2020 11:02:20 PM EST.
+2020-03-04T02:49:06Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-image-build-override
+2020-03-04T02:49:07Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 07:48:28 AM EDT.
+2020-03-04T02:49:07Z DEBUG repo: using cache for: rhos-release
+2020-03-04T02:49:07Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 01:27:47 PM EST.
+2020-03-04T02:49:07Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T02:49:07Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 08:14:18 AM EDT.
+2020-03-04T02:49:08Z DDEBUG timer: sack setup: 44793 ms
+2020-03-04T02:49:08Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:49:08Z INFO Only module name is required. Ignoring unneeded information in argument: 'virt:rhel'
+2020-03-04T02:49:08Z DEBUG --> Starting dependency resolution
+2020-03-04T02:49:09Z DEBUG --> Finished dependency resolution
+2020-03-04T02:49:09Z DDEBUG timer: depsolve: 208 ms
+2020-03-04T02:49:09Z INFO Dependencies resolved.
+2020-03-04T02:49:09Z INFO ================================================================================
+ Package           Architecture     Version             Repository         Size
+================================================================================
+Disabling modules:
+ virt                                                                          
+
+Transaction Summary
+================================================================================
+
+2020-03-04T02:49:09Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:49:09Z INFO Complete!
+2020-03-04T02:49:09Z DDEBUG Cleaning up.
+2020-03-04T02:49:09Z INFO --- logging initialized ---
+2020-03-04T02:49:09Z DDEBUG timer: config: 2 ms
+2020-03-04T02:49:09Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:49:09Z DEBUG DNF version: 4.2.7
+2020-03-04T02:49:09Z DDEBUG Command: dnf -y module enable virt:8.1 
+2020-03-04T02:49:09Z DDEBUG Installroot: /
+2020-03-04T02:49:09Z DDEBUG Releasever: 8
+2020-03-04T02:49:09Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:49:09Z DDEBUG Base command: module
+2020-03-04T02:49:09Z DDEBUG Extra commands: ['-y', 'module', 'enable', 'virt:8.1']
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T02:49:09Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 02:10:59 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T02:49:09Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 10:18:29 AM EDT.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 12:03:34 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 10:50:10 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T02:49:09Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 10:31:54 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 08:31:04 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 12:35:31 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 01:50:54 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 11:44:14 AM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Tue 21 Jan 2020 11:02:20 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T02:49:09Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 07:48:28 AM EDT.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhos-release
+2020-03-04T02:49:09Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 01:27:47 PM EST.
+2020-03-04T02:49:09Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T02:49:09Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 08:14:18 AM EDT.
+2020-03-04T02:49:09Z INFO Last metadata expiration check: 0:00:03 ago on Tue 03 Mar 2020 09:49:06 PM EST.
+2020-03-04T02:49:10Z DDEBUG timer: sack setup: 598 ms
+2020-03-04T02:49:10Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:49:10Z DEBUG --> Starting dependency resolution
+2020-03-04T02:49:11Z DEBUG --> Finished dependency resolution
+2020-03-04T02:49:11Z DDEBUG timer: depsolve: 207 ms
+2020-03-04T02:49:11Z INFO Dependencies resolved.
+2020-03-04T02:49:11Z INFO ================================================================================
+ Package           Architecture     Version             Repository         Size
+================================================================================
+Enabling module streams:
+ virt                               8.1                                        
+
+Transaction Summary
+================================================================================
+
+2020-03-04T02:49:11Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:49:11Z INFO Complete!
+2020-03-04T02:49:11Z DDEBUG Cleaning up.
+2020-03-04T02:49:11Z INFO --- logging initialized ---
+2020-03-04T02:49:11Z DDEBUG timer: config: 1 ms
+2020-03-04T02:49:11Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:49:11Z DEBUG DNF version: 4.2.7
+2020-03-04T02:49:11Z DDEBUG Command: dnf -y -e 0 install dnf-utils 
+2020-03-04T02:49:11Z DDEBUG Installroot: /
+2020-03-04T02:49:11Z DDEBUG Releasever: 8
+2020-03-04T02:49:11Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:49:11Z DDEBUG Base command: install
+2020-03-04T02:49:11Z DDEBUG Extra commands: ['-y', '-e', '0', 'install', 'dnf-utils']
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T02:49:11Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 02:10:59 PM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T02:49:11Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 10:18:29 AM EDT.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 12:03:34 PM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 10:50:10 AM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:49:11Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T02:49:11Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:49:12Z DEBUG reviving: 'rhosp-rhel-8.1-baseos' can be revived - repomd matches.
+2020-03-04T02:49:12Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 10:31:54 AM EST.
+2020-03-04T02:49:12Z DEBUG reviving: 'rhosp-rhel-8.1-appstream' can be revived - repomd matches.
+2020-03-04T02:49:12Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 08:31:04 AM EST.
+2020-03-04T02:49:12Z DEBUG reviving: 'rhosp-rhel-8.1-ha' can be revived - repomd matches.
+2020-03-04T02:49:12Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 12:35:31 AM EST.
+2020-03-04T02:49:13Z DEBUG reviving: 'rhosp-rhel-8.1-av' can be revived - repomd matches.
+2020-03-04T02:49:13Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 01:50:54 PM EST.
+2020-03-04T02:49:13Z DEBUG reviving: 'rhosp-rhel-8.1-ansible' can be revived - repomd matches.
+2020-03-04T02:49:13Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 11:44:14 AM EST.
+2020-03-04T02:49:14Z DEBUG reviving: 'rhosp-rhel-8.1-fdp' can be revived - repomd matches.
+2020-03-04T02:49:14Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Tue 21 Jan 2020 11:02:20 PM EST.
+2020-03-04T02:49:14Z DEBUG repo: downloading from remote: rhosp-rhel-8.1-image-build-override
+2020-03-04T02:49:15Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 07:48:28 AM EDT.
+2020-03-04T02:49:15Z DEBUG repo: using cache for: rhos-release
+2020-03-04T02:49:15Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 01:27:47 PM EST.
+2020-03-04T02:49:15Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T02:49:15Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 08:14:18 AM EDT.
+2020-03-04T02:49:15Z DDEBUG timer: sack setup: 3962 ms
+2020-03-04T02:49:15Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:49:15Z INFO Package yum-utils-4.0.8-3.el8.noarch is already installed.
+2020-03-04T02:49:15Z DEBUG --> Starting dependency resolution
+2020-03-04T02:49:15Z DEBUG --> Finished dependency resolution
+2020-03-04T02:49:15Z DDEBUG timer: depsolve: 208 ms
+2020-03-04T02:49:15Z INFO Dependencies resolved.
+2020-03-04T02:49:15Z INFO Nothing to do.
+2020-03-04T02:49:15Z INFO Complete!
+2020-03-04T02:49:15Z DDEBUG Cleaning up.
+2020-03-04T02:49:21Z INFO --- logging initialized ---
+2020-03-04T02:49:21Z DDEBUG timer: config: 2 ms
+2020-03-04T02:49:21Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:49:21Z DEBUG DNF version: 4.2.7
+2020-03-04T02:49:21Z DDEBUG Command: yum clean all 
+2020-03-04T02:49:21Z DDEBUG Installroot: /
+2020-03-04T02:49:21Z DDEBUG Releasever: 8
+2020-03-04T02:49:21Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:49:21Z DDEBUG Base command: clean
+2020-03-04T02:49:21Z DDEBUG Extra commands: ['clean', 'all']
+2020-03-04T02:49:21Z DEBUG Cleaning data: metadata packages dbcache
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-updateinfo.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp.solv
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-filenames.solvx
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-60152f3a2a9e2c61/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-60152f3a2a9e2c61/repodata/7439a073033cf1f9c4bf3736f91ec574c1fc140c056f128c2b31af093884cbfc-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-60152f3a2a9e2c61/repodata/1444570cf5696617e20d757d897320a5f0bc229ca88983afedf977057e6d7eb0-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-2bc8caaa3e8f07c1/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-2bc8caaa3e8f07c1/repodata/401dc19bda88c82c403423fb835844d64345f7e95f5b9835888189c03834cc93-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-2bc8caaa3e8f07c1/repodata/dabe2ce5481d23de1f4f52bdcfee0f9af98316c9e0de2ce8123adeefa0dd08b9-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/77e56a3168b5fde36e37243e6d804fab774af0a43ea06177cd58d093ee843987-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/294420c30c752ace2a631ba0bf1ebfffc5f91d52f73155776d024f47042c70f6-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/5892250ddaab85b5ad44b507feccb72d24365a7d31e18367e09ea8f8809f14e3-comps-OpenStack.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/401dc19bda88c82c403423fb835844d64345f7e95f5b9835888189c03834cc93-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/dabe2ce5481d23de1f4f52bdcfee0f9af98316c9e0de2ce8123adeefa0dd08b9-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/c8baea69af8c30294050588235966b7a27d27c016f719e09bf1568319e9f6a51-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/20d878984e4c110462ba6af071d2f3cb86e72216e0c538e2824837b556ea344e-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/09dbad6904abf5665e0737f62c21e8d3071a88efb419eb7b8f8e775cbe2f80d4-comps-MON.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/17b7d5afc66ff336d69cca86cf14b58ef553ff030778d6dd0b05d99f16826b89-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/8c0b3ee7c78674716c85841640141172d4404b5ea3c05b9ebcce9504036bdcfc-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/df7111cd1d479d07580e1f7c0025f9c9c1fe6e25bb4e9a4f2c265b0b985f6bf4-comps-Tools.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/7e6a4969a4d68aff4ca3eb031a295861dcd7f8c85e0b01f6cf76476fb804cc39-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/9638c2e6a43336e10855cb8c6c3d23f55379bf2f6c9dad49b14c681f679bd482-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/09dbad6904abf5665e0737f62c21e8d3071a88efb419eb7b8f8e775cbe2f80d4-comps-MON.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/1e162b714aa26632ff45438e9598033ab9dc48a5c53ed6c501e05ba52066854a-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/1f67a6a5f2a7fd36dcc6c837d7138cda7a366c96c0a80686501528fd6db1bb95-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/df7111cd1d479d07580e1f7c0025f9c9c1fe6e25bb4e9a4f2c265b0b985f6bf4-comps-Tools.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-2987729ebd95da96/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-2987729ebd95da96/repodata/e1f2de31c79470a0daa27a09f706122df51b9ac72ad8ca0588373c69ab9a87e4-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-2987729ebd95da96/repodata/0ab5d201ffdb7f62d51f8073fd3e014b204e549db42cba868f5dfe13a4035e2c-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-2987729ebd95da96/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-2987729ebd95da96/repodata/7ff3b2d507c074403f2ae85937ddd47d55b9abed65012f1bd8ec215e34cd7a1c-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/c4b150fa237a4a0a14936553d986494d183dd3605bcea772a1e761217c519191-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/ccd0af25f88aa4748608964523e3c1b917c863e07bc9a9171823c9a6f5da4079-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/563bca626de288aef1e30584e45575b83a09224f9d68ac6fed3c6e7c67b0ff1b-comps-OSD.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/c3b6d1db20e3592655d7a07573a862b2cbaf6cfeff701604840f59d7f0ca5050-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/754647963f73f938ffbe1351b3a64c2f87db96d802e59f2afa82b9bca6e672bc-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/563bca626de288aef1e30584e45575b83a09224f9d68ac6fed3c6e7c67b0ff1b-comps-OSD.x86_64.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8530d953e6751752/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8530d953e6751752/repodata/9b034ca8fec7e4dbb131f3e9d4ec21f11b3f54f58c64315f94466bc0689d93b8-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8530d953e6751752/repodata/5e85ac7b9879cf5aae2c4612213fc32d4bb55d37b85f83e21bd8497540ee66a5-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8530d953e6751752/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8530d953e6751752/repodata/fbd0a37fe1483491e42b0f8804f136eb92717709548c8c3763c04f692f0258c6-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-bbc764c499f06c7f/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-bbc764c499f06c7f/repodata/498c4beb1d2d0fbc02c7fb2564f6101903a409529db7f06172660b68bcb1c476-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-bbc764c499f06c7f/repodata/a67a682b8a7822d14d302d4eb085be4f6695c2c63b6d1910bbc5cc492da3de84-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-bbc764c499f06c7f/repodata/14bf1723a9863d976795269cf0c50149d114d251e6fa90c0a03d9a0229061cf4-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-bbc764c499f06c7f/repodata/f62e6e266a3e38d43f2ee605f24a654f671ebd4460323376b5e6bb6e8800d051-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-aef7d6037490e332/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-aef7d6037490e332/repodata/14590c4dae2f22d6f82fe162d855f0864d61b82bb3330c57cc711f07fb5a708b-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-aef7d6037490e332/repodata/0344be9ea0c62e784ef116a61aee5ceb425d636810c69f292f6812eb490676a8-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-aef7d6037490e332/repodata/aee6016df8ddce215d578834f8746f360c6b63094cfd450256cf0d607369d4bf-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-aef7d6037490e332/repodata/7285b7345591efcfca9233c294aeaa05e68f0c5d8fa1a1474baad41dc7193852-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-1dcca0461ffab828/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-1dcca0461ffab828/repodata/75b045a1e28e9edafac221df69dc6208ceceee908dc7a23c50c52780601ebb1b-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-1dcca0461ffab828/repodata/6b2913c96f4cbc85b09d07b80d77735f4ef158e5cd4735a5ee2defb0a0dbfb98-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-1dcca0461ffab828/repodata/2b4ec451e7adb968ea936d2cb0ff6c2f9949d80547acbb60354ce9a505b2e85f-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-1dcca0461ffab828/repodata/40bd54c3fcd7995c812196bf8a1f3557ea6e5a8ac21d0ec097b2b7894c68825d-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-b9ab7e21fa08f01d/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-b9ab7e21fa08f01d/repodata/be38188ee536021571870eb77007542556e88adf5ba30e8cd4c5a1881d3b986b-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-b9ab7e21fa08f01d/repodata/02b13b245069cf592dbb7f7cd30b625095a1ba8fff51d8fd312e3ee6e62180bf-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-b9ab7e21fa08f01d/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-b9ab7e21fa08f01d/repodata/1cdc45e908e911775eede53f61845e661a0fa2d36923cd4574d1666bac5ec376-updateinfo.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-8906e3b0c2787592/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-8906e3b0c2787592/repodata/03f30271c888c83eb7fcfec1cd26a733c4e39eb3a2f9a430c09ae9302d966a61-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-8906e3b0c2787592/repodata/4929cc0d3d718d36dc15e834a5f31be0898596a59e4d3f8bac924e5c189923aa-primary.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/repomd.xml
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/03f30271c888c83eb7fcfec1cd26a733c4e39eb3a2f9a430c09ae9302d966a61-filelists.xml.gz
+2020-03-04T02:49:21Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/4929cc0d3d718d36dc15e834a5f31be0898596a59e4d3f8bac924e5c189923aa-primary.xml.gz
+2020-03-04T02:49:21Z INFO 113 files removed
+2020-03-04T02:49:21Z DDEBUG Cleaning up.
+2020-03-04T02:50:58Z INFO --- logging initialized ---
+2020-03-04T02:50:58Z DDEBUG timer: config: 2 ms
+2020-03-04T02:50:58Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:50:58Z DEBUG DNF version: 4.2.7
+2020-03-04T02:50:58Z DDEBUG Command: yum -d 7 repolist 
+2020-03-04T02:50:58Z DDEBUG Installroot: /
+2020-03-04T02:50:58Z DDEBUG Releasever: 8
+2020-03-04T02:50:58Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:50:58Z DDEBUG Base command: repolist
+2020-03-04T02:50:58Z DDEBUG Extra commands: ['-d', '7', 'repolist']
+2020-03-04T02:50:58Z DEBUG reviving: 'rhelosp-16.0' can be revived - repomd matches.
+2020-03-04T02:50:58Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 02:10:59 PM EST.
+2020-03-04T02:50:59Z DEBUG reviving: 'rhelosp-16.0-image-build-override' can be revived - repomd matches.
+2020-03-04T02:50:59Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 10:18:29 AM EDT.
+2020-03-04T02:50:59Z DEBUG reviving: 'rhelosp-ceph-4-mon' can be revived - repomd matches.
+2020-03-04T02:50:59Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:50:59Z DEBUG reviving: 'rhelosp-ceph-4-tools' can be revived - repomd matches.
+2020-03-04T02:50:59Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 12:03:34 PM EST.
+2020-03-04T02:51:00Z DEBUG reviving: 'rhelosp-ceph-4.0-mon-pending' can be revived - repomd matches.
+2020-03-04T02:51:00Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 10:50:10 AM EST.
+2020-03-04T02:51:00Z DEBUG reviving: 'rhelosp-ceph-4.0-tools-pending' can be revived - repomd matches.
+2020-03-04T02:51:00Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:51:01Z DEBUG reviving: 'rhelosp-ceph-4-osd' can be revived - repomd matches.
+2020-03-04T02:51:01Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:51:01Z DEBUG reviving: 'rhelosp-ceph-4.0-osd-pending' can be revived - repomd matches.
+2020-03-04T02:51:01Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:51:01Z DEBUG reviving: 'rhosp-rhel-8.1-baseos' can be revived - repomd matches.
+2020-03-04T02:51:01Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 10:31:54 AM EST.
+2020-03-04T02:51:02Z DEBUG reviving: 'rhosp-rhel-8.1-appstream' can be revived - repomd matches.
+2020-03-04T02:51:02Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 08:31:04 AM EST.
+2020-03-04T02:51:02Z DEBUG reviving: 'rhosp-rhel-8.1-ha' can be revived - repomd matches.
+2020-03-04T02:51:02Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 12:35:31 AM EST.
+2020-03-04T02:51:03Z DEBUG reviving: 'rhosp-rhel-8.1-av' can be revived - repomd matches.
+2020-03-04T02:51:03Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 01:50:54 PM EST.
+2020-03-04T02:51:03Z DEBUG reviving: 'rhosp-rhel-8.1-ansible' can be revived - repomd matches.
+2020-03-04T02:51:03Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 11:44:14 AM EST.
+2020-03-04T02:51:03Z DEBUG reviving: 'rhosp-rhel-8.1-fdp' can be revived - repomd matches.
+2020-03-04T02:51:03Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Tue 21 Jan 2020 11:02:20 PM EST.
+2020-03-04T02:51:04Z DEBUG reviving: 'rhosp-rhel-8.1-image-build-override' can be revived - repomd matches.
+2020-03-04T02:51:04Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 07:48:28 AM EDT.
+2020-03-04T02:51:04Z DEBUG reviving: 'rhos-release' can be revived - repomd matches.
+2020-03-04T02:51:04Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 01:27:47 PM EST.
+2020-03-04T02:51:05Z DEBUG reviving: 'rhos-release-extras' can be revived - repomd matches.
+2020-03-04T02:51:05Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 08:14:18 AM EDT.
+2020-03-04T02:51:05Z DDEBUG timer: sack setup: 7323 ms
+2020-03-04T02:51:05Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T02:51:05Z DEBUG Total packages: 13,403
+2020-03-04T02:51:05Z DDEBUG Cleaning up.
+2020-03-04T02:56:31Z INFO --- logging initialized ---
+2020-03-04T02:56:31Z DDEBUG timer: config: 14 ms
+2020-03-04T02:56:32Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T02:56:32Z DEBUG DNF version: 4.2.7
+2020-03-04T02:56:32Z DDEBUG Command: dnf makecache --timer 
+2020-03-04T02:56:32Z DDEBUG Installroot: /
+2020-03-04T02:56:32Z DDEBUG Releasever: 8
+2020-03-04T02:56:32Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T02:56:32Z DDEBUG Base command: makecache
+2020-03-04T02:56:32Z DDEBUG Extra commands: ['makecache', '--timer']
+2020-03-04T02:56:32Z DEBUG Making cache files for all metadata files.
+2020-03-04T02:56:32Z INFO Failed determining last makecache time.
+2020-03-04T02:56:32Z DEBUG rhelosp-16.0: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-16.0-image-build-override: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4-mon: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4-tools: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4.0-mon-pending: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4.0-tools-pending: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4-osd: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhelosp-ceph-4.0-osd-pending: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-baseos: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-appstream: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-ha: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-av: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-ansible: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-fdp: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhosp-rhel-8.1-image-build-override: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhos-release: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG rhos-release-extras: has expired and will be refreshed.
+2020-03-04T02:56:32Z DEBUG reviving: 'rhelosp-16.0' can be revived - repomd matches.
+2020-03-04T02:56:32Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 02:10:59 PM EST.
+2020-03-04T02:56:33Z DEBUG reviving: 'rhelosp-16.0-image-build-override' can be revived - repomd matches.
+2020-03-04T02:56:33Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 10:18:29 AM EDT.
+2020-03-04T02:56:33Z DEBUG reviving: 'rhelosp-ceph-4-mon' can be revived - repomd matches.
+2020-03-04T02:56:33Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:56:33Z DEBUG reviving: 'rhelosp-ceph-4-tools' can be revived - repomd matches.
+2020-03-04T02:56:33Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 12:03:34 PM EST.
+2020-03-04T02:56:34Z DEBUG reviving: 'rhelosp-ceph-4.0-mon-pending' can be revived - repomd matches.
+2020-03-04T02:56:34Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 10:50:10 AM EST.
+2020-03-04T02:56:34Z DEBUG reviving: 'rhelosp-ceph-4.0-tools-pending' can be revived - repomd matches.
+2020-03-04T02:56:34Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T02:56:34Z DEBUG reviving: 'rhelosp-ceph-4-osd' can be revived - repomd matches.
+2020-03-04T02:56:34Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 12:03:33 PM EST.
+2020-03-04T02:56:35Z DEBUG reviving: 'rhelosp-ceph-4.0-osd-pending' can be revived - repomd matches.
+2020-03-04T02:56:35Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 10:50:11 AM EST.
+2020-03-04T03:06:47Z INFO --- logging initialized ---
+2020-03-04T03:06:47Z DDEBUG timer: config: 3 ms
+2020-03-04T03:06:48Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:06:48Z DEBUG DNF version: 4.2.7
+2020-03-04T03:06:48Z DDEBUG Command: dnf makecache --timer 
+2020-03-04T03:06:48Z DDEBUG Installroot: /
+2020-03-04T03:06:48Z DDEBUG Releasever: 8
+2020-03-04T03:06:48Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:06:48Z DDEBUG Base command: makecache
+2020-03-04T03:06:48Z DDEBUG Extra commands: ['makecache', '--timer']
+2020-03-04T03:06:48Z DEBUG Making cache files for all metadata files.
+2020-03-04T03:06:48Z INFO Failed determining last makecache time.
+2020-03-04T03:06:48Z DEBUG rhelosp-16.0: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-16.0-image-build-override: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4-mon: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4-tools: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4.0-mon-pending: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4.0-tools-pending: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4-osd: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhelosp-ceph-4.0-osd-pending: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-baseos: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-appstream: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-ha: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-av: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-ansible: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-fdp: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhosp-rhel-8.1-image-build-override: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhos-release: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG rhos-release-extras: has expired and will be refreshed.
+2020-03-04T03:06:48Z DEBUG reviving: 'rhelosp-16.0' can be revived - repomd matches.
+2020-03-04T03:06:48Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 07:10:59 PM UTC.
+2020-03-04T03:06:48Z DEBUG reviving: 'rhelosp-16.0-image-build-override' can be revived - repomd matches.
+2020-03-04T03:06:48Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 02:18:29 PM UTC.
+2020-03-04T03:06:49Z DEBUG reviving: 'rhelosp-ceph-4-mon' can be revived - repomd matches.
+2020-03-04T03:06:49Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:06:49Z DEBUG reviving: 'rhelosp-ceph-4-tools' can be revived - repomd matches.
+2020-03-04T03:06:49Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 05:03:34 PM UTC.
+2020-03-04T03:06:50Z DEBUG reviving: 'rhelosp-ceph-4.0-mon-pending' can be revived - repomd matches.
+2020-03-04T03:06:50Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 03:50:10 PM UTC.
+2020-03-04T03:06:50Z DEBUG reviving: 'rhelosp-ceph-4.0-tools-pending' can be revived - repomd matches.
+2020-03-04T03:06:50Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:06:50Z DEBUG reviving: 'rhelosp-ceph-4-osd' can be revived - repomd matches.
+2020-03-04T03:06:50Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:06:51Z DEBUG reviving: 'rhelosp-ceph-4.0-osd-pending' can be revived - repomd matches.
+2020-03-04T03:06:51Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:06:51Z DEBUG reviving: 'rhosp-rhel-8.1-baseos' can be revived - repomd matches.
+2020-03-04T03:06:51Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 03:31:54 PM UTC.
+2020-03-04T03:06:51Z DEBUG reviving: 'rhosp-rhel-8.1-appstream' can be revived - repomd matches.
+2020-03-04T03:06:52Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 01:31:04 PM UTC.
+2020-03-04T03:06:52Z DEBUG reviving: 'rhosp-rhel-8.1-ha' can be revived - repomd matches.
+2020-03-04T03:06:52Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 05:35:31 AM UTC.
+2020-03-04T03:06:52Z DEBUG reviving: 'rhosp-rhel-8.1-av' can be revived - repomd matches.
+2020-03-04T03:06:52Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 06:50:54 PM UTC.
+2020-03-04T03:06:53Z DEBUG reviving: 'rhosp-rhel-8.1-ansible' can be revived - repomd matches.
+2020-03-04T03:06:53Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 04:44:14 PM UTC.
+2020-03-04T03:06:53Z DEBUG reviving: 'rhosp-rhel-8.1-fdp' can be revived - repomd matches.
+2020-03-04T03:06:53Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed 22 Jan 2020 04:02:20 AM UTC.
+2020-03-04T03:06:54Z DEBUG reviving: 'rhosp-rhel-8.1-image-build-override' can be revived - repomd matches.
+2020-03-04T03:06:54Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 11:48:28 AM UTC.
+2020-03-04T03:06:54Z DEBUG reviving: 'rhos-release' can be revived - repomd matches.
+2020-03-04T03:06:54Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 06:27:47 PM UTC.
+2020-03-04T03:06:54Z DEBUG reviving: 'rhos-release-extras' can be revived - repomd matches.
+2020-03-04T03:06:54Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 12:14:18 PM UTC.
+2020-03-04T03:06:55Z DDEBUG timer: sack setup: 7308 ms
+2020-03-04T03:06:55Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:06:55Z INFO Metadata cache created.
+2020-03-04T03:06:55Z DDEBUG Cleaning up.
+2020-03-04T03:09:01Z INFO --- logging initialized ---
+2020-03-04T03:09:01Z DDEBUG timer: config: 2 ms
+2020-03-04T03:09:02Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:09:02Z DEBUG DNF version: 4.2.7
+2020-03-04T03:09:02Z DDEBUG Command: dnf -d 0 -e 1 -y install certmonger 
+2020-03-04T03:09:02Z DDEBUG Installroot: /
+2020-03-04T03:09:02Z DDEBUG Releasever: 8
+2020-03-04T03:09:02Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:09:02Z DDEBUG Base command: install
+2020-03-04T03:09:02Z DDEBUG Extra commands: ['-d', '0', '-e', '1', '-y', 'install', 'certmonger']
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T03:09:02Z DEBUG rhelosp-16.0: using metadata from Wed Feb 26 19:10:59 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T03:09:02Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri Apr 12 14:18:29 2019.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed Jan 29 17:03:34 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon Mar  2 15:50:10 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T03:09:02Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu Feb 27 15:31:54 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue Feb 25 13:31:04 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue Feb 25 05:35:31 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed Feb 19 18:50:54 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu Jan 23 16:44:14 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed Jan 22 04:02:20 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T03:09:02Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu Apr  4 11:48:28 2019.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhos-release
+2020-03-04T03:09:02Z DEBUG rhos-release: using metadata from Mon Mar  2 18:27:47 2020.
+2020-03-04T03:09:02Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T03:09:02Z DEBUG rhos-release-extras: using metadata from Thu May 23 12:14:18 2019.
+2020-03-04T03:09:02Z INFO Last metadata expiration check: 0:02:08 ago on Wed Mar  4 03:06:54 2020.
+2020-03-04T03:09:02Z DDEBUG timer: sack setup: 849 ms
+2020-03-04T03:09:02Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:03Z DEBUG --> Starting dependency resolution
+2020-03-04T03:09:03Z DEBUG ---> Package xmlrpc-c-client.x86_64 1.51.0-5.el8 will be installed
+2020-03-04T03:09:03Z DEBUG ---> Package xmlrpc-c.x86_64 1.51.0-5.el8 will be installed
+2020-03-04T03:09:03Z DEBUG ---> Package certmonger.x86_64 0.79.7-3.el8 will be installed
+2020-03-04T03:09:03Z DEBUG --> Finished dependency resolution
+2020-03-04T03:09:03Z DDEBUG timer: depsolve: 259 ms
+2020-03-04T03:09:03Z INFO Dependencies resolved.
+2020-03-04T03:09:03Z INFO ================================================================================
+ Package            Arch      Version         Repository                   Size
+================================================================================
+Installing:
+ certmonger         x86_64    0.79.7-3.el8    rhosp-rhel-8.1-appstream    656 k
+Installing dependencies:
+ xmlrpc-c-client    x86_64    1.51.0-5.el8    rhosp-rhel-8.1-baseos        40 k
+ xmlrpc-c           x86_64    1.51.0-5.el8    rhosp-rhel-8.1-baseos       212 k
+
+Transaction Summary
+================================================================================
+Install  3 Packages
+
+2020-03-04T03:09:03Z INFO Total download size: 908 k
+2020-03-04T03:09:03Z INFO Installed size: 4.0 M
+2020-03-04T03:09:03Z INFO Downloading Packages:
+2020-03-04T03:09:03Z INFO --------------------------------------------------------------------------------
+2020-03-04T03:09:03Z INFO Total                                           2.0 MB/s | 908 kB     00:00     
+2020-03-04T03:09:03Z INFO Running transaction check
+2020-03-04T03:09:03Z INFO Transaction check succeeded.
+2020-03-04T03:09:03Z INFO Running transaction test
+2020-03-04T03:09:03Z INFO Transaction test succeeded.
+2020-03-04T03:09:03Z DDEBUG timer: transaction test: 122 ms
+2020-03-04T03:09:03Z INFO Running transaction
+2020-03-04T03:09:03Z DDEBUG RPM transaction start.
+2020-03-04T03:09:04Z DDEBUG RPM transaction over.
+2020-03-04T03:09:04Z DDEBUG timer: verify transaction: 211 ms
+2020-03-04T03:09:04Z DDEBUG timer: transaction: 956 ms
+2020-03-04T03:09:04Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:05Z INFO 
+Installed:
+  certmonger-0.79.7-3.el8.x86_64       xmlrpc-c-client-1.51.0-5.el8.x86_64      
+  xmlrpc-c-1.51.0-5.el8.x86_64        
+
+2020-03-04T03:09:05Z INFO Complete!
+2020-03-04T03:09:05Z DDEBUG Cleaning up.
+2020-03-04T03:09:05Z DDEBUG /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/certmonger-0.79.7-3.el8.x86_64.rpm removed
+2020-03-04T03:09:05Z DDEBUG /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/xmlrpc-c-client-1.51.0-5.el8.x86_64.rpm removed
+2020-03-04T03:09:05Z DDEBUG /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/xmlrpc-c-1.51.0-5.el8.x86_64.rpm removed
+2020-03-04T03:09:07Z INFO --- logging initialized ---
+2020-03-04T03:09:07Z DDEBUG timer: config: 2 ms
+2020-03-04T03:09:07Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:09:07Z DEBUG DNF version: 4.2.7
+2020-03-04T03:09:07Z DDEBUG Command: dnf -d 0 -e 1 -y install python3-gnocchiclient 
+2020-03-04T03:09:07Z DDEBUG Installroot: /
+2020-03-04T03:09:07Z DDEBUG Releasever: 8
+2020-03-04T03:09:07Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:09:07Z DDEBUG Base command: install
+2020-03-04T03:09:07Z DDEBUG Extra commands: ['-d', '0', '-e', '1', '-y', 'install', 'python3-gnocchiclient']
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T03:09:07Z DEBUG rhelosp-16.0: using metadata from Wed Feb 26 19:10:59 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T03:09:07Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri Apr 12 14:18:29 2019.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed Jan 29 17:03:34 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon Mar  2 15:50:10 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T03:09:07Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu Feb 27 15:31:54 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue Feb 25 13:31:04 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue Feb 25 05:35:31 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed Feb 19 18:50:54 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu Jan 23 16:44:14 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed Jan 22 04:02:20 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T03:09:07Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu Apr  4 11:48:28 2019.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhos-release
+2020-03-04T03:09:07Z DEBUG rhos-release: using metadata from Mon Mar  2 18:27:47 2020.
+2020-03-04T03:09:07Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T03:09:07Z DEBUG rhos-release-extras: using metadata from Thu May 23 12:14:18 2019.
+2020-03-04T03:09:07Z INFO Last metadata expiration check: 0:02:13 ago on Wed Mar  4 03:06:54 2020.
+2020-03-04T03:09:08Z DDEBUG timer: sack setup: 778 ms
+2020-03-04T03:09:08Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:08Z DEBUG --> Starting dependency resolution
+2020-03-04T03:09:08Z DEBUG ---> Package python3-gnocchiclient.noarch 7.0.4-0.20190919175421.64814b9.el8ost will be installed
+2020-03-04T03:09:08Z DEBUG ---> Package python3-ujson.x86_64 2.0-0.1.20170206git2f1d487.el8ost.7 will be installed
+2020-03-04T03:09:08Z DEBUG --> Finished dependency resolution
+2020-03-04T03:09:08Z DDEBUG timer: depsolve: 249 ms
+2020-03-04T03:09:08Z INFO Dependencies resolved.
+2020-03-04T03:09:08Z INFO ================================================================================
+ Package        Arch   Version                               Repository    Size
+================================================================================
+Installing:
+ python3-gnocchiclient
+                noarch 7.0.4-0.20190919175421.64814b9.el8ost rhelosp-16.0  78 k
+Installing dependencies:
+ python3-ujson  x86_64 2.0-0.1.20170206git2f1d487.el8ost.7   rhelosp-16.0  32 k
+
+Transaction Summary
+================================================================================
+Install  2 Packages
+
+2020-03-04T03:09:08Z INFO Total download size: 110 k
+2020-03-04T03:09:08Z INFO Installed size: 337 k
+2020-03-04T03:09:08Z INFO Downloading Packages:
+2020-03-04T03:09:09Z INFO --------------------------------------------------------------------------------
+2020-03-04T03:09:09Z INFO Total                                           263 kB/s | 110 kB     00:00     
+2020-03-04T03:09:09Z INFO Running transaction check
+2020-03-04T03:09:09Z INFO Transaction check succeeded.
+2020-03-04T03:09:09Z INFO Running transaction test
+2020-03-04T03:09:09Z INFO Transaction test succeeded.
+2020-03-04T03:09:09Z DDEBUG timer: transaction test: 185 ms
+2020-03-04T03:09:09Z INFO Running transaction
+2020-03-04T03:09:09Z DDEBUG RPM transaction start.
+2020-03-04T03:09:09Z DDEBUG RPM transaction over.
+2020-03-04T03:09:09Z DDEBUG timer: verify transaction: 191 ms
+2020-03-04T03:09:09Z DDEBUG timer: transaction: 429 ms
+2020-03-04T03:09:09Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:10Z INFO 
+Installed:
+  python3-gnocchiclient-7.0.4-0.20190919175421.64814b9.el8ost.noarch            
+  python3-ujson-2.0-0.1.20170206git2f1d487.el8ost.7.x86_64                      
+
+2020-03-04T03:09:10Z INFO Complete!
+2020-03-04T03:09:10Z DDEBUG Cleaning up.
+2020-03-04T03:09:10Z DDEBUG /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-gnocchiclient-7.0.4-0.20190919175421.64814b9.el8ost.noarch.rpm removed
+2020-03-04T03:09:10Z DDEBUG /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-ujson-2.0-0.1.20170206git2f1d487.el8ost.7.x86_64.rpm removed
+2020-03-04T03:09:10Z INFO --- logging initialized ---
+2020-03-04T03:09:10Z DDEBUG timer: config: 2 ms
+2020-03-04T03:09:10Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:09:10Z DEBUG DNF version: 4.2.7
+2020-03-04T03:09:10Z DDEBUG Command: dnf -d 0 -e 1 -y install python3-pankoclient 
+2020-03-04T03:09:10Z DDEBUG Installroot: /
+2020-03-04T03:09:10Z DDEBUG Releasever: 8
+2020-03-04T03:09:10Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:09:10Z DDEBUG Base command: install
+2020-03-04T03:09:10Z DDEBUG Extra commands: ['-d', '0', '-e', '1', '-y', 'install', 'python3-pankoclient']
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T03:09:10Z DEBUG rhelosp-16.0: using metadata from Wed Feb 26 19:10:59 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T03:09:10Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri Apr 12 14:18:29 2019.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed Jan 29 17:03:34 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon Mar  2 15:50:10 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed Jan 29 17:03:33 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T03:09:10Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon Mar  2 15:50:11 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T03:09:10Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu Feb 27 15:31:54 2020.
+2020-03-04T03:09:10Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue Feb 25 13:31:04 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue Feb 25 05:35:31 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed Feb 19 18:50:54 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu Jan 23 16:44:14 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed Jan 22 04:02:20 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T03:09:11Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu Apr  4 11:48:28 2019.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhos-release
+2020-03-04T03:09:11Z DEBUG rhos-release: using metadata from Mon Mar  2 18:27:47 2020.
+2020-03-04T03:09:11Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T03:09:11Z DEBUG rhos-release-extras: using metadata from Thu May 23 12:14:18 2019.
+2020-03-04T03:09:11Z INFO Last metadata expiration check: 0:02:17 ago on Wed Mar  4 03:06:54 2020.
+2020-03-04T03:09:11Z DDEBUG timer: sack setup: 806 ms
+2020-03-04T03:09:11Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:11Z DEBUG --> Starting dependency resolution
+2020-03-04T03:09:11Z DEBUG ---> Package python3-pankoclient.noarch 0.5.0-0.20191010210258.572aee9.el8ost will be installed
+2020-03-04T03:09:11Z DEBUG --> Finished dependency resolution
+2020-03-04T03:09:11Z DDEBUG timer: depsolve: 237 ms
+2020-03-04T03:09:11Z INFO Dependencies resolved.
+2020-03-04T03:09:11Z INFO ================================================================================
+ Package        Arch   Version                               Repository    Size
+================================================================================
+Installing:
+ python3-pankoclient
+                noarch 0.5.0-0.20191010210258.572aee9.el8ost rhelosp-16.0  43 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+2020-03-04T03:09:11Z INFO Total download size: 43 k
+2020-03-04T03:09:11Z INFO Installed size: 94 k
+2020-03-04T03:09:11Z INFO Downloading Packages:
+2020-03-04T03:09:12Z INFO --------------------------------------------------------------------------------
+2020-03-04T03:09:12Z INFO Total                                           104 kB/s |  43 kB     00:00     
+2020-03-04T03:09:12Z INFO Running transaction check
+2020-03-04T03:09:12Z INFO Transaction check succeeded.
+2020-03-04T03:09:12Z INFO Running transaction test
+2020-03-04T03:09:12Z INFO Transaction test succeeded.
+2020-03-04T03:09:12Z DDEBUG timer: transaction test: 68 ms
+2020-03-04T03:09:12Z INFO Running transaction
+2020-03-04T03:09:12Z DDEBUG RPM transaction start.
+2020-03-04T03:09:12Z DDEBUG RPM transaction over.
+2020-03-04T03:09:12Z DDEBUG timer: verify transaction: 183 ms
+2020-03-04T03:09:12Z DDEBUG timer: transaction: 339 ms
+2020-03-04T03:09:12Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:09:12Z INFO 
+Installed:
+  python3-pankoclient-0.5.0-0.20191010210258.572aee9.el8ost.noarch              
+
+2020-03-04T03:09:12Z INFO Complete!
+2020-03-04T03:09:12Z DDEBUG Cleaning up.
+2020-03-04T03:09:12Z DDEBUG /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pankoclient-0.5.0-0.20191010210258.572aee9.el8ost.noarch.rpm removed
+2020-03-04T03:26:20Z INFO --- logging initialized ---
+2020-03-04T03:26:20Z DDEBUG timer: config: 2 ms
+2020-03-04T03:26:21Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:26:21Z DEBUG DNF version: 4.2.7
+2020-03-04T03:26:21Z DDEBUG Command: dnf -y -e 0 install dnf-utils 
+2020-03-04T03:26:21Z DDEBUG Installroot: /
+2020-03-04T03:26:21Z DDEBUG Releasever: 8
+2020-03-04T03:26:21Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:26:21Z DDEBUG Base command: install
+2020-03-04T03:26:21Z DDEBUG Extra commands: ['-y', '-e', '0', 'install', 'dnf-utils']
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T03:26:21Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 07:10:59 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T03:26:21Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 02:18:29 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 05:03:34 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 03:50:10 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T03:26:21Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 03:31:54 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 01:31:04 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 05:35:31 AM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 06:50:54 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 04:44:14 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed 22 Jan 2020 04:02:20 AM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T03:26:21Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 11:48:28 AM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhos-release
+2020-03-04T03:26:21Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 06:27:47 PM UTC.
+2020-03-04T03:26:21Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T03:26:21Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 12:14:18 PM UTC.
+2020-03-04T03:26:21Z INFO Last metadata expiration check: 0:19:27 ago on Wed 04 Mar 2020 03:06:54 AM UTC.
+2020-03-04T03:26:21Z DDEBUG timer: sack setup: 912 ms
+2020-03-04T03:26:21Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:26:22Z INFO Package yum-utils-4.0.8-3.el8.noarch is already installed.
+2020-03-04T03:26:22Z DEBUG --> Starting dependency resolution
+2020-03-04T03:26:22Z DEBUG --> Finished dependency resolution
+2020-03-04T03:26:22Z DDEBUG timer: depsolve: 252 ms
+2020-03-04T03:26:22Z INFO Dependencies resolved.
+2020-03-04T03:26:22Z INFO Nothing to do.
+2020-03-04T03:26:22Z INFO Complete!
+2020-03-04T03:26:22Z DDEBUG Cleaning up.
+2020-03-04T03:26:24Z INFO --- logging initialized ---
+2020-03-04T03:26:24Z DDEBUG timer: config: 2 ms
+2020-03-04T03:26:25Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:26:25Z DEBUG DNF version: 4.2.7
+2020-03-04T03:26:25Z DDEBUG Command: dnf -y -e 0 install dnf-utils 
+2020-03-04T03:26:25Z DDEBUG Installroot: /
+2020-03-04T03:26:25Z DDEBUG Releasever: 8
+2020-03-04T03:26:25Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:26:25Z DDEBUG Base command: install
+2020-03-04T03:26:25Z DDEBUG Extra commands: ['-y', '-e', '0', 'install', 'dnf-utils']
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-16.0
+2020-03-04T03:26:25Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 07:10:59 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-16.0-image-build-override
+2020-03-04T03:26:25Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 02:18:29 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4-mon
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4-tools
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 05:03:34 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4.0-mon-pending
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 03:50:10 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4.0-tools-pending
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4-osd
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhelosp-ceph-4.0-osd-pending
+2020-03-04T03:26:25Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-baseos
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 03:31:54 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-appstream
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 01:31:04 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-ha
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 05:35:31 AM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-av
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 06:50:54 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-ansible
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 04:44:14 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-fdp
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed 22 Jan 2020 04:02:20 AM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhosp-rhel-8.1-image-build-override
+2020-03-04T03:26:25Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 11:48:28 AM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhos-release
+2020-03-04T03:26:25Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 06:27:47 PM UTC.
+2020-03-04T03:26:25Z DEBUG repo: using cache for: rhos-release-extras
+2020-03-04T03:26:25Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 12:14:18 PM UTC.
+2020-03-04T03:26:25Z INFO Last metadata expiration check: 0:19:31 ago on Wed 04 Mar 2020 03:06:54 AM UTC.
+2020-03-04T03:26:25Z DDEBUG timer: sack setup: 860 ms
+2020-03-04T03:26:25Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:26:25Z INFO Package yum-utils-4.0.8-3.el8.noarch is already installed.
+2020-03-04T03:26:25Z DEBUG --> Starting dependency resolution
+2020-03-04T03:26:26Z DEBUG --> Finished dependency resolution
+2020-03-04T03:26:26Z DDEBUG timer: depsolve: 223 ms
+2020-03-04T03:26:26Z INFO Dependencies resolved.
+2020-03-04T03:26:26Z INFO Nothing to do.
+2020-03-04T03:26:26Z INFO Complete!
+2020-03-04T03:26:26Z DDEBUG Cleaning up.
+2020-03-04T03:26:32Z INFO --- logging initialized ---
+2020-03-04T03:26:32Z DDEBUG timer: config: 2 ms
+2020-03-04T03:26:33Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:26:33Z DEBUG DNF version: 4.2.7
+2020-03-04T03:26:33Z DDEBUG Command: yum clean all 
+2020-03-04T03:26:33Z DDEBUG Installroot: /
+2020-03-04T03:26:33Z DDEBUG Releasever: 8
+2020-03-04T03:26:33Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:26:33Z DDEBUG Base command: clean
+2020-03-04T03:26:33Z DDEBUG Extra commands: ['clean', 'all']
+2020-03-04T03:26:33Z DEBUG Cleaning data: packages metadata dbcache
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-updateinfo.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-filenames.solvx
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp.solv
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/77e56a3168b5fde36e37243e6d804fab774af0a43ea06177cd58d093ee843987-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/294420c30c752ace2a631ba0bf1ebfffc5f91d52f73155776d024f47042c70f6-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/repodata/5892250ddaab85b5ad44b507feccb72d24365a7d31e18367e09ea8f8809f14e3-comps-OpenStack.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-config_template-1.0.1-0.20191122040234.ff61269.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-pacemaker-1.0.4-0.20191022042340.0e4d7c0.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-atos-hsm-0.1.1-0.20191024165047.866e075.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-chrony-1.0.2-0.20191022052427.03e7fbe.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-container-registry-1.1.1-0.20191025041237.bf2e310.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-openstack-operations-0.0.1-0.20191022044056.29cc537.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-redhat-subscription-1.0.5-0.20191022053336.6c67a40.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-thales-hsm-0.2.1-0.20191024165911.2803c6c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-role-tripleo-modify-image-1.1.1-0.20200122200932.58d7a5b.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ansible-tripleo-ipsec-9.2.0-0.20191022054642.ffe104c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/cpp-hocon-0.1.8-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/dib-utils-0.0.11-0.20191025164319.51661c3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/diskimage-builder-2.33.1-0.20200204145616.500e60d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/facter-3.9.3-9.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/golang-github-vbatts-tar-split-0.11.1-3.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/heat-cfntools-1.4.2-6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/hiera-3.3.1-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/leatherman-1.4.5-4.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/libsodium-1.0.16-4.5.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-heat-agents-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-heat-api-13.0.1-0.20191127204014.0703ca7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-heat-common-13.0.1-0.20191127204014.0703ca7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-heat-engine-13.0.1-0.20191127204014.0703ca7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-heat-monolith-13.0.1-0.20191127204014.0703ca7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-ironic-python-agent-builder-1.1.1-0.20191203040321.a34dfda.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-selinux-0.8.20-0.20200130230725.3fca012.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-common-11.3.3-0.20200206225551.18d4fbc.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-common-containers-11.3.3-0.20200206225551.18d4fbc.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-heat-templates-11.3.2-0.20200211065546.d3d6dc3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-image-elements-10.6.1-0.20191022065313.7338463.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-puppet-elements-11.2.2-0.20200128210949.d668f88.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/openstack-tripleo-validations-11.3.2-0.20200206065551.1a9b92a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/os-apply-config-10.5.1-0.20191022070316.3c6e3cd.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/os-collect-config-10.5.1-0.20191022072455.0f985b9.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/os-net-config-11.3.1-0.20191202211303.d814f68.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/os-refresh-config-10.4.1-0.20191022071520.b5e8cc4.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/paunch-services-5.3.2-0.20200130065659.d56765a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-5.5.10-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-aodh-15.4.1-0.20191014131853.8beb87a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-apache-5.1.0-0.20191004100623.1fa9b1c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-archive-4.2.1-0.20191004094640.0538163.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-auditd-2.2.1-0.20191002163110.189b22b.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-barbican-15.4.1-0.20191014134242.00a75aa.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-cassandra-2.7.4-0.20191004150835.9954256.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ceilometer-15.4.1-0.20191014134249.de7b6a1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ceph-3.0.1-0.20191002213425.55a0f94.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-certmonger-2.4.0-0.20191002174506.a198870.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-cinder-15.4.1-0.20191028225029.f4aa29e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-collectd-11.0.1-0.20191004151223.785a71b.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-headless-5.5.10-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-concat-6.1.0-0.20191004093433.9baa8fc.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-contrail-1.0.1-0.20191002163109.6f87929.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-corosync-6.0.2-0.20191004103159.961add3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-datacat-0.6.3-0.20191002155944.5cce8f2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-designate-15.5.1-0.20191014152945.4fc5214.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-dns-6.2.1-0.20191004115034.2ae1cd7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ec2api-15.4.1-0.20191014133252.e38e26c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-elasticsearch-6.4.1-0.20191004142247.725afd6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-etcd-1.12.3-0.20191022053823.123d2af.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-fdio-18.2-0.20191002164401.6fd1c8e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-firewall-2.1.1-0.20191004122614.4f4437a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-fluentd-0.10.0-0.20191002160933.4dfc15a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-git-0.5.0-0.20191002154952.4e4498e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-glance-15.4.1-0.20191127040410.69c10c4.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-gnocchi-15.4.1-0.20191017040010.b462302.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-haproxy-4.1.1-0.20191004123506.df96ffc.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-heat-15.4.1-0.20191014145528.68b7e29.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-horizon-15.4.1-0.20191014143128.620e8f6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-inifile-3.1.0-0.20191004095713.91efced.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ipaclient-2.5.2-0.20191002160932.b086731.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ironic-15.4.1-0.20191022165413.8fe6978.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-java-5.0.1-0.20191004145038.e57cbc8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-kafka-5.3.1-0.20191004150127.88aa866.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-keepalived-0.0.2-0.20191002154205.bbca37a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-keystone-15.4.1-0.20191019043505.e57542a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-kibana3-0.0.5-0.20191002144605.6ca9631.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-kmod-2.3.2-0.20191004134845.41e2a2b.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-manila-15.4.1-0.20191014132051.bd3540c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-memcached-3.4.0-0.20191002174507.66d3a66.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-midonet-1.0.0-0.20191002180647.a8cec1d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-mistral-15.4.1-0.20191014143431.c733b8a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-module-data-0.5.1-0.20191002153420.28dafce.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-mysql-6.2.1-0.20191016083905.6fabbcb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-n1k-vsm-0.0.2-0.20191002180648.92401b8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-neutron-15.4.1-0.20191105131130.1111e3d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-nova-15.4.1-0.20191215120134.721ca2a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-nssdb-1.0.2-0.20191002154951.2ed2a2d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-octavia-15.4.1-0.20191123040214.8d86546.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-opendaylight-8.4.3-0.20191002173417.bbe7ce5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-openstack_extras-15.4.1-0.20191014142330.8ba5522.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-openstacklib-15.4.1-0.20191014170135.94b2016.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-oslo-15.4.1-0.20191014135439.00f661d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ovn-15.4.1-0.20191014133046.192ac4e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-pacemaker-0.8.1-0.20200203145608.83d23b3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-panko-15.4.1-0.20191014140134.49b7b3e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-placement-2.4.1-0.20191019044656.afddd56.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-qdr-4.4.1-0.20191014131155.d141271.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-rabbitmq-9.1.1-0.20191004100807.75574b8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-redis-4.2.2-0.20191004102502.be8d097.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-remote-10.0.0-0.20191002155842.7420908.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-GitPython-2.1.11-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-rsync-1.1.2-0.20191002175500.a7d4f84.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-sahara-15.4.1-0.20191014141333.5d28c21.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-sensu-2.62.4-0.20191002175556.20361a4.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-snmp-3.9.1-0.20191002162020.5d73485.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-ssh-6.0.1-0.20191004101612.65570a3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-staging-1.0.5-0.20191002153419.b466d93.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-stdlib-6.1.0-0.20191003115605.5aa891c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-swift-15.4.1-0.20191014152413.654e964.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-sysctl-0.0.13-0.20191002173418.a3d160d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-systemd-2.6.1-0.20191004105758.f0ce6f0.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-timezone-5.1.2-0.20191004104756.21b4a58.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-tomcat-3.1.0-0.20191004111140.a3f92d1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-tripleo-11.4.1-0.20200205150840.71ff36d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-trove-15.4.1-0.20191014140632.4710735.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-uchiwa-2.1.1-0.20191002164306.837c669.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-vcsrepo-3.0.0-0.20191004152414.b06d5d3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-veritas_hyperscale-1.0.0-0.20191002162020.7c7868a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-vswitch-11.4.1-0.20191014172742.4fc423f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-xinetd-3.3.1-0.20191004094526.d768da2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-zaqar-15.4.1-0.20191014144423.88b97ec.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/puppet-zookeeper-0.9.0-0.20191017160909.5877cbf.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-openstackclient-lang-4.0.0-0.20191025160014.aa64eb6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-cache-lang-1.37.0-0.20191004134644.f67262f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-concurrency-lang-3.30.0-0.20191004131147.610df38.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-db-lang-5.0.2-0.20191004121119.fb40cdb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-i18n-lang-3.24.0-0.20191004120029.91b39bb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-log-lang-3.44.1-0.20191004135842.3ff497d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-middleware-lang-3.38.1-0.20191004114631.9bae80e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-policy-lang-2.3.2-0.20190919144636.e433a3c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-utils-lang-3.41.4-0.20200113095843.39870f6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-oslo-versionedobjects-lang-1.36.1-0.20191025164659.14ee7e0.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python-pycadf-common-2.10.0-0.20191004114040.d113c15.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-SecretStorage-2.3.1-7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-alembic-1.0.7-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-amqp-2.4.1-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-anyjson-0.3.3-8.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-aodhclient-1.3.0-0.20190924061353.a8651ec.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-appdirs-1.4.0-7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-barbicanclient-4.9.0-0.20191004111947.9c0e02d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-bcrypt-3.1.6-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-beautifulsoup4-4.6.0-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-boto-2.45.0-7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-cachetools-3.1.0-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-cinderclient-5.0.0-0.20191025161022.a63d4d6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-cliff-2.16.0-0.20191004122213.6b6b186.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-cmd2-0.6.8-10.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-contextlib2-0.5.5-8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-croniter-0.3.27-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-debtcollector-1.22.0-0.20191004133750.0be4911.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-designateclient-3.0.0-0.20190920091151.093d8d7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-dogpile-cache-0.6.8-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-editor-0.4-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/yaml-cpp-0.6.1-8.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-eventlet-0.25.1-1.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-fasteners-0.14.1-15.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-flake8-3.5.0-6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-funcsigs-1.0.2-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-futurist-1.9.0-0.20191004125956.25ffb8f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-gitdb-2.0.3-6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-glanceclient-2.17.0-0.20190919135328.40c19aa.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-greenlet-0.4.14-5.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-ansible-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-apply-config-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-docker-cmd-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-hiera-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-json-file-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heat-agent-puppet-1.10.1-0.20191022061131.96b819c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-heatclient-1.18.0-0.20190923105620.eca1637.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-ironic-inspector-client-3.7.0-0.20190923163033.d95a4cd.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-ironicclient-3.1.0-0.20190926124316.04ef2d7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-iso8601-0.1.11-9.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-keyring-17.1.1-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-keystoneauth1-3.17.1-0.20191004143644.8b06c57.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-keystoneclient-3.21.0-0.20191004144136.79f150f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-keystonemiddleware-7.0.1-0.20191004112333.0a65b14.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-kombu-4.2.2-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-logutils-0.3.5-6.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-magnumclient-2.15.0-0.20190923154724.93acc92.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-manilaclient-1.29.0-0.20190923115452.1b2cafb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-markupsafe-1.1.0-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-mccabe-0.6.1-7.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-memcached-1.58-8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-metalsmith-0.15.0-0.20190923165127.a77cfb2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-migrate-0.12.0-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-mistral-lib-1.2.1-0.20191118120254.4bac2b2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-mistralclient-3.10.0-0.20190920090831.dc246bf.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-monotonic-1.5-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-msgpack-0.6.1-3.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-munch-2.2.0-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-networkx-1.11-15.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-networkx-core-1.11-15.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-neutron-lib-1.29.1-0.20190923154030.4ef4b71.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-neutronclient-6.14.0-0.20190919181709.115f60f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-novaclient-15.1.0-0.20190919143437.cd396b8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-numpy-1.15.1-2.2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-numpy-f2py-1.15.1-2.2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-octaviaclient-1.10.0-0.20191126121848.0e00a90.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-openstackclient-4.0.0-0.20191025160014.aa64eb6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-openstacksdk-0.36.0-0.20191004153514.8b85e8c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-os-client-config-1.33.0-0.20191004115925.d0eea17.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-os-ken-0.4.1-0.20190923143906.8f7851a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-os-service-types-1.7.0-0.20191004125900.0b2f473.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-os-traits-0.16.0-0.20190920084752.5a477b8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-osc-lib-1.14.1-0.20191004121222.a0d9746.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-cache-1.37.0-0.20191004134644.f67262f.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-paramiko-2.4.2-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-concurrency-3.30.0-0.20191004131147.610df38.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-config-6.11.1-0.20191004140143.c4d8fa7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-context-2.23.0-0.20191004132250.07f068d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-db-5.0.2-0.20191004121119.fb40cdb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-i18n-3.24.0-0.20191004120029.91b39bb.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-log-3.44.1-0.20191004135842.3ff497d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-messaging-10.2.0-0.20191009113335.b7e9faf.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-middleware-3.38.1-0.20191004114631.9bae80e.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-policy-2.3.2-0.20190919144636.e433a3c.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-reports-1.30.0-0.20190918125923.cf35fec.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-rootwrap-5.16.1-0.20190919173436.c6babc7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-serialization-2.29.2-0.20191004132544.fa399b6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-service-1.40.2-0.20191004142639.a7621c8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-upgradecheck-0.3.2-0.20190919180723.e1df576.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-utils-3.41.4-0.20200113095843.39870f6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-oslo-versionedobjects-1.36.1-0.20191025164659.14ee7e0.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-osprofiler-2.8.2-0.20190920064824.d431c7a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-passlib-1.7.0-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-paste-2.0.3-6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-paste-deploy-1.5.2-13.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-paunch-5.3.2-0.20200130065659.d56765a.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pbr-5.1.2-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pecan-1.3.2-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pycadf-2.10.0-0.20191004114040.d113c15.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pycodestyle-2.4.0-3.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pyflakes-2.0.0-7.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pynacl-1.3.0-1.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pyparsing-2.3.1-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-pystache-0.5.3-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-repoze-lru-0.4-9.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-requestsexceptions-1.4.0-0.20191004123913.d7ac0ff.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-rfc3986-1.2.0-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-rhosp-openvswitch-2.11-0.5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-routes-2.4.1-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-rsa-3.4.2-9.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-saharaclient-2.3.0-0.20191025165324.3107b45.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-setproctitle-1.1.9-7.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-shade-1.32.0-0.20191010212050.47fe056.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-simplegeneric-0.8-8.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-simplejson-3.16.0-3.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-smmap-2.0.3-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-sqlparse-0.2.2-6.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-statsd-3.2.1-6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-stevedore-1.31.0-0.20191004113432.6817543.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-swiftclient-3.8.1-0.20200207203301.72b90fe.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tempita-0.5.1-20.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tenacity-5.0.2-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tinyrpc-0.5-4.20170523git1f38ac.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tripleo-common-11.3.3-0.20200206225551.18d4fbc.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tripleoclient-12.3.2-0.20200130192329.78ac810.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-tripleoclient-heat-installer-12.3.2-0.20200130192329.78ac810.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-troveclient-3.0.0-0.20190923161219.960843d.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-vine-1.2.0-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-waitress-1.4.2-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-warlock-1.3.0-9.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-webob-1.8.5-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-websocket-client-0.54.0-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-webtest-2.0.29-4.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-werkzeug-0.14.1-5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-wrapt-1.11.1-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-yappi-1.0-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-yaql-1.1.3-3.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-zaqarclient-1.12.0-0.20190920090052.9038bf6.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/rhosp-openvswitch-2.11-0.5.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ruby-augeas-0.5.0-3.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ruby-facter-3.9.3-9.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/ruby-shadow-2.5.0-3.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/rubygem-pathspec-0.2.1-4.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/rubygem-rgen-0.6.6-2.1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/tripleo-ansible-0.4.2-0.20200207140443.b750574.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-netifaces-0.10.9-2.el8ost.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-six-1.12.0-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/python3-dateutil-2.8.0-1.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-ae1d9ba40d2fd657/packages/rhosp-release-16.0.1-2.el8ost.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/repodata/14590c4dae2f22d6f82fe162d855f0864d61b82bb3330c57cc711f07fb5a708b-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/repodata/0344be9ea0c62e784ef116a61aee5ceb425d636810c69f292f6812eb490676a8-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/repodata/aee6016df8ddce215d578834f8746f360c6b63094cfd450256cf0d607369d4bf-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/repodata/7285b7345591efcfca9233c294aeaa05e68f0c5d8fa1a1474baad41dc7193852-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/pcp-conf-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nss-util-3.44.0-9.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libuv-1.23.1-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nss-softokn-3.44.0-9.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-pip-9.0.3-15.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nspr-4.21.0-2.el8_0.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/pcp-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/pcp-selinux-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nss-3.44.0-9.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nss-softokn-freebl-3.44.0-9.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/pcp-libs-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-pcp-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/nss-sysinit-3.44.0-9.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/pcp-system-tools-4.3.2-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/criu-3.12-9.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-IO-Socket-IP-0.39-5.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Digest-MD5-2.55-396.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/platform-python-devel-3.6.8-15.1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/container-selinux-2.124.0-1.module+el8.1.1+5259+bcdd613a.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/slirp4netns-0.4.2-2.git21fdece.module+el8.1.1+5460+3ac089c3.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/conmon-2.0.6-1.module+el8.1.1+5259+bcdd613a.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-rpm-generators-5-4.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/skopeo-0.1.40-8.module+el8.1.1+5351+506397b0.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/containernetworking-plugins-0.8.3-4.module+el8.1.1+5259+bcdd613a.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/jq-1.5-12.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-thread-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-libnet-3.11-3.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/git-core-2.18.2-1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-pytz-2017.2-9.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/git-core-doc-2.18.2-1.el8_1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/runc-1.0.0-64.rc9.module+el8.1.1+5259+bcdd613a.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Git-2.18.2-1.el8_1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/fuse-overlayfs-0.7.2-1.module+el8.1.1+5259+bcdd613a.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/podman-manpages-1.6.4-2.module+el8.1.1+5363+bf8ff1af.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/podman-1.6.4-2.module+el8.1.1+5363+bf8ff1af.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/git-2.18.2-1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-psutil-5.4.3-10.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/containers-common-0.1.40-8.module+el8.1.1+5351+506397b0.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-scipy-1.0.0-20.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-filesystem-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/buildah-1.11.6-4.module+el8.1.1+5259+bcdd613a.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Error-0.17025-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-locale-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-PyMySQL-0.8.0-10.module+el8.1.0+3334+5cb623d7.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-babel-2.5.1-5.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-pyasn1-0.3.7-6.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Digest-1.17-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-rdoc-6.0.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-rpm-macros-3-37.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-program-options-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Net-SSLeay-1.88-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ruby-irb-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-html5lib-0.999999999-6.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/protobuf-c-1.3.0-4.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-regex-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-URI-1.73-3.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-jinja2-2.10.1-2.el8_0.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/openblas-threads-0.3.3-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-sqlalchemy-1.3.2-1.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-webencodings-0.5.1-6.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-IO-Socket-SSL-2.066-3.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-log-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libselinux-ruby-2.9-2.1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-date-time-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libev-4.24-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libusal-1.1.11-39.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-prettytable-0.7.2-14.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-netaddr-0.7.19-8.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-Mozilla-CA-20160104-7.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-gevent-1.2.2-4.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-lxml-4.2.3-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-TermReadKey-2.37-7.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libnet-1.1.6-15.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-mako-1.0.6-13.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python-srpm-macros-3-37.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-did_you_mean-1.2.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/genisoimage-1.1.11-39.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-jsonpatch-1.21-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-jmespath-0.9.0-11.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python3-jsonpointer-1.10-11.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-chrono-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-system-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ostree-libs-2019.2-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/oniguruma-6.8.2-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/boost-atomic-1.66.0-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/python-rpm-macros-3-37.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/openblas-0.3.3-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rhnsd-5.0.35-3.module+el8+2754+6a08e8f4.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libmpc-1.0.2-9.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/gcc-8.3.1-4.5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/cpp-8.3.1-4.5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/isl-0.16.1-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/httpd-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/apr-util-openssl-1.6.1-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/apr-util-1.6.1-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/apr-1.6.3-9.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/httpd-filesystem-2.4.37-16.module+el8.1.0+4134+e6bad0ed.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/mod_http2-1.11.3-3.module+el8.1.0+4134+e6bad0ed.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/httpd-tools-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/apr-util-bdb-1.6.1-6.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/guile-2.0.14-7.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/gc-7.6.4-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/efi-srpm-macros-3-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/qt5-srpm-macros-5.11.1-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/annobin-8.78-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libipt-1.6.1-8.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ocaml-srpm-macros-5-4.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/dwz-0.12-9.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rpm-build-4.14.2-25.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rpmdevtools-8.10-7.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libatomic_ops-7.6.2-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/libbabeltrace-1.5.4-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/redhat-rpm-config-120-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/go-srpm-macros-2-16.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/rust-srpm-macros-5-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/ghc-srpm-macros-1.4.2-7.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/openblas-srpm-macros-2-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/gdb-headless-8.2-6.el8_0.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-appstream-1d5126813bf3f828/packages/perl-srpm-macros-1-25.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/repodata/9b034ca8fec7e4dbb131f3e9d4ec21f11b3f54f58c64315f94466bc0689d93b8-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/repodata/5e85ac7b9879cf5aae2c4612213fc32d4bb55d37b85f83e21bd8497540ee66a5-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/repodata/fbd0a37fe1483491e42b0f8804f136eb92717709548c8c3763c04f692f0258c6-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/packages/sshpass-1.06-3.el8ae.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ansible-8af3ed25c223bed6/packages/ansible-2.8.8-1.el8ae.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/401dc19bda88c82c403423fb835844d64345f7e95f5b9835888189c03834cc93-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-16.0-image-build-override-ac5fa188601ac0ce/repodata/dabe2ce5481d23de1f4f52bdcfee0f9af98316c9e0de2ce8123adeefa0dd08b9-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-a3305f38d66f8a65/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-a3305f38d66f8a65/repodata/401dc19bda88c82c403423fb835844d64345f7e95f5b9835888189c03834cc93-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-extras-a3305f38d66f8a65/repodata/dabe2ce5481d23de1f4f52bdcfee0f9af98316c9e0de2ce8123adeefa0dd08b9-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/c8baea69af8c30294050588235966b7a27d27c016f719e09bf1568319e9f6a51-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/20d878984e4c110462ba6af071d2f3cb86e72216e0c538e2824837b556ea344e-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-mon-942842cfca9941b1/repodata/09dbad6904abf5665e0737f62c21e8d3071a88efb419eb7b8f8e775cbe2f80d4-comps-MON.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/17b7d5afc66ff336d69cca86cf14b58ef553ff030778d6dd0b05d99f16826b89-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/8c0b3ee7c78674716c85841640141172d4404b5ea3c05b9ebcce9504036bdcfc-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-tools-17db10ccbc47dfc6/repodata/df7111cd1d479d07580e1f7c0025f9c9c1fe6e25bb4e9a4f2c265b0b985f6bf4-comps-Tools.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/7e6a4969a4d68aff4ca3eb031a295861dcd7f8c85e0b01f6cf76476fb804cc39-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/9638c2e6a43336e10855cb8c6c3d23f55379bf2f6c9dad49b14c681f679bd482-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-mon-pending-7a355599c11cda72/repodata/09dbad6904abf5665e0737f62c21e8d3071a88efb419eb7b8f8e775cbe2f80d4-comps-MON.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/repodata/498c4beb1d2d0fbc02c7fb2564f6101903a409529db7f06172660b68bcb1c476-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/repodata/a67a682b8a7822d14d302d4eb085be4f6695c2c63b6d1910bbc5cc492da3de84-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/repodata/14bf1723a9863d976795269cf0c50149d114d251e6fa90c0a03d9a0229061cf4-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/repodata/f62e6e266a3e38d43f2ee605f24a654f671ebd4460323376b5e6bb6e8800d051-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/linux-firmware-20190516-94.git711d3297.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-core-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-modules-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/avahi-libs-0.7-19.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/python3-setuptools-39.2.0-5.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libquadmath-8.3.1-4.5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/fuse3-libs-3.2.1-12.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-langpack-en-2.28-72.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/pkgconf-pkg-config-1.4.2-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/nftables-0.9.0-14.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Unicode-Normalize-1.25-396.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-macros-5.26.3-416.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libvarlink-18-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libnetfilter_conntrack-1.0.6-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-MIME-Base64-3.15-396.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/bzip2-1.0.6-26.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/iptables-services-1.8.2-16.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-threads-2.21-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/iptables-1.8.2-16.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Pod-Simple-3.35-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Term-ANSIColor-4.06-396.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libxslt-1.1.32-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/python3-dns-1.15.0-8.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/sos-3.7-8.el8_1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-HTTP-Tiny-0.074-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Socket-2.027-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libpkgconf-1.4.2-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Pod-Perldoc-3.28-396.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libnftnl-1.1.1-4.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-File-Path-2.15-2.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-parent-0.237-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-IO-1.38-416.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/pkgconf-m4-1.4.2-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Text-Tabs+Wrap-2013.0523-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Getopt-Long-2.50-4.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-podlators-4.11-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Time-Local-1.280-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Carp-1.42-396.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Exporter-5.72-396.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Storable-3.11-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Text-ParseWords-3.30-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/emacs-filesystem-26.1-5.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-File-Temp-0.230.600-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-constant-1.33-396.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Term-Cap-1.17-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Pod-Usage-1.69-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Scalar-List-Utils-1.49-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-PathTools-3.74-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libgfortran-8.3.1-4.5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libicu-60.3-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Data-Dumper-2.167-399.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libnfnetlink-1.0.1-13.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-libs-5.26.3-416.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/network-scripts-10.00.4-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/augeas-libs-1.12.0-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Errno-1.28-416.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-interpreter-5.26.3-416.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Pod-Escapes-1.07-395.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-threads-shared-1.58-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/network-scripts-team-1.28-4.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/perl-Encode-2.97-3.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/pkgconf-1.4.2-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libaio-0.3.112-1.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-all-langpacks-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-pc-modules-2.02-78.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-common-2.02-78.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libarchive-3.3.2-8.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/tuned-2.12.0-3.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/NetworkManager-1.20.0-5.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/dracut-squash-049-27.git20190906.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/dracut-049-27.git20190906.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/setup-2.12.2-2.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/python3-policycoreutils-2.9-3.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-tools-minimal-2.02-78.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/NetworkManager-team-1.20.0-5.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/dracut-config-generic-049-27.git20190906.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-tools-libs-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kexec-tools-2.0.19-12.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/NetworkManager-libnm-1.20.0-5.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/sqlite-libs-3.26.0-4.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-tools-efi-2.02-78.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/policycoreutils-python-utils-2.9-3.el8_1.1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/openssh-server-8.0p1-4.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/systemd-udev-239-18.el8_1.4.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/systemd-libs-239-18.el8_1.4.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/policycoreutils-2.9-3.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/openssh-8.0p1-4.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/dracut-network-049-27.git20190906.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-langpack-en-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-pc-2.02-78.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/python3-perf-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/openssh-clients-8.0p1-4.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/systemd-239-18.el8_1.4.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-common-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/openldap-2.4.46-11.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/ca-certificates-2019.2.32-80.0.el8_1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/systemd-pam-239-18.el8_1.4.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-tools-2.02-78.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/dracut-config-rescue-049-27.git20190906.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-tools-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/microcode_ctl-20190618-1.20191115.3.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/hwdata-0.314-8.2.el8_1.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/sudo-1.8.25p1-8.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/NetworkManager-tui-1.20.0-5.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/grub2-tools-extra-2.02-78.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/binutils-2.30-58.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libffi-devel-3.1-21.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libxcrypt-devel-4.1.1-4.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-devel-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/glibc-headers-2.28-72.el8_1.1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/kernel-headers-4.18.0-147.5.1.el8_1.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/tmpwatch-2.11-14.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/device-mapper-event-1.02.163-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/lvm2-2.03.05-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/lvm2-libs-2.03.05-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/device-mapper-persistent-data-0.8.5-2.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/device-mapper-event-libs-1.02.163-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/redhat-logos-httpd-81.1-1.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/mailcap-2.1.48-3.el8.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/elfutils-0.176-5.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/libtool-ltdl-2.4.6-25.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/unzip-6.0-41.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/zip-3.0-23.el8.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-baseos-d9e93ebab2134212/packages/patch-2.7.6-9.el8_0.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/repodata/e1f2de31c79470a0daa27a09f706122df51b9ac72ad8ca0588373c69ab9a87e4-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/repodata/0ab5d201ffdb7f62d51f8073fd3e014b204e549db42cba868f5dfe13a4035e2c-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/repodata/7ff3b2d507c074403f2ae85937ddd47d55b9abed65012f1bd8ec215e34cd7a1c-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/packages/qemu-img-4.1.0-23.module+el8.1.1+5467+ba2d821b.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-av-4ac73661a44e39ef/packages/qemu-guest-agent-4.1.0-23.module+el8.1.1+5467+ba2d821b.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/1e162b714aa26632ff45438e9598033ab9dc48a5c53ed6c501e05ba52066854a-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/1f67a6a5f2a7fd36dcc6c837d7138cda7a366c96c0a80686501528fd6db1bb95-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-tools-pending-a82df247641af17c/repodata/df7111cd1d479d07580e1f7c0025f9c9c1fe6e25bb4e9a4f2c265b0b985f6bf4-comps-Tools.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/c4b150fa237a4a0a14936553d986494d183dd3605bcea772a1e761217c519191-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/ccd0af25f88aa4748608964523e3c1b917c863e07bc9a9171823c9a6f5da4079-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4-osd-bb0552919a77c95c/repodata/563bca626de288aef1e30584e45575b83a09224f9d68ac6fed3c6e7c67b0ff1b-comps-OSD.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-d3db3600a2b6b48e/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-d3db3600a2b6b48e/repodata/75b045a1e28e9edafac221df69dc6208ceceee908dc7a23c50c52780601ebb1b-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-d3db3600a2b6b48e/repodata/6b2913c96f4cbc85b09d07b80d77735f4ef158e5cd4735a5ee2defb0a0dbfb98-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-d3db3600a2b6b48e/repodata/2b4ec451e7adb968ea936d2cb0ff6c2f9949d80547acbb60354ce9a505b2e85f-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-ha-d3db3600a2b6b48e/repodata/40bd54c3fcd7995c812196bf8a1f3557ea6e5a8ac21d0ec097b2b7894c68825d-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/c3b6d1db20e3592655d7a07573a862b2cbaf6cfeff701604840f59d7f0ca5050-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/754647963f73f938ffbe1351b3a64c2f87db96d802e59f2afa82b9bca6e672bc-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhelosp-ceph-4.0-osd-pending-459f179200fecd72/repodata/563bca626de288aef1e30584e45575b83a09224f9d68ac6fed3c6e7c67b0ff1b-comps-OSD.x86_64.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-1830c9a8f3b01446/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-1830c9a8f3b01446/repodata/7439a073033cf1f9c4bf3736f91ec574c1fc140c056f128c2b31af093884cbfc-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhos-release-1830c9a8f3b01446/repodata/1444570cf5696617e20d757d897320a5f0bc229ca88983afedf977057e6d7eb0-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/repodata/be38188ee536021571870eb77007542556e88adf5ba30e8cd4c5a1881d3b986b-primary.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/repodata/02b13b245069cf592dbb7f7cd30b625095a1ba8fff51d8fd312e3ee6e62180bf-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/repodata/a27718cc28ec6d71432e0ef3e6da544b7f9d93f6bb7d0a55aacd592d03144b70-comps.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/repodata/1cdc45e908e911775eede53f61845e661a0fa2d36923cd4574d1666bac5ec376-updateinfo.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/packages/openvswitch-selinux-extra-policy-1.0-19.el8fdp.noarch.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/packages/openvswitch2.11-2.11.0-35.el8fdp.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/packages/python3-openvswitch2.11-2.11.0-35.el8fdp.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-fdp-95055a853aad48ee/packages/network-scripts-openvswitch2.11-2.11.0-35.el8fdp.x86_64.rpm
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/repomd.xml
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/03f30271c888c83eb7fcfec1cd26a733c4e39eb3a2f9a430c09ae9302d966a61-filelists.xml.gz
+2020-03-04T03:26:33Z DDEBUG Removing file /var/cache/dnf/rhosp-rhel-8.1-image-build-override-a07e153c2feb80f3/repodata/4929cc0d3d718d36dc15e834a5f31be0898596a59e4d3f8bac924e5c189923aa-primary.xml.gz
+2020-03-04T03:26:33Z INFO 655 files removed
+2020-03-04T03:26:33Z DDEBUG Cleaning up.
+2020-03-04T03:27:03Z INFO --- logging initialized ---
+2020-03-04T03:27:03Z DDEBUG timer: config: 2 ms
+2020-03-04T03:27:03Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:27:03Z DEBUG DNF version: 4.2.7
+2020-03-04T03:27:03Z DDEBUG Command: yum -d 7 repolist 
+2020-03-04T03:27:03Z DDEBUG Installroot: /
+2020-03-04T03:27:03Z DDEBUG Releasever: 8
+2020-03-04T03:27:03Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:27:03Z DDEBUG Base command: repolist
+2020-03-04T03:27:03Z DDEBUG Extra commands: ['-d', '7', 'repolist']
+2020-03-04T03:27:04Z DEBUG reviving: 'rhelosp-16.0' can be revived - repomd matches.
+2020-03-04T03:27:04Z DEBUG rhelosp-16.0: using metadata from Wed 26 Feb 2020 07:10:59 PM UTC.
+2020-03-04T03:27:04Z DEBUG reviving: 'rhelosp-16.0-image-build-override' can be revived - repomd matches.
+2020-03-04T03:27:04Z DEBUG rhelosp-16.0-image-build-override: using metadata from Fri 12 Apr 2019 02:18:29 PM UTC.
+2020-03-04T03:27:04Z DEBUG reviving: 'rhelosp-ceph-4-mon' can be revived - repomd matches.
+2020-03-04T03:27:04Z DEBUG rhelosp-ceph-4-mon: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:27:05Z DEBUG reviving: 'rhelosp-ceph-4-tools' can be revived - repomd matches.
+2020-03-04T03:27:05Z DEBUG rhelosp-ceph-4-tools: using metadata from Wed 29 Jan 2020 05:03:34 PM UTC.
+2020-03-04T03:27:05Z DEBUG reviving: 'rhelosp-ceph-4.0-mon-pending' can be revived - repomd matches.
+2020-03-04T03:27:05Z DEBUG rhelosp-ceph-4.0-mon-pending: using metadata from Mon 02 Mar 2020 03:50:10 PM UTC.
+2020-03-04T03:27:06Z DEBUG reviving: 'rhelosp-ceph-4.0-tools-pending' can be revived - repomd matches.
+2020-03-04T03:27:06Z DEBUG rhelosp-ceph-4.0-tools-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:27:06Z DEBUG reviving: 'rhelosp-ceph-4-osd' can be revived - repomd matches.
+2020-03-04T03:27:06Z DEBUG rhelosp-ceph-4-osd: using metadata from Wed 29 Jan 2020 05:03:33 PM UTC.
+2020-03-04T03:27:06Z DEBUG reviving: 'rhelosp-ceph-4.0-osd-pending' can be revived - repomd matches.
+2020-03-04T03:27:06Z DEBUG rhelosp-ceph-4.0-osd-pending: using metadata from Mon 02 Mar 2020 03:50:11 PM UTC.
+2020-03-04T03:27:07Z DEBUG reviving: 'rhosp-rhel-8.1-baseos' can be revived - repomd matches.
+2020-03-04T03:27:07Z DEBUG rhosp-rhel-8.1-baseos: using metadata from Thu 27 Feb 2020 03:31:54 PM UTC.
+2020-03-04T03:27:07Z DEBUG reviving: 'rhosp-rhel-8.1-appstream' can be revived - repomd matches.
+2020-03-04T03:27:07Z DEBUG rhosp-rhel-8.1-appstream: using metadata from Tue 25 Feb 2020 01:31:04 PM UTC.
+2020-03-04T03:27:08Z DEBUG reviving: 'rhosp-rhel-8.1-ha' can be revived - repomd matches.
+2020-03-04T03:27:08Z DEBUG rhosp-rhel-8.1-ha: using metadata from Tue 25 Feb 2020 05:35:31 AM UTC.
+2020-03-04T03:27:08Z DEBUG reviving: 'rhosp-rhel-8.1-av' can be revived - repomd matches.
+2020-03-04T03:27:08Z DEBUG rhosp-rhel-8.1-av: using metadata from Wed 19 Feb 2020 06:50:54 PM UTC.
+2020-03-04T03:27:08Z DEBUG reviving: 'rhosp-rhel-8.1-ansible' can be revived - repomd matches.
+2020-03-04T03:27:08Z DEBUG rhosp-rhel-8.1-ansible: using metadata from Thu 23 Jan 2020 04:44:14 PM UTC.
+2020-03-04T03:27:09Z DEBUG reviving: 'rhosp-rhel-8.1-fdp' can be revived - repomd matches.
+2020-03-04T03:27:09Z DEBUG rhosp-rhel-8.1-fdp: using metadata from Wed 22 Jan 2020 04:02:20 AM UTC.
+2020-03-04T03:27:09Z DEBUG reviving: 'rhosp-rhel-8.1-image-build-override' can be revived - repomd matches.
+2020-03-04T03:27:09Z DEBUG rhosp-rhel-8.1-image-build-override: using metadata from Thu 04 Apr 2019 11:48:28 AM UTC.
+2020-03-04T03:27:10Z DEBUG reviving: 'rhos-release' can be revived - repomd matches.
+2020-03-04T03:27:10Z DEBUG rhos-release: using metadata from Mon 02 Mar 2020 06:27:47 PM UTC.
+2020-03-04T03:27:10Z DEBUG reviving: 'rhos-release-extras' can be revived - repomd matches.
+2020-03-04T03:27:10Z DEBUG rhos-release-extras: using metadata from Thu 23 May 2019 12:14:18 PM UTC.
+2020-03-04T03:27:11Z DDEBUG timer: sack setup: 7626 ms
+2020-03-04T03:27:11Z DEBUG Completion plugin: Generating completion cache...
+2020-03-04T03:27:11Z DEBUG Total packages: 13,403
+2020-03-04T03:27:11Z DDEBUG Cleaning up.
+2020-03-04T03:51:47Z INFO --- logging initialized ---
+2020-03-04T03:51:47Z DDEBUG timer: config: 2 ms
+2020-03-04T03:51:47Z DEBUG Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, uploadprofile
+2020-03-04T03:51:47Z DEBUG DNF version: 4.2.7
+2020-03-04T03:51:47Z DDEBUG Command: yum -C list installed 
+2020-03-04T03:51:47Z DDEBUG Installroot: /
+2020-03-04T03:51:47Z DDEBUG Releasever: 8
+2020-03-04T03:51:47Z DEBUG cachedir: /var/cache/dnf
+2020-03-04T03:51:47Z DDEBUG Base command: list
+2020-03-04T03:51:47Z DDEBUG Extra commands: ['-C', 'list', 'installed']
+2020-03-04T03:51:47Z DEBUG No module defaults found
+2020-03-04T03:51:47Z DDEBUG timer: sack setup: 242 ms
+2020-03-04T03:51:48Z DDEBUG Cleaning up.

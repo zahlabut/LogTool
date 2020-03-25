@@ -1,0 +1,84 @@
+Module                  Size  Used by
+raw_diag               16384  0
+unix_diag              16384  0
+af_packet_diag         16384  0
+netlink_diag           16384  0
+tcp_diag               16384  0
+udp_diag               16384  0
+inet_diag              20480  3 tcp_diag,raw_diag,udp_diag
+xt_physdev             16384  1
+nft_chain_route_ipv6    16384  1
+nft_chain_route_ipv4    16384  1
+xt_CHECKSUM            16384  1
+ipt_MASQUERADE         16384  1
+nft_chain_nat_ipv4     16384  4
+nf_log_ipv6            16384  1
+nf_log_ipv4            16384  1
+nf_log_common          16384  2 nf_log_ipv4,nf_log_ipv6
+nft_limit              16384  2
+xt_LOG                 16384  2
+xt_limit               16384  0
+xt_multiport           16384  2
+nft_counter            16384  180
+xt_comment             16384  1
+xt_state               16384  0
+xt_conntrack           16384  1
+nft_compat             20480  376
+nf_tables             147456  447 nft_chain_route_ipv4,nft_compat,nft_chain_nat_ipv4,nft_counter,nft_limit,nft_chain_route_ipv6
+nfnetlink              16384  2 nft_compat,nf_tables
+br_netfilter           24576  0
+bridge                192512  1 br_netfilter
+stp                    16384  1 bridge
+llc                    16384  2 bridge,stp
+ip_vs                 172032  0
+overlay               126976  45
+iscsi_tcp              20480  0
+libiscsi_tcp           24576  1 iscsi_tcp
+libiscsi               61440  2 libiscsi_tcp,iscsi_tcp
+scsi_transport_iscsi   110592  3 iscsi_tcp,libiscsi
+openvswitch           155648  5
+nf_conntrack_ipv6      20480  65
+nf_nat_ipv6            16384  1 openvswitch
+nf_conntrack_ipv4      16384  69
+nf_defrag_ipv4         16384  1 nf_conntrack_ipv4
+nf_nat_ipv4            16384  3 ipt_MASQUERADE,nft_chain_nat_ipv4,openvswitch
+nf_defrag_ipv6         20480  3 nf_conntrack_ipv6,openvswitch,ip_vs
+nf_conncount           16384  1 openvswitch
+nf_nat                 36864  3 nf_nat_ipv6,nf_nat_ipv4,openvswitch
+nf_conntrack          155648  11 xt_conntrack,nf_conntrack_ipv6,nf_conntrack_ipv4,nf_nat,xt_state,nf_nat_ipv6,ipt_MASQUERADE,nf_nat_ipv4,openvswitch,nf_conncount,ip_vs
+sb_edac                24576  0
+kvm_intel             290816  0
+kvm                   761856  1 kvm_intel
+cirrus                 28672  1
+ttm                   110592  1 cirrus
+irqbypass              16384  1 kvm
+drm_kms_helper        217088  1 cirrus
+syscopyarea            16384  1 drm_kms_helper
+sysfillrect            16384  1 drm_kms_helper
+sysimgblt              16384  1 drm_kms_helper
+fb_sys_fops            16384  1 drm_kms_helper
+drm                   524288  4 drm_kms_helper,cirrus,ttm
+pcspkr                 16384  0
+joydev                 24576  0
+i2c_piix4              24576  0
+virtio_balloon         20480  0
+xfs                  1474560  1
+libcrc32c              16384  5 nf_conntrack,nf_nat,openvswitch,xfs,ip_vs
+ata_generic            16384  0
+crct10dif_pclmul       16384  0
+crc32_pclmul           16384  0
+crc32c_intel           24576  1
+ata_piix               36864  0
+libata                270336  2 ata_piix,ata_generic
+virtio_blk             20480  2
+virtio_console         36864  1
+serio_raw              16384  0
+virtio_net             53248  0
+ghash_clmulni_intel    16384  0
+net_failover           24576  1 virtio_net
+failover               16384  1 net_failover
+sunrpc                425984  1
+dm_mirror              28672  0
+dm_region_hash         20480  1 dm_mirror
+dm_log                 20480  2 dm_region_hash,dm_mirror
+dm_mod                151552  2 dm_log,dm_mirror

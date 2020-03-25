@@ -1,0 +1,43 @@
+{
+  "command": [
+    "puppet",
+    "apply",
+    "--modulepath",
+    "/etc/puppet/modules:/usr/share/openstack-puppet/modules",
+    "--tags",
+    "file,file_line,concat,augeas,neutron::plugins::ovs::bridge,vs_config",
+    "-v",
+    "-e",
+    "include neutron::agents::ml2::ovs"
+  ],
+  "detach": false,
+  "environment": {
+    "KOLLA_CONFIG_STRATEGY": "COPY_ALWAYS",
+    "TRIPLEO_DEPLOY_IDENTIFIER": "1583290741",
+    "TRIPLEO_CONFIG_HASH": "8fbef02dac2607b7edf65e15cd6de816"
+  },
+  "image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-neutron-server:20200226.1",
+  "net": "host",
+  "pid": "host",
+  "privileged": true,
+  "security_opt": "label=disable",
+  "user": "root",
+  "volumes": [
+    "/etc/hosts:/etc/hosts:ro",
+    "/etc/localtime:/etc/localtime:ro",
+    "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro",
+    "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro",
+    "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro",
+    "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro",
+    "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro",
+    "/dev/log:/dev/log",
+    "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro",
+    "/etc/puppet:/etc/puppet:ro",
+    "/var/lib/kolla/config_files/neutron_ovs_agent.json:/var/lib/kolla/config_files/config.json:ro",
+    "/var/lib/config-data/puppet-generated/neutron/:/var/lib/kolla/config_files/src:ro",
+    "/lib/modules:/lib/modules:ro",
+    "/run/openvswitch:/run/openvswitch:shared,z",
+    "/var/run/openvswitch/:/var/run/openvswitch/:shared,z",
+    "/usr/share/openstack-puppet/modules/:/usr/share/openstack-puppet/modules/:ro"
+  ]
+}

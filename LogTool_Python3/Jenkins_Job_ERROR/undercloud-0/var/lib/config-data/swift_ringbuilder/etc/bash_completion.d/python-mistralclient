@@ -1,0 +1,25 @@
+_mistral_opts="" # lazy init
+_mistral_flags="" # lazy init
+_mistral_opts_exp="" # lazy init
+_mistral()
+{
+	local cur prev mbc cflags
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	if [ "x$_mistral_opts" == "x" ] ; then
+		mbc="`mistral bash-completion`"
+		_mistral_opts="`echo "$mbc" | sed -e "s/\s-[a-z0-9_-]*//g" -e "s/\s\s*/ /g"`"
+		_mistral_flags="`echo " $mbc" | sed -e "s/ [^-][^-][a-z0-9_-]*//g" -e "s/\s\s*/ /g"`"
+		_mistral_opts_exp="`echo "$_mistral_opts" | sed -e "s/\s/|/g"`"
+	fi
+
+	if [[ " ${COMP_WORDS[@]} " =~ " "($_mistral_opts_exp)" " && "$prev" != "help" ]] ; then
+		COMPREPLY=($(compgen -W "${_mistral_flags}" -- ${cur}))
+	else
+		COMPREPLY=($(compgen -W "${_mistral_opts}" -- ${cur}))
+	fi
+	return 0
+}
+complete -F _mistral mistral

@@ -1,0 +1,32 @@
+2019-10-29 12:33:38,198 [INFO] dnf:3475:MainThread @repolib.py:464 - repos updated: Repo updates
+
+Total repo updates: 0
+Updated
+    <NONE>
+Added (new)
+    <NONE>
+Deleted
+    <NONE>
+2019-10-29 12:33:39,932 [WARNING] dnf:3475:MainThread @logutil.py:142 - logging already initialized
+2019-10-29 12:33:39,935 [ERROR] dnf:3475:MainThread @product-id.py:193 - Unable to read cache: /var/lib/rhsm/cache/productid_repo_mapping.json
+2019-10-29 12:33:39,935 [ERROR] dnf:3475:MainThread @product-id.py:194 - [Errno 2] No such file or directory: '/var/lib/rhsm/cache/productid_repo_mapping.json'
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/dnf-plugins/product-id.py", line 188, in __read_cache_file
+    with open(file_name) as file:
+FileNotFoundError: [Errno 2] No such file or directory: '/var/lib/rhsm/cache/productid_repo_mapping.json'
+2019-10-29 12:33:41,147 [INFO] dnf:3480:MainThread @repolib.py:464 - repos updated: Repo updates
+
+Total repo updates: 0
+Updated
+    <NONE>
+Added (new)
+    <NONE>
+Deleted
+    <NONE>
+2019-10-29 12:33:44,593 [WARNING] dnf:3480:MainThread @logutil.py:142 - logging already initialized
+2019-10-29 12:33:44,595 [ERROR] dnf:3480:MainThread @product-id.py:193 - Unable to read cache: /var/lib/rhsm/cache/productid_repo_mapping.json
+2019-10-29 12:33:44,595 [ERROR] dnf:3480:MainThread @product-id.py:194 - [Errno 2] No such file or directory: '/var/lib/rhsm/cache/productid_repo_mapping.json'
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/dnf-plugins/product-id.py", line 188, in __read_cache_file
+    with open(file_name) as file:
+FileNotFoundError: [Errno 2] No such file or directory: '/var/lib/rhsm/cache/productid_repo_mapping.json'

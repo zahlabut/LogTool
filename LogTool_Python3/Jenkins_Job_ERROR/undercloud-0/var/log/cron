@@ -1,0 +1,66 @@
+Mar  3 21:46:31 localhost crond[1570]: (CRON) STARTUP (1.5.2)
+Mar  3 21:46:31 localhost crond[1570]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  3 21:46:31 localhost crond[1570]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 38% if used.)
+Mar  3 21:46:31 localhost crond[1570]: (CRON) INFO (running with inotify support)
+Mar  3 21:55:46 localhost crond[1570]: (CRON) INFO (Shutting down)
+Mar  3 21:55:46 localhost crond[9948]: (CRON) STARTUP (1.5.2)
+Mar  3 21:55:46 localhost crond[9948]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  3 21:55:46 localhost crond[9948]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 15% if used.)
+Mar  3 21:55:46 localhost crond[9948]: (CRON) INFO (running with inotify support)
+Mar  3 21:55:46 localhost crond[9948]: (CRON) INFO (@reboot jobs will be run at computer's startup.)
+Mar  3 21:56:35 undercloud-0 crond[9948]: (CRON) INFO (Shutting down)
+Mar  3 21:56:44 undercloud-0 crond[1672]: (CRON) STARTUP (1.5.2)
+Mar  3 21:56:44 undercloud-0 crond[1672]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  3 21:56:44 undercloud-0 crond[1672]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 50% if used.)
+Mar  3 21:56:45 undercloud-0 crond[1672]: (CRON) INFO (running with inotify support)
+Mar  3 22:01:01 undercloud-0 CROND[12348]: (root) CMD (run-parts /etc/cron.hourly)
+Mar  3 22:01:01 undercloud-0 run-parts[12348]: (/etc/cron.hourly) starting 0anacron
+Mar  3 22:01:01 undercloud-0 anacron[12357]: Anacron started on 2020-03-03
+Mar  3 22:01:01 undercloud-0 anacron[12357]: Will run job `cron.daily' in 14 min.
+Mar  3 22:01:01 undercloud-0 anacron[12357]: Will run job `cron.weekly' in 34 min.
+Mar  3 22:01:01 undercloud-0 anacron[12357]: Will run job `cron.monthly' in 54 min.
+Mar  3 22:01:01 undercloud-0 anacron[12357]: Jobs will be executed sequentially
+Mar  3 22:01:01 undercloud-0 run-parts[12348]: (/etc/cron.hourly) finished 0anacron
+Mar  4 03:05:47 undercloud-0 crond[1672]: (CRON) INFO (Shutting down)
+Mar  4 03:05:47 undercloud-0 crond[17153]: (CRON) STARTUP (1.5.2)
+Mar  4 03:05:47 undercloud-0 crond[17153]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  4 03:05:47 undercloud-0 crond[17153]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 58% if used.)
+Mar  4 03:05:47 undercloud-0 crond[17153]: (CRON) INFO (running with inotify support)
+Mar  4 03:05:47 undercloud-0 crond[17153]: (CRON) INFO (@reboot jobs will be run at computer's startup.)
+Mar  4 03:09:07 undercloud-0 crontab[25371]: (root) LIST (root)
+Mar  4 03:09:56 undercloud-0 crontab[78]: (root) LIST (root)
+Mar  4 03:09:56 undercloud-0 crontab[81]: (root) REPLACE (root)
+Mar  4 03:10:01 undercloud-0 crontab[90]: (root) LIST (root)
+Mar  4 03:10:01 undercloud-0 crontab[93]: (root) LIST (heat)
+Mar  4 03:10:01 undercloud-0 crontab[96]: (root) REPLACE (heat)
+Mar  4 03:10:02 undercloud-0 crontab[89]: (root) LIST (root)
+Mar  4 03:10:02 undercloud-0 crontab[92]: (root) LIST (heat)
+Mar  4 03:10:02 undercloud-0 crontab[95]: (root) REPLACE (heat)
+Mar  4 03:11:03 undercloud-0 crontab[99]: (root) LIST (root)
+Mar  4 03:11:03 undercloud-0 crontab[102]: (root) LIST (nova)
+Mar  4 03:11:03 undercloud-0 crontab[105]: (root) REPLACE (nova)
+Mar  4 03:11:03 undercloud-0 crontab[106]: (root) REPLACE (nova)
+Mar  4 03:15:01 undercloud-0 anacron[12357]: Job `cron.daily' started
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) starting containers-tmpwatch
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) finished containers-tmpwatch
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) starting logrotate
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) finished logrotate
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) starting rhsmd
+Mar  4 03:15:01 undercloud-0 run-parts[42303]: (/etc/cron.daily) finished rhsmd
+Mar  4 03:15:01 undercloud-0 anacron[12357]: Job `cron.daily' terminated
+Mar  4 03:20:02 undercloud-0 crond[8]: (CRON) STARTUP (1.5.2)
+Mar  4 03:20:02 undercloud-0 crond[8]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  4 03:20:02 undercloud-0 crond[8]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 57% if used.)
+Mar  4 03:20:02 undercloud-0 crond[8]: (CRON) INFO (running with inotify support)
+Mar  4 03:20:05 undercloud-0 crond[49108]: (CRON) STARTUP (1.5.2)
+Mar  4 03:20:05 undercloud-0 crond[49108]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 73% if used.)
+Mar  4 03:20:05 undercloud-0 crond[49108]: (CRON) INFO (running with inotify support)
+Mar  4 03:20:55 undercloud-0 crond[7]: (CRON) STARTUP (1.5.2)
+Mar  4 03:20:55 undercloud-0 crond[7]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Mar  4 03:20:55 undercloud-0 crond[7]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 25% if used.)
+Mar  4 03:20:55 undercloud-0 crond[7]: (CRON) INFO (running with inotify support)
+Mar  4 03:35:01 undercloud-0 anacron[12357]: Job `cron.weekly' started
+Mar  4 03:35:01 undercloud-0 anacron[12357]: Job `cron.weekly' terminated
+Mar  4 03:55:01 undercloud-0 anacron[12357]: Job `cron.monthly' started
+Mar  4 03:55:01 undercloud-0 anacron[12357]: Job `cron.monthly' terminated
+Mar  4 03:55:01 undercloud-0 anacron[12357]: Normal exit (3 jobs run)

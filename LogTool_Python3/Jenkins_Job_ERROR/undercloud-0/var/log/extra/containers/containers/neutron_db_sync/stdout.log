@@ -1,0 +1,199 @@
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> kilo
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 354db87e3225
+INFO  [alembic.runtime.migration] Running upgrade 354db87e3225 -> 599c6a226151
+INFO  [alembic.runtime.migration] Running upgrade 599c6a226151 -> 52c5312f6baf
+INFO  [alembic.runtime.migration] Running upgrade 52c5312f6baf -> 313373c0ffee
+INFO  [alembic.runtime.migration] Running upgrade 313373c0ffee -> 8675309a5c4f
+INFO  [alembic.runtime.migration] Running upgrade 8675309a5c4f -> 45f955889773
+INFO  [alembic.runtime.migration] Running upgrade 45f955889773 -> 26c371498592
+INFO  [alembic.runtime.migration] Running upgrade 26c371498592 -> 1c844d1677f7
+INFO  [alembic.runtime.migration] Running upgrade 1c844d1677f7 -> 1b4c6e320f79
+INFO  [alembic.runtime.migration] Running upgrade 1b4c6e320f79 -> 48153cb5f051
+INFO  [alembic.runtime.migration] Running upgrade 48153cb5f051 -> 9859ac9c136
+INFO  [alembic.runtime.migration] Running upgrade 9859ac9c136 -> 34af2b5c5a59
+INFO  [alembic.runtime.migration] Running upgrade 34af2b5c5a59 -> 59cb5b6cf4d
+INFO  [alembic.runtime.migration] Running upgrade 59cb5b6cf4d -> 13cfb89f881a
+INFO  [alembic.runtime.migration] Running upgrade 13cfb89f881a -> 32e5974ada25
+INFO  [alembic.runtime.migration] Running upgrade 32e5974ada25 -> ec7fcfbf72ee
+INFO  [alembic.runtime.migration] Running upgrade ec7fcfbf72ee -> dce3ec7a25c9
+INFO  [alembic.runtime.migration] Running upgrade dce3ec7a25c9 -> c3a73f615e4
+INFO  [alembic.runtime.migration] Running upgrade c3a73f615e4 -> 659bf3d90664
+INFO  [alembic.runtime.migration] Running upgrade 659bf3d90664 -> 1df244e556f5
+INFO  [alembic.runtime.migration] Running upgrade 1df244e556f5 -> 19f26505c74f
+INFO  [alembic.runtime.migration] Running upgrade 19f26505c74f -> 15be73214821
+INFO  [alembic.runtime.migration] Running upgrade 15be73214821 -> b4caf27aae4
+INFO  [alembic.runtime.migration] Running upgrade b4caf27aae4 -> 15e43b934f81
+INFO  [alembic.runtime.migration] Running upgrade 15e43b934f81 -> 31ed664953e6
+INFO  [alembic.runtime.migration] Running upgrade 31ed664953e6 -> 2f9e956e7532
+INFO  [alembic.runtime.migration] Running upgrade 2f9e956e7532 -> 3894bccad37f
+INFO  [alembic.runtime.migration] Running upgrade 3894bccad37f -> 0e66c5227a8a
+INFO  [alembic.runtime.migration] Running upgrade 0e66c5227a8a -> 45f8dd33480b
+INFO  [alembic.runtime.migration] Running upgrade 45f8dd33480b -> 5abc0278ca73
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 30018084ec99
+INFO  [alembic.runtime.migration] Running upgrade 30018084ec99 -> 4ffceebfada
+INFO  [alembic.runtime.migration] Running upgrade 4ffceebfada -> 5498d17be016
+INFO  [alembic.runtime.migration] Running upgrade 5498d17be016 -> 2a16083502f3
+INFO  [alembic.runtime.migration] Running upgrade 2a16083502f3 -> 2e5352a0ad4d
+INFO  [alembic.runtime.migration] Running upgrade 2e5352a0ad4d -> 11926bcfe72d
+INFO  [alembic.runtime.migration] Running upgrade 11926bcfe72d -> 4af11ca47297
+INFO  [alembic.runtime.migration] Running upgrade 4af11ca47297 -> 1b294093239c
+INFO  [alembic.runtime.migration] Running upgrade 1b294093239c -> 8a6d8bdae39
+INFO  [alembic.runtime.migration] Running upgrade 8a6d8bdae39 -> 2b4c2465d44b
+INFO  [alembic.runtime.migration] Running upgrade 2b4c2465d44b -> e3278ee65050
+INFO  [alembic.runtime.migration] Running upgrade e3278ee65050 -> c6c112992c9
+INFO  [alembic.runtime.migration] Running upgrade c6c112992c9 -> 5ffceebfada
+INFO  [alembic.runtime.migration] Running upgrade 5ffceebfada -> 4ffceebfcdc
+INFO  [alembic.runtime.migration] Running upgrade 4ffceebfcdc -> 7bbb25278f53
+INFO  [alembic.runtime.migration] Running upgrade 7bbb25278f53 -> 89ab9a816d70
+INFO  [alembic.runtime.migration] Running upgrade 5abc0278ca73 -> d3435b514502
+INFO  [alembic.runtime.migration] Running upgrade d3435b514502 -> 30107ab6a3ee
+INFO  [alembic.runtime.migration] Running upgrade 30107ab6a3ee -> c415aab1c048
+INFO  [alembic.runtime.migration] Running upgrade c415aab1c048 -> a963b38d82f4
+INFO  [alembic.runtime.migration] Running upgrade a963b38d82f4 -> 3d0e74aa7d37
+INFO  [alembic.runtime.migration] Running upgrade 3d0e74aa7d37 -> 030a959ceafa
+INFO  [alembic.runtime.migration] Running upgrade 030a959ceafa -> a5648cfeeadf
+INFO  [alembic.runtime.migration] Running upgrade a5648cfeeadf -> 0f5bef0f87d4
+INFO  [alembic.runtime.migration] Running upgrade 0f5bef0f87d4 -> 67daae611b6e
+INFO  [alembic.runtime.migration] Running upgrade 89ab9a816d70 -> c879c5e1ee90
+INFO  [alembic.runtime.migration] Running upgrade c879c5e1ee90 -> 8fd3918ef6f4
+INFO  [alembic.runtime.migration] Running upgrade 8fd3918ef6f4 -> 4bcd4df1f426
+INFO  [alembic.runtime.migration] Running upgrade 4bcd4df1f426 -> b67e765a3524
+INFO  [alembic.runtime.migration] Running upgrade 67daae611b6e -> 6b461a21bcfc
+INFO  [alembic.runtime.migration] Running upgrade 6b461a21bcfc -> 5cd92597d11d
+INFO  [alembic.runtime.migration] Running upgrade 5cd92597d11d -> 929c968efe70
+INFO  [alembic.runtime.migration] Running upgrade 929c968efe70 -> a9c43481023c
+INFO  [alembic.runtime.migration] Running upgrade a9c43481023c -> 804a3c76314c
+INFO  [alembic.runtime.migration] Running upgrade 804a3c76314c -> 2b42d90729da
+INFO  [alembic.runtime.migration] Running upgrade 2b42d90729da -> 62c781cb6192
+INFO  [alembic.runtime.migration] Running upgrade 62c781cb6192 -> c8c222d42aa9
+INFO  [alembic.runtime.migration] Running upgrade c8c222d42aa9 -> 349b6fd605a6
+INFO  [alembic.runtime.migration] Running upgrade 349b6fd605a6 -> 7d32f979895f
+INFO  [alembic.runtime.migration] Running upgrade 7d32f979895f -> 594422d373ee
+INFO  [alembic.runtime.migration] Running upgrade 594422d373ee -> 61663558142c
+INFO  [alembic.runtime.migration] Running upgrade 61663558142c -> 867d39095bf4, port forwarding
+INFO  [alembic.runtime.migration] Running upgrade 867d39095bf4 -> d72db3e25539, modify uniq port forwarding
+INFO  [alembic.runtime.migration] Running upgrade d72db3e25539 -> cada2437bf41
+INFO  [alembic.runtime.migration] Running upgrade cada2437bf41 -> 195176fb410d, router gateway IP QoS
+INFO  [alembic.runtime.migration] Running upgrade 195176fb410d -> fb0167bd9639
+INFO  [alembic.runtime.migration] Running upgrade fb0167bd9639 -> 0ff9e3881597
+INFO  [alembic.runtime.migration] Running upgrade 0ff9e3881597 -> 9bfad3f1e780
+INFO  [alembic.runtime.migration] Running upgrade 9bfad3f1e780 -> 63fd95af7dcd
+INFO  [alembic.runtime.migration] Running upgrade 63fd95af7dcd -> c613d0b82681
+INFO  [alembic.runtime.migration] Running upgrade b67e765a3524 -> a84ccf28f06a
+INFO  [alembic.runtime.migration] Running upgrade a84ccf28f06a -> 7d9d8eeec6ad
+INFO  [alembic.runtime.migration] Running upgrade 7d9d8eeec6ad -> a8b517cff8ab
+INFO  [alembic.runtime.migration] Running upgrade a8b517cff8ab -> 3b935b28e7a0
+INFO  [alembic.runtime.migration] Running upgrade 3b935b28e7a0 -> b12a3ef66e62
+INFO  [alembic.runtime.migration] Running upgrade b12a3ef66e62 -> 97c25b0d2353
+INFO  [alembic.runtime.migration] Running upgrade 97c25b0d2353 -> 2e0d7a8a1586
+INFO  [alembic.runtime.migration] Running upgrade 2e0d7a8a1586 -> 5c85685d616d
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> start_networking_l2gw, start networking-l2gw chain
+INFO  [alembic.runtime.migration] Running upgrade start_networking_l2gw -> 54c9c8fe22bf, DB_Models_for_OVSDB_Hardware_VTEP_Schema
+INFO  [alembic.runtime.migration] Running upgrade 54c9c8fe22bf -> 42438454c556, l2gateway_models
+INFO  [alembic.runtime.migration] Running upgrade 42438454c556 -> kilo, kilo
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 60019185aa99, Initial no-op Liberty expand rule.
+INFO  [alembic.runtime.migration] Running upgrade 60019185aa99 -> 49ce408ac349, add indexes to tenant_id
+INFO  [alembic.runtime.migration] Running upgrade 49ce408ac349 -> 8d7d772eafcf, add standard_attribute_id for l2gw
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 79919185aa99, Initial no-op Liberty contract rule.
+INFO  [alembic.runtime.migration] Running upgrade 79919185aa99 -> 2f533f7705dd, rename tenant to project
+INFO  [alembic.runtime.migration] Running upgrade 2f533f7705dd -> 0fb45e525aa9, add standard_attribute_id for l2gw
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> start_networking_sfc, start networking-sfc chain
+INFO  [alembic.runtime.migration] Running upgrade start_networking_sfc -> 24fc7241aa5, Initial Mitaka no-op script.
+INFO  [alembic.runtime.migration] Running upgrade 24fc7241aa5 -> 9768e6a66c9, Defining flow-classifier data-model
+INFO  [alembic.runtime.migration] Running upgrade 9768e6a66c9 -> c3e178d4a985, Defining Port Chain data-model.
+INFO  [alembic.runtime.migration] Running upgrade c3e178d4a985 -> 5a475fc853e6, Defining OVS data-model
+INFO  [alembic.runtime.migration] Running upgrade 5a475fc853e6 -> d1002a1f97f6, update flow classifier
+INFO  [alembic.runtime.migration] Running upgrade d1002a1f97f6 -> fa75d46a7f11, add_port_pair_group_params
+INFO  [alembic.runtime.migration] Running upgrade fa75d46a7f11 -> b3adaf631bab, _add_fwd_path_and_in_mac_column
+INFO  [alembic.runtime.migration] Running upgrade b3adaf631bab -> 6185f1633a3d, description of revision
+INFO  [alembic.runtime.migration] Running upgrade 6185f1633a3d -> 61832141fb82, add_ppg_n_tuple_mapping_column
+INFO  [alembic.runtime.migration] Running upgrade 61832141fb82 -> 8329e9be2d8a, modify_value_column_size_in_port_pair_group_params
+INFO  [alembic.runtime.migration] Running upgrade 8329e9be2d8a -> 53ed5bec6cff, Add Service Graph API resource
+INFO  [alembic.runtime.migration] Running upgrade 53ed5bec6cff -> d6fb381b65f2
+INFO  [alembic.runtime.migration] Running upgrade d6fb381b65f2 -> a3ad63aa834f, extra attributes for pathnode
+INFO  [alembic.runtime.migration] Running upgrade start_networking_sfc -> 48072cb59133, Initial Mitaka no-op script.
+INFO  [alembic.runtime.migration] Running upgrade 48072cb59133 -> 010308b06b49, rename tenant to project
+INFO  [alembic.runtime.migration] Running upgrade 010308b06b49 -> 06382790fb2c, fix foreign constraints
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> start_neutron_dynamic_routing, start neutron-dynamic-routing chain
+INFO  [alembic.runtime.migration] Running upgrade start_neutron_dynamic_routing -> 61cc795e43e8, initial
+INFO  [alembic.runtime.migration] Running upgrade 61cc795e43e8 -> 4cf8bc3edb66, rename tenant to project
+INFO  [alembic.runtime.migration] Running upgrade 4cf8bc3edb66 -> a589fdb5724c, change size of as number
+INFO  [alembic.runtime.migration] Running upgrade start_neutron_dynamic_routing -> f399fa0f5f25, initial
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Context impl MySQLImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> kilo, kilo
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 53a3254aa95e, Initial Liberty no-op expand script.
+INFO  [alembic.runtime.migration] Running upgrade 53a3254aa95e -> 28430956782d, nsxv3_security_groups
+INFO  [alembic.runtime.migration] Running upgrade 28430956782d -> 279b70ac3ae8, NSXv3 Add l2gwconnection table
+INFO  [alembic.runtime.migration] Running upgrade 279b70ac3ae8 -> 312211a5725f, nsxv_lbv2
+INFO  [alembic.runtime.migration] Running upgrade 312211a5725f -> 2af850eb3970, update nsxv tz binding type
+INFO  [alembic.runtime.migration] Running upgrade 2af850eb3970 -> 69fb78b33d41, NSXv add dns search domain to subnets
+INFO  [alembic.runtime.migration] Running upgrade 69fb78b33d41 -> 20483029f1ff, update nsx_v3 tz_network_bindings_binding_type
+INFO  [alembic.runtime.migration] Running upgrade 20483029f1ff -> 4c45bcadccf9, extend_secgroup_rule
+INFO  [alembic.runtime.migration] Running upgrade 4c45bcadccf9 -> 2c87aedb206f, nsxv_security_group_logging
+INFO  [alembic.runtime.migration] Running upgrade 2c87aedb206f -> 3e4dccfe6fb4, NSXv add dns search domain to subnets
+INFO  [alembic.runtime.migration] Running upgrade 3e4dccfe6fb4 -> 967462f585e1, add dvs_id column to neutron_nsx_network_mappings
+INFO  [alembic.runtime.migration] Running upgrade 967462f585e1 -> b7f41687cbad, nsxv3_qos_policy_mapping
+INFO  [alembic.runtime.migration] Running upgrade b7f41687cbad -> c288bb6a7252, NSXv add resource pool to the router bindings table
+INFO  [alembic.runtime.migration] Running upgrade c288bb6a7252 -> c644ec62c585, NSXv3 add nsx_service_bindings and nsx_dhcp_bindings tables
+INFO  [alembic.runtime.migration] Running upgrade c644ec62c585 -> 5e564e781d77, add nsx binding type
+INFO  [alembic.runtime.migration] Running upgrade 5e564e781d77 -> aede17d51d0f, add timestamp
+INFO  [alembic.runtime.migration] Running upgrade aede17d51d0f -> 7e46906f8997, lbaas foreignkeys
+INFO  [alembic.runtime.migration] Running upgrade 7e46906f8997 -> 86a55205337c, NSXv add availability zone to the router bindings table instead of
+the resource pool column
+INFO  [alembic.runtime.migration] Running upgrade 86a55205337c -> 633514d94b93, Add support for TaaS
+INFO  [alembic.runtime.migration] Running upgrade 633514d94b93 -> 1b4eaffe4f31, NSX Adds a 'provider' attribute to security-group
+INFO  [alembic.runtime.migration] Running upgrade 1b4eaffe4f31 -> 6e6da8296c0e, Add support for IPAM in NSXv
+INFO  [alembic.runtime.migration] Running upgrade kilo -> 393bf843b96, Initial Liberty no-op contract script.
+INFO  [alembic.runtime.migration] Running upgrade 393bf843b96 -> 3c88bdea3054, nsxv_vdr_dhcp_binding.py
+INFO  [alembic.runtime.migration] Running upgrade 3c88bdea3054 -> 5ed1ffbc0d2a, nsxv_security_group_logging
+INFO  [alembic.runtime.migration] Running upgrade 5ed1ffbc0d2a -> 081af0e396d7, nsxv3_secgroup_local_ip_prefix
+INFO  [alembic.runtime.migration] Running upgrade 081af0e396d7 -> dbe29d208ac6, NSXv add DHCP MTU to subnets
+INFO  [alembic.runtime.migration] Running upgrade dbe29d208ac6 -> d49ac91b560e, Support shared pools with NSXv LBaaSv2 driver
+INFO  [alembic.runtime.migration] Running upgrade d49ac91b560e -> 5c8f451290b7, nsxv_subnet_ipam rename to nsx_subnet_ipam
+INFO  [alembic.runtime.migration] Running upgrade 5c8f451290b7 -> 14a89ddf96e2, NSX Adds a 'availability_zone' attribute to internal-networks table
+INFO  [alembic.runtime.migration] Running upgrade 14a89ddf96e2 -> 8c0a81a07691, Update the primary key constraint of nsx_subnet_ipam
+INFO  [alembic.runtime.migration] Running upgrade 8c0a81a07691 -> 84ceffa27115, remove the foreign key constrain from nsxv3_qos_policy_mapping
+INFO  [alembic.runtime.migration] Running upgrade 84ceffa27115 -> a1be06050b41, update nsx binding types
+INFO  [alembic.runtime.migration] Running upgrade a1be06050b41 -> 717f7f63a219, nsxv3_lbaas_l7policy
+INFO  [alembic.runtime.migration] Running upgrade 6e6da8296c0e -> 7b5ec3caa9a4, Fix the availability zones default value in the router bindings table
+INFO  [alembic.runtime.migration] Running upgrade 7b5ec3caa9a4 -> e816d4fe9d4f, NSX Adds a 'policy' attribute to security-group
+INFO  [alembic.runtime.migration] Running upgrade e816d4fe9d4f -> dd9fe5a3a526, NSX Adds certificate table for client certificate management
+INFO  [alembic.runtime.migration] Running upgrade dd9fe5a3a526 -> 01a33f93f5fd, nsxv_lbv2_l7policy
+INFO  [alembic.runtime.migration] Running upgrade 01a33f93f5fd -> e4c503f4133f, Port vnic_type support
+INFO  [alembic.runtime.migration] Running upgrade e4c503f4133f -> 7c4704ad37df, Fix NSX Lbaas L7 policy table creation
+INFO  [alembic.runtime.migration] Running upgrade 7c4704ad37df -> 8699700cd95c, nsxv_bgp_speaker_mapping
+INFO  [alembic.runtime.migration] Running upgrade 8699700cd95c -> 53eb497903a4, Drop VDR DHCP bindings table
+INFO  [alembic.runtime.migration] Running upgrade 53eb497903a4 -> ea7a72ab9643
+INFO  [alembic.runtime.migration] Running upgrade ea7a72ab9643 -> 9799427fc0e1, nsx map project to plugin
+INFO  [alembic.runtime.migration] Running upgrade 9799427fc0e1 -> 0dbeda408e41, nsxv3_vpn_mapping
+INFO  [alembic.runtime.migration] Running upgrade 0dbeda408e41 -> fc6308289aca, lbaas_no_foreign_key
+INFO  [alembic.runtime.migration] Running upgrade fc6308289aca -> 99bfcb6003c6, lbaas_error_no_member
+Running upgrade for neutron ...
+OK
+Running upgrade for networking-l2gw ...
+OK
+Running upgrade for networking-sfc ...
+OK
+Running upgrade for neutron-dynamic-routing ...
+OK
+Running upgrade for vmware-nsx ...
+OK

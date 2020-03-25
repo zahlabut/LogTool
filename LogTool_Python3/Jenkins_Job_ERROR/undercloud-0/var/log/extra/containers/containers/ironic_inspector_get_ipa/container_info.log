@@ -1,0 +1,471 @@
++ podman top ironic_inspector_get_ipa user pid ppid pcpu vsz tty state time etime args
+Error: top can only be used on running containers
++ podman exec --user root ironic_inspector_get_ipa top -bwn1
+Error: cannot exec into container that is not running: container state improper
++ podman inspect ironic_inspector_get_ipa
+[
+    {
+        "Id": "02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114",
+        "Created": "2020-03-04T03:15:05.12759075Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--single-child",
+            "--",
+            "true"
+        ],
+        "State": {
+            "OciVersion": "1.0.1-dev",
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-04T03:15:05.475633817Z",
+            "FinishedAt": "2020-03-04T03:15:05.494651222Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "0cc2092d93ad945f6f3d76e80b4efee73d696f667048515bdc8ea414ab62d372",
+        "ImageName": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "/var/run/containers/storage/overlay-containers/02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114/userdata/resolv.conf",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114/userdata/hostname",
+        "HostsPath": "/var/run/containers/storage/overlay-containers/02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114/userdata/hosts",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114/userdata/config.json",
+        "OCIRuntime": "runc",
+        "LogPath": "/var/log/containers/stdouts/ironic_inspector_get_ipa.log",
+        "ConmonPidFile": "/var/run/ironic_inspector_get_ipa.pid",
+        "Name": "ironic_inspector_get_ipa",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c191,c553",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c191,c553",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "BoundingCaps": [
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FSETID",
+            "CAP_FOWNER",
+            "CAP_MKNOD",
+            "CAP_NET_RAW",
+            "CAP_SETGID",
+            "CAP_SETUID",
+            "CAP_SETFCAP",
+            "CAP_SETPCAP",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_SYS_CHROOT",
+            "CAP_KILL",
+            "CAP_AUDIT_WRITE"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/e7249305b413acfe95fddb8fd5e7c953eb9b65fe648d13dbb1e03630c5997e3f/diff:/var/lib/containers/storage/overlay/39231f0c35ac6b5018875a08df285edbceeeb29ab1a6185f125c5bd1d90be658/diff:/var/lib/containers/storage/overlay/9ffebe361fec105693dc398ba724d0faa201282b8a1e9a3e6383cac48256e775/diff:/var/lib/containers/storage/overlay/f659bfaf2e3b922dcc39bb7e9011ea80508c21349fabb8d1ce2ea20525be349b/diff:/var/lib/containers/storage/overlay/1295eae54c9d95bd8e2c7f83df2a90ac3923d89ec44231fd49f31e7a934f9656/diff",
+                "UpperDir": "/var/lib/containers/storage/overlay/3323559e8d6b0088a5bd7555b57d244ece1700c4220ff9b5cd34cdd71e2e52a2/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/3323559e8d6b0088a5bd7555b57d244ece1700c4220ff9b5cd34cdd71e2e52a2/work"
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/dev/log",
+                "Destination": "/dev/log",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "nosuid",
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/kolla/config_files/ironic_inspector.json",
+                "Destination": "/var/lib/kolla/config_files/config.json",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/cert.pem",
+                "Destination": "/etc/pki/tls/cert.pem",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/hosts",
+                "Destination": "/etc/hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/ssh/ssh_known_hosts",
+                "Destination": "/etc/ssh/ssh_known_hosts",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/localtime",
+                "Destination": "/etc/localtime",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/puppet",
+                "Destination": "/etc/puppet",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/var/lib/ironic",
+                "Destination": "/var/lib/ironic",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": true,
+                "Propagation": "shared"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/source/anchors",
+                "Destination": "/etc/pki/ca-trust/source/anchors",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Destination": "/etc/pki/tls/certs/ca-bundle.trust.crt",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Name": "",
+                "Source": "/etc/pki/ca-trust/extracted",
+                "Destination": "/etc/pki/ca-trust/extracted",
+                "Driver": "",
+                "Mode": "",
+                "Options": [
+                    "rbind"
+                ],
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": [],
+            "SandboxKey": "",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": ""
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "runc",
+            "--storage-driver",
+            "overlay",
+            "--events-backend",
+            "journald",
+            "container",
+            "cleanup",
+            "02a00574fa3be220ed4a2ff92df6feeeeb431c035b224da924e3cc7c49d9f114"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "undercloud-0.redhat.local",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "HOSTNAME=undercloud-0.redhat.local",
+                "container=oci",
+                "KOLLA_BASE_DISTRO=rhel",
+                "KOLLA_INSTALL_TYPE=binary",
+                "KOLLA_DISTRO_PYTHON_VERSION=3.6",
+                "KOLLA_BASE_ARCH=x86_64",
+                "KOLLA_CONFIG_STRATEGY=COPY_ALWAYS",
+                "KOLLA_INSTALL_METATYPE=rhos",
+                "PS1=$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(hostname -s) $(pwd)]$ ",
+                "LANG=en_US.UTF-8",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "true"
+            ],
+            "Image": "undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "dumb-init --single-child --",
+            "OnBuild": null,
+            "Labels": {
+                "architecture": "x86_64",
+                "authoritative-source-url": "registry.access.redhat.com",
+                "batch": "20200226.1",
+                "build-date": "2020-02-26T17:54:58.933976",
+                "com.redhat.build-host": "cpt-1005.osbs.prod.upshift.rdu2.redhat.com",
+                "com.redhat.component": "openstack-ironic-inspector-container",
+                "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements",
+                "config_data": "{\"command\": \"true\", \"detach\": false, \"environment\": {\"KOLLA_CONFIG_STRATEGY\": \"COPY_ALWAYS\"}, \"image\": \"undercloud-0.ctlplane.redhat.local:8787/rh-osbs/rhosp16-openstack-ironic-inspector:20200226.1\", \"net\": \"host\", \"privileged\": false, \"start_order\": 2, \"user\": \"root\", \"volumes\": [\"/etc/hosts:/etc/hosts:ro\", \"/etc/localtime:/etc/localtime:ro\", \"/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro\", \"/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro\", \"/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro\", \"/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro\", \"/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro\", \"/dev/log:/dev/log\", \"/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro\", \"/etc/puppet:/etc/puppet:ro\", \"/var/lib/kolla/config_files/ironic_inspector.json:/var/lib/kolla/config_files/config.json:ro\", \"/var/lib/ironic:/var/lib/ironic:shared,z\"]}",
+                "config_id": "tripleo_step3",
+                "container_name": "ironic_inspector_get_ipa",
+                "description": "Red Hat OpenStack Platform 16.0 ironic-inspector",
+                "distribution-scope": "public",
+                "io.k8s.description": "Red Hat OpenStack Platform 16.0 ironic-inspector",
+                "io.k8s.display-name": "Red Hat OpenStack Platform 16.0 ironic-inspector",
+                "io.openshift.expose-services": "",
+                "io.openshift.tags": "rhosp osp openstack osp-16.0",
+                "maintainer": "Red Hat, Inc.",
+                "managed_by": "tripleo-Undercloud",
+                "name": "rhosp16/openstack-ironic-inspector",
+                "release": "83",
+                "summary": "Red Hat OpenStack Platform 16.0 ironic-inspector",
+                "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhosp16/openstack-ironic-inspector/images/16.0-83",
+                "vcs-ref": "fa6981621248ccaf92c4ff88301e32b1dcc2131c",
+                "vcs-type": "git",
+                "vendor": "Red Hat, Inc.",
+                "version": "16.0"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.ContainerType": "sandbox",
+                "io.kubernetes.cri-o.Created": "2020-03-04T03:15:05.12759075Z",
+                "io.kubernetes.cri-o.TTY": "false",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15
+        },
+        "HostConfig": {
+            "Binds": [
+                "/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro,rprivate,rbind",
+                "/dev/log:/dev/log:rw,rprivate,nosuid,rbind",
+                "/var/lib/kolla/config_files/ironic_inspector.json:/var/lib/kolla/config_files/config.json:ro,rprivate,rbind",
+                "/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro,rprivate,rbind",
+                "/etc/hosts:/etc/hosts:ro,rprivate,rbind",
+                "/etc/ssh/ssh_known_hosts:/etc/ssh/ssh_known_hosts:ro,rprivate,rbind",
+                "/etc/localtime:/etc/localtime:ro,rprivate,rbind",
+                "/etc/puppet:/etc/puppet:ro,rprivate,rbind",
+                "/var/lib/ironic:/var/lib/ironic:shared,rw,rbind",
+                "/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro,rprivate,rbind",
+                "/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro,rprivate,rbind",
+                "/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro,rprivate,rbind"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "host",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "0,1,2,3,4,5,6,7",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 4096,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
++ podman exec -it --user root ironic_inspector_get_ipa /usr/bin/rpm -qa
+Error: cannot exec into container that is not running: container state improper
