@@ -44,6 +44,7 @@ result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
+to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
 magic_words=['error','traceback','stderr','failed','critical','fatal'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
@@ -565,7 +566,8 @@ if __name__ == "__main__":
                     string_for_grep='WARN'
                 if 'ERROR' in string_for_grep:
                     string_for_grep=' ERROR'
-                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+                if to_analyze_osp_logs_only=='all_logs':
+                    not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
             else:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)

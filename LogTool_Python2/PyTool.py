@@ -60,7 +60,7 @@ sys.stderr=MyOutput('Error.log')
 executed_script_on_overcloud = []
 executed_script_on_undercloud = []
 
-def run_on_node(node):
+def run_on_node(node, log_type):
     print '-' * 90
     print 'Remote Overcloud Node -->', str(node)
     try:
@@ -70,7 +70,7 @@ def run_on_node(node):
         s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
-            start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data
+            start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
         print 'Executed command on host --> ', command
         com_result = s.ssh_command(command)
         print com_result['Stdout']  # Do not delete me!!!
@@ -473,6 +473,10 @@ try:
             exit('Execution will be interrupted!')
         options=['ERROR','WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
+        osp_logs_only='all_logs'
+        handle_all_logs=choose_option_from_list(['OSP logs only','All logs'], "Log files to analyze?")[1]
+        if handle_all_logs=="OSP logs only":
+            osp_logs_only='osp_logs_only'
         mode_start_time=time.time()
         if option[1]=='ERROR':
             grep_string=' ERROR '
@@ -762,7 +766,7 @@ try:
         executed_script_on_overcloud.append('Extract_On_Node.py')
         threads = []
         for node in nodes:
-            t = threading.Thread(target=run_on_node, args=(node,))
+            t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
             threads.append(t)
             t.start()
         for t in threads:
