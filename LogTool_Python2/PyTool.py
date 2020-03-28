@@ -473,10 +473,6 @@ try:
             exit('Execution will be interrupted!')
         options=['ERROR','WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
-        osp_logs_only='all_logs'
-        handle_all_logs=choose_option_from_list(['OSP logs only','All logs'], "Log files to analyze?")[1]
-        if handle_all_logs=="OSP logs only":
-            osp_logs_only='osp_logs_only'
         mode_start_time=time.time()
         if option[1]=='ERROR':
             grep_string=' ERROR '
@@ -751,6 +747,10 @@ try:
             exit('Execution will be interrupted!')
         options=['ERROR','WARNING']
         option=choose_option_from_list(options,'Please choose debug level: ')
+        osp_logs_only='all_logs'
+        handle_all_logs=choose_option_from_list(['OSP logs only','All logs'], "Log files to analyze?")[1]
+        if handle_all_logs=="OSP logs only":
+            osp_logs_only='osp_logs_only'
         #save_raw_data=choose_option_from_list(['yes','no'],'Save "Raw Data" in result files?')[1]
         save_raw_data='yes'
         if option[1]=='ERROR':
