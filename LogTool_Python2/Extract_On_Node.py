@@ -38,7 +38,7 @@ def set_default_arg_by_index(index, default):
 ### Parameters ###
 fuzzy_match = 0.55
 time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
-log_root_dir=set_default_arg_by_index(2,'/var/log/containers') # Log path #
+log_root_dir=set_default_arg_by_index(2,'/var/log') # Log path #
 string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
