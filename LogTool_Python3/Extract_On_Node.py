@@ -50,7 +50,7 @@ magic_words=['error','traceback','stderr','failed','critical','fatal'] # Used to
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
-                '0 errors,']
+                '0 errors,','python-traceback2-']
 logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
 
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
