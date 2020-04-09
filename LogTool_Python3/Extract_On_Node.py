@@ -177,7 +177,7 @@ def append_to_file(log_file, msg):
 def get_line_date(line):
     line=line[0:50] # Use first 50 characters to get line timestamp
     # Check that debug level exists in log last line
-    valid_debug_levels=['INFO','WARN','DEBUG','ERROR','CRITICAL','FATAL','TRACE','OFF']
+    valid_debug_levels=['INFO','WARN','DEBUG','ERROR','CRITICAL','FATAL','TRACE','OFF','ERR']
     return_error=True
     for level in valid_debug_levels:
         if level in line:
@@ -223,7 +223,7 @@ def analyze_log(log, string, time_grep, file_to_save):
     command = "grep -n '" + string + "' " + log + " >> "+grep_file
     if string=='WARN':
         strings=['WARNING',string]
-    if string ==' ERROR':
+    if string ==' ERROR ':
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','ERR']
         strings=strings+python_exceptions
