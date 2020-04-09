@@ -221,7 +221,7 @@ def analyze_log(log, string, time_grep, file_to_save):
         strings=['WARNING',string]
     if 'ERROR' in string:
         command=''
-        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','ERR']
+        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
         strings=strings+python_exceptions
         for item in strings:
             command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
