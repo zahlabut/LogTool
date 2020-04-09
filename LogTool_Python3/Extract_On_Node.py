@@ -223,7 +223,7 @@ def analyze_log(log, string, time_grep, file_to_save):
     command = "grep -n '" + string + "' " + log + " >> "+grep_file
     if string=='WARN':
         strings=['WARNING',string]
-    if string ==' ERROR ':
+    if 'ERROR' in string:
         command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','ERR']
         strings=strings+python_exceptions
