@@ -50,7 +50,7 @@ magic_words=['error','traceback','stderr','failed','critical','fatal','err'] # U
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
-                '0 errors,','python-traceback2-']
+                '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-']
 logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
 
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
@@ -476,7 +476,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -A7 -B2 ERR ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 |ERR| ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         for string in python_exceptions:
             commands.append(
                 'grep -n -A7 -B2 '+string+' ' + log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
