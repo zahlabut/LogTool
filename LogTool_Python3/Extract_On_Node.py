@@ -45,7 +45,7 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal','err'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -225,7 +225,7 @@ def analyze_log(log, string, time_grep, file_to_save):
         strings=['WARNING',string]
     if string ==' ERROR':
         command=''
-        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE']
+        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','ERR']
         strings=strings+python_exceptions
         for item in strings:
             command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
@@ -476,6 +476,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 ERR ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         for string in python_exceptions:
             commands.append(
                 'grep -n -A7 -B2 '+string+' ' + log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
