@@ -43,9 +43,10 @@ string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
+save_raw_data='no' # Currently disabled
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal','err'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal','\|err\|'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -172,16 +173,6 @@ def append_to_file(log_file, msg):
 
 def get_line_date(line):
     line=line[0:50] # Use first 50 characters to get line timestamp
-    # Check that debug level exists in log last line
-    valid_debug_levels=['INFO','WARN','DEBUG','ERROR','CRITICAL','FATAL','TRACE','OFF','ERR']
-    return_error=True
-    for level in valid_debug_levels:
-        if level in line:
-            return_error=False
-            break
-    if return_error==True:
-        return {'Error': 'No valid debug level found in log last line!', 'Line': line.strip(), 'Date': None}
-
     # Delta 27 []
     if line.find(']') - line.find('[') == 27:
         try:
@@ -208,108 +199,197 @@ def get_line_date(line):
         except Exception as e:
             return {'Error':str(e),'Line':line.strip(),'Date':None}
 
-def analyze_log(log, string, time_grep, file_to_save):
+def analyze_log(log, string, time_grep, file_to_save,last_line_date):
     grep_file='zahlabut.txt'
     strings=[]
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
+    last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
     if os.path.exists(grep_file):
         os.remove(grep_file)
-    command = "grep -n '" + string + "' " + log + " >> "+grep_file
+    command = ''
     if string=='WARN':
         strings=['WARNING',string]
     if 'ERROR' in string:
-        command=''
         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
         strings=strings+python_exceptions
-        for item in strings:
-            command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+    for item in strings:
+        command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
     if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
-        lines=open(grep_file,'r').readlines()
-        filtered_lines = []
-        for line in lines:
-            for string in strings:
-                if string in line[0:60]:
-                    filtered_lines.append(line)
-        lines=filtered_lines
-        lines_dic={}
-        for line in lines:
-            lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
-        indexes=[int(line.split(':')[0]) for line in lines]# [1,2,3,....15,26]
-        blocks=list(to_ranges(indexes)) #[(1,2)...(4,80)]
-        for block in blocks:
-            if block[0]==block[1]:# Single line
-                block_lines=[lines_dic[str(block[0])]]
-            elif block[1]-block[0]>100:
-                block_lines=[]
-                for indx in range(block[0],block[0]+15):
-                    block_lines.append(lines_dic[str(indx)])
-                block_lines.append('.../n'*3)
-                block_lines.append('LogTool --> This block is too long!')
-                block_lines.append('.../n' * 3)
-                for indx in range(block[1]-15,block[1]+1):
-                    block_lines.append(lines_dic[str(indx)])
-            else:
-                block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1]+1)]
-            block_date=get_line_date(block_lines[0]) # Check date only for first line
+        temp_data = open(grep_file, 'r').read()
+        if '--\n' in temp_data:
+            list_of_blocks = temp_data.split('--\n')
+        else:
+            list_of_blocks = [temp_data]
+    else:  # zahlabut.txt is empty
+        list_of_blocks=[]
+    list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
+    list_of_blocks=[block for block in list_of_blocks if len(block)>1] #Ignore empty blocks
+    # Try to get block date
+    last_parsed_date=last_line_date
+    for block in list_of_blocks:
+        block_lines=block.splitlines()
+        parsed_date=False
+        for line in block_lines:
+            block_date=get_line_date(line)
             if block_date['Error']==None:
                 date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
-            else:
-                print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
-                print('--- Failed block lines are: ---')
-                for l in block_lines:
-                    print(l)
-                continue # Failed on block, continue to another block
-            if date < time_grep:
-                continue
-            LogDataDic['TotalNumberOfErrors']+=1
-            block_lines_to_save = [line for line in block_lines]
-            filtered_lines=[]
-            for line in block_lines:
-                for string in strings:
-                    if string in line:
-                        filtered_lines.append(string+line.split(string)[1])
-                        break
-            block_lines=filtered_lines
-            # Save to file block lines #
-            if save_raw_data=='yes':
-                append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
-                append_to_file(file_to_save, 'Block_Date:'+str(date)+'\n')
-                append_to_file(file_to_save, 'BlockLinesTuple:'+str(block)+'\n')
-                for l in block_lines_to_save:
-                    append_to_file(result_file,l+'\n')
-            # Check fuzzy match and count matches #
-            to_add = True
-            is_trace = False
-            if 'Traceback (most recent call last)' in str(block_lines):
-                is_trace = True
-            block_tuple = block
-            block_size = len(block_lines)
-            for key in existing_messages:
-                if similar(key[1], str(block_lines)) >= fuzzy_match:
-                    to_add = False
-                    messages_index=existing_messages.index(key)
-                    counter=existing_messages[messages_index][0]
-                    message=existing_messages[messages_index][1]
-                    existing_messages[messages_index]=[counter+1,message,is_trace,block_tuple,block_size]
-                    break
-            if to_add == True:
-                existing_messages.append([1,block_lines,is_trace,block_tuple,block_size])
+                last_parsed_date=date
+                parsed_date=True
+                break
+        if parsed_date==False:
+            print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
+            print('Last known parsed date was: '+str(last_parsed_date))
+            date=last_parsed_date
+            block_lines.insert(0,"*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your time range! ***")
+        if date < time_grep:
+            continue
+        LogDataDic['TotalNumberOfErrors'] += 1
+        # Write raw data
+        if save_raw_data == 'yes':
+            append_to_file(file_to_save, '\n' + '~' * 20 + log + '~' * 20 + '\n')
+            append_to_file(file_to_save, 'Block_Date:' + str(date) + '\n')
+            append_to_file(file_to_save, 'BlockLines:\n' + str(block) + '\n')
+
+        # Check fuzzy match and count matches #
+        to_add = True
+        is_trace = False
+        if 'Traceback (most recent call last)' in str(block_lines):
+            is_trace = True
+        block_size = len(block_lines)
+        for key in existing_messages:
+            if similar(key[1], str(block_lines)) >= fuzzy_match:
+                to_add = False
+                messages_index = existing_messages.index(key)
+                counter = existing_messages[messages_index][0]
+                message = existing_messages[messages_index][1]
+                existing_messages[messages_index] = [counter + 1, message, is_trace, block_size]
+                break
+        if to_add == True:
+            existing_messages.append([1, block_lines, is_trace, block_size])
     for i in existing_messages:
-        dic={}
-        dic['UniqueCounter']=i[0]
-        dic['BlockLines']=i[1]
-        dic['IsTracebackBlock']= i[2]
-        dic['BlockTuple']=i[3]
-        dic['BlockLinesSize']=i[4]
+        dic = {}
+        dic['UniqueCounter'] = i[0]
+        dic['BlockLines'] = i[1]
+        dic['IsTracebackBlock'] = i[2]
+        dic['BlockLinesSize'] = i[3]
         LogDataDic['AnalyzedBlocks'].append(dic)
     if os.path.exists(grep_file):
         os.remove(grep_file)
     return LogDataDic
+
+# # Backup
+# def analyze_log(log, string, time_grep, file_to_save,last_line_date):
+#     grep_file='zahlabut.txt'
+#     strings=[]
+#     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
+#     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
+#     last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
+#     existing_messages = []
+#     if os.path.exists(grep_file):
+#         os.remove(grep_file)
+#     command = "grep -n '" + string + "' " + log + " >> "+grep_file
+#     if string=='WARN':
+#         strings=['WARNING',string]
+#     if 'ERROR' in string:
+#         command=''
+#         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
+#         strings=strings+python_exceptions
+#         for item in strings:
+#             command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+#     if log.endswith('.gz'):
+#         command.replace('grep','zgrep')
+#     exec_command_line_command(command)
+#     if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
+#         lines=open(grep_file,'r').readlines()
+#         filtered_lines = []
+#         for line in lines:
+#             for string in strings:
+#                 if string in line[0:80]:
+#                     filtered_lines.append(line)
+#         lines=filtered_lines
+#         lines_dic={}
+#         for line in lines:
+#             lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
+#         indexes=[int(line.split(':')[0]) for line in lines]# [1,2,3,....15,26]
+#         blocks=list(to_ranges(indexes)) #[(1,2)...(4,80)]
+#         last_parsed_date=last_line_date
+#         for block in blocks:
+#             if block[0]==block[1]:# Single line
+#                 block_lines=[lines_dic[str(block[0])]]
+#             elif block[1]-block[0]>100:
+#                 block_lines=[]
+#                 for indx in range(block[0],block[0]+15):
+#                     block_lines.append(lines_dic[str(indx)])
+#                 block_lines.append('.../n'*3)
+#                 block_lines.append('LogTool --> This block is too long!')
+#                 block_lines.append('.../n' * 3)
+#                 for indx in range(block[1]-15,block[1]+1):
+#                     block_lines.append(lines_dic[str(indx)])
+#             else:
+#                 block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1]+1)]
+#             block_date=get_line_date(block_lines[0]) # Check date only for first line
+#             if block_date['Error']==None:
+#                 date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
+#                 last_parsed_date=date
+#             else:
+#                 print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
+#                 print('Last known parsed date was: '+str(last_parsed_date))
+#                 print('--- Failed block lines are: ---')
+#                 for l in block_lines:
+#                     print(l)
+#                 date=last_parsed_date
+#                 block_lines.insert(0,"LogTool --> this block is missing timestamp, therefore could be irrelevant to your time range!")
+#             if date < time_grep:
+#                 continue
+#             LogDataDic['TotalNumberOfErrors']+=1
+#             block_lines_to_save = [line for line in block_lines]
+#             # filtered_lines=[]
+#             # for line in block_lines:
+#             #     for string in strings:
+#             #         if string in line:
+#             #             filtered_lines.append(string+line.split(string)[1])
+#             #             break
+#             # block_lines=filtered_lines
+#             # Save to file block lines #
+#             if save_raw_data=='yes':
+#                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
+#                 append_to_file(file_to_save, 'Block_Date:'+str(date)+'\n')
+#                 append_to_file(file_to_save, 'BlockLinesTuple:'+str(block)+'\n')
+#                 for l in block_lines_to_save:
+#                     append_to_file(result_file,l+'\n')
+#             # Check fuzzy match and count matches #
+#             to_add = True
+#             is_trace = False
+#             if 'Traceback (most recent call last)' in str(block_lines):
+#                 is_trace = True
+#             block_tuple = block
+#             block_size = len(block_lines)
+#             for key in existing_messages:
+#                 if similar(key[1], str(block_lines)) >= fuzzy_match:
+#                     to_add = False
+#                     messages_index=existing_messages.index(key)
+#                     counter=existing_messages[messages_index][0]
+#                     message=existing_messages[messages_index][1]
+#                     existing_messages[messages_index]=[counter+1,message,is_trace,block_tuple,block_size]
+#                     break
+#             if to_add == True:
+#                 existing_messages.append([1,block_lines,is_trace,block_tuple,block_size])
+#     for i in existing_messages:
+#         dic={}
+#         dic['UniqueCounter']=i[0]
+#         dic['BlockLines']=i[1]
+#         dic['IsTracebackBlock']= i[2]
+#         dic['BlockTuple']=i[3]
+#         dic['BlockLinesSize']=i[4]
+#         LogDataDic['AnalyzedBlocks'].append(dic)
+#     if os.path.exists(grep_file):
+#         os.remove(grep_file)
+#     return LogDataDic
 
 def print_list(lis):
     for l in lis:
@@ -376,7 +456,10 @@ def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
 
 def find_all_string_matches_in_line(line, string):
     line,string=line.lower(),string.lower()
-    return [(i.start(),i.start()+len(string)) for i in re.finditer(string.lower(), line.lower())]
+    if string=='\|err\|':
+        return [(i.start(), i.start() + len(string)-2) for i in re.finditer(string.lower(), line.lower())]
+    else:
+        return [(i.start(),i.start()+len(string)) for i in re.finditer(string.lower(), line.lower())]
 
 def create_underline(line, list_of_strings):
     underline=''
@@ -402,9 +485,9 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     # Check if not Jumbo block
     if len(block_lines)>5000:
         new_block='LogTool --> this block is a Jumbo block and its size is: '+str(len(block_lines))+' lines!\n'
-        for line in block_lines[0:100]:
+        for line in block_lines[0:20]:
             new_block+=line+'\n'
-        for line in block_lines[-100:-1]:
+        for line in block_lines[-20:-1]:
             new_block += line + '\n'
         block=new_block
     # Normilize block
@@ -416,7 +499,7 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
         if len(line) < limit_line_size:
             new_block += line + '\n'
         else:
-            new_block+=line[0:limit_line_size]+'... <-- LogTool: THIS LINE IS TOO LONG!\n'
+            new_block+=line[0:limit_line_size]+'...<--LogTool-LINE IS TOO LONG!\n'
             for string in magic_words+python_exceptions:
                 match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
                 if match_indexes!=[]:
@@ -434,10 +517,13 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                         matches.append(match_line)
     if matches!=[]:
         new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
-        unique_matches=unique_list_by_fuzzy(matches,fuzzy_match)
+        if len(matches)>100:
+            unique_matches = unique_list_by_fuzzy(matches, 0.2) #To increase time execution
+        else:
+            unique_matches = unique_list_by_fuzzy(matches, fuzzy_match)
         for item in unique_matches:
             new_block+=item+'\n'
-            new_block+=create_underline(item,magic_words)+'\n'
+            new_block+=create_underline(item,magic_words+python_exceptions)+'\n'
     # Drop if not relevant block using "ignore_block"
     if ignore_block(block,ignore_strings)==True:
         new_block=None
@@ -538,7 +624,7 @@ if __name__ == "__main__":
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
     if __name__ == "__main__":
         empty_file_content(result_file)
-        append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
+        #append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
         start_time=time.time()
         logs=collect_log_paths(log_root_dir)
         #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
@@ -559,14 +645,7 @@ if __name__ == "__main__":
             last_line=get_file_last_line(log)
             last_line_date=get_line_date(last_line)
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if last_line_date['Error']!=None or '-ir-' in log: #Infrared logs are not standard logs
-                #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
-                # Check if last line contains: proper debug level: INFO or WARN or ERROR string
-                log_last_lines=get_file_last_line(log, '10')
-                if ('ERROR' in log_last_lines or 'WARN' in log_last_lines or
-                    'INFO' in log_last_lines or 'DEBUG' in log_last_lines) is False:
-                    not_standard_logs.append({'Log':log,'Last_Lines':'\n' + log_last_lines})
-                # Extract all ERROR or WARN lines and provide the unique messages
+            if last_line_date['Error']!=None:
                 if 'WARNING' in string_for_grep:
                     string_for_grep='WARN'
                 if 'ERROR' in string_for_grep:
@@ -575,7 +654,7 @@ if __name__ == "__main__":
                     not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
             else:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file)
+                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
     ### Fill Failed log Section ###
     if len(not_standard_logs)>0:
@@ -611,7 +690,6 @@ if __name__ == "__main__":
         for block in item['AnalyzedBlocks']:
             append_to_file(result_file, '\n'+'-'*30+' LogPath:' + item['Log']+'-'*30+' \n')
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
-            append_to_file(result_file, 'BlockTuple:' + str(block['BlockTuple'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
             append_to_file(result_file, 'BlockLinesSize:' + str(block['BlockLinesSize']) + '\n')
             if block['BlockLinesSize']<30:
@@ -666,7 +744,7 @@ if __name__ == "__main__":
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]
     messages=[
-        'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
+        #'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per standard OSP log since: '+time_grep,
         'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
