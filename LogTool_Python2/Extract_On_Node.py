@@ -741,4 +741,3 @@ if __name__ == "__main__":
     exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
     print('SUCCESS!!!')
-
