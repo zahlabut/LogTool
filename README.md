@@ -30,19 +30,16 @@ There are two kinds of log files being detected by LogTool on the fly, "Standard
 "Standard" - each log's line has known and defined structure: timestamp, debug level, msg ...
 "Not Standard" - log's structure is unknown, it could be third parties logs for example.
 In "Table of Content" you'll find: "Section name --> Line number" per section, for example:
-1) Raw Data - extracted Errors/Warnings from standard OSP logs since: <Given Timestamp>
-   In this section you'll find all extracted Errors/Warnings messages as is without being modified or changed by LogTool.
-   Actually these messages are the "Raw Data" used by LogTool for "Fuzzy matching" analysis.
-2) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
-   In this section, you'll find the amount of Errors/Warnings per Standard log file, this may help you to understand
-   what could be potential component, to search for "Root Cause".
+
+1) Statistics - Number of Errors/Warnings per standard OSP log since: <Given Timestamp>
+   In this section, you find the amount of Errors/Warnings per Standard OSP log file.
+   All these Errors/Warnings took place in the past after provided timestamp.
+2) Statistics - Number of Errors/Warnings per Not Standard OSP log since ever
+   In this section, you find the amount of Errors and Warnings per Not Standard OSP log file since ever.
 3) Statistics - Unique messages, per STANDARD OSP log file since: <Given Timestamp>
-   In this section you'll find the unique Errors/Warnings messages since given by you timestamp.
-   For more details about each one of unique Error/Warning you can always search for the same message in "Raw Data" section.
+   In this section you'll find the unique Errors/Warnings messages since given by you timestamp for Standard OSP logs.
 4) Statistics - Unique messages per NOT STANDARD log file, since ever
-   In this section you'll find the unique messages per not standard log files, unfortunately LogTool cannot handle such
-   log files in the same manner as standard Log files, therefor "Since Time" provided by you on extraction, will be ignored and
-   you'll see all the unique Errors/Warnings messages since ever.
+   In this section you'll find the unique Errors/Warnings messages since ever for Not Standard OSP logs.
 
 So the **first thing** you'll have to do, is scrolling down to the bottom of result file, to the "Table of content" and then passing through
 its sections (use line indexes mentioned in "Table of Content" to jump into relevant section), where: #2 #3 and #4 are most important.

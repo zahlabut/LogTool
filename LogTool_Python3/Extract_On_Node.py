@@ -504,7 +504,10 @@ def extract_log_unique_greped_lines(log, string_for_grep):
             unique_messages.append(block)
     if os.path.exists(temp_grep_result_file):
         os.remove(temp_grep_result_file)
-    return {log:unique_messages,'AnalyzedBlocks':len(relevant_blocks),'Log':log}
+    return {'UniqueMessages':unique_messages,'AnalyzedBlocks':len(unique_messages),'Log':log}
+
+def sort_list_by_index(lis, index):
+    return (sorted(lis, key=lambda x: x[index]))
 
 if __name__ == "__main__":
     not_standard_logs=[]
@@ -561,30 +564,16 @@ if __name__ == "__main__":
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
-    statistics_dic={item['Log']:item['AnalyzedBlocks'] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0}
-    print('---------------------')
-    print_dic(statistics_dic)
-    print('---------------------')
-
-    #statistics_dic = sorted(list(statistics_dic.items()), key=operator.itemgetter(1))
-    #statistics_list = [{item[0]: item[1]} for item in statistics_dic]
-    #return {log:unique_messages,'AnalyzedBlocks':len(relevant_blocks),'Log':log}
-    #print_in_color(str(statistics_list),'green')
-
-
-
-
-
-    total_number_of_all_logs_errors=sum([item['AnalyzedBlocks'] for item in analyzed_logs_result if item['AnalyzedBlocks']!=0])
-
-
+    statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
+    statistics_list = sort_list_by_index(statistics_list, 1)
+    total_number_of_errors=sum([i[1] for i in statistics_list])
     if 'error' in string_for_grep.lower():
-        statistics_list.insert(0,{'Total_Number_Of_Errors':total_number_of_all_logs_errors})
+        statistics_list.insert(0,['Total_Number_Of_Errors',total_number_of_errors])
     if 'warn' in string_for_grep.lower():
-        statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
+        statistics_list.insert(0,['Total_Number_Of_Warnings',total_number_of_errors])
     print_list(statistics_list)
-    write_list_of_dict_to_file(result_file,statistics_list,
-                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since: '+time_grep+'#'*20+'\n')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever'+'#'*20)
+    write_list_to_file(result_file,statistics_list,False)
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
@@ -611,10 +600,9 @@ if __name__ == "__main__":
     ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
-        key=list(dir.keys())[0]
-        if len(dir[key])>0:
-            append_to_file(result_file,'\n'+'~'*40+key+'~'*40+'\n')
-            write_list_to_file(result_file,dir[key])
+        if len(dir['UniqueMessages'])>0:
+            append_to_file(result_file,'\n'+'~'*40+dir['Log']+'~'*40+'\n')
+            write_list_to_file(result_file,dir['UniqueMessages'])
 
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]
@@ -622,7 +610,7 @@ if __name__ == "__main__":
         #'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
-        'Statistics - Number of Errors/Warnings per Not standard OSP log since: ' + time_grep,
+        'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
         'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
         'Statistics - Unique messages per NOT STANDARD log file, since ever',
         #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
@@ -633,3 +621,17 @@ if __name__ == "__main__":
     exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
     print('SUCCESS!!!')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
