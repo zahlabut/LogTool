@@ -150,6 +150,6 @@ Please add the content of both into the description of issue you'd like to open.
 
 
 # Limitations
-1) LogTool is hardcoded to handle log files up to 500[MB].
+1) LogTool is hardcoded to handle log files up to 1GB.
 
 

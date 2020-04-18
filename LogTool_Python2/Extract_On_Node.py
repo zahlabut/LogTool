@@ -20,7 +20,6 @@ import json
 import warnings
 warnings.simplefilter("ignore", UserWarning)
 import difflib
-import gzip
 import datetime
 import operator
 import collections
@@ -43,16 +42,17 @@ string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
-save_raw_data='no' # Currently disabled
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal','\|err\|'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|"] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
-                '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-']
-logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+                '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
+                '= CRITICAL ']
+#logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+logs_to_ignore=[]
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
                    'EOFError','ImportError','ModuleNotFoundError','LookupError','IndexError','KeyError',
@@ -202,6 +202,7 @@ def get_line_date(line):
 def analyze_log(log, string, time_grep, file_to_save,last_line_date):
     grep_file='zahlabut.txt'
     strings=[]
+    third_lines=[]
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
@@ -227,8 +228,8 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             list_of_blocks = [temp_data]
     else:  # zahlabut.txt is empty
         list_of_blocks=[]
-    list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
-    list_of_blocks=[block for block in list_of_blocks if len(block)>1] #Ignore empty blocks
+    #list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
+    list_of_blocks=[block for block in list_of_blocks if len(block)>=1] #Ignore empty blocks
     # Try to get block date
     last_parsed_date=last_line_date
     for block in list_of_blocks:
@@ -249,12 +250,18 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         if date < time_grep:
             continue
         LogDataDic['TotalNumberOfErrors'] += 1
-        # Write raw data
-        if save_raw_data == 'yes':
-            append_to_file(file_to_save, '\n' + '~' * 20 + log + '~' * 20 + '\n')
-            append_to_file(file_to_save, 'Block_Date:' + str(date) + '\n')
-            append_to_file(file_to_save, 'BlockLines:\n' + str(block) + '\n')
-
+        # Create list of third lines, do not analyze the same blocks again and again
+        if len(block_lines)>=3:
+            third_line=remove_digits_from_string(block_lines[2])
+        else:
+            third_line=remove_digits_from_string(block_lines[0])
+        if third_line not in third_lines:
+            third_lines.append(third_line)
+            block=cut_huge_block(block)
+            if block!=None:
+                block_lines=block.splitlines()
+        else:
+            continue
         # Check fuzzy match and count matches #
         to_add = True
         is_trace = False
@@ -281,116 +288,6 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
     if os.path.exists(grep_file):
         os.remove(grep_file)
     return LogDataDic
-
-
-# # Backup
-# def analyze_log(log, string, time_grep, file_to_save,last_line_date):
-#     grep_file='zahlabut.txt'
-#     strings=[]
-#     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
-#     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
-#     last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
-#     existing_messages = []
-#     if os.path.exists(grep_file):
-#         os.remove(grep_file)
-#     command = "grep -n '" + string + "' " + log + " >> "+grep_file
-#     if string=='WARN':
-#         strings=['WARNING',string]
-#     if 'ERROR' in string:
-#         command=''
-#         strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
-#         strings=strings+python_exceptions
-#         for item in strings:
-#             command+="grep -n '" +item+ "' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
-#     if log.endswith('.gz'):
-#         command.replace('grep','zgrep')
-#     exec_command_line_command(command)
-#     if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
-#         lines=open(grep_file,'r').readlines()
-#         filtered_lines = []
-#         for line in lines:
-#             for string in strings:
-#                 if string in line[0:80]:
-#                     filtered_lines.append(line)
-#         lines=filtered_lines
-#         lines_dic={}
-#         for line in lines:
-#             lines_dic[line.split(':')[0]]=line[line.find(':')+1:].strip() #{index1:line1,....indexN:lineN}
-#         indexes=[int(line.split(':')[0]) for line in lines]# [1,2,3,....15,26]
-#         blocks=list(to_ranges(indexes)) #[(1,2)...(4,80)]
-#         last_parsed_date=last_line_date
-#         for block in blocks:
-#             if block[0]==block[1]:# Single line
-#                 block_lines=[lines_dic[str(block[0])]]
-#             elif block[1]-block[0]>100:
-#                 block_lines=[]
-#                 for indx in range(block[0],block[0]+15):
-#                     block_lines.append(lines_dic[str(indx)])
-#                 block_lines.append('.../n'*3)
-#                 block_lines.append('LogTool --> This block is too long!')
-#                 block_lines.append('.../n' * 3)
-#                 for indx in range(block[1]-15,block[1]+1):
-#                     block_lines.append(lines_dic[str(indx)])
-#             else:
-#                 block_lines=[lines_dic[str(indx)] for indx in range(block[0],block[1]+1)]
-#             block_date=get_line_date(block_lines[0]) # Check date only for first line
-#             if block_date['Error']==None:
-#                 date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
-#                 last_parsed_date=date
-#             else:
-#                 print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
-#                 print('Last known parsed date was: '+str(last_parsed_date))
-#                 print('--- Failed block lines are: ---')
-#                 for l in block_lines:
-#                     print(l)
-#                 date=last_parsed_date
-#                 block_lines.insert(0,"LogTool --> this block is missing timestamp, therefore could be irrelevant to your time range!")
-#             if date < time_grep:
-#                 continue
-#             LogDataDic['TotalNumberOfErrors']+=1
-#             block_lines_to_save = [line for line in block_lines]
-#             # filtered_lines=[]
-#             # for line in block_lines:
-#             #     for string in strings:
-#             #         if string in line:
-#             #             filtered_lines.append(string+line.split(string)[1])
-#             #             break
-#             # block_lines=filtered_lines
-#             # Save to file block lines #
-#             if save_raw_data=='yes':
-#                 append_to_file(file_to_save,'\n'+'~'*20+log+'~'*20+'\n')
-#                 append_to_file(file_to_save, 'Block_Date:'+str(date)+'\n')
-#                 append_to_file(file_to_save, 'BlockLinesTuple:'+str(block)+'\n')
-#                 for l in block_lines_to_save:
-#                     append_to_file(result_file,l+'\n')
-#             # Check fuzzy match and count matches #
-#             to_add = True
-#             is_trace = False
-#             if 'Traceback (most recent call last)' in str(block_lines):
-#                 is_trace = True
-#             block_tuple = block
-#             block_size = len(block_lines)
-#             for key in existing_messages:
-#                 if similar(key[1], str(block_lines)) >= fuzzy_match:
-#                     to_add = False
-#                     messages_index=existing_messages.index(key)
-#                     counter=existing_messages[messages_index][0]
-#                     message=existing_messages[messages_index][1]
-#                     existing_messages[messages_index]=[counter+1,message,is_trace,block_tuple,block_size]
-#                     break
-#             if to_add == True:
-#                 existing_messages.append([1,block_lines,is_trace,block_tuple,block_size])
-#     for i in existing_messages:
-#         dic={}
-#         dic['UniqueCounter']=i[0]
-#         dic['BlockLines']=i[1]
-#         dic['IsTracebackBlock']= i[2]
-#         dic['BlockTuple']=i[3]
-#         dic['BlockLinesSize']=i[4]
-#         LogDataDic['AnalyzedBlocks'].append(dic)
-#     if os.path.exists(grep_file):
-#         os.remove(grep_file)
-#     return LogDataDic
 
 def print_list(lis):
     for l in lis:
@@ -586,7 +483,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         else:
             list_of_blocks = [temp_data]
     else: #zahlabut.txt is empty
-        return {log: unique_messages}
+        return {log: unique_messages,'AnalyzedBlocks':0,'Log':log}
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
     list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
@@ -632,13 +529,12 @@ if __name__ == "__main__":
         logs=collect_log_paths(log_root_dir)
         #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
         for log in logs:
-            # Skip log file if bigger than 500MB, save this information into not standard logs section
+            # Skip log file if bigger than 1GB, save this information into not standard logs section
             log_size = os.path.getsize(log)
-            if log_size > 1024 * 1024 * 1024 / 2:  # 500MB
+            if log_size > 1024 * 1024 * 1024:  # 1GB
                 print_in_color(log + ' size is too big, skipped!!!', 'yellow')
-                analysis_result={log: ['LogTool --> WARNING the size of: ' + log
-                                       + ' is: '+ str(log_size /(1024.0*1024.0*1024.0)) + ' [GB]\nLogTool is hardcoded to support log files up to 500[MB]\nThis log was skipped!']}
-                not_standard_logs_unique_messages.append(analysis_result)
+                append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
+                               + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
                 continue
             print_in_color('--> '+log, 'bold')
             Log_Analyze_Info = {}
@@ -721,7 +617,7 @@ if __name__ == "__main__":
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
         if len(dir['UniqueMessages'])>0:
-            append_to_file(result_file,'\n'+'~'*40+dir['Log']+'~'*40+'\n')
+            append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
 
     ### Fill statistics section - Table of Content: line+index ###

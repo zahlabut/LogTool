@@ -21,7 +21,6 @@ import json
 import warnings
 warnings.simplefilter("ignore", UserWarning)
 import difflib
-import gzip
 import datetime
 import operator
 import collections
@@ -43,7 +42,6 @@ string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
-save_raw_data='no' # Currently disabled
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
 magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|"] # Used to cut huge size lines
@@ -51,8 +49,10 @@ magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|"]
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
-                '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-']
-logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+                '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
+                '= CRITICAL ']
+#logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+logs_to_ignore=[]
 
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
@@ -204,6 +204,7 @@ def get_line_date(line):
 def analyze_log(log, string, time_grep, file_to_save,last_line_date):
     grep_file='zahlabut.txt'
     strings=[]
+    third_lines=[]
     LogDataDic={'Log':log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
@@ -229,8 +230,8 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             list_of_blocks = [temp_data]
     else:  # zahlabut.txt is empty
         list_of_blocks=[]
-    list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
-    list_of_blocks=[block for block in list_of_blocks if len(block)>1] #Ignore empty blocks
+    #list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
+    list_of_blocks=[block for block in list_of_blocks if len(block)>=1] #Ignore empty blocks
     # Try to get block date
     last_parsed_date=last_line_date
     for block in list_of_blocks:
@@ -251,12 +252,18 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         if date < time_grep:
             continue
         LogDataDic['TotalNumberOfErrors'] += 1
-        # Write raw data
-        if save_raw_data == 'yes':
-            append_to_file(file_to_save, '\n' + '~' * 20 + log + '~' * 20 + '\n')
-            append_to_file(file_to_save, 'Block_Date:' + str(date) + '\n')
-            append_to_file(file_to_save, 'BlockLines:\n' + str(block) + '\n')
-
+        # Create list of third lines, do not analyze the same blocks again and again
+        if len(block_lines)>=3:
+            third_line=remove_digits_from_string(block_lines[2])
+        else:
+            third_line=remove_digits_from_string(block_lines[0])
+        if third_line not in third_lines:
+            third_lines.append(third_line)
+            block=cut_huge_block(block)
+            if block!=None:
+                block_lines=block.splitlines()
+        else:
+            continue
         # Check fuzzy match and count matches #
         to_add = True
         is_trace = False
@@ -478,7 +485,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         else:
             list_of_blocks = [temp_data]
     else: #zahlabut.txt is empty
-        return {log: unique_messages}
+        return {log: unique_messages,'AnalyzedBlocks':0,'Log':log}
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
     list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
@@ -519,13 +526,12 @@ if __name__ == "__main__":
         start_time=time.time()
         logs=collect_log_paths(log_root_dir)
         for log in logs:
-            # Skip log file if bigger than 500MB, save this information into not standard logs section
+            # Skip log file if bigger than 1GB, save this information into not standard logs section
             log_size = os.path.getsize(log)
-            if log_size > 1024 * 1024 * 1024 / 2:  # 500MB
+            if log_size > 1024 * 1024 * 1024:  # 1GB
                 print_in_color(log + ' size is too big, skipped!!!', 'yellow')
-                analysis_result={log: ['LogTool --> WARNING the size of: ' + log
-                                       + ' is: '+ str(log_size /(1024.0*1024.0*1024.0)) + ' [GB]\nLogTool is hardcoded to support log files up to 500[MB]\nThis log was skipped!']}
-                not_standard_logs_unique_messages.append(analysis_result)
+                append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
+                               + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
                 continue
             print_in_color('--> '+log, 'bold')
             Log_Analyze_Info = {}
@@ -601,7 +607,7 @@ if __name__ == "__main__":
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
         if len(dir['UniqueMessages'])>0:
-            append_to_file(result_file,'\n'+'~'*40+dir['Log']+'~'*40+'\n')
+            append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
 
     ### Fill statistics section - Table of Content: line+index ###
