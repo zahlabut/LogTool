@@ -483,7 +483,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         else:
             list_of_blocks = [temp_data]
     else: #zahlabut.txt is empty
-        return {log: unique_messages,'AnalyzedBlocks':0,'Log':log}
+        return {'UniqueMessages': unique_messages, 'AnalyzedBlocks': len(unique_messages), 'Log': log}
     # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
     list_of_blocks=[cut_huge_block(block)+'\n' for block in list_of_blocks if cut_huge_block(block)!=None]
     # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
@@ -598,7 +598,7 @@ if __name__ == "__main__":
     for item in analyzed_logs_result:
         #print 'LogPath --> '+item['Log']
         for block in item['AnalyzedBlocks']:
-            append_to_file(result_file, '\n'+'-'*30+' LogPath:' + item['Log']+'-'*30+' \n')
+            append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + item['Log']+' '+'-'*30+' \n')
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
             append_to_file(result_file, 'BlockLinesSize:' + str(block['BlockLinesSize']) + '\n')
