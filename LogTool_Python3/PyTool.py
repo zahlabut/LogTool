@@ -586,7 +586,7 @@ try:
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
 
-    if mode[1] == 'F':
+    if mode[1] == 'Download "relevant logs" only, by given timestamp':
         # Change log path if needed #
         osp_versions=['Older than OSP13?', "Newer than OSP13?"]
         if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':

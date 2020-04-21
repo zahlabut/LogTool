@@ -213,10 +213,11 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         os.remove(grep_file)
     command = ''
     if string=='WARN':
-        strings=['WARNING',string]
+        basic_strings=['WARNING',string]
+        strings=basic_strings
     if 'ERROR' in string:
-        strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
-        strings=strings+python_exceptions
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']
+        strings=basic_strings+python_exceptions
     for item in strings:
         command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
@@ -230,7 +231,6 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             list_of_blocks = [temp_data]
     else:  # zahlabut.txt is empty
         list_of_blocks=[]
-    #list_of_blocks = [cut_huge_block(block) + '\n' for block in list_of_blocks if cut_huge_block(block) != None]
     list_of_blocks=[block for block in list_of_blocks if len(block)>=1] #Ignore empty blocks
     # Try to get block date
     last_parsed_date=last_line_date
@@ -251,12 +251,17 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             block_lines.insert(0,"*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your time range! ***")
         if date < time_grep:
             continue
-        LogDataDic['TotalNumberOfErrors'] += 1
         # Create list of third lines, do not analyze the same blocks again and again
         if len(block_lines)>=3:
             third_line=remove_digits_from_string(block_lines[2])
         else:
             third_line=remove_digits_from_string(block_lines[0])
+        # Block is relevant only when the debug level is in the first 100 characters
+        cut_line = third_line[0:100]
+        temp_list=[cut_line.find(item) for item in basic_strings if cut_line.find(item)>0]
+        if sum(temp_list)==0:
+            continue
+        LogDataDic['TotalNumberOfErrors'] += 1
         if third_line not in third_lines:
             third_lines.append(third_line)
             block=cut_huge_block(block)
