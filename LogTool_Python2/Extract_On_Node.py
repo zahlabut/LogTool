@@ -259,7 +259,7 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             third_line=remove_digits_from_string(block_lines[0])
         # Block is relevant only when the debug level is in the first 100 characters
         cut_line = third_line[0:100]
-        temp_list=[cut_line.find(item) for item in basic_strings if cut_line.find(item)>0]
+        temp_list=[cut_line.find(item) for item in strings if cut_line.find(item)>0]
         if sum(temp_list)==0:
             continue
         LogDataDic['TotalNumberOfErrors'] += 1
