@@ -51,8 +51,7 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
                 '= CRITICAL ']
-#logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
-logs_to_ignore=[]
+logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
                    'EOFError','ImportError','ModuleNotFoundError','LookupError','IndexError','KeyError',
@@ -583,7 +582,7 @@ if __name__ == "__main__":
         statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
-                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'#'*20+'\n')
+                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
 
 
     ### Fill statistics section for Not Standard OSP logs###
@@ -596,7 +595,7 @@ if __name__ == "__main__":
     if 'warn' in string_for_grep.lower():
         statistics_list.insert(0,['Total_Number_Of_Warnings',total_number_of_errors])
     print_list(statistics_list)
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever'+'#'*20)
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
 
 
