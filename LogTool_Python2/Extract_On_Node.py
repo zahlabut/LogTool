@@ -44,7 +44,7 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|"] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -213,13 +213,10 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         basic_strings=['WARNING',string]
         strings=basic_strings
     if 'ERROR' in string:
-        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|',' FAILED ']
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|',' FAILED', ' STDERR',' traceback']
         strings=basic_strings+python_exceptions
     for item in strings:
-        if item ==' FATAL ':
-            command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
-        else:
-            command += "grep -B2 -A7 '" + item + "' " + log + " >> " + grep_file + ";echo -e '--' >> " + grep_file + ';'
+        command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -256,9 +253,9 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
             third_line=remove_digits_from_string(block_lines[2])
         else:
             third_line=remove_digits_from_string(block_lines[0])
-        # Block is relevant only when the debug level is in the first 100 characters
-        cut_line = third_line[0:100]
-        temp_list=[cut_line.find(item) for item in strings if cut_line.find(item)>0]
+        # Block is relevant only when the debug level is in the first 60 characters in THIRD LINE (no digits in it)
+        cut_line = third_line[0:60].lower()
+        temp_list=[cut_line.find(item.lower()) for item in strings if cut_line.find(item.lower())>0]
         if sum(temp_list)==0:
             continue
         LogDataDic['TotalNumberOfErrors'] += 1
