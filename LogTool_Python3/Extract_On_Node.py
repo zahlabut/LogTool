@@ -199,7 +199,7 @@ def get_line_date(line):
         except Exception as e:
             return {'Error':str(e),'Line':line.strip(),'Date':None}
 
-def analyze_log(log, string, time_grep, file_to_save,last_line_date):
+def analyze_log(log, string, time_grep, last_line_date):
     grep_file='zahlabut.txt'
     strings=[]
     third_lines=[]
@@ -207,6 +207,14 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
     time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
     last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
     existing_messages = []
+    # Let's check if log has standard DEBUG level
+    is_standard_log=False
+    last_ten_lines=get_file_last_line(log,'10')
+    last_ten_lines=[line[0:100] for line in last_ten_lines.splitlines()]
+    for level in ['ERROR','CRITICAL','FATAL','TRACE','|ERR|','DEBUG','INFO','WARN']:
+        if level in str(last_ten_lines):
+            is_standard_log=True
+            break
     if os.path.exists(grep_file):
         os.remove(grep_file)
     command = ''
@@ -214,10 +222,15 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         basic_strings=['WARNING',string]
         strings=basic_strings
     if 'ERROR' in string:
-        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ']#,' FAILED', ' STDERR',' traceback']
-        strings=basic_strings#+python_exceptions
-    for item in strings:
-        command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ']
+        strings=basic_strings
+    if is_standard_log==False:
+        strings=python_exceptions+magic_words
+        for item in strings:
+            command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+    if is_standard_log==True:
+        for item in strings:
+            command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -553,7 +566,7 @@ if __name__ == "__main__":
                     not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
             else:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,result_file,last_line_date['Date'])
+                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
 
     ### Fill statistics section for Standard OSP logs###
