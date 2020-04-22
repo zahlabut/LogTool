@@ -249,8 +249,8 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         if date < time_grep:
             continue
         # Create list of third lines, do not analyze the same blocks again and again
-        if len(block_lines)>=3:
-            third_line=remove_digits_from_string(block_lines[2])
+        if len(block_lines)>=4:
+            third_line=remove_digits_from_string(block_lines[2:3])
         else:
             third_line=remove_digits_from_string(block_lines[0])
         # Block is relevant only when the debug level is in the first 60 characters in THIRD LINE (no digits in it)
@@ -495,8 +495,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     third_lines = []
     for block in list_of_blocks:
         block_lines=block.splitlines()
-        if len(block_lines)>=3:# Do nothing if len of blocks is less than 3
-            third_line=block_lines[2]
+        if len(block_lines)>=4:# Do nothing if len of blocks is less than 4
+            third_line=block_lines[2:3]
             third_line=remove_digits_from_string(third_line)
             if third_line not in third_lines:
                 third_lines.append(third_line)
