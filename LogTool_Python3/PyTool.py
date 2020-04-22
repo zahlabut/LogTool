@@ -340,6 +340,11 @@ try:
                 print_in_color("Provided URL doesn't seem to be proper artifact URL, please rerun using correct URL address!",'red')
                 sys.exit(1)
 
+            # Use since time
+            start_time = input('Enter your "since time" to analyze log filess,'
+                               '\nFor example you might want to extract Eoccurredhat occured ~10 minutes before some Failed stage'
+                               '\nTime format example: <2020-04-22 12:10:00> enter your time: ')
+
             mode_start_time=time.time()
             response = urllib.request.urlopen(artifacts_url)
             html = response.read()
@@ -430,7 +435,7 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        command = "python3 Extract_On_Node.py '"+start_time+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')
