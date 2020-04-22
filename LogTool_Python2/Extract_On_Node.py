@@ -214,7 +214,7 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         strings=basic_strings
     if 'ERROR' in string:
         basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ']#,' FAILED', ' STDERR',' traceback']
-        strings=basic_strings+python_exceptions
+        strings=basic_strings#+python_exceptions
     for item in strings:
         command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
