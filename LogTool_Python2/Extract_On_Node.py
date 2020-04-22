@@ -213,7 +213,7 @@ def analyze_log(log, string, time_grep, file_to_save,last_line_date):
         basic_strings=['WARNING',string]
         strings=basic_strings
     if 'ERROR' in string:
-        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|']#,' FAILED', ' STDERR',' traceback']
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ']#,' FAILED', ' STDERR',' traceback']
         strings=basic_strings+python_exceptions
     for item in strings:
         command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
