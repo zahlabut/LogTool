@@ -183,6 +183,8 @@ def get_line_date(line):
     if match:
         date=datetime.datetime.strptime(match.group().replace('T',' '), '%b-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
+    if len(line)>100:
+        line=line[0:100]+'...'
     return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date':None}
 
 def analyze_log(log, string, time_grep, last_line_date):
@@ -211,12 +213,10 @@ def analyze_log(log, string, time_grep, last_line_date):
         basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR']
         strings=basic_strings
     if is_standard_log==False:
-        print_in_color('Half Standard --> ' + log, 'yellow')
         strings=python_exceptions+[' '+item for item in magic_words]
         for item in strings:
             command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
-        print_in_color('Standard --> ' + log, 'green')
         for item in strings:
             command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
@@ -451,7 +451,6 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
-    print_in_color('Not Standard --> '+log,'red')
     temp_grep_result_file = 'zahlabut.txt'
     unique_messages = []
     if os.path.exists(temp_grep_result_file):
@@ -536,6 +535,7 @@ if __name__ == "__main__":
         logs=collect_log_paths(log_root_dir)
         #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
         for log in logs:
+            print_in_color(log,'bold')
             # Skip log file if bigger than 1GB, save this information into not standard logs section
             log_size = os.path.getsize(log)
             if log_size > 1024 * 1024 * 1024:  # 1GB
@@ -548,14 +548,14 @@ if __name__ == "__main__":
             Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
             # Try to check if there is a known timestamp in last 100 lines
             last_line=get_file_last_line(log,'100')
-            is_known_time_fromat=False
+            is_known_time_format=False
             for line in last_line.splitlines():
                 last_line_date=get_line_date(line)
                 if last_line_date['Error']==None:
-                    is_known_time_fromat=True
+                    is_known_time_format=True
                     break
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if is_known_time_fromat==False:
+            if is_known_time_format==False:
                 #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
                 # Check if last line contains: proper debug level: INFO or WARN or ERROR string
                 log_last_lines=get_file_last_line(log, '10')
