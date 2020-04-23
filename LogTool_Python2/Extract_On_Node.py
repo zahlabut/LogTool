@@ -221,13 +221,15 @@ def analyze_log(log, string, time_grep, last_line_date):
         basic_strings=['WARNING',string]
         strings=basic_strings
     if 'ERROR' in string:
-        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ']
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR']
         strings=basic_strings
     if is_standard_log==False:
-        strings=python_exceptions+magic_words
+        print_in_color('Half Standard --> ' + log, 'yellow')
+        strings=python_exceptions+[' '+item for item in magic_words]
         for item in strings:
             command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
+        print_in_color('Standard --> ' + log, 'green')
         for item in strings:
             command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
@@ -262,8 +264,8 @@ def analyze_log(log, string, time_grep, last_line_date):
         if date < time_grep:
             continue
         # Create list of third lines, do not analyze the same blocks again and again
-        if len(block_lines)>=4:
-            third_line=remove_digits_from_string(block_lines[2:3])
+        if len(block_lines)>=6:
+            third_line=remove_digits_from_string(block_lines[2:5])
         else:
             third_line=remove_digits_from_string(block_lines[0])
         # Block is relevant only when the debug level is in the first 60 characters in THIRD LINE (no digits in it)
@@ -462,6 +464,7 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
 
 # Extract WARN or ERROR messages from log and return unique messages #
 def extract_log_unique_greped_lines(log, string_for_grep):
+    print_in_color('Not Standard --> '+log,'red')
     temp_grep_result_file = 'zahlabut.txt'
     unique_messages = []
     if os.path.exists(temp_grep_result_file):
@@ -508,8 +511,8 @@ def extract_log_unique_greped_lines(log, string_for_grep):
     third_lines = []
     for block in list_of_blocks:
         block_lines=block.splitlines()
-        if len(block_lines)>=4:# Do nothing if len of blocks is less than 4
-            third_line=block_lines[2:3]
+        if len(block_lines)>=6:# Do nothing if len of blocks is less than 4
+            third_line=block_lines[2:5]
             third_line=remove_digits_from_string(third_line)
             if third_line not in third_lines:
                 third_lines.append(third_line)
@@ -553,15 +556,19 @@ if __name__ == "__main__":
                 append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
                                + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
                 continue
-            print_in_color('--> '+log, 'bold')
             Log_Analyze_Info = {}
             Log_Analyze_Info['Log']=log
             Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
-            # Get the time of last line, if fails will be added to ignored logs
-            last_line=get_file_last_line(log)
-            last_line_date=get_line_date(last_line)
+            # Try to check if there is a known timestamp in last 100 lines
+            last_line=get_file_last_line(log,'100')
+            is_known_time_fromat=False
+            for line in last_line.splitlines():
+                last_line_date=get_line_date(line)
+                if last_line_date['Error']!=None:
+                    is_known_time_fromat=True
+                    break
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if last_line_date['Error']!=None or '-ir-' in log: #Infrared logs are not standard logs
+            if is_known_time_fromat==True:
                 #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
                 # Check if last line contains: proper debug level: INFO or WARN or ERROR string
                 log_last_lines=get_file_last_line(log, '10')
@@ -579,6 +586,13 @@ if __name__ == "__main__":
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
+
+    ### Add basic description about the results into result file ###
+    info='### General results description ### \nThere are two types of log files supported by LogTool:"Standard" and' \
+         '"Not Standard".\nLogTool is trying to detect the timestamp and standard debug level basing on last lines in log paticular file.\n' \
+         'If both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log is handled as Standard\n' \
+         'otherwise as Not Standard.'
+    append_to_file(result_file,info)
 
     ### Fill statistics section for Standard OSP logs###
     print_in_color('\nAggregating statistics for Standard OSP logs','bold')
