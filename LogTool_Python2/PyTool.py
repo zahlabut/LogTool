@@ -343,7 +343,7 @@ try:
             # Use since time
             start_time = raw_input('Enter your "since time" to analyze log filess,'
                                '\nFor example you might want to extract Eoccurredhat occured ~10 minutes before some Failed stage'
-                               '\nTime format example: <2020-04-22 12:10:00> enter your time: ')
+                               '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
 
             mode_start_time=time.time()
             response = urllib2.urlopen(artifacts_url)
