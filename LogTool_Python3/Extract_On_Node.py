@@ -529,7 +529,6 @@ if __name__ == "__main__":
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
     if __name__ == "__main__":
         empty_file_content(result_file)
-        #append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
         start_time=time.time()
         logs=collect_log_paths(log_root_dir)
         for log in logs:
@@ -546,7 +545,6 @@ if __name__ == "__main__":
             Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
             # Try to check if there is a known timestamp in last 100 lines
             last_line=get_file_last_line(log,'100')
-
             is_known_time_format=False
             for line in last_line.splitlines():
                 last_line_date=get_line_date(line)
@@ -554,22 +552,21 @@ if __name__ == "__main__":
                     is_known_time_format=True
                     break
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if is_known_time_format==False:
+            if is_known_time_format==False and to_analyze_osp_logs_only=='all_logs':
                 if 'WARNING' in string_for_grep:
                     string_for_grep='WARN'
                 if 'ERROR' in string_for_grep:
                     string_for_grep=' ERROR'
-                if to_analyze_osp_logs_only=='all_logs':
-                    not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
             else:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
 
     ### Add basic description about the results into result file ###
-    info='### General results description ### \nThere are two types of log files supported by LogTool:"Standard" and' \
-         '"Not Standard".\nLogTool is trying to detect the timestamp and standard debug level basing on last lines in log paticular file.\n' \
-         'If both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log is handled as Standard\n' \
+    info='There are two types of log files supported by LogTool:"Standard" and' \
+         ' "Not Standard".\nLogTool is trying to detect: timestamp and debug string on runtime, basing on last lines in log.\n' \
+         'Once both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log will be handled as Standard\n' \
          'otherwise as Not Standard.'
     append_to_file(result_file,info)
 

@@ -530,10 +530,8 @@ if __name__ == "__main__":
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
     if __name__ == "__main__":
         empty_file_content(result_file)
-        #append_to_file(result_file,'\n\n\n'+'#'*20+' Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep+' '+'#'*20)
         start_time=time.time()
         logs=collect_log_paths(log_root_dir)
-        #logs=['/var/log/containers/nova/nova-compute.log.2.gz']
         for log in logs:
             print_in_color(log,'bold')
             # Skip log file if bigger than 1GB, save this information into not standard logs section
@@ -575,9 +573,9 @@ if __name__ == "__main__":
                     analyzed_logs_result.append(log_result)
 
     ### Add basic description about the results into result file ###
-    info='### General results description ### \nThere are two types of log files supported by LogTool:"Standard" and' \
-         '"Not Standard".\nLogTool is trying to detect the timestamp and standard debug level basing on last lines in log paticular file.\n' \
-         'If both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log is handled as Standard\n' \
+    info='There are two types of log files supported by LogTool:"Standard" and' \
+         ' "Not Standard".\nLogTool is trying to detect: timestamp and debug string on runtime, basing on last lines in log.\n' \
+         'Once both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log will be handled as Standard\n' \
          'otherwise as Not Standard.'
     append_to_file(result_file,info)
 
