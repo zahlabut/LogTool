@@ -171,32 +171,19 @@ def append_to_file(log_file, msg):
     log_file.write(msg)
 
 def get_line_date(line):
-    line=line[0:50] # Use first 50 characters to get line timestamp
-    # Delta 27 []
-    if line.find(']') - line.find('[') == 27:
-        try:
-            date = line[line.find('[') + 1:line.find(']')]
-            date=datetime.datetime.strptime(date.split(' +')[0], "%d/%b/%Y:%H:%M:%S")
-            return {'Error': None, 'Date':date.strftime('%Y-%m-%d %H:%M:%S.%f').split('.')[0],'Line':line}
-        except Exception as e:
-            return {'Error': e, 'Line': line.strip(), 'Date':None}
-
-    # Delta 32 []
-    elif line.find(']') - line.find('[') == 32:
-        try:
-            date = line[line.find('[') + 1:line.find(']')]
-            date=datetime.datetime.strptime(date.split(' +')[0], "%a %b %d %H:%M:%S.%f %Y")
-            return {'Error': None, 'Date': date.strftime('%Y-%m-%d %H:%M:%S.%f').split('.')[0], 'Line': line}
-        except Exception as e:
-            return {'Error': e, 'Line': line.strip(),'Date':None}
-
-    else:
-        try:
-            date=line[0:19].replace('T',' ')
-            date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-            return {'Error': None, 'Date': date.strftime('%Y-%m-%d %H:%M:%S').split('.')[0], 'Line': line}
-        except Exception as e:
-            return {'Error':str(e),'Line':line.strip(),'Date':None}
+    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
+    if match:
+        date=datetime.datetime.strptime(match.group().replace('T',' '), '%Y-%m-%d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct 29 16:25:47
+    if match:
+        date=datetime.datetime.strptime(match.group().replace('T',' '), '%b %d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct-29 16:25:51
+    if match:
+        date=datetime.datetime.strptime(match.group().replace('T',' '), '%b-%d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date':None}
 
 def analyze_log(log, string, time_grep, last_line_date):
     grep_file='zahlabut.txt'
@@ -564,11 +551,11 @@ if __name__ == "__main__":
             is_known_time_fromat=False
             for line in last_line.splitlines():
                 last_line_date=get_line_date(line)
-                if last_line_date['Error']!=None:
+                if last_line_date['Error']==None:
                     is_known_time_fromat=True
                     break
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if is_known_time_fromat==True:
+            if is_known_time_fromat==False:
                 #print_in_color(log+' --> \n'+str(last_line_date['Error']),'yellow')
                 # Check if last line contains: proper debug level: INFO or WARN or ERROR string
                 log_last_lines=get_file_last_line(log, '10')
