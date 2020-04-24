@@ -215,10 +215,10 @@ def analyze_log(log, string, time_grep, last_line_date):
     if is_standard_log==False:
         strings=python_exceptions+[' '+item for item in magic_words]
         for item in strings:
-            command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+            command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
         for item in strings:
-            command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+            command+="grep -B2 -A7 -n '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)

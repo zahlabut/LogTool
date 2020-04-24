@@ -218,10 +218,10 @@ def analyze_log(log, string, time_grep, last_line_date):
     if is_standard_log==False:
         strings=python_exceptions+[' '+item for item in magic_words]
         for item in strings:
-            command+="grep -B2 -A7 -i '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+            command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
         for item in strings:
-            command+="grep -B2 -A7 '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+            command+="grep -B2 -A7 -n '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -464,7 +464,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append("grep -in -A7 -B2 fatal " + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 |ERR| ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         for string in python_exceptions:
