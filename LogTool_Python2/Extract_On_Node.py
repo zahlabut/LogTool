@@ -573,10 +573,10 @@ if __name__ == "__main__":
                     analyzed_logs_result.append(log_result)
 
     ### Add basic description about the results into result file ###
-    info='There are two kinds of log files supported by LogTool:Standard and Not Standard.' \
-         '\nStandard logs - debug level string and timestamp have been successfully detected in log lines, for example:' \
+    info='There are two kinds of log files supported by LogTool: "Standard" and "Not Standard".' \
+         '\nStandard logs - debug level string and timestamp have been successfully detected in log lines, example line:' \
          '\n2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi ' \
-         '\nNot Standard - all the rest, for example:' \
+         '\nNot Standard - all the rest, example line:' \
          '\nDebug: Evicting cache entry for environment "production"'
     append_to_file(result_file,info)
 
