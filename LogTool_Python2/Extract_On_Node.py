@@ -573,10 +573,11 @@ if __name__ == "__main__":
                     analyzed_logs_result.append(log_result)
 
     ### Add basic description about the results into result file ###
-    info='There are two types of log files supported by LogTool:"Standard" and' \
-         ' "Not Standard".\nLogTool is trying to detect: timestamp and debug string on runtime, basing on last lines in log.\n' \
-         'Once both of them have been detected, for example: 2020-04-21 12:15:01 and DEBUG log will be handled as Standard\n' \
-         'otherwise as Not Standard.'
+    info='There are two kinds of log files supported by LogTool:Standard and Not Standard.' \
+         '\nStandard logs - debug level string and timestamp have been successfully detected in log lines, for example:' \
+         '\n2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi ' \
+         '\nNot Standard - all the rest, for example:' \
+         '\nDebug: Evicting cache entry for environment "production"'
     append_to_file(result_file,info)
 
     ### Fill statistics section for Standard OSP logs###
