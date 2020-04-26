@@ -342,7 +342,7 @@ try:
 
             # Use since time
             start_time = input('\nEnter your "since time" to analyze log files,'
-                               '\nFor example you might want to extract Eoccurredhat occured ~10 minutes before some Failed stage'
+                               '\nFor example it could be start time of some failed stage'
                                '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
 
             mode_start_time=time.time()
