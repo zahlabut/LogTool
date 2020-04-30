@@ -178,6 +178,14 @@ def get_line_date(line):
     if match:
         date=datetime.datetime.strptime(match.group().replace('T',' '), '%Y-%m-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
+    match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)#27 Apr 2020 11:37:46
+    if match:
+        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d %b %Y %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    match = re.search(r'\d{2}/(...)/\d{4}.\d{2}:\d{2}:\d{2}', line)#30/Apr/2020:00:00:20
+    if match:
+        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d/%b/%Y:%H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct 29 16:25:47
     if match:
         date=datetime.datetime.strptime(match.group().replace('T',' '), '%b %d %H:%M:%S')
@@ -552,16 +560,18 @@ if __name__ == "__main__":
                     is_known_time_format=True
                     break
             Log_Analyze_Info['ParseLogTime']=last_line_date
-            if is_known_time_format==False and to_analyze_osp_logs_only=='all_logs':
-                if 'WARNING' in string_for_grep:
-                    string_for_grep='WARN'
-                if 'ERROR' in string_for_grep:
-                    string_for_grep=' ERROR'
-                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
-            else:
+            if is_known_time_format==True:
                 if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
+            else:
+                if to_analyze_osp_logs_only=='all_logs':
+                    if 'WARNING' in string_for_grep:
+                        string_for_grep='WARN'
+                    if 'ERROR' in string_for_grep:
+                        string_for_grep=' ERROR'
+                    not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+
 
     ### Add basic description about the results into result file ###
     info='There are two kinds of log files supported by LogTool: "Standard" and "Not Standard".' \
