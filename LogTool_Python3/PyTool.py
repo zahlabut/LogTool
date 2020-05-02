@@ -939,7 +939,7 @@ try:
                 spec_print(['Execution has failed for all nodes :-( ',
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]'], 'red')
             else:
-                spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
+                spec_print(['Completed with failures!!!', 'Result Directory: ' + mode_result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
