@@ -266,7 +266,7 @@ if __name__ == "__main__":
                     append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
                     known_lines=[]
                     if log.endswith('.gz'):
-                        with gzip.open('file.txt.gz', 'r') as f:
+                        with gzip.open(log, 'r') as f:
                             for line in f:
                                 line_date = get_line_date(line)
                                 char_line = remove_digits_from_string(line)
