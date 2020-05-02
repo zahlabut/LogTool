@@ -90,6 +90,13 @@ def run_on_node(node, log_type):
 
 
 def execute_on_node(dic):
+
+
+
+    print(dic)
+
+
+
     if dic['Mode']=='Export_Range':
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
