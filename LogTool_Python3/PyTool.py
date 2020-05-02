@@ -89,19 +89,19 @@ def run_on_node(node, log_type):
 
 
 
-def execute_on_node(node, **kwargs):
-    if kwargs['Mode']=='Export_Range':
+def execute_on_node(dic):
+    if dic['Mode']=='Export_Range':
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
         try:
-            result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
-            result_dir=kwargs['ResultDir']
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            result_file=dic['ResultFile']+'.gz' # This file will be created by worker script
+            result_dir=dic['ResultDir']
+            s = SSH(dic['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
             s.ssh_connect_key()
             s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
             s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
-            command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
-                      "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
+            command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+dic['StartRange']+"' '"+dic['StopRange']+\
+                      "' "+dic['LogDir']+" "+dic['ResultFile']+' '+dic['ResultDir']
             print('Executed command on host --> ', command)
             com_result = s.ssh_command(command)
             print(com_result['Stdout'])  # Do not delete me!!!
@@ -114,7 +114,7 @@ def execute_on_node(node, **kwargs):
             s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
             s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(result_dir), result_dir+'.zip'))
             # Clean all #
-            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
+            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',dic['ResultFile']]
             for fil in files_to_delete:
                 s.ssh_command('rm -rf ' + fil)
             # Close SSH #
@@ -885,7 +885,7 @@ try:
             #                        LogDir='/var/log', ResultFile='ExportedTimeRange.log',
             #                        ResultDir='Overcloud_Exported_Time_Range'))
 
-            t = threading.Thread(target=execute_on_node,args=(node, {'Mode':'Export_Range','StartRange':start_range_time,
+            t = threading.Thread(target=execute_on_node,args=({'ip':node['ip'],'Mode':'Export_Range','StartRange':start_range_time,
                                                                      'StopRange':stop_range_time,'LogDir':overcloud_logs_dir,
                                                                      'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}))
 
