@@ -24,7 +24,7 @@ import collections
 from string import digits
 import re
 import shutil
-
+import gzip
 def set_default_arg_by_index(index, default):
     try:
         value=sys.argv[index]
@@ -265,28 +265,55 @@ if __name__ == "__main__":
                     detected_relevant_logs.append(log)
                     append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
                     known_lines=[]
-                    with open(log, 'rb') as f:
-                        for line in f:
-                            line_date=get_line_date(line)
-                            char_line = remove_digits_from_string(line)
-                            if line_date['Error']==None:
-                               if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                    start_found=True
+                    if log.endswith('.gz'):
+                        with gzip.open('file.txt.gz', 'r') as f:
+                            for line in f:
+                                line_date = get_line_date(line)
+                                char_line = remove_digits_from_string(line)
+                                if line_date['Error'] == None:
+                                    if time.strptime(range_start, '%Y-%m-%d %H:%M:%S') <= time.strptime(
+                                            line_date['Date'], '%Y-%m-%d %H:%M:%S') <= time.strptime(range_stop,
+                                                                                                     '%Y-%m-%d %H:%M:%S'):
+                                        start_found = True
+                                        log_file_to_save.write(line)
+                                        if char_line not in known_lines:
+                                            known_lines.append(char_line)
+                                            append_to_file(temp_file, line)
+                                if line_date['Error'] != None and start_found == True:
                                     log_file_to_save.write(line)
                                     if char_line not in known_lines:
                                         known_lines.append(char_line)
-                                        append_to_file(temp_file,line)
-                            if line_date['Error']!=None and start_found==True:
-                                log_file_to_save.write(line)
-                                if char_line not in known_lines:
-                                    known_lines.append(char_line)
-                                    append_to_file(temp_file, line)
-                            if line_date['Error'] == None:
-                                if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                    log_stat_info['NumberOfLines']=len(known_lines)
-                                    statistics_list.append(log_stat_info)
-                                    break
-                    log_file_to_save.close()
+                                        append_to_file(temp_file, line)
+                                if line_date['Error'] == None:
+                                    if time.strptime(line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(range_stop,
+                                                                                                             '%Y-%m-%d %H:%M:%S'):
+                                        log_stat_info['NumberOfLines'] = len(known_lines)
+                                        statistics_list.append(log_stat_info)
+                                        break
+                        log_file_to_save.close()
+                    else:
+                        with open(log, 'r') as f:
+                            for line in f:
+                                line_date=get_line_date(line)
+                                char_line = remove_digits_from_string(line)
+                                if line_date['Error']==None:
+                                   if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                        start_found=True
+                                        log_file_to_save.write(line)
+                                        if char_line not in known_lines:
+                                            known_lines.append(char_line)
+                                            append_to_file(temp_file,line)
+                                if line_date['Error']!=None and start_found==True:
+                                    log_file_to_save.write(line)
+                                    if char_line not in known_lines:
+                                        known_lines.append(char_line)
+                                        append_to_file(temp_file, line)
+                                if line_date['Error'] == None:
+                                    if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                        log_stat_info['NumberOfLines']=len(known_lines)
+                                        statistics_list.append(log_stat_info)
+                                        break
+                        log_file_to_save.close()
     not_relevant_lines=['### '+item['Log']+' ###' for item in statistics_list if item['NumberOfLines']==0]
     statistics_list=[item for item in statistics_list if item['NumberOfLines']!=0]
     print_list(statistics_list)
