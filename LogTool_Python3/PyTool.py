@@ -93,7 +93,7 @@ def execute_on_node(**kwargs):
         print('Remote Overcloud Node -->', str(node))
         try:
             result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
-            result_dir=kwargs['ResultDir']
+            result_dir='Downloaded_Logs_'+kwargs['ResultDir']
             s = SSH(kwargs['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
             s.ssh_connect_key()
             s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
