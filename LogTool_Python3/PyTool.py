@@ -933,7 +933,7 @@ try:
 
 
         if len(errors_on_execution)==0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!','Result Directory: '+mode_result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
             if len(errors_on_execution) == len(nodes):
                 spec_print(['Execution has failed for all nodes :-( ',
