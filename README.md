@@ -52,7 +52,7 @@ Logs from all Overcloud nodes will be compressed and downloaded to local directo
 
 This mode will "grep" some string (given by user) on all Overcloud logs. For example, you might want to see all loged messages for specific request ID, let's say the request ID of "Create VM" that is failed.
 
-**4) Extract messages for given time range
+**4) Extract messages for given time range**
 
 This mode could be useful when you might want to see log messages logged in particular time range.
 For example you want to see all messages in all log files, logged between 2020:05:01 12:00:00 till 2020:05:01 12:05:00 for debug purpose.
