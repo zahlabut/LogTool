@@ -265,7 +265,7 @@ if __name__ == "__main__":
                     detected_relevant_logs.append(log)
                     append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
                     known_lines=[]
-                    with open(log, 'r') as f:
+                    with open(log, 'rb') as f:
                         for line in f:
                             line_date=get_line_date(line)
                             char_line = remove_digits_from_string(line)
