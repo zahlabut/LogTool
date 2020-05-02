@@ -268,6 +268,7 @@ if __name__ == "__main__":
                     if log.endswith('.gz'):
                         with gzip.open(log, 'r') as f:
                             for line in f:
+                                line=line.decode("utf-8")
                                 line_date = get_line_date(line)
                                 char_line = remove_digits_from_string(line)
                                 if line_date['Error'] == None:
