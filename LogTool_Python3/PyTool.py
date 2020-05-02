@@ -94,7 +94,7 @@ def execute_on_node(node, **kwargs):
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
         try:
-            result_file=kwargs['ResultFile']
+            result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
             result_dir=kwargs['ResultDir']
             s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
             s.ssh_connect_key()
@@ -110,15 +110,13 @@ def execute_on_node(node, **kwargs):
             else:
                 print_in_color(str(node) + ' --> FAILED', 'red')
                 errors_on_execution[node['Name']] = False
-            result_file = kwargs['ResultFile']+'.gz'
-
             os.makedirs(result_dir,exist_ok=True)
             s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
             s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(result_dir), result_dir+'.zip'))
             # Clean all #
-            # files_to_delete = ['Extract_Range.py', result_file]
-            # for fil in files_to_delete:
-            #     s.ssh_command('rm -rf ' + fil)
+            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir,kwargs['ResultFile']]
+            for fil in files_to_delete:
+                s.ssh_command('rm -rf ' + fil)
             # Close SSH #
             s.ssh_close()
 
