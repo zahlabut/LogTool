@@ -915,8 +915,8 @@ try:
                             'StartRange':start_range_time,
                             'StopRange':stop_range_time,
                             'LogDir':overcloud_logs_dir,
-                            'ResultFile':'ExportedTimeRange.log',
-                            'ResultDir':'Overcloud_Exported_Time_Range'}
+                            'ResultFile':node['Name'],
+                            'ResultDir':node['Name']}
             t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
 
 
