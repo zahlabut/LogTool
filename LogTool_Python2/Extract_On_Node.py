@@ -171,6 +171,9 @@ def append_to_file(log_file, msg):
     log_file.write(msg)
 
 def get_line_date(line):
+    line=line[0:50]
+    now = datetime.datetime.now()
+    year=str(now.year)
     match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
     if match:
         date=datetime.datetime.strptime(match.group().replace('T',' '), '%Y-%m-%d %H:%M:%S')
@@ -185,11 +188,11 @@ def get_line_date(line):
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct 29 16:25:47
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%b %d %H:%M:%S')
+        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b %d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct-29 16:25:51
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%b-%d %H:%M:%S')
+        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     if len(line)>100:
         line=line[0:100]+'...'

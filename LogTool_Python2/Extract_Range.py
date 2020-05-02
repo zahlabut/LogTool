@@ -245,18 +245,7 @@ def is_single_line_file(log):
     else:
         return False
 
-def unique_list_by_fuzzy(lis,fuzzy):
-    unique_messages=[]
 
-    for item in lis:
-        to_add = True
-        for key in unique_messages:
-            if similar(key, str(item)) >= fuzzy:
-                to_add = False
-                break
-        if to_add == True:
-            unique_messages.append(str(item))
-    return unique_messages
 
 def get_file_line_index(fil,line):
     return exec_command_line_command("grep -n '"+line+"' "+fil)['CommandOutput'].split(':')[0]
