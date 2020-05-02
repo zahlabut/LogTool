@@ -863,7 +863,7 @@ try:
         mode_start_time = time.time()
         for item in [start_range_time,stop_range_time]:
             if check_time(item)==False:
-                print_in_color('Bad timestamp format: '+start_time,'yellow')
+                print_in_color('Bad timestamp format: '+item,'yellow')
                 exit('Execution will be interrupted!')
         result_dir='Overcloud_Exported_Time_Range'
         os.makedirs(result_dir,exist_ok=True)
