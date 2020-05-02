@@ -119,7 +119,7 @@ def execute_on_node(**kwargs):
             # Clean all #
             files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
             for fil in files_to_delete:
-                s.ssh_command('rm -rf ' + fil)
+                s.ssh_command('sudo rm -rf ' + fil)
             # Close SSH #
             s.ssh_close()
         except Exception as e:
