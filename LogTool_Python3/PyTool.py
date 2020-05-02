@@ -114,7 +114,7 @@ def execute_on_node(node, **kwargs):
             s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
             s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(result_dir), result_dir+'.zip'))
             # Clean all #
-            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir,kwargs['ResultFile']]
+            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
             for fil in files_to_delete:
                 s.ssh_command('rm -rf ' + fil)
             # Close SSH #
