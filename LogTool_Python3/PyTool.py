@@ -134,11 +134,11 @@ def execute_on_node(dic):
 
 
 
-dic_for_thread={'ip':node['ip'],'Mode':'Export_Range','StartRange':start_range_time,
-                            'StopRange':stop_range_time,'LogDir':overcloud_logs_dir,
-                            'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}
-execute_on_node,args=(dic_for_thread)
-sys.exit(1)
+# dic_for_thread={'ip':'ip','Mode':'Export_Range','StartRange':'start_range_time',
+#                             'StopRange':'stop_range_time','LogDir':'overcloud_logs_dir',
+#                             'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}
+# execute_on_node(dic_for_thread)
+# sys.exit(1)
 
 
 
@@ -910,10 +910,14 @@ try:
             #                        LogDir='/var/log', ResultFile='ExportedTimeRange.log',
             #                        ResultDir='Overcloud_Exported_Time_Range'))
 
-            dic_for_thread={'ip':node['ip'],'Mode':'Export_Range','StartRange':start_range_time,
-                            'StopRange':stop_range_time,'LogDir':overcloud_logs_dir,
-                            'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}
-            t = threading.Thread(target=execute_on_node,args=(dic_for_thread))
+            dic_for_thread={'ip':node['ip'],
+                            'Mode':'Export_Range',
+                            'StartRange':start_range_time,
+                            'StopRange':stop_range_time,
+                            'LogDir':overcloud_logs_dir,
+                            'ResultFile':'ExportedTimeRange.log',
+                            'ResultDir':'Overcloud_Exported_Time_Range'}
+            t = threading.Thread(target=execute_on_node, args=dic_for_thread)
 
 
 
