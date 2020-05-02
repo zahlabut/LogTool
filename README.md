@@ -52,36 +52,45 @@ Logs from all Overcloud nodes will be compressed and downloaded to local directo
 
 This mode will "grep" some string (given by user) on all Overcloud logs. For example, you might want to see all loged messages for specific request ID, let's say the request ID of "Create VM" that is failed.
 
-**4) Check current:CPU,RAM and Disk on Overcloud**
+**4) Extract messages for given time range
+This mode could be useful when you might want to see log messages logged in particular time range.
+For example you want to see all messages in all log files, logged between 2020:05:01 12:00:00 till 2020:05:01 12:05:00 for debug purpose.
+This mode will create two files per Overcloud node: <NodeName>.log.gz and *.zip.
+<NodeName>.zip - contains all relevant log files. It means that messages have been detected for given time range in these logs.
+BTW - this file could be used as attachment when you report BZ
+<NodeName>.log.gz - LogTool result file, you'll find statistics per OSP log.
+Note: only "unique" messages per OSP log file are saved in this result file. (Duplicated lines are kept only once)
+
+**5) Check current:CPU,RAM and Disk on Overcloud**
 
 This mode will display the current: CPU, RAM and Disk info, on each Overcloud node.
 
-**5) Execute user's script**
+**6) Execute user's script**
 
 This mode provides user the ability to run his own script on Overcloud nodes.
 Create your own script and save it in UserScripts directory, set proper interpreter in it (for example: #!/usr/bin/bash).
 Let's say that Overcloud deployment failed and that you need to execute the same procedure on each Controller node to fix that.
 So, you can implement "work around" script and to run this script on Controllers using this mode.
 
-**6) Download "relevant logs" only, by given timestamp**
+**7) Download "relevant logs" only, by given timestamp**
 
 This mode will download the only Overcloud logs with *"Last Modified" > "given by user timestamp"*.
 For example if you got some error 10 minutes ago, you'll probably need to investigate the actual logs only, it means that old logs won't be relevant to you and therefore download such log files is unecessary.
 In addition, on Bugzila you can attach file only if its size is less than 21MB, so this mode might help.
 
-**7) Export ERRORs/WARNINGs from Undercloud logs**
+**8) Export ERRORs/WARNINGs from Undercloud logs**
 
 This mode is the same as #1, the only difference is that it will use Undercloud logs.
 
-**8) Overcloud - check Unhealthy dockers
+**9) Overcloud - check Unhealthy dockers
 
 This mode is used to search for "Unhealthy" dockers on Nodes
 
-**9)  Download OSP logs and run LogTool locally**
+**10)  Download OSP logs and run LogTool locally**
 
 This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11.scl.lab.tlv.redhat.com) and to analyze downloaded logs locally.
 
-**10)  Undercloud - analyze deployment log**
+**11)  Undercloud - analyze deployment log**
 
 This mode may help you to understand what went wrong while OC or UC deployment, basing on generated log.
 Deployment logs are generated when ""--log" option is used, for example inside the "overcloud_deploy.sh" script, the
@@ -89,7 +98,7 @@ problem is that such logs are not "friendly" and it's hard to understand what ex
 when verbosity is set to "vv" or more, this will make the log not readable with a bunch of data inside it.
 This mode will provide you some details about all failed TASKs.
 
-**11) Analyze Gerrit(Zuul) failed gate logs**
+**12) Analyze Gerrit(Zuul) failed gate logs**
 
 This mode is used to analyze Gerrit(Zuul) log files.
 It will automatically download all files from remote Gerrit gate (HTTP download) and analyze all
