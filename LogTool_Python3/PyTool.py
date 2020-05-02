@@ -887,7 +887,7 @@ try:
 
             t = threading.Thread(target=execute_on_node,args=(node, {'Mode':'Export_Range','StartRange':start_range_time,
                                                                      'StopRange':stop_range_time,'LogDir':log_root_dir,
-                                                                     'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'})
+                                                                     'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}))
 
 
 
