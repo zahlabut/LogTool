@@ -110,7 +110,7 @@ def execute_on_node(**kwargs):
             else:
                 print_in_color(str(node) + ' --> FAILED', 'red')
                 errors_on_execution[node['Name']] = False
-            os.makedirs(result_dir,exist_ok=True)
+            #os.makedirs(result_dir,exist_ok=True)
 
 
 
