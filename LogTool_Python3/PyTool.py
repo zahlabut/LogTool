@@ -119,16 +119,13 @@ def execute_on_node(node, **kwargs):
                 s.ssh_command('rm -rf ' + fil)
             # Close SSH #
             s.ssh_close()
-
         except Exception as e:
             spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
 
 
 
 
-print (execute_on_node({'Name': 'overcloud-controller-2', 'ip': '192.168.24.11'}, Mode='Export_Range',
-                       StartRange='2020-04-13 16:26:57', StopRange='2020-04-13 16:28:57',
-                       LogDir='/var/log',ResultFile='ExportedTimeRange.log',ResultDir='Overcloud_Exported_Time_Range'))
+
 
 
 
@@ -138,6 +135,7 @@ try:
            'Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud nodes',
            '"Grep" some string on all Overcloud logs',
+           'Extract messages for given time range',
            'Check current:CPU,RAM and Disk on Overcloud',
            "Execute user's script",
            'Download "relevant logs" only, by given timestamp',
@@ -836,6 +834,83 @@ try:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
+
+
+
+
+
+
+
+
+
+    if mode[1]=='Extract messages for given time range':
+        ### Get all nodes ###
+        nodes=[]
+        all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
+        all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
+        for node in all_nodes:
+            if check_ping(node['ip']) is True:
+                nodes.append(node)
+            else:
+                print_in_color('Warning - '+str(node)+' will be skipped, due to connectivity issue!!!','yellow')
+        if len(nodes)==0:
+            print_in_color('No Overcloud nodes detected, looks like your OSP installation has failed!','red')
+            sys.exit(1)
+        start_range_time = input('\nEnter range "start time":'
+                           '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
+        stop_range_time = input('\nEnter range "stop time":'
+                           '\nTime format example: 2020-04-22 12:20:00 enter your time: ')
+        mode_start_time = time.time()
+        for item in [start_range_time,stop_range_time]:
+            if check_time(item)==False:
+                print_in_color('Bad timestamp format: '+start_time,'yellow')
+                exit('Execution will be interrupted!')
+        result_dir='Overcloud_Exported_Time_Range'
+        os.makedirs(result_dir,exist_ok=True)
+
+
+
+
+
+
+
+        errors_on_execution={}
+        executed_script_on_overcloud.append('Extract_Range.py')
+        threads = []
+        for node in nodes:
+            #t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
+
+            t = threading.Thread(target=execute_on_node,args=(node, Mode='Export_Range',
+                                   StartRange='2020-04-13 16:26:57', StopRange='2020-04-13 16:28:57',
+                                   LogDir='/var/log', ResultFile='ExportedTimeRange.log',
+                                   ResultDir='Overcloud_Exported_Time_Range'))
+
+
+
+
+
+
+            threads.append(t)
+            t.start()
+        for t in threads:
+            t.join()
+        end_time=time.time()
+        if len(errors_on_execution)==0:
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+        else:
+            if len(errors_on_execution) == len(nodes):
+                spec_print(['Execution has failed for all nodes :-( ',
+                            'Execution Time: ' + str(end_time-mode_start_time) + '[sec]'], 'red')
+            else:
+                spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
+                            'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
+                            'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
+
+
+
+
+
+
 
     if mode[1]=='Extract all logs messages for given time range':
         print_in_color('ToDo - Not implemented yet :-(','yellow')
