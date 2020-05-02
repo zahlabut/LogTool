@@ -887,6 +887,8 @@ try:
                 print_in_color('Bad timestamp format: '+item,'yellow')
                 exit('Execution will be interrupted!')
         mode_result_dir='Overcloud_Exported_Time_Range'
+        if os.path.exists(mode_result_dir):
+            shutil.rmtree(mode_result_dir)
         os.makedirs(mode_result_dir,exist_ok=True)
 
 
