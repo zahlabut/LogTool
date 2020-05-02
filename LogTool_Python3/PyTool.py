@@ -111,8 +111,11 @@ def execute_on_node(**kwargs):
                 print_in_color(str(node) + ' --> FAILED', 'red')
                 errors_on_execution[node['Name']] = False
             os.makedirs(result_dir,exist_ok=True)
-            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
-            s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(result_dir), result_dir+'.zip'))
+
+
+
+            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
+            s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
             # Clean all #
             files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
             for fil in files_to_delete:
@@ -883,8 +886,8 @@ try:
             if check_time(item)==False:
                 print_in_color('Bad timestamp format: '+item,'yellow')
                 exit('Execution will be interrupted!')
-        result_dir='Overcloud_Exported_Time_Range'
-        os.makedirs(result_dir,exist_ok=True)
+        mode_result_dir='Overcloud_Exported_Time_Range'
+        os.makedirs(mode_result_dir,exist_ok=True)
 
 
 
@@ -909,7 +912,8 @@ try:
                             'StopRange':stop_range_time,
                             'LogDir':overcloud_logs_dir,
                             'ResultFile':node['Name']+'.log',
-                            'ResultDir':node['Name']}
+                            'ResultDir':node['Name'],
+                            'ModeResultDir':mode_result_dir}
             t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
 
 
