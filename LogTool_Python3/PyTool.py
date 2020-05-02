@@ -89,26 +89,26 @@ def run_on_node(node, log_type):
 
 
 
-def execute_on_node(dic):
+def execute_on_node(**kwargs):
 
 
 
-    print(dic)
+    print(kwargs)
 
 
 
-    if dic['Mode']=='Export_Range':
+    if kwargs['Mode']=='Export_Range':
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
         try:
-            result_file=dic['ResultFile']+'.gz' # This file will be created by worker script
-            result_dir=dic['ResultDir']
-            s = SSH(dic['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
+            result_dir=kwargs['ResultDir']
+            s = SSH(kwargs['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
             s.ssh_connect_key()
             s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
             s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
-            command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+dic['StartRange']+"' '"+dic['StopRange']+\
-                      "' "+dic['LogDir']+" "+dic['ResultFile']+' '+dic['ResultDir']
+            command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
+                      "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
             print('Executed command on host --> ', command)
             com_result = s.ssh_command(command)
             print(com_result['Stdout'])  # Do not delete me!!!
