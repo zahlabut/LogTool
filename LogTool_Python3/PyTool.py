@@ -87,8 +87,6 @@ def run_on_node(node, log_type):
     except Exception as e:
         spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
 
-
-
 def execute_on_node(**kwargs):
     if kwargs['Mode']=='Export_Range':
         print('-' * 90)
@@ -110,10 +108,6 @@ def execute_on_node(**kwargs):
             else:
                 print_in_color(str(node) + ' --> FAILED', 'red')
                 errors_on_execution[node['Name']] = False
-            #os.makedirs(result_dir,exist_ok=True)
-
-
-
             s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
             s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
             # Clean all #
@@ -124,31 +118,6 @@ def execute_on_node(**kwargs):
             s.ssh_close()
         except Exception as e:
             spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
-
-
-
-
-
-
-# dic_for_thread={'ip':'ip','Mode':'Export_Range','StartRange':'start_range_time',
-#                             'StopRange':'stop_range_time','LogDir':'overcloud_logs_dir',
-#                             'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'}
-# execute_on_node(dic_for_thread)
-# sys.exit(1)
-
-
-
-# execute_on_node({'ip':'192.168.24.11',
-#                  'Mode':'Export_Range',
-#                  'StartRange':'2020-04-22 12:10:00',
-#                  'StopRange':'2020-04-22 12:10:00',
-#                  'LogDir':overcloud_logs_dir,
-#                  'ResultFile':'ExportedTimeRange.log',
-#                  'ResultDir':'Overcloud_Exported_Time_Range'})
-# sys.exit(1)
-
-
-
 
 ### Operation Modes ###
 try:
@@ -169,7 +138,6 @@ try:
            'Analyze Gerrit(Zuul) failed gate logs',
            ]
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
-
 
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
         wget_exists=exec_command_line_command('wget -h')
@@ -856,14 +824,6 @@ try:
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
-
-
-
-
-
-
-
-
     if mode[1]=='Extract messages for given time range':
         ### Get all nodes ###
         nodes=[]
@@ -890,24 +850,10 @@ try:
         if os.path.exists(mode_result_dir):
             shutil.rmtree(mode_result_dir)
         os.makedirs(mode_result_dir,exist_ok=True)
-
-
-
-
-
-
-
         errors_on_execution={}
         executed_script_on_overcloud.append('Extract_Range.py')
         threads = []
         for node in nodes:
-            #t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
-
-            # t = threading.Thread(target=execute_on_node,args=(node, Mode='Export_Range',
-            #                        StartRange='2020-04-13 16:26:57', StopRange='2020-04-13 16:28:57',
-            #                        LogDir='/var/log', ResultFile='ExportedTimeRange.log',
-            #                        ResultDir='Overcloud_Exported_Time_Range'))
-
             dic_for_thread={'ip':node['ip'],
                             'Mode':'Export_Range',
                             'StartRange':start_range_time,
@@ -917,23 +863,11 @@ try:
                             'ResultDir':node['Name'],
                             'ModeResultDir':mode_result_dir}
             t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
-
-
-
-
             threads.append(t)
             t.start()
-
-
-
-
         for t in threads:
             t.join()
         end_time=time.time()
-
-
-
-
         if len(errors_on_execution)==0:
             spec_print(['Completed!!!','Result Directory: '+mode_result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
@@ -944,12 +878,6 @@ try:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + mode_result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
-
-
-
-
-
-
 
     if mode[1]=='Extract all logs messages for given time range':
         print_in_color('ToDo - Not implemented yet :-(','yellow')
