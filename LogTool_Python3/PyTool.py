@@ -922,8 +922,7 @@ try:
             threads.append(t)
             t.start()
 
-            shutil.move(node['Name']+'.log.gz',result_dir)
-            shutil.move(node['Name']+'.zip', result_dir)
+
 
 
         for t in threads:
