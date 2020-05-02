@@ -90,13 +90,6 @@ def run_on_node(node, log_type):
 
 
 def execute_on_node(**kwargs):
-
-
-
-    print(kwargs)
-
-
-
     if kwargs['Mode']=='Export_Range':
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
@@ -924,9 +917,18 @@ try:
 
             threads.append(t)
             t.start()
+
+            shutil.move(node['Name']+'.log.gz',result_dir)
+            shutil.move(node['Name']+'.zip', result_dir)
+
+
         for t in threads:
             t.join()
         end_time=time.time()
+
+
+
+
         if len(errors_on_execution)==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
