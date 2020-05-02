@@ -917,7 +917,7 @@ try:
                             'LogDir':overcloud_logs_dir,
                             'ResultFile':'ExportedTimeRange.log',
                             'ResultDir':'Overcloud_Exported_Time_Range'}
-            t = threading.Thread(target=execute_on_node, args=dic_for_thread)
+            t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
 
 
 
