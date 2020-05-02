@@ -880,12 +880,14 @@ try:
         for node in nodes:
             #t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
 
-            t = threading.Thread(target=execute_on_node,args=(node, Mode='Export_Range',
-                                   StartRange='2020-04-13 16:26:57', StopRange='2020-04-13 16:28:57',
-                                   LogDir='/var/log', ResultFile='ExportedTimeRange.log',
-                                   ResultDir='Overcloud_Exported_Time_Range'))
+            # t = threading.Thread(target=execute_on_node,args=(node, Mode='Export_Range',
+            #                        StartRange='2020-04-13 16:26:57', StopRange='2020-04-13 16:28:57',
+            #                        LogDir='/var/log', ResultFile='ExportedTimeRange.log',
+            #                        ResultDir='Overcloud_Exported_Time_Range'))
 
-
+            t = threading.Thread(target=execute_on_node,args=(node, {'Mode':'Export_Range','StartRange':start_range_time,
+                                                                     'StopRange':stop_range_time,'LogDir':log_root_dir,
+                                                                     'ResultFile':'ExportedTimeRange.log','ResultDir':'Overcloud_Exported_Time_Range'})
 
 
 
