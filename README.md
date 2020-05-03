@@ -61,7 +61,7 @@ This mode will create two files per Overcloud node: <NodeName>.log.gz and *.zip.
 BTW - this file could be used as attachment when you report BZ
 <br/>    <NodeName>.log.gz - LogTool result file, you'll find statistics per OSP log.
 
-** Notes: **
+**Notes:**
 Only "unique" messages per OSP log file are saved in this result file. Duplicated are dropped.
 This mode is available in LogTool Python3 version only.
 
