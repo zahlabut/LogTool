@@ -268,7 +268,9 @@ def analyze_log(log, string, time_grep, last_line_date):
             third_line=remove_digits_from_string(block_lines[0])
         # Block is relevant only when the debug level is in the first 60 characters in THIRD LINE (no digits in it)
         cut_line = third_line[0:60].lower()
-        temp_list=[cut_line.find(item.lower()) for item in strings if cut_line.find(item.lower())>0]
+        legal_debug_strings=strings
+        legal_debug_strings.append('warn')
+        temp_list=[cut_line.find(item.lower()) for item in legal_debug_strings if cut_line.find(item.lower())>0]
         if sum(temp_list)==0:
             continue
         LogDataDic['TotalNumberOfErrors'] += 1
@@ -565,7 +567,7 @@ if __name__ == "__main__":
                     break
             Log_Analyze_Info['ParseLogTime']=last_line_date
             if is_known_time_format==True:
-                if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') > time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
+                if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                     log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
                     analyzed_logs_result.append(log_result)
             else:
