@@ -231,7 +231,7 @@ def analyze_log(log, string, time_grep, last_line_date):
         for item in strings:
             command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
-        for item in strings:
+        for item in strings+python_exceptions:
             command+="grep -B2 -A7 -n '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
@@ -269,10 +269,13 @@ def analyze_log(log, string, time_grep, last_line_date):
             third_line=remove_digits_from_string(block_lines[2:5])
         else:
             third_line=remove_digits_from_string(block_lines[0])
-        # Block is relevant only when the debug level is in the first 60 characters in THIRD LINE (no digits in it)
+        # Block is relevant only when the debug level or python standard exeption is in the first 60 characters in THIRD LINE (no digits in it)
         cut_line = third_line[0:60].lower()
         legal_debug_strings=strings
         legal_debug_strings.append('warn')
+        for item in python_exceptions:
+            legal_debug_strings.append(item)
+
         temp_list=[cut_line.find(item.lower()) for item in legal_debug_strings if cut_line.find(item.lower())>0]
         if sum(temp_list)==0:
             continue
