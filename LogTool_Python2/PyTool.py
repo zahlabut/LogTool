@@ -213,7 +213,7 @@ try:
         result_file='Ansible_Deploy_Log_Result.txt'
         undercloud_home_path = '/home/stack'
         if os.path.exists(undercloud_home_path) is False:
-            undercloud_home_path=input('Enter absolute path to directory containing deployment log: ')
+            undercloud_home_path=raw_input('Enter absolute path to directory containing deployment log: ')
         fatal_lines=[]
         error_lines=[]
         failed_tasks=[]
@@ -341,7 +341,7 @@ try:
                 sys.exit(1)
 
             # Use since time
-            start_time = input('\nEnter your "since time" to analyze log files,'
+            start_time = raw_input('\nEnter your "since time" to analyze log files,'
                                '\nFor example it could be start time of some failed stage'
                                '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
 
@@ -457,7 +457,7 @@ try:
         if start_time_option[1]=='Custom':
             print_in_color('Current date on Undercloud is: ' + undercloud_time, 'blue')
             print_in_color('Use the same date format as in previous output', 'blue')
-            start_time = input('And enter your "since time" to extract log messages: ')
+            start_time = raw_input('And enter your "since time" to extract log messages: ')
         if start_time_option[1]=='10 Minutes ago':
             start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
         if start_time_option[1]=='30 Minutes ago':
