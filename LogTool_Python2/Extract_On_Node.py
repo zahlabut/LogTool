@@ -44,7 +44,7 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -171,7 +171,7 @@ def append_to_file(log_file, msg):
     log_file.write(msg)
 
 def get_line_date(line):
-    line=line[0:50]
+    #line=line[0:50]
     now = datetime.datetime.now()
     year=str(now.year)
     match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
