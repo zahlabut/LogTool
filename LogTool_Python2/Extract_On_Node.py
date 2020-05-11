@@ -44,7 +44,7 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -221,15 +221,18 @@ def analyze_log(log, string, time_grep, last_line_date):
         basic_strings=['WARNING',string]
         strings=basic_strings
     if 'ERROR' in string:
-        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR']
+        basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR', ' FAILED']
         strings=basic_strings
     if is_standard_log==False:
-        strings=python_exceptions+[' '+item for item in magic_words]
+        strings = python_exceptions+[' ' + item for item in magic_words]
         for item in strings:
             command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
+        not_case_sensetive_strings=['http error']
         for item in strings+python_exceptions:
-            command+="grep -B2 -A7 -n '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+            command+="grep -B2 -A7 -n '"+item+"' " +log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
+        for item in not_case_sensetive_strings:
+            command += "grep -B2 -A7 -in '" + item + "' " + log + " >> " + grep_file + ";echo -e '--' >> " + grep_file + ';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -262,8 +265,8 @@ def analyze_log(log, string, time_grep, last_line_date):
         if date < time_grep:
             continue
         # Create list of third lines, do not analyze the same blocks again and again
-        if len(block_lines)>=6:
-            third_line=remove_digits_from_string(block_lines[2:5])
+        if len(block_lines)>=3:
+            third_line=remove_digits_from_string(block_lines[2])
         else:
             third_line=remove_digits_from_string(block_lines[0])
         # Block is relevant only when the debug level or python standard exeption is in the first 60 characters in THIRD LINE (no digits in it)
