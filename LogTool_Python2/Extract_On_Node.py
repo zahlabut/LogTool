@@ -176,7 +176,7 @@ def get_line_date(line):
     year=str(now.year)
     match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%Y-%m-%d %H:%M:%S')
+        date=datetime.datetime.strptime(match.group().replace('T',' ').replace('_',' '), '%Y-%m-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)#27 Apr 2020 11:37:46
     if match:
@@ -228,11 +228,8 @@ def analyze_log(log, string, time_grep, last_line_date):
         for item in strings:
             command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
-        not_case_sensetive_strings=['http error']
         for item in strings+python_exceptions:
-            command+="grep -B2 -A7 -n '"+item+"' " +log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
-        for item in not_case_sensetive_strings:
-            command += "grep -B2 -A7 -in '" + item + "' " + log + " >> " + grep_file + ";echo -e '--' >> " + grep_file + ';'
+            command+="grep -B2 -A7 -in '"+item+"' " +log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
@@ -248,61 +245,56 @@ def analyze_log(log, string, time_grep, last_line_date):
     # Try to get block date
     last_parsed_date=last_line_date
     for block in list_of_blocks:
-        block_lines=block.splitlines()
-        parsed_date=False
-        for line in block_lines:
-            block_date=get_line_date(line)
-            if block_date['Error']==None:
-                date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
-                last_parsed_date=date
-                parsed_date=True
-                break
-        if parsed_date==False:
-            print_in_color('Failed to parse date on line: '+str(block_date),'yellow')
+        block_date=get_line_date(block)
+        if block_date['Error']==None:
+            date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
+        else:
+            print_in_color('Failed to get block date\n: '+block_date['Line'],'yellow')
             print('Last known parsed date was: '+str(last_parsed_date))
             date=last_parsed_date
-            block_lines.insert(0,"*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your time range! ***")
-        if date < time_grep:
-            continue
-        # Create list of third lines, do not analyze the same blocks again and again
-        if len(block_lines)>=3:
-            third_line=remove_digits_from_string(block_lines[2])
-        else:
-            third_line=remove_digits_from_string(block_lines[0])
-        # Block is relevant only when the debug level or python standard exeption is in the first 60 characters in THIRD LINE (no digits in it)
-        cut_line = third_line[0:60].lower()
-        legal_debug_strings=strings
-        legal_debug_strings.append('warn')
-        for item in python_exceptions:
-            legal_debug_strings.append(item)
-
-        temp_list=[cut_line.find(item.lower()) for item in legal_debug_strings if cut_line.find(item.lower())>0]
-        if sum(temp_list)==0:
-            continue
-        LogDataDic['TotalNumberOfErrors'] += 1
-        if third_line not in third_lines:
-            third_lines.append(third_line)
-            block=cut_huge_block(block)
-            if block!=None:
-                block_lines=block.splitlines()
-        else:
-            continue
-        # Check fuzzy match and count matches #
-        to_add = True
-        is_trace = False
-        if 'Traceback (most recent call last)' in str(block_lines):
-            is_trace = True
-        block_size = len(block_lines)
-        for key in existing_messages:
-            if similar(key[1], str(block_lines)) >= fuzzy_match:
-                to_add = False
-                messages_index = existing_messages.index(key)
-                counter = existing_messages[messages_index][0]
-                message = existing_messages[messages_index][1]
-                existing_messages[messages_index] = [counter + 1, message, is_trace, block_size]
-                break
-        if to_add == True:
-            existing_messages.append([1, block_lines, is_trace, block_size])
+            block="*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your" \
+                  " time range! ***\n"+block
+        if date>time_grep:
+            # Create list of third lines, do not analyze the same blocks again and again
+            block_lines=block.splitlines()
+            if len(block_lines)>=3:
+                third_line=remove_digits_from_string(block_lines[2])
+            else:
+                third_line=remove_digits_from_string(block_lines[0])
+            # Block is relevant only when the debug level or python standard exeption is in the first 60 characters in THIRD LINE (no digits in it)
+            cut_line = third_line[0:60].lower()
+            legal_debug_strings=strings
+            legal_debug_strings.append('warn')
+            relevant_block=False
+            for item in legal_debug_strings+python_exceptions:
+                if item.lower() in cut_line.lower():
+                    relevant_block=True
+                    break
+            if relevant_block==True:
+                LogDataDic['TotalNumberOfErrors'] += 1
+                if third_line not in third_lines:
+                    third_lines.append(third_line)
+                    block=cut_huge_block(block)
+                    if block!=None:
+                        block_lines=block.splitlines()
+                else:
+                    continue
+                # Check fuzzy match and count matches #
+                to_add = True
+                is_trace = False
+                if 'Traceback (most recent call last)' in str(block_lines):
+                    is_trace = True
+                block_size = len(block_lines)
+                for key in existing_messages:
+                    if similar(key[1], str(block_lines)) >=fuzzy_match:
+                        to_add = False
+                        messages_index = existing_messages.index(key)
+                        counter = existing_messages[messages_index][0]
+                        message = existing_messages[messages_index][1]
+                        existing_messages[messages_index] = [counter + 1, message, is_trace, block_size]
+                        break
+                if to_add == True:
+                    existing_messages.append([1, block_lines, is_trace, block_size])
     for i in existing_messages:
         dic = {}
         dic['UniqueCounter'] = i[0]
