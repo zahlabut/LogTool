@@ -178,6 +178,10 @@ def get_line_date(line):
     #line=line[0:50]
     now = datetime.datetime.now()
     year=str(now.year)
+    match = re.search(r'\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2}', line)  # 2019-12-20-01:08:55
+    if match:
+        date = datetime.datetime.strptime(match.group().replace('T', ' ').replace('_', ' '), '%Y-%m-%d-%H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
     if match:
         date=datetime.datetime.strptime(match.group().replace('T',' ').replace('_',' '), '%Y-%m-%d %H:%M:%S')
