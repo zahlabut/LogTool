@@ -44,7 +44,7 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error', 'failure'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
@@ -64,6 +64,11 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
                    'ProcessLookupError','TimeoutError','ReferenceError','RuntimeError','NotImplementedError',
                    'RecursionError','SyntaxError','IndentationError','TabError','SystemError','TypeError',
                    'ValueError','UnicodeError','UnicodeDecodeError','UnicodeEncodeError','UnicodeTranslateError']
+
+# These logs are standard (contains proper debug level + timestamp),
+# but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
+# so that is why LogTool will analyze such logs including "magic_strings".
+analyze_log_as_not_standard=['heat_api_cfn.log']
 
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
@@ -220,6 +225,12 @@ def analyze_log(log, string, time_grep, last_line_date):
     for level in ['ERROR','CRITICAL','FATAL','TRACE','|ERR|','DEBUG','INFO','WARN']:
         if level in str(last_ten_lines):
             is_standard_log=True
+            break
+    # Sorry, but this block will change the "is_standard_log" to False,
+    # once by default log is listed in "analyze_log_as_not_standard"
+    for item in analyze_log_as_not_standard:
+        if item in log:
+            is_standard_log=False
             break
     if os.path.exists(grep_file):
         os.remove(grep_file)
