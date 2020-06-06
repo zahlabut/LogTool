@@ -66,7 +66,7 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 # These logs are standard (contains proper debug level + timestamp),
 # but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
 # so that is why LogTool will analyze such logs including "magic_strings".
-analyze_log_as_not_standard=['heat_api_cfn.log']
+analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
 def remove_digits_from_string(s):
     return str(s).translate(None, digits)

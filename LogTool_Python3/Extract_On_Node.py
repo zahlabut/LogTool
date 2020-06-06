@@ -69,7 +69,7 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 # but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
 # so that is why LogTool will analyze such logs including "magic_strings" without line limitation
 # (Debig lebel is in first 60 characters)
-analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment']
+analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
