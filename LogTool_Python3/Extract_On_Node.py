@@ -67,8 +67,9 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 
 # These logs are standard (contains proper debug level + timestamp),
 # but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
-# so that is why LogTool will analyze such logs including "magic_strings".
-analyze_log_as_not_standard=['heat_api_cfn.log']
+# so that is why LogTool will analyze such logs including "magic_strings" without line limitation
+# (Debig lebel is in first 60 characters)
+analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment']
 
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
@@ -276,18 +277,27 @@ def analyze_log(log, string, time_grep, last_line_date):
             # Create list of third lines, do not analyze the same blocks again and again
             block_lines=block.splitlines()
             if len(block_lines)>=3:
-                third_line=remove_digits_from_string(block_lines[2])
+                third_line=block_lines[2]
+                if len(third_line) > 1000:
+                    third_line = third_line[0:1000]
+                third_line=remove_digits_from_string(third_line)
             else:
-                third_line=remove_digits_from_string(block_lines[0])
+                third_line=block_lines[0]
+                if len(third_line) > 1000:
+                    third_line = third_line[0:1000]
+                third_line=remove_digits_from_string(third_line)
             # Block is relevant only when the debug level or python standard exeption is in the first 60 characters in THIRD LINE (no digits in it)
-            cut_line = third_line[0:60].lower()
-            legal_debug_strings=strings
-            legal_debug_strings.append('warn')
             relevant_block=False
-            for item in legal_debug_strings+python_exceptions:
-                if item.lower() in cut_line.lower():
-                    relevant_block=True
-                    break
+            if is_standard_log==True:
+                cut_line = third_line[0:60].lower()
+                legal_debug_strings = strings
+                legal_debug_strings.append('warn')
+                for item in legal_debug_strings+python_exceptions:
+                    if item.lower() in cut_line.lower():
+                        relevant_block=True
+                        break
+            if is_standard_log==False:
+                relevant_block=True
             if relevant_block==True:
                 LogDataDic['TotalNumberOfErrors'] += 1
                 if third_line not in third_lines:
@@ -295,6 +305,9 @@ def analyze_log(log, string, time_grep, last_line_date):
                     block=cut_huge_block(block)
                     if block!=None:
                         block_lines=block.splitlines()
+
+                    else:
+                        block_lines=[]
                 else:
                     continue
                 # Check fuzzy match and count matches #
@@ -311,7 +324,7 @@ def analyze_log(log, string, time_grep, last_line_date):
                         message = existing_messages[messages_index][1]
                         existing_messages[messages_index] = [counter + 1, message, is_trace, block_size]
                         break
-                if to_add == True:
+                if to_add == True and block_lines!=[]:
                     existing_messages.append([1, block_lines, is_trace, block_size])
     for i in existing_messages:
         dic = {}
@@ -413,6 +426,11 @@ def escape_ansi(line):
     return ansi_escape.sub('', line)
 
 def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
+
+    print_in_color('start_cut','blue')
+    start=time.time()
+
+
     block_lines=block.splitlines()
     # Check if not Jumbo block
     if len(block_lines)>5000:
@@ -476,6 +494,15 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                 for line in block_lines[-5:-1]:
                     new_small_block += line + '\n'
             new_block=new_small_block
+
+
+
+    print_in_color('stop_cut','blue')
+    stop=time.time()
+    print_in_color(str(stop-start),'blue')
+
+
+
     return new_block
 
 # Extract WARN or ERROR messages from log and return unique messages #

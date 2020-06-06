@@ -341,9 +341,13 @@ try:
                 sys.exit(1)
 
             # Use since time
-            start_time = raw_input('\nEnter your "since time" to analyze log files,'
-                               '\nFor example it could be start time of some failed stage'
-                               '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
+            try:
+                start_time = input('\nEnter your "since time" to analyze log files,'
+                                   '\nFor example it could be start time of some failed stage'
+                                   '\nTime format example: 2020-04-22 12:10:00 enter your time: '
+                                   '\nOtherwise, press ENTER to continue ')
+            except:
+                start_time='2019-01-01 00:00:00'
 
             mode_start_time=time.time()
             response = urllib2.urlopen(artifacts_url)
