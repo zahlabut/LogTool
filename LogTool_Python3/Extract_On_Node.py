@@ -426,11 +426,6 @@ def escape_ansi(line):
     return ansi_escape.sub('', line)
 
 def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
-
-    print_in_color('start_cut','blue')
-    start=time.time()
-
-
     block_lines=block.splitlines()
     # Check if not Jumbo block
     if len(block_lines)>5000:
@@ -494,15 +489,6 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
                 for line in block_lines[-5:-1]:
                     new_small_block += line + '\n'
             new_block=new_small_block
-
-
-
-    print_in_color('stop_cut','blue')
-    stop=time.time()
-    print_in_color(str(stop-start),'blue')
-
-
-
     return new_block
 
 # Extract WARN or ERROR messages from log and return unique messages #
