@@ -437,34 +437,36 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     new_block=''
     matches = []
     for line in block_lines:
-        if len(line) < limit_line_size:
-            new_block += line + '\n'
-        else:
-            new_block+=line[0:limit_line_size]+'...<--LogTool-LINE IS TOO LONG!\n'
-            for string in magic_words+python_exceptions:
-                match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
-                if match_indexes!=[]:
-                    for item in match_indexes:
-                        if item[0]>number_of_characters_before_match:
-                            if item[1]+number_of_characters_after_match<len(line):
-                                match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
-                            else:
-                                match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:]
+        for string in magic_words+python_exceptions:
+            match_indexes=find_all_string_matches_in_line(line.lower(),string.lower())
+            if match_indexes!=[]:
+                for item in match_indexes:
+                    if item[0]>number_of_characters_before_match:
+                        if item[1]+number_of_characters_after_match<len(line):
+                            match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
                         else:
-                            if item[1]+number_of_characters_after_match<len(line):
-                                match_line=line[0:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
-                            else:
-                                match_line=line[0:item[0]]+line[item[0]:]
-                        matches.append(match_line)
+                            match_line=line[item[0]-number_of_characters_before_match:item[0]]+line[item[0]:]
+                    else:
+                        if item[1]+number_of_characters_after_match<len(line):
+                            match_line=line[0:item[0]]+line[item[0]:item[1]+number_of_characters_after_match]+'...'
+                        else:
+                            match_line=line[0:item[0]]+line[item[0]:]
+                    matches.append(match_line)
+        if len(line) < limit_line_size:
+            new_block += line+'\n'
+        else:
+            new_block += line[0:limit_line_size] + '...<--LogTool-LINE IS TOO LONG!\n'
     if matches!=[]:
-        new_block += "LogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
+        new_block += "\nLogTool --> "+"POTENTIAL BLOCK'S ISSUES: \n"
         if len(matches)>100:
-            unique_matches = unique_list_by_fuzzy(matches, 0.2) #To increase time execution
+            unique_matches = unique_list_by_fuzzy(matches, 0.2) #To reduce execution time
         else:
             unique_matches = unique_list_by_fuzzy(matches, fuzzy_match)
         for item in unique_matches:
             new_block+=item+'\n'
             new_block+=create_underline(item,magic_words+python_exceptions)+'\n'
+    if matches==[]: #Nothing was found, so it's not relevant block
+        new_block=None
     # Drop if not relevant block using "ignore_block"
     if ignore_block(block,ignore_strings)==True:
         new_block=None
