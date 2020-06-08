@@ -326,7 +326,7 @@ def analyze_log(log, string, time_grep, last_line_date):
         dic['UniqueCounter'] = i[0]
         dic['BlockLines'] = i[1]
         dic['IsTracebackBlock'] = i[2]
-        dic['BlockLinesSize'] = i[3]
+        dic['AnalyzedBlockLinesSize'] = i[3]
         LogDataDic['AnalyzedBlocks'].append(dic)
     if os.path.exists(grep_file):
         os.remove(grep_file)
@@ -650,8 +650,8 @@ if __name__ == "__main__":
             append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + item['Log']+' '+'-'*30+' \n')
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
-            append_to_file(result_file, 'BlockLinesSize:' + str(block['BlockLinesSize']) + '\n')
-            if block['BlockLinesSize']<30:
+            append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
+            if block['AnalyzedBlockLinesSize']<30:
                 for line in block['BlockLines']:
                     append_to_file(result_file,line+'\n')
             else:
