@@ -653,16 +653,27 @@ if __name__ == "__main__":
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
             append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-            if block['AnalyzedBlockLinesSize']<30:
-                for line in block['BlockLines']:
-                    append_to_file(result_file,line+'\n')
-            else:
-                for line in block['BlockLines'][0:10]:
-                    append_to_file(result_file, line + '\n')
-                append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
-                for line in block['BlockLines'][-10:-1]:
-                    append_to_file(result_file, line + '\n')
-            #append_to_file(result_file, '~' * 100 + '\n')
+
+            for line in block['BlockLines']:
+                append_to_file(result_file, line + '\n')
+
+
+
+            # if block['AnalyzedBlockLinesSize']<30:
+            #     for line in block['BlockLines']:
+            #         append_to_file(result_file,line+'\n')
+            # else:
+            #     for line in block['BlockLines'][0:10]:
+            #         append_to_file(result_file, line + '\n')
+            #     append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
+            #     for line in block['BlockLines'][-10:-1]:
+            #         append_to_file(result_file, line + '\n')
+            # #append_to_file(result_file, '~' * 100 + '\n')
+
+
+
+
+
 
     ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')

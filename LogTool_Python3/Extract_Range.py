@@ -150,12 +150,15 @@ def append_to_file(log_file, msg):
     log_file.write(msg)
 
 def get_line_date(line):
-    line=line[0:50]
+    # try:
+    #line=line[0:50]
     now = datetime.datetime.now()
     year=str(now.year)
     match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%Y-%m-%d %H:%M:%S')
+        string=match.group()
+        string = string[0:10]+' '+string[11:]
+        date=datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)#27 Apr 2020 11:37:46
     if match:

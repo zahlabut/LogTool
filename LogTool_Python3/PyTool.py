@@ -56,6 +56,8 @@ empty_file_content('Error.log')
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
 executed_script_on_undercloud = []
+global errors_on_execution
+errors_on_execution = {}
 
 def run_on_node(node, log_type):
     print('-' * 90)
@@ -119,6 +121,7 @@ def execute_on_node(**kwargs):
         except Exception as e:
             spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
 
+
 ### Operation Modes ###
 try:
     modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
@@ -131,8 +134,6 @@ try:
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Overcloud - check Unhealthy dockers',
-           #'Extract all logs messages for given time range',
-           #'Extract NEW (DELTA) messages from Overcloud',
            'Download Jenkins Job logs and run LogTool locally',
            'Undercloud - analyze Ansible Deployment log',
            'Analyze Gerrit(Zuul) failed gate logs',
@@ -851,7 +852,7 @@ try:
         if os.path.exists(mode_result_dir):
             shutil.rmtree(mode_result_dir)
         os.makedirs(mode_result_dir,exist_ok=True)
-        errors_on_execution={}
+
         executed_script_on_overcloud.append('Extract_Range.py')
         threads = []
         for node in nodes:
@@ -880,11 +881,6 @@ try:
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
-    if mode[1]=='Extract all logs messages for given time range':
-        print_in_color('ToDo - Not implemented yet :-(','yellow')
-
-    if mode[1]=='Extract NEW (DELTA) messages from Overcloud':
-        print_in_color('ToDo - Not implemented yet :-(', 'yellow')
 
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')

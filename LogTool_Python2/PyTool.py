@@ -103,8 +103,6 @@ try:
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Overcloud - check Unhealthy dockers',
-           #'Extract all logs messages for given time range',
-           #'Extract NEW (DELTA) messages from Overcloud',
            'Download Jenkins Job logs and run LogTool locally',
            'Undercloud - analyze Ansible Deployment log',
            'Analyze Gerrit(Zuul) failed gate logs',
@@ -789,12 +787,6 @@ try:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in errors_on_execution.keys()], 'yellow')
-
-    if mode[1]=='Extract all logs messages for given time range':
-        print_in_color('ToDo - Not implemented yet :-(','yellow')
-
-    if mode[1]=='Extract NEW (DELTA) messages from Overcloud':
-        print_in_color('ToDo - Not implemented yet :-(', 'yellow')
 
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
