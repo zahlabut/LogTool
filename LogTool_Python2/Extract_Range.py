@@ -312,6 +312,7 @@ if __name__ == "__main__":
                     log_file_to_save.close()
 
 
+
     not_relevant_lines=['### '+item['Log']+' ###' for item in statistics_list if item['NumberOfLines']==0]
     statistics_list=[item for item in statistics_list if item['NumberOfLines']!=0]
     print_list(statistics_list)
