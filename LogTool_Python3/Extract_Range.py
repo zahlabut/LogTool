@@ -269,24 +269,27 @@ if __name__ == "__main__":
                     append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
                     known_lines=[]
                     if log.endswith('.gz'):
-                        with open(log, 'r') as f:
-                            for line in f:
-                                line_date=get_line_date(line)
-                                char_line = remove_digits_from_string(line)
-                                if line_date['Error']==None:
-                                   if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                        start_found=True
+                        try:
+                            with open(log, 'r') as f:
+                                for line in f:
+                                    line_date=get_line_date(line)
+                                    char_line = remove_digits_from_string(line)
+                                    if line_date['Error']==None:
+                                       if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                            start_found=True
+                                            log_file_to_save.write(line)
+                                            if char_line not in known_lines:
+                                                known_lines.append(char_line)
+                                                append_to_file(temp_file,line)
+                                       if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                            break
+                                    if line_date['Error']!=None and start_found==True:
                                         log_file_to_save.write(line)
                                         if char_line not in known_lines:
                                             known_lines.append(char_line)
-                                            append_to_file(temp_file,line)
-                                   if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                        break
-                                if line_date['Error']!=None and start_found==True:
-                                    log_file_to_save.write(line)
-                                    if char_line not in known_lines:
-                                        known_lines.append(char_line)
-                                        append_to_file(temp_file, line)
+                                            append_to_file(temp_file, line)
+                        except Exception as e:
+                            print_in_color(e,'yellow')
                     else:
                         with open(log, 'r') as f:
                             for line in f:

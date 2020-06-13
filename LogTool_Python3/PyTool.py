@@ -59,17 +59,19 @@ executed_script_on_undercloud = []
 global errors_on_execution
 errors_on_execution = {}
 
-def run_on_node(node, log_type):
-    print('-' * 90)
-    print('Remote Overcloud Node -->', str(node))
-    try:
-        result_file = node['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
-        s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+
+def execute_on_node(**kwargs):
+    if kwargs['Mode']=='Export_Range':
+        print('-' * 90)
+        print('Remote Overcloud Node -->', str(node))
+        result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
+        result_dir=kwargs['ResultDir']
+        s = SSH(kwargs['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
         s.ssh_connect_key()
-        s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
-        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
-        command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
-            start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
+        s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
+        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
+        command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
+                  "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
         print(com_result['Stdout'])  # Do not delete me!!!
@@ -78,30 +80,26 @@ def run_on_node(node, log_type):
         else:
             print_in_color(str(node) + ' --> FAILED', 'red')
             errors_on_execution[node['Name']] = False
-        result_file=result_file+'.gz'
-        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
+        s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
         # Clean all #
-        files_to_delete = ['Extract_On_Node.py', result_file]
+        files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
         for fil in files_to_delete:
-            s.ssh_command('rm -rf ' + fil)
+            s.ssh_command('sudo rm -rf ' + fil)
         # Close SSH #
         s.ssh_close()
-    except Exception as e:
-        spec_print('Failed on node:' + str(node) + 'with: ' + str(e))
-
-def execute_on_node(**kwargs):
-    if kwargs['Mode']=='Export_Range':
+    if kwargs['Mode']=='Export_Overcloud_Errors':
         print('-' * 90)
         print('Remote Overcloud Node -->', str(node))
         try:
-            result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
-            result_dir=kwargs['ResultDir']
-            s = SSH(kwargs['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            result_file = kwargs['Node']['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
+            result_dir = kwargs['ResultDir']
+            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
             s.ssh_connect_key()
-            s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
-            s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
-            command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
-                      "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
+            s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
+            s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
+            command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
+                start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+kwargs['LogsType']
             print('Executed command on host --> ', command)
             com_result = s.ssh_command(command)
             print(com_result['Stdout'])  # Do not delete me!!!
@@ -110,12 +108,12 @@ def execute_on_node(**kwargs):
             else:
                 print_in_color(str(node) + ' --> FAILED', 'red')
                 errors_on_execution[node['Name']] = False
-            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
-            s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
+            result_file=result_file+'.gz'
+            s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
             # Clean all #
-            files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
+            files_to_delete = ['Extract_On_Node.py', result_file]
             for fil in files_to_delete:
-                s.ssh_command('sudo rm -rf ' + fil)
+                s.ssh_command('rm -rf ' + fil)
             # Close SSH #
             s.ssh_close()
         except Exception as e:
@@ -805,13 +803,33 @@ try:
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
+
+
+
+
+
+
+
         errors_on_execution={}
         executed_script_on_overcloud.append('Extract_On_Node.py')
         threads = []
+
+
+
+
         for node in nodes:
-            t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
+            dic_for_thread={'Node':node,'LogsType':osp_logs_only,'Mode':'Export_Overcloud_Errors','ResultDir':result_dir}
+            t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
             threads.append(t)
             t.start()
+
+
+        # for node in nodes:
+        #     t = threading.Thread(target=run_on_node, args=(node,osp_logs_only))
+        #     threads.append(t)
+        #     t.start()
+
+
         for t in threads:
             t.join()
         end_time=time.time()
