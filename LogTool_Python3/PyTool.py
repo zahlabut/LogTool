@@ -544,7 +544,6 @@ try:
         os.mkdir(result_dir)
         mode_start_time = time.time()
         executed_script_on_overcloud.append(os.path.basename(script_path))
-
         threads = []
         for node in overcloud_nodes:
             dic_for_thread={'Node':node,'Mode':'ExecuteUserScript','ResultDir':result_dir,'UserScript':script_path}
@@ -553,12 +552,9 @@ try:
             t.start()
         for t in threads:
             t.join()
-
-
-
-
         end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'bold')
+        spec_print(['Completed!!!','Result Directory: '+result_dir,
+                    'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
 
     if mode[1]=='Overcloud - check Unhealthy dockers':
         start_time=time.time()
