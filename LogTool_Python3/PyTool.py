@@ -16,7 +16,7 @@
 
 import shutil,random,datetime,threading,warnings
 from Common import *
-warnings.filterwarnings(action='ignore',module='.*paramiko.*')
+warnings.filterwarnings(action='ignore',module='.*paramiko*')
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
