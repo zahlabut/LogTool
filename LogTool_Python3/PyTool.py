@@ -151,14 +151,10 @@ def execute_on_node(**kwargs):
 ### Operation Modes ###
 try:
     modes=['Export ERRORs/WARNINGs from Overcloud logs',
-           'Download all logs from Overcloud nodes',
            '"Grep" some string on all Overcloud logs',
            'Extract messages for given time range',
            "Execute user's script",
            'Download Overcloud Logs',
-
-
-           'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
            'Analyze Gerrit(Zuul) failed gate logs']
