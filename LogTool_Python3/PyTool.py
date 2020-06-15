@@ -501,7 +501,7 @@ try:
                 t.join()
             end_time=time.time()
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
-        if option=='Download "relevant logs" only, by given timestamp':
+        if option[1]=='Download "relevant logs" only, by given timestamp':
             # Change log path if needed #
             osp_versions=['Older than OSP13?', "Newer than OSP13?"]
             if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':
