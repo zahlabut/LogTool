@@ -118,7 +118,7 @@ def execute_on_node(**kwargs):
         print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_greps_file)))
         files_to_delete=[output_greps_file,'Grep_String.py']
 
-    if kwargs['Mode']=='UserScript':
+    if kwargs['Mode']=='ExecuteUserScript':
         output_file = node['Node']['Name']+'.log'
         print(s.scp_upload(script_path, os.path.basename(kwargs['UserScript'])))
         print(s.ssh_command('chmod 777 ' + os.path.basename(kwargs['UserScript'])))
