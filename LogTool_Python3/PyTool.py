@@ -116,7 +116,7 @@ def execute_on_node(**kwargs):
         command='sudo ' + overcloud_home_dir + 'Grep_String.py ' + overcloud_logs_dir + ' ' + string_to_grep + ' ' + output_greps_file
         print_in_color(command,'bold')
         s.ssh_command(command)
-        print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(result_dir), output_greps_file)))
+        print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_greps_file)))
         files_to_delete=[output_greps_file,'Grep_String.py']
 
 
