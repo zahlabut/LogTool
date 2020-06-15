@@ -118,7 +118,6 @@ def execute_on_node(**kwargs):
         s.ssh_command(command)
         print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_greps_file)))
         files_to_delete=[output_greps_file,'Grep_String.py']
-
     if kwargs['Mode']=='ExecuteUserScript':
         output_file = kwargs['Node']['Name']+'.log'
         print(s.scp_upload(script_path, os.path.basename(kwargs['UserScript'])))
@@ -144,7 +143,6 @@ try:
            "Execute user's script",
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
-           'Overcloud - check Unhealthy dockers',
            'Download Jenkins Job logs and run LogTool locally',
            'Analyze Gerrit(Zuul) failed gate logs']
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
@@ -556,34 +554,6 @@ try:
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,
                     'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
-
-    if mode[1]=='Overcloud - check Unhealthy dockers':
-        start_time=time.time()
-        cpu = 'sudo top -n 1 | head -6'
-        mem = 'sudo free'
-        disk = 'sudo df -h'
-        commands=['sudo podman ps | grep -i unhealthy']
-        for node in overcloud_nodes:
-            try:
-                print_in_color('#'*20+str(node)+'#'*20,'blue')
-                s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-                s.ssh_connect_key()
-                for com in commands:
-                    print(com)
-                    out=s.ssh_command(com)
-                    err = out['Stderr']
-                    out=out['Stdout']
-                    if len(out) !=0:
-                        print_in_color(out,'red')
-                    if len(out) ==0:
-                        print_in_color(str(node)+" --> OK", 'green')
-                    if len(err)!=0:
-                        print(err)
-                s.ssh_close()
-            except Exception as e:
-                print_in_color('Execution has failed on node: '+str(node)+'with: '+str(e), 'red')
-        end_time=time.time()
-        spec_print(['Completed!!!', 'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'],'bold')
 
     if mode[1]=='Export ERRORs/WARNINGs from Overcloud logs':
         random_node=random.choice(overcloud_nodes)
