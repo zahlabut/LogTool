@@ -237,10 +237,10 @@ try:
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
                         'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'green')
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
     if mode[1] == 'Undercloud - analyze Ansible Deployment log':
         from Extract_On_Node import *

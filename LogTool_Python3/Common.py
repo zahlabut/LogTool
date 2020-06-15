@@ -132,7 +132,7 @@ class SSH():
             t1=time.time()
             ftp.put(src_abs_path,dst_abs_path)
             t2=time.time()
-            return {'Status':True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2),'Host':self.host}
+            return {'Status':True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2)+'[sec]','Host':self.host}
         except  Exception as e:
             print_in_color(str(e), 'red')
             return {'Status':False,'Exception':e,'Host':self.host}
@@ -144,7 +144,7 @@ class SSH():
             ftp.get(remote_abs_path, local_abs_path)
             t2 = time.time()
             file_size=os.path.getsize(local_abs_path)
-            return {'Status': True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2),'Host':self.host}
+            return {'Status': True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2)+'[sec]','Host':self.host}
         except  Exception as e:
             print_in_color(str(e), 'red')
             return {'Status': False, 'Exception': e,'Host':self.host}
