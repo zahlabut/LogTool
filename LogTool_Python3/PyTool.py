@@ -108,7 +108,6 @@ def execute_on_node(**kwargs):
         s.ssh_command(command)
         print(s.scp_download(overcloud_home_dir + zip_file_name, os.path.join(os.path.abspath(kwargs['ResultDir']), zip_file_name)))
         files_to_delete=[zip_file_name]
-
     if kwargs['Mode'] == 'GrepString':
         output_greps_file = 'All_Grep_Strings_'+kwargs['Node']['Name']+'.log'
         print(s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py'))
@@ -466,7 +465,7 @@ try:
         print_in_color("1) You can use special characters in your string"
                        "\n2) Ignore case sensitive flag is used by default",'yellow')
         string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
-        start_time = time.time()
+        mode_start_time = time.time()
         result_dir='All_Greped_Strings'
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
