@@ -519,6 +519,7 @@ try:
             if result_dir in os.listdir('.'):
                 shutil.rmtree(result_dir)
             os.mkdir(result_dir)
+            threads=[]
             for node in overcloud_nodes:
                 dic_for_thread={'Node':node,'Mode':'Download_Relevant_Logs','ResultDir':result_dir,'OC_LOgs+Path':overcloud_logs_dir}
                 t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
