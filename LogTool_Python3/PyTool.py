@@ -129,7 +129,6 @@ try:
            'Download all logs from Overcloud nodes',
            '"Grep" some string on all Overcloud logs',
            'Extract messages for given time range',
-           'Check current:CPU,RAM and Disk on Overcloud',
            "Execute user's script",
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
@@ -439,27 +438,7 @@ try:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
-    if mode[1]=='Check current:CPU,RAM and Disk on Overcloud':
-        start_time=time.time()
-        cpu = 'vmstat'
-        mem = 'free'
-        disk = 'df -h'
-        commands=[cpu,mem,disk]
-        for node in overcloud_nodes:
-            print_in_color('#'*20+str(node)+'#'*20,'blue')
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            # Check if pip is installed #
-            pip_installed='sudo which pip'
-            for com in commands:
-                print('--> '+com)
-                out=s.ssh_command(com)
-                print(out['Stdout'])
-                if len(out['Stderr'])!=0:
-                    print(out['Stderr'])
-            s.ssh_close()
-        end_time=time.time()
-        spec_print(['Completed!!!', 'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'],'bold')
+
 
     if mode[1]=='"Grep" some string on all Overcloud logs':
         print_in_color("1) You can use special characters in your string"
