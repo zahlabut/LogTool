@@ -119,7 +119,7 @@ def execute_on_node(**kwargs):
         files_to_delete=[output_greps_file,'Grep_String.py']
 
     if kwargs['Mode']=='ExecuteUserScript':
-        output_file = node['Node']['Name']+'.log'
+        output_file = kwargs['Node']['Name']+'.log'
         print(s.scp_upload(script_path, os.path.basename(kwargs['UserScript'])))
         print(s.ssh_command('chmod 777 ' + os.path.basename(kwargs['UserScript'])))
         command='sudo ./' + os.path.basename(kwargs['UserScript'])+' | tee '+output_file
