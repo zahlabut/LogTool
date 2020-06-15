@@ -126,8 +126,7 @@ def execute_on_node(**kwargs):
 
 ### Operation Modes ###
 try:
-    modes=[#'Export ERRORs/WARNINGs from Overcloud logs OLD',
-           'Export ERRORs/WARNINGs from Overcloud logs',
+    modes=['Export ERRORs/WARNINGs from Overcloud logs',
            'Download all logs from Overcloud nodes',
            '"Grep" some string on all Overcloud logs',
            'Extract messages for given time range',
@@ -137,9 +136,7 @@ try:
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Overcloud - check Unhealthy dockers',
            'Download Jenkins Job logs and run LogTool locally',
-           'Undercloud - analyze Ansible Deployment log',
-           'Analyze Gerrit(Zuul) failed gate logs',
-           ]
+           'Analyze Gerrit(Zuul) failed gate logs']
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
@@ -241,103 +238,6 @@ try:
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
-
-    if mode[1] == 'Undercloud - analyze Ansible Deployment log':
-        from Extract_On_Node import *
-        result_file='Ansible_Deploy_Log_Result.txt'
-        undercloud_home_path = '/home/stack'
-        if os.path.exists(undercloud_home_path) is False:
-            undercloud_home_path=input('Enter absolute path to directory containing deployment log: ')
-        fatal_lines=[]
-        error_lines=[]
-        failed_tasks=[]
-        magic_words = ['FAILED', 'TASK', 'msg', 'stderr', 'WARN', 'fatal', 'traceback']
-        magic_dic_result = {}
-        for word in magic_words:
-            magic_dic_result[word] = []
-        log_path=[os.path.join(undercloud_home_path,path) for path in os.listdir(undercloud_home_path) if path.endswith('.log')]
-        log_path=choose_option_from_list(log_path,'Please choose your Ansible deployment log file path: ')
-        empty_file_content(result_file)
-        data = open(log_path[1], 'r').read().splitlines()
-        lines_to_analyze=[]
-        lines_to_unique=[]
-        append_to_file(result_file,'#'*40+' Raw Data Lines '+'#'*40+'\n')
-        for line in data:
-            # Print some lines that might be relevant #
-            words = [' error:', ' error ', ' failed:', ' failed ', ' fatal ', ' fatal:']
-            for w in words:
-                if w in line.lower():
-                    append_to_file(result_file, '_'*200+'\n')
-                    append_to_file(result_file,'Detected string is: "'+w+'"\n')
-                    w_index=line.find(w)
-                    if len(line) < 5000:
-                        append_to_file(result_file, line+'\n')
-                        lines_to_unique.append('Detected string is: "' + w + '"\n' + line + '\n')
-                    else:
-                        if w_index+1000<len(line):
-                            lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
-                            append_to_file(result_file, '\n...Line is too long ...' + line[w_index:w_index+1000] + '\n...Line is too long ...'+'\n')
-                        else:
-                            append_to_file(result_file, '...Line is too long ...' + line[w_index:] + '\n')
-                            lines_to_unique.append('Detected string is: "' + w + '\n...Line is too long ...' + line[w_index:] + '\n')
-                    break
-            if ' ERROR ' in line and line not in error_lines:
-                error_lines.append(line)
-            if 'fatal: [' in line:
-                is_task_line=False
-                counter=1
-                while is_task_line==False:
-                    previous_line=data[data.index(line)-counter]
-                    if 'TASK' in previous_line:
-                        is_task_line=True
-                        lines_to_analyze.append(previous_line)
-                    counter+=1
-                lines_to_analyze.append(line)
-                failed_task=previous_line[previous_line.find('TASK'):previous_line.find('*****')]
-                if len(failed_task)!=0:
-                    failed_tasks.append(failed_task)
-
-        # Print unique list into result file
-        append_to_file(result_file, '\n' * 10 + '#' * 7 + ' Unique "problematical" lines ' + '#' * 7 + '\n')
-        unique_errors_list = unique_list_by_fuzzy(lines_to_unique, 0.5)
-        for item in unique_errors_list:
-            append_to_file(result_file, '-' * 100 + '\n' + item)
-
-        for line in lines_to_analyze:
-            line = line.split('\\n')
-            for item in line:
-                if 'fatal' in item.lower() and item not in fatal_lines:
-                    fatal_lines.append(item)
-                append_to_file(result_file,item)
-                for w in magic_words:
-                    if w in item:
-                        magic_dic_result[w].append(item)
-        append_to_file(result_file,'\n'*10+'#'*50+' Unique statistics for these magic keys:'+str(magic_words)+' '+'#'*50+'\n\n\n')
-        for key in magic_dic_result:
-            append_to_file(result_file,'\n\n\n' + '_' * 40 + key + '_' * 40+'\n')
-            if key in ['fatal','FAILED']:
-                fuzzy=1
-            else:
-                fuzzy=0.6
-            for v in unique_list_by_fuzzy(magic_dic_result[key], fuzzy):
-                if key in ['stderr','msg']:
-                    append_to_file(result_file,'\n'+v+'\n')
-                else:
-                    append_to_file(result_file,v+'\n')
-        append_to_file(result_file, '\n\n\n' + '*' * 7 + ' Failed_Tasks: ' + '*' * 7)
-        write_list_to_file(result_file, failed_tasks, False)
-        append_to_file(result_file,'\n\n\n### Search for these keys: '+str(magic_words)+' surrounded by underscore for example: "__stderr__" to find the statistics!!! ###')
-        print_in_color('\n\n\n####### Detected lines with "fatal" string:#######', 'red')
-        for f in fatal_lines:
-            print_in_color(f,'bold')
-        print_in_color('\n\n\n####### Detected lines with " ERROR " string:#######', 'red')
-        for e in error_lines:
-            print_in_color(e,'bold')
-        print_in_color('\n\n\n####### Detected failed TASKs: #######', 'red')
-        for t in failed_tasks:
-            print_in_color(t, 'bold')
-        append_to_file(result_file,'\n*** Check - (Unique "problematical" lines) section as well!')
-        spec_print(['Result File is: ', '"'+result_file+'"', 'Vi and scroll down to the bottom for details!'],'green')
 
     if mode[1]=='Download Jenkins Job logs and run LogTool locally':
         wget_exists=exec_command_line_command('wget -h')
@@ -479,10 +379,11 @@ try:
         #print (com_result['CommandOutput'])
         end_time=time.time()
         if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','You can find the result file + downloaded logs in:', 'Result Directory: '+result_dir,'Analyze logs execution time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!','You can find the result file + downloaded logs in:', 'Result Directory: '+result_dir,
+                        'Analyze logs execution time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
@@ -534,10 +435,10 @@ try:
         shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
         end_time=time.time()
         if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
+                        'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
     if mode[1]=='Check current:CPU,RAM and Disk on Overcloud':
         start_time=time.time()
@@ -559,7 +460,7 @@ try:
                     print(out['Stderr'])
             s.ssh_close()
         end_time=time.time()
-        spec_print(['Completed!!!', 'Execution Time: ' + str(end_time - start_time) + '[sec]'],'bold')
+        spec_print(['Completed!!!', 'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'],'bold')
 
     if mode[1]=='"Grep" some string on all Overcloud logs':
         print_in_color("1) You can use special characters in your string"
@@ -580,7 +481,7 @@ try:
         for t in threads:
             t.join()
         end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'green')
+        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
 
     if mode[1] == 'Download all logs from Overcloud nodes':
         start_time=time.time()
@@ -597,7 +498,7 @@ try:
         for t in threads:
             t.join()
         end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'green')
+        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
 
     if mode[1] == 'Download "relevant logs" only, by given timestamp':
         # Change log path if needed #
@@ -642,9 +543,9 @@ try:
             s.ssh_close()
         end_time=time.time()
         if len(errors_on_execution) == 0:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
         else:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'red')
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'red')
 
     if mode[1] == "Execute user's script":
         user_scripts_dir=os.path.join(os.path.abspath('.'),'UserScripts')
@@ -675,7 +576,7 @@ try:
             # Close SSH #
             s.ssh_close()
         end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
+        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'bold')
 
     if mode[1]=='Overcloud - check Unhealthy dockers':
         start_time=time.time()
@@ -703,7 +604,7 @@ try:
             except Exception as e:
                 print_in_color('Execution has failed on node: '+str(node)+'with: '+str(e), 'red')
         end_time=time.time()
-        spec_print(['Completed!!!', 'Execution Time: ' + str(end_time - start_time) + '[sec]'],'bold')
+        spec_print(['Completed!!!', 'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'],'bold')
 
     if mode[1]=='Export ERRORs/WARNINGs from Overcloud logs':
         random_node=random.choice(overcloud_nodes)
@@ -772,10 +673,10 @@ try:
         else:
             if len(errors_on_execution) == len(nodes):
                 spec_print(['Execution has failed for all nodes :-( ',
-                            'Execution Time: ' + str(end_time-mode_start_time) + '[sec]'], 'red')
+                            'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
             else:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + result_dir,
-                            'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
+                            'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
     if mode[1]=='Extract messages for given time range':
