@@ -485,7 +485,7 @@ try:
     if mode[1]=='Download Overcloud Logs':
         options=['Download all logs from Overcloud nodes','Download "relevant logs" only, by given timestamp']
         option = choose_option_from_list(options, 'Please choose operation mode: ')
-        if option=='Download all logs from Overcloud nodes':
+        if option[1]=='Download all logs from Overcloud nodes':
             mode_start_time=time.time()
             result_dir='Overcloud_Logs'
             if result_dir in os.listdir('.'):
