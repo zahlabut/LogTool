@@ -127,7 +127,7 @@ def execute_on_node(**kwargs):
         print_in_color(s.ssh_command_only(command)['Stdout'],'blue')
         print(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file))
         print(s.scp_download(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file)))
-        files_to_delete=[output_file,os.path.basename(script_path)]
+        files_to_delete=[output_file,os.path.basename(kwargs['UserScript'])]
 
 
     for fil in files_to_delete:
