@@ -438,8 +438,6 @@ try:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
-
-
     if mode[1]=='"Grep" some string on all Overcloud logs':
         print_in_color("1) You can use special characters in your string"
                        "\n2) Ignore case sensitive flag is used by default",'yellow')
