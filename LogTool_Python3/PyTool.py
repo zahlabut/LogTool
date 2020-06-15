@@ -16,7 +16,7 @@
 
 import shutil,random,datetime,threading,warnings
 from Common import *
-warnings.filterwarnings(action='ignore',module='.*paramiko*')
+warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
@@ -37,11 +37,6 @@ log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 mode_execution_status={}
-
-empty_file_content('Runtime.log')
-empty_file_content('Error.log')
-# sys.stdout=MyOutput('Runtime.log')
-# sys.stderr=MyOutput('Error.log')
 
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
@@ -65,6 +60,7 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
         print_in_color('No Overcloud nodes detected, looks like your OSP installation has failed!', 'red')
         sys.exit(1)
 
+# This function is called when threads (executed on OC nodes) are being started #
 def execute_on_node(**kwargs):
     print('Remote Overcloud Node -->', kwargs['Node']['Name'])
     s = SSH(kwargs['Node']['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
@@ -87,8 +83,7 @@ def execute_on_node(**kwargs):
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
         s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
         files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
-        for fil in files_to_delete:
-            s.ssh_command('sudo rm -rf ' + fil)
+
     if kwargs['Mode']=='Export_Overcloud_Errors':
         result_file = kwargs['Node']['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
         result_dir = kwargs['ResultDir']
@@ -107,16 +102,26 @@ def execute_on_node(**kwargs):
         result_file=result_file+'.gz'
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
         files_to_delete = ['Extract_On_Node.py', result_file]
-        for fil in files_to_delete:
-            s.ssh_command('rm -rf ' + fil)
     if kwargs['Mode'] == 'Download_All_Logs':
         zip_file_name=kwargs['Node']['Name']+'.zip'
         command='sudo zip -r ' + zip_file_name +' ' + overcloud_logs_dir
         s.ssh_command(command)
         print(s.scp_download(overcloud_home_dir + zip_file_name, os.path.join(os.path.abspath(kwargs['ResultDir']), zip_file_name)))
         files_to_delete=[zip_file_name]
-        for fil in files_to_delete:
-            s.ssh_command('rm -rf ' + fil)
+
+    if kwargs['Mode'] == 'GrepString':
+        output_greps_file = 'All_Grep_Strings_'+kwargs['Node']['Name']+'.log'
+        print(s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py'))
+        print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Grep_String.py'))
+        command='sudo ' + overcloud_home_dir + 'Grep_String.py ' + overcloud_logs_dir + ' ' + string_to_grep + ' ' + output_greps_file
+        print_in_color(command,'bold')
+        s.ssh_command(command)
+        print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(result_dir), output_greps_file)))
+        files_to_delete=[output_greps_file,'Grep_String.py']
+
+
+    for fil in files_to_delete:
+            s.ssh_command('sudo rm -rf ' + fil)
     s.ssh_close()
 
 ### Operation Modes ###
@@ -559,7 +564,6 @@ try:
     if mode[1]=='"Grep" some string on all Overcloud logs':
         print_in_color("1) You can use special characters in your string"
                        "\n2) Ignore case sensitive flag is used by default",'yellow')
-                       #"\n3) It's possible to use additional grep flags, for example '-e ^' a to grep all lines started with 'a' character",'yellow')
         string_to_grep = "'"+input("Please enter your 'grep' string: ")+"'"
         start_time = time.time()
         result_dir='All_Greped_Strings'
@@ -567,25 +571,16 @@ try:
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
         executed_script_on_overcloud.append('Grep_String.py')
+        threads = []
         for node in overcloud_nodes:
-            print(str(node))
-            output_greps_file = 'All_Grep_Strings_'+node['Name']+'.log'
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            print(s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py'))
-            print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Grep_String.py'))
-            command='sudo ' + overcloud_home_dir + 'Grep_String.py ' + overcloud_logs_dir + ' ' + string_to_grep + ' ' + output_greps_file
-            print_in_color(command,'bold')
-            s.ssh_command(command)
-            print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(result_dir), output_greps_file)))
-            # Clean all #
-            files_to_delete=[output_greps_file,'Grep_String.py']
-            for fil in files_to_delete:
-                s.ssh_command('rm -rf ' + fil)
-            # Close SSH #
-            s.ssh_close()
+            dic_for_thread={'Node':node,'Mode':'GrepString','ResultDir':result_dir}
+            t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
+            threads.append(t)
+            t.start()
+        for t in threads:
+            t.join()
         end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'bold')
+        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-start_time)+'[sec]'],'green')
 
     if mode[1] == 'Download all logs from Overcloud nodes':
         start_time=time.time()
@@ -826,16 +821,13 @@ try:
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
-
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
     if len(executed_script_on_undercloud)!=0:
         for script in executed_script_on_undercloud:
             os.system('sudo pkill -f '+script)
     if len(executed_script_on_overcloud)!=0:
-        nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-        nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in nodes]
-        for node in nodes:
+        for node in overcloud_nodes:
             print('-'*90)
             print([str(node)])
             s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
@@ -845,9 +837,3 @@ except KeyboardInterrupt:
                 print('--> '+command)
                 com_result=s.ssh_command(command)
             s.ssh_close()
-# except Exception as e:
-#     print_in_color(e,'red')
-
-
-
-
