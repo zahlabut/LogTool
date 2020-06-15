@@ -497,7 +497,7 @@ try:
             t.start()
         for t in threads:
             t.join()
-        end_time=time.time()
+            mode_start_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
 
     if mode[1] == 'Download "relevant logs" only, by given timestamp':
