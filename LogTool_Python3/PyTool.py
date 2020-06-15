@@ -103,13 +103,13 @@ def execute_on_node(**kwargs):
         result_file=result_file+'.gz'
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
         files_to_delete = ['Extract_On_Node.py', result_file]
-    if kwargs['Mode'] == 'Download_All_Logs':
+    if kwargs['Mode']=='Download_All_Logs':
         zip_file_name=kwargs['Node']['Name']+'.zip'
         command='sudo zip -r ' + zip_file_name +' ' + overcloud_logs_dir
         s.ssh_command(command)
         print(s.scp_download(overcloud_home_dir + zip_file_name, os.path.join(os.path.abspath(kwargs['ResultDir']), zip_file_name)))
         files_to_delete=[zip_file_name]
-    if kwargs['Mode'] == 'GrepString':
+    if kwargs['Mode']=='GrepString':
         output_greps_file = 'All_Grep_Strings_'+kwargs['Node']['Name']+'.log'
         print(s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py'))
         print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Grep_String.py'))
@@ -128,7 +128,21 @@ def execute_on_node(**kwargs):
         print(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file))
         print(s.scp_download(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file)))
         files_to_delete=[output_file,os.path.basename(kwargs['UserScript'])]
-
+    if kwargs['Mode']=='Download_relevant_Logs':
+        print(s.scp_upload('Download_Logs_By_Timestamp.py', overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
+        print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
+        command="sudo " + overcloud_home_dir + "Download_Logs_By_Timestamp.py '" + str(start_time) + "' " + overcloud_logs_dir +' '+ node['Name']
+        print(command)
+        com_result=s.ssh_command(command)
+        print(com_result['Stdout']) # Do not delete me!!!
+        if 'SUCCESS!!!' in com_result['Stdout']:
+            print_in_color(str(node)+' --> OK','green')
+        else:
+            print_in_color(str(node) + ' --> FAILED','red')
+            errors_on_execution[node['Name']]=False
+        print(s.scp_download(overcloud_home_dir + node['Name']+'.zip', os.path.join(os.path.abspath(kwargs['ResultDir']), node['Name']+'.zip')))
+        # Clean all #
+        files_to_delete=['Download_Logs_By_Timestamp.py',kwargs['Node']['Name']+'.zip', kwargs['Node']['Name']]
 
     for fil in files_to_delete:
             s.ssh_command('sudo rm -rf ' + fil)
@@ -141,6 +155,9 @@ try:
            '"Grep" some string on all Overcloud logs',
            'Extract messages for given time range',
            "Execute user's script",
+           'Download Overcloud Logs',
+
+
            'Download "relevant logs" only, by given timestamp',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
@@ -469,69 +486,55 @@ try:
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
 
-    if mode[1] == 'Download all logs from Overcloud nodes':
-        mode_start_time=time.time()
-        result_dir='Overcloud_Logs'
-        if result_dir in os.listdir('.'):
-            shutil.rmtree(result_dir)
-        os.mkdir(result_dir)
-        threads = []
-        for node in overcloud_nodes:
-            dic_for_thread={'Node':node,'Mode':'Download_All_Logs','ResultDir':result_dir}
-            t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
-            threads.append(t)
-            t.start()
-        for t in threads:
-            t.join()
-        end_time=time.time()
-        spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
-
-    if mode[1] == 'Download "relevant logs" only, by given timestamp':
-        # Change log path if needed #
-        osp_versions=['Older than OSP13?', "Newer than OSP13?"]
-        if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':
-            overcloud_logs_dir=os.path.join(overcloud_logs_dir,'containers')
-        random_node=random.choice(overcloud_nodes)
-        s = SSH(random_node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-        s.ssh_connect_key()
-        com_result=s.ssh_command('date "+%Y-%m-%d %H:%M:%S"')
-        print_in_color('Current date on '+random_node['Name']+' is: '+com_result['Stdout'].strip(),'blue')
-        s.ssh_close()
-        print_in_color('Use the same date format as in previous output','blue')
-        start_time = input('And Enter your "since time" to extract log messages: ')
-        mode_start_time=time.time()
-        result_dir='Overcloud_Logs_Relevant'
-        if result_dir in os.listdir('.'):
-            shutil.rmtree(result_dir)
-        os.mkdir(result_dir)
-        for node in overcloud_nodes:
-            errors_on_execution={}
-            print(str(node))
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            print(s.scp_upload('Download_Logs_By_Timestamp.py', overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
-            print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
-            command="sudo " + overcloud_home_dir + "Download_Logs_By_Timestamp.py '" + str(start_time) + "' " + overcloud_logs_dir +' '+ node['Name']
-            print(command)
-            com_result=s.ssh_command(command)
-            print(com_result['Stdout']) # Do not delete me!!!
-            if 'SUCCESS!!!' in com_result['Stdout']:
-                print_in_color(str(node)+' --> OK','green')
-            else:
-                print_in_color(str(node) + ' --> FAILED','red')
-                errors_on_execution[node['Name']]=False
-            print(s.scp_download(overcloud_home_dir + node['Name']+'.zip', os.path.join(os.path.abspath(result_dir), node['Name']+'.zip')))
-            # Clean all #
-            files_to_delete=['Download_Logs_By_Timestamp.py',node['Name']+'.zip', node['Name']]
-            for fil in files_to_delete:
-                s.ssh_command('rm -rf '+fil)
-            # Close SSH #
-            s.ssh_close()
-        end_time=time.time()
-        if len(errors_on_execution) == 0:
+    if mode[1]=='Download Overcloud Logs':
+        options=['Download all logs from Overcloud nodes','Download "relevant logs" only, by given timestamp']
+        option = choose_option_from_list(options, 'Please choose operation mode: ')
+        if option=='Download all logs from Overcloud nodes':
+            mode_start_time=time.time()
+            result_dir='Overcloud_Logs'
+            if result_dir in os.listdir('.'):
+                shutil.rmtree(result_dir)
+            os.mkdir(result_dir)
+            threads = []
+            for node in overcloud_nodes:
+                dic_for_thread={'Node':node,'Mode':'Download_All_Logs','ResultDir':result_dir}
+                t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
+                threads.append(t)
+                t.start()
+            for t in threads:
+                t.join()
+            end_time=time.time()
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
-        else:
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'red')
+        if option=='Download "relevant logs" only, by given timestamp':
+            # Change log path if needed #
+            osp_versions=['Older than OSP13?', "Newer than OSP13?"]
+            if choose_option_from_list(osp_versions,'Choose your OSP Version: ')[1]=='Newer than OSP13?':
+                overcloud_logs_dir=os.path.join(overcloud_logs_dir,'containers')
+            random_node=random.choice(overcloud_nodes)
+            s = SSH(random_node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+            s.ssh_connect_key()
+            com_result=s.ssh_command('date "+%Y-%m-%d %H:%M:%S"')
+            print_in_color('Current date on '+random_node['Name']+' is: '+com_result['Stdout'].strip(),'blue')
+            s.ssh_close()
+            print_in_color('Use the same date format as in previous output','blue')
+            start_time = input('And Enter your "since time" to extract log messages: ')
+            mode_start_time=time.time()
+            result_dir='Overcloud_Logs_Relevant'
+            if result_dir in os.listdir('.'):
+                shutil.rmtree(result_dir)
+            os.mkdir(result_dir)
+            for node in overcloud_nodes:
+                dic_for_thread={'Node':node,'Mode':'Download_Relevant_Logs','ResultDir':result_dir,'OC_LOgs+Path':overcloud_logs_dir}
+                t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
+                threads.append(t)
+                t.start()
+            for t in threads:
+                t.join()
+            end_time=time.time()
+            if len(errors_on_execution) == 0:
+                spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+            else:
+                spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'red')
 
     if mode[1] == "Execute user's script":
         user_scripts_dir=os.path.join(os.path.abspath('.'),'UserScripts')
