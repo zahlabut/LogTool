@@ -54,7 +54,6 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
     all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
     for node in all_nodes:
         if check_ping(node['ip']) is True:
-            print_in_color(node['Name']+' --> OK','green')
             overcloud_nodes.append(node)
         else:
             print_in_color('Warning - ' + str(node) + ' will be skipped, due to connectivity issue!!!', 'yellow')
