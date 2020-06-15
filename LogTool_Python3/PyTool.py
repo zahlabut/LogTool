@@ -128,7 +128,7 @@ def execute_on_node(**kwargs):
         print(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file))
         print(s.scp_download(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file)))
         files_to_delete=[output_file,os.path.basename(kwargs['UserScript'])]
-    if kwargs['Mode']=='Download_relevant_Logs':
+    if kwargs['Mode']=='Download_Relevant_Logs':
         print(s.scp_upload('Download_Logs_By_Timestamp.py', overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
         print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
         command="sudo " + overcloud_home_dir + "Download_Logs_By_Timestamp.py '" + str(start_time) + "' " + overcloud_logs_dir +' '+ node['Name']
