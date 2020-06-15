@@ -89,10 +89,10 @@ class SSH():
             self.client.load_system_host_keys()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(self.host, username=self.user, password=self.password)
-            return {'Status':True}
+            return {'Status':True,'Host':self.host}
         except Exception as e:
             print_in_color(str(e),'red')
-            return {'Status':False,'Exception':e}
+            return {'Status':False,'Exception':e,'Host':self.host}
 
     def ssh_connect_key(self):
         try:
@@ -100,10 +100,10 @@ class SSH():
             self.client.load_system_host_keys()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(self.host, username=self.user, key_filename=self.key_path)
-            return {'Status':True}
+            return {'Status':True,'Host':self.host}
         except Exception as e:
             print_in_color(str(e), 'red')
-            return {'Status':False,'Exception':e}
+            return {'Status':False,'Exception':e,'Host':self.host}
 
     def ssh_command(self, command):
         stdin,stdout,stderr=self.client.exec_command(command)
@@ -123,7 +123,7 @@ class SSH():
 
     def ssh_command_only(self, command):
         self.stdin,self.stdout,self.stderr=self.client.exec_command(command)
-        return {'Stdout':self.stdout.read().decode(),'Stderr':self.stderr.read().decode()}
+        return {'Stdout':self.stdout.read().decode(),'Stderr':self.stderr.read().decode(),'Host':self.host}
 
     def scp_upload(self, src_abs_path, dst_abs_path):
         try:
@@ -132,10 +132,10 @@ class SSH():
             t1=time.time()
             ftp.put(src_abs_path,dst_abs_path)
             t2=time.time()
-            return {'Status':True,'AverageBW':file_size/(t2-t1),'ExecutionTime':t2-t1}
+            return {'Status':True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2),'Host':self.host}
         except  Exception as e:
             print_in_color(str(e), 'red')
-            return {'Status':False,'Exception':e}
+            return {'Status':False,'Exception':e,'Host':self.host}
 
     def scp_download(self,remote_abs_path,local_abs_path):
         try:
@@ -144,10 +144,10 @@ class SSH():
             ftp.get(remote_abs_path, local_abs_path)
             t2 = time.time()
             file_size=os.path.getsize(local_abs_path)
-            return {'Status': True,'AverageBW':file_size/(t2-t1),'ExecutionTime':t2-t1}
+            return {'Status': True,'AverageBW':file_size/(t2-t1),'ExecutionTime':round(t2-t1,2),'Host':self.host}
         except  Exception as e:
             print_in_color(str(e), 'red')
-            return {'Status': False, 'Exception': e}
+            return {'Status': False, 'Exception': e,'Host':self.host}
 
     def ssh_close(self):
         self.client.close()
