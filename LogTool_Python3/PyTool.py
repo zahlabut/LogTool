@@ -118,6 +118,17 @@ def execute_on_node(**kwargs):
         print(s.scp_download(overcloud_home_dir + output_greps_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_greps_file)))
         files_to_delete=[output_greps_file,'Grep_String.py']
 
+    if kwargs['Mode']=='UserScript':
+        output_file = node['Node']['Name']+'.log'
+        print(s.scp_upload(script_path, os.path.basename(kwargs['UserScript'])))
+        print(s.ssh_command('chmod 777 ' + os.path.basename(kwargs['UserScript'])))
+        command='sudo ./' + os.path.basename(kwargs['UserScript'])+' | tee '+output_file
+        print('Executed command on host is: ',command)
+        print_in_color(s.ssh_command_only(command)['Stdout'],'blue')
+        print(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file))
+        print(s.scp_download(overcloud_home_dir + output_file, os.path.join(os.path.abspath(kwargs['ResultDir']), output_file)))
+        files_to_delete=[output_file,os.path.basename(script_path)]
+
 
     for fil in files_to_delete:
             s.ssh_command('sudo rm -rf ' + fil)
@@ -531,26 +542,21 @@ try:
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
         os.mkdir(result_dir)
-        start_time = time.time()
+        mode_start_time = time.time()
         executed_script_on_overcloud.append(os.path.basename(script_path))
+
+        threads = []
         for node in overcloud_nodes:
-            print(str(node))
-            output_file = node['Name']+'.log'
-            s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
-            s.ssh_connect_key()
-            print(s.scp_upload(script_path, os.path.basename(script_path)))
-            print(s.ssh_command('chmod 777 ' + os.path.basename(script_path)))
-            command='sudo ./' + os.path.basename(script_path)+' | tee '+output_file
-            print('Executed command on host is: ',command)
-            print(s.ssh_command_only(command)['Stdout'])
-            print(overcloud_home_dir + output_file, os.path.join(os.path.abspath(result_dir), output_file))
-            print(s.scp_download(overcloud_home_dir + output_file, os.path.join(os.path.abspath(result_dir), output_file)))
-            # Clean all #
-            files_to_delete=[output_file,os.path.basename(script_path)]
-            for fil in files_to_delete:
-                s.ssh_command('rm -rf ' + fil)
-            # Close SSH #
-            s.ssh_close()
+            dic_for_thread={'Node':node,'Mode':'ExecuteUserScript','ResultDir':result_dir,'UserScript':script_path}
+            t = threading.Thread(target=execute_on_node, kwargs=dic_for_thread)
+            threads.append(t)
+            t.start()
+        for t in threads:
+            t.join()
+
+
+
+
         end_time=time.time()
         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'bold')
 
