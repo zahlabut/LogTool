@@ -399,7 +399,7 @@ try:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
         options=[' ERROR ',' WARNING ']
-        grep_string=choose_option_from_list(options,'Please choose debug level: ')
+        grep_string=choose_option_from_list(options,'Please choose debug level: ')[1]
         mode_start_time=time.time()
         result_dir='Undercloud_'+grep_string.replace(' ','')
         if result_dir in os.listdir('.'):
