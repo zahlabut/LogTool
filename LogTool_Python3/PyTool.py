@@ -520,46 +520,22 @@ try:
         com_result=s.ssh_command('date "+%Y-%m-%d %H:%M:%S"')
         overcloud_time=com_result['Stdout'].strip()
         s.ssh_close()
-        print_in_color('Current date on Overcloud is: ' + com_result['Stdout'].strip(), 'blue')
-        start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
-        start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
-        if start_time_option[1]=='Custom':
-            print_in_color('Current date on Overcloud is: ' + com_result['Stdout'].strip(), 'blue')
-            print_in_color('Use the same date format as in previous output', 'blue')
-            start_time = input('And enter your "since time" to extract log messages: ')
-        if start_time_option[1]=='10 Minutes ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
-        if start_time_option[1]=='30 Minutes ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=30)
-        if start_time_option[1]=='One Hour ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=1)
-        if start_time_option[1]=='Three Hours ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=3)
-        if start_time_option[1]=='Ten Hours ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=10)
-        if start_time_option[1]=='One Day ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=24)
-        if start_time_option[1]=='Two Days ago':
-            start_time = datetime.datetime.strptime(overcloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
-        start_time=str(start_time)
+        overcloud_time=com_result['Stdout'].strip()
+        start_time=choose_time(overcloud_time,'Overcloud')
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
         mode_start_time = time.time()
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
-        options=['ERROR','WARNING']
-        option=choose_option_from_list(options,'Please choose debug level: ')
+        options=[' ERROR ',' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level: ')[1]
         osp_logs_only='all_logs'
         handle_all_logs=choose_option_from_list(['OSP logs only','All logs'], "Log files to analyze?")[1]
         if handle_all_logs=="OSP logs only":
             osp_logs_only='osp_logs_only'
         #save_raw_data=choose_option_from_list(['yes','no'],'Save "Raw Data" in result files?')[1]
         save_raw_data='yes'
-        if option[1]=='ERROR':
-            grep_string=' ERROR '
-        if option[1]=='WARNING':
-            grep_string=' WARNING '
-        #result_dir='Overcloud_'+start_time+'_'+grep_string.replace(' ','_').replace(':','_').replace('\n','')
+         #result_dir='Overcloud_'+start_time+'_'+grep_string.replace(' ','_').replace(':','_').replace('\n','')
         result_dir='Overcloud_'+grep_string.replace(' ','')
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
