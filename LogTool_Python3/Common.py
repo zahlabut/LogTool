@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, paramiko, time, subprocess, json, sys, re, difflib
+import os, paramiko, time, subprocess, json, sys, re, difflib, datetime
 import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
 from urllib.parse import urljoin
@@ -241,3 +241,27 @@ def similar(a, b):
 def remove_digits_from_string(s):
     remove_digits = str.maketrans('', '', digits)
     return str(s).translate(remove_digits)
+
+def choose_time(user_time, host):
+    start_time_options = ['10 Minutes ago', '30 Minutes ago', 'One Hour ago', 'Three Hours ago', 'Ten Hours ago',
+                          'One Day ago', 'Custom']
+    start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
+    if start_time_option[1] == 'Custom':
+        print_in_color('Current date on '+host+' is: ' + user_time, 'blue')
+        print_in_color('Use the same date format as in previous output', 'blue')
+        start_time = input('And enter your "since time" to extract log messages: ')
+    if start_time_option[1] == '10 Minutes ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
+    if start_time_option[1] == '30 Minutes ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=30)
+    if start_time_option[1] == 'One Hour ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=1)
+    if start_time_option[1] == 'Three Hours ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=3)
+    if start_time_option[1] == 'Ten Hours ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=10)
+    if start_time_option[1] == 'One Day ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=24)
+    if start_time_option[1] == 'Two Days ago':
+        start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
+    return str(start_time)

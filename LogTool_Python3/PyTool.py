@@ -36,7 +36,6 @@ source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 log_storage_directory='/srv/static'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
-mode_execution_status={}
 
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
@@ -84,7 +83,6 @@ def execute_on_node(**kwargs):
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
         s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
         files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
-
     if kwargs['Mode']=='Export_Overcloud_Errors':
         result_file = kwargs['Node']['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
         result_dir = kwargs['ResultDir']
@@ -143,7 +141,6 @@ def execute_on_node(**kwargs):
         print(s.scp_download(overcloud_home_dir + node['Name']+'.zip', os.path.join(os.path.abspath(kwargs['ResultDir']), kwargs['Node']['Name']+'.zip')))
         # Clean all #
         files_to_delete=['Download_Logs_By_Timestamp.py',kwargs['Node']['Name']+'.zip', kwargs['Node']['Name']]
-
     for fil in files_to_delete:
             s.ssh_command('sudo rm -rf ' + fil)
     s.ssh_close()
@@ -208,12 +205,8 @@ try:
                     recursiveUrl(url + link['href'][0:])
 
         # Start mode
-        options = ['ERROR', 'WARNING']
-        option=choose_option_from_list(options,'Please choose debug level option: ')
-        if option[1]=='ERROR':
-            grep_string=' ERROR '
-        if option[1]=='WARNING':
-            grep_string=' WARNING '
+        options = [' ERROR ', ' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
         destination_dir='Zuul_Log_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
@@ -265,12 +258,8 @@ try:
         if wget_exists['ReturnCode']!=0:
             exit('WGET tool is not installed on your host, please install and rerun this operation mode!')
         # Start mode
-        options = ['ERROR', 'WARNING']
-        option=choose_option_from_list(options,'Please choose debug level option: ')
-        if option[1]=='ERROR':
-            grep_string=' ERROR '
-        if option[1]=='WARNING':
-            grep_string=' WARNING '
+        options = [' ERROR ', ' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
@@ -335,10 +324,6 @@ try:
                     for link in soup.findAll('a'):
                         if str(link.get('href')).endswith('.log'):
                             ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
-            # if len(tar_gz_files)==0:
-            #     spec_print(['There is no links to *.tar.gz on provided URL page','Nothing to work on :-)'],'red')
-            #     exit('Check your: '+artifacts_url)
-
 
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed
@@ -408,41 +393,14 @@ try:
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
-        print('Current date is: '+undercloud_time)
-        start_time_options=['10 Minutes ago','30 Minutes ago','One Hour ago','Three Hours ago', 'Ten Hours ago', 'One Day ago', 'Custom']
-        start_time_option = choose_option_from_list(start_time_options, 'Please choose your "since time": ')
-        if start_time_option[1]=='Custom':
-            print_in_color('Current date on Undercloud is: ' + undercloud_time, 'blue')
-            print_in_color('Use the same date format as in previous output', 'blue')
-            start_time = input('And enter your "since time" to extract log messages: ')
-        if start_time_option[1]=='10 Minutes ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
-        if start_time_option[1]=='30 Minutes ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=30)
-        if start_time_option[1]=='One Hour ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=1)
-        if start_time_option[1]=='Three Hours ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=3)
-        if start_time_option[1]=='Ten Hours ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=10)
-        if start_time_option[1]=='One Day ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=24)
-        if start_time_option[1]=='Two Days ago':
-            start_time = datetime.datetime.strptime(undercloud_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
-        start_time=str(start_time)
+        start_time=choose_time(undercloud_time,'Undercloud')
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
         if check_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
-        options=['ERROR','WARNING']
-        option=choose_option_from_list(options,'Please choose debug level: ')
+        options=[' ERROR ',' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level: ')
         mode_start_time=time.time()
-        if option[1]=='ERROR':
-            grep_string=' ERROR '
-        elif option[1]=='WARNING':
-            grep_string=' WARNING '
-        else:
-            grep_string=' '+option[1]+' '
         result_dir='Undercloud_'+grep_string.replace(' ','')
         if result_dir in os.listdir('.'):
             shutil.rmtree(result_dir)
