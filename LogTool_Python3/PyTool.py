@@ -345,7 +345,7 @@ try:
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
             job_full_path=os.path.join(job_full_path,job_build)
             files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
-            files=[f.split(' ')[-1] for f in files if '.tar.gz' in f]
+            files=[f.split(' ')[-1] for f in files if '.tar.gz' or '.log' in f]
             for fil in files:
                 print_in_color('Downloading "'+fil+'"...', 'bold')
                 s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
