@@ -15,6 +15,8 @@
 # limitations under the License.
 
 import shutil,random,datetime,threading,warnings
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 from Common import *
 warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 

@@ -23,6 +23,8 @@ import threading
 from urlparse import urljoin
 import urllib2
 import  urllib
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
@@ -338,7 +340,7 @@ try:
                     'red')
                 sys.exit(1)
             # Use since time
-            start_time = input('\nEnter your "since time" to analyze log files,'
+            start_time = raw_input('\nEnter your "since time" to analyze log files,'
                                '\nFor example it could be start time of some failed stage'
                                '\nTime format example: 2020-04-22 12:10:00 enter your time: '
                                '\nOtherwise, press ENTER to continue: ')
