@@ -156,7 +156,8 @@ try:
            'Download Overcloud Logs',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
-           'Analyze Gerrit(Zuul) failed gate logs']
+           'Analyze Gerrit(Zuul) failed gate logs',
+           'Demo']
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
@@ -262,12 +263,17 @@ try:
         # Start mode
         options = [' ERROR ', ' WARNING ']
         grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
+        start_time = input('\nEnter your "since time" to analyze log files,'
+                           '\nFor example it could be start time of some failed stage'
+                           '\nTime format example: 2020-04-22 12:10:00 enter your time: '
+                           '\nOtherwise, press ENTER to continue: ')
+        if start_time == '':
+            start_time = '2019-01-01 00:00:00'
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-
         #Download log files
         options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
         option=choose_option_from_list(options,'Please choose your option to download files: ')
@@ -286,12 +292,7 @@ try:
                 print_in_color("Provided URL doesn't seem to be proper artifact URL, please rerun using correct URL address!",'red')
                 sys.exit(1)
             # Use since time
-            start_time = input('\nEnter your "since time" to analyze log files,'
-                               '\nFor example it could be start time of some failed stage'
-                               '\nTime format example: 2020-04-22 12:10:00 enter your time: '
-                               '\nOtherwise, press ENTER to continue: ')
-            if start_time=='':
-                start_time = '2019-01-01 00:00:00'
+
             mode_start_time=time.time()
             response = urllib.request.urlopen(artifacts_url)
             html = response.read()
@@ -327,6 +328,20 @@ try:
                         if str(link.get('href')).endswith('.log'):
                             ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
 
+            # Download console.log
+            console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
+            os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+            shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
+
+            # Download Infared Logs .sh, files in .sh directory on Jenkins
+            if len(ir_logs_urls)!=0:
+                for url in ir_logs_urls:
+                    os.system('wget -P ' + destination_dir + ' ' + url)
+
+            # Download tempest log (html #)
+            if tempest_log_url!=None:
+                os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+                shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed
             try:
@@ -344,8 +359,9 @@ try:
             job_build=input('Please enter build number: ')
             job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
             job_full_path=os.path.join(job_full_path,job_build)
-            files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
-            files=[f.split(' ')[-1] for f in files if '.tar.gz' or '.log' in f]
+            dir_files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
+            files=[f.split(' ')[-1] for f in dir_files if f.endswith('.tar.gz')]+\
+                  [f.split(' ')[-1] for f in dir_files if f.endswith('.log')]
             for fil in files:
                 print_in_color('Downloading "'+fil+'"...', 'bold')
                 s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
@@ -353,25 +369,85 @@ try:
 
         #Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
-            cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
-            print_in_color('Unzipping '+fil+'...', 'bold')
-            os.system(cmd)
+            if fil.endswith('.tar.gz'):
+                cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
+                print_in_color('Unzipping '+fil+'...', 'bold')
+                os.system(cmd)
 
-        # Download console.log
-        console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
-        os.system('wget -P ' + destination_dir + ' ' + console_log_url)
-        shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
+        # Run LogTool analyzing
+        print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
+        result_dir='Jenkins_Job_'+grep_string.replace(' ','')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
+        command = "python3 Extract_On_Node.py '"+start_time+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file
+        #shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
+        print_in_color('\n --> '+command,'bold')
+        start_time=time.time()
+        com_result=exec_command_line_command(command)
+        #print (com_result['CommandOutput'])
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!','You can find the result file + downloaded logs in:', 'Result Directory: '+result_dir,
+                        'Analyze logs execution time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
 
-        # Download Infared Logs .sh, files in .sh directory on Jenkins
-        if len(ir_logs_urls)!=0:
-            for url in ir_logs_urls:
-                os.system('wget -P ' + destination_dir + ' ' + url)
+    if mode[1]=='Demo':
+        wget_exists=exec_command_line_command('wget -h')
+        if wget_exists['ReturnCode']!=0:
+            exit('WGET tool is not installed on your host, please install and rerun this operation mode!')
+        # Start mode
+        options = [' ERROR ', ' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
+        start_time = input('\nEnter your "since time" to analyze log files,'
+                           '\nFor example it could be start time of some failed stage'
+                           '\nTime format example: 2020-04-22 12:10:00 enter your time: '
+                           '\nOtherwise, press ENTER to continue: ')
+        if start_time == '':
+            start_time = '2019-01-01 00:00:00'
+        destination_dir='Jenkins_Job_Files'
+        destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+        #Download log files
+        log_storage_host = 'seal08.qa.lab.tlv.redhat.com'
+        log_storage_directory = '/root/Demo'
+        # Make sure that Paramiko is installed
+        try:
+            import paramiko
+        except Exception as e:
+            print_in_color(str(e), 'red')
+            print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
+            exit('Install Paramiko and rerun!')
+        log_storage_user=input('SSH User - '+log_storage_host+': ')
+        log_storage_password=input('SSH password - '+log_storage_host+': ')
+        mode_start_time = time.time()
+        s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
+        s.ssh_connect_password()
+        dirs=s.ssh_command("ls -l "+log_storage_directory+" | grep '^d'")['Stdout']
+        print_in_color('Demo logs directories are: \n'+str(dirs))
+        job_name=input('Please type your directory: ')
+        job_build='13'
+        job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
+        job_full_path=os.path.join(job_full_path,job_build)
+        dir_files=s.ssh_command('ls -ltrh '+job_full_path)['Stdout'].split('\n')
+        files=[f.split(' ')[-1] for f in dir_files if f.endswith('.tar.gz')]+\
+              [f.split(' ')[-1] for f in dir_files if f.endswith('.log')]
+        for fil in files:
+            print_in_color('Downloading "'+fil+'"...', 'bold')
+            s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
+        s.ssh_close()
 
-        # Download tempest log (html #)
-        if tempest_log_url!=None:
-            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
-            shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
-
+        #Unzip all downloaded .tar.gz files
+        for fil in os.listdir(os.path.abspath(destination_dir)):
+            if fil.endswith('.tar.gz'):
+                cmd = 'tar -zxvf '+os.path.join(os.path.abspath(destination_dir),fil)+' -C '+os.path.abspath(destination_dir)+' >/dev/null'+';'+'rm -rf '+os.path.join(os.path.abspath(destination_dir),fil)
+                print_in_color('Unzipping '+fil+'...', 'bold')
+                os.system(cmd)
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
         result_dir='Jenkins_Job_'+grep_string.replace(' ','')
