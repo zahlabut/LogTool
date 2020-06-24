@@ -156,8 +156,7 @@ try:
            'Download Overcloud Logs',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
-           'Analyze Gerrit(Zuul) failed gate logs',
-           'Demo']
+           'Analyze Gerrit(Zuul) failed gate logs']
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
@@ -423,14 +422,16 @@ try:
             print_in_color(str(e), 'red')
             print_in_color('Execute "pip install paramiko" to install it!', 'yellow')
             exit('Install Paramiko and rerun!')
-        log_storage_user=input('SSH User - '+log_storage_host+': ')
-        log_storage_password=input('SSH password - '+log_storage_host+': ')
+        log_storage_user=input('\nSSH User - '+log_storage_host+': ')
+        log_storage_password=input('\nSSH password - '+log_storage_host+': ')
         mode_start_time = time.time()
         s = SSH(log_storage_host, user=log_storage_user, password=log_storage_password)
         s.ssh_connect_password()
         dirs=s.ssh_command("ls -l "+log_storage_directory+" | grep '^d'")['Stdout']
         print_in_color('Demo logs directories are: \n'+str(dirs))
-        job_name=input('Please type your directory: ')
+        users=str(dirs).split('\n')
+        users=[i.split(' ')[-1] for i in users if i.split(' ')[-1]!='']
+        job_name=choose_option_from_list(users,"Choose your directory: ")[1]
         job_build='13'
         job_full_path=os.path.join(os.path.join(log_storage_host,log_storage_directory),job_name)
         job_full_path=os.path.join(job_full_path,job_build)
