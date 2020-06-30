@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os
 for com in ['vmstat','free','df -h']:
     print('\n-->'+com)
