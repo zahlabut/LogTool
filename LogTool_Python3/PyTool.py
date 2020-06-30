@@ -47,11 +47,17 @@ errors_on_execution = {}
 
 # Get all Overcloud Nodes #
 is_undercloud_host=False
-if os.path.isfile('/home/stack/core_puddle_version')==True:
-    print_in_color('Connectivity check to all OC nodes...','bold')
-    overcloud_nodes = []
-    all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')[
-        'JsonOutput']
+if os.path.isdir('/home/stack/')==True:
+    try:
+        print_in_color('Connectivity check to all OC nodes...','bold')
+        overcloud_nodes = []
+        oc_nodes_command='source ' + source_rc_file_path + 'stackrc;openstack server list -f json'
+        print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
+        all_nodes = exec_command_line_command(oc_nodes_command)['JsonOutput']
+    except Exception as e:
+        print_in_color('Failed to detect Overcloud Nodes :( '+str(e),'red')
+        sys.exit(1)
+
     all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
     for node in all_nodes:
         if check_ping(node['ip']) is True:
