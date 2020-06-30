@@ -76,7 +76,7 @@ def execute_on_node(**kwargs):
     if kwargs['Mode']=='Export_Range':
         result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
         result_dir=kwargs['ResultDir']
-        s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py')
+        print(s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py'))
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
         command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
                   "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
@@ -88,13 +88,13 @@ def execute_on_node(**kwargs):
         else:
             print_in_color(kwargs['Node']['Name'] + ' --> FAILED', 'red')
             errors_on_execution[node['Name']] = False
-        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file))
-        s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip'))
+        print(s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_file)))
+        print(s.scp_download(overcloud_home_dir + result_dir+'.zip', os.path.join(os.path.abspath(kwargs['ModeResultDir']), result_dir+'.zip')))
         files_to_delete = ['Extract_Range.py', result_file, result_dir, result_dir+'.zip',kwargs['ResultFile']]
     if kwargs['Mode']=='Export_Overcloud_Errors':
         result_file = kwargs['Node']['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
         result_dir = kwargs['ResultDir']
-        s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
+        print(s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py'))
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
             start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+kwargs['LogsType']
@@ -107,7 +107,7 @@ def execute_on_node(**kwargs):
             print_in_color(kwargs['Node']['Name'] + ' --> FAILED', 'red')
             errors_on_execution[node['Name']] = False
         result_file=result_file+'.gz'
-        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+        print(s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file)))
         files_to_delete = ['Extract_On_Node.py', result_file]
     if kwargs['Mode']=='Download_All_Logs':
         zip_file_name=kwargs['Node']['Name']+'.zip'
@@ -369,7 +369,7 @@ try:
                   [f.split(' ')[-1] for f in dir_files if f.endswith('.log')]
             for fil in files:
                 print_in_color('Downloading "'+fil+'"...', 'bold')
-                s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
+                print(s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil)))
             s.ssh_close()
 
         #Unzip all downloaded .tar.gz files
@@ -446,7 +446,7 @@ try:
               [f.split(' ')[-1] for f in dir_files if f.endswith('.log')]
         for fil in files:
             print_in_color('Downloading "'+fil+'"...', 'bold')
-            s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil))
+            print(s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil)))
         s.ssh_close()
 
         #Unzip all downloaded .tar.gz files
@@ -639,7 +639,7 @@ try:
         if len(errors_on_execution)==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
-            if len(errors_on_execution) == len(nodes):
+            if len(errors_on_execution) == len(overcloud_nodes):
                 spec_print(['Execution has failed for all nodes :-( ',
                             'Execution Time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
             else:
@@ -682,7 +682,7 @@ try:
         if len(errors_on_execution)==0:
             spec_print(['Completed!!!','Result Directory: '+mode_result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
         else:
-            if len(errors_on_execution) == len(nodes):
+            if len(errors_on_execution) == len(overcloud_nodes):
                 spec_print(['Execution has failed for all nodes :-( ',
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]'], 'red')
             else:
