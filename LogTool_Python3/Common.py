@@ -188,10 +188,8 @@ def choose_option_from_list(list_object, msg):
             print(str(counter)+') - '+item)
             counter=counter+1
         choosed_option=input("Choose your option:")
-
         if choosed_option=='Demo':
-            return [True, list_object[int(choosed_option) - 1]]
-
+            return [True, 'Demo']
         while (int(choosed_option)<0 or int(choosed_option)> len(list_object)):
             print("No such option - ", choosed_option)
             choosed_option=input("Choose your option:")
