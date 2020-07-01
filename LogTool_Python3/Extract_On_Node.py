@@ -622,7 +622,12 @@ if __name__ == "__main__":
          '   Simply copy log path and try to search for this string inside the result file\n'\
          "   You'll be able to find the exported Errors/Warnings blocks inside this section, pass through all\n"\
          "   exported blocks (press 'n' in case when VI/VIM is your text editor) and try \n" \
-         "   to figure out if the current block that you see, could be a 'root cause' you are searching for\n\n"\
+         "   to figure out if the current block that you see, could be a 'root cause' you are searching for\n"\
+         "   *** Note: you can always 'jump' directly into the beginning of this section, using the line number\n"\
+         "   provided in 'Table of Content' and to scroll down till you find the potential 'Root Cause' and it's OK\n"\
+         "   when you have like a tens of exported blocks, but when there is much more exported blocks, the efficient way\n"\
+         "   would be trying to understand basing on 'Statistics' sections which logs are most 'suspicious' and then\n"\
+         "   trying to dig out using 'searching' method explained before.\n\n"\
          '*** There are two kinds of log files: "Standard" and "Not Standard" ***.\n' \
          'Standard logs - debug level string and timestamp both have been detected in log lines, example line:\n'\
          '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi" \n'\
