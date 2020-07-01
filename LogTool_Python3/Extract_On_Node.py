@@ -607,24 +607,26 @@ if __name__ == "__main__":
 
 
     ### Add basic description about the results into result file ###
-    info='############################################# Usage Instruction ############################################\n' \
-         "LogTool result file has some logical structure, it's divided into the sections.\n" \
-         "On the bottom of the result file you'll be able to find the 'Table of Content'\n"\
-         "that is simply pointing you into the start line of each section.\n\n"\
-         "There are two kinds of sections:\n"\
-         '1) Statistics - Number of Errors/Warnings\n'\
+    info='############################################# Usage Instruction ############################################\n'\
+         "This LogTool result file have some logical structure and its content is divided into the several sections.\n" \
+         "On the bottom of this file you'll be able to find the 'Table of Content'\n"\
+         "that is simply pointing you into the start line of each section inside this file.\n\n"\
+         "*** There are two kinds of sections ***:\n"\
+         '1) Statistics - Number of Errors/Warnings...\n'\
          "   In this section you'll find log's path and the number of exported Errors/Warnings\n"\
-         '   which is used to sort logs in increasing order, so most "suspicious" logs\n'\
-         '   could be found on the bottom of this section.\n'\
-         '2) Exported unique messages\n'\
+         '   blocks sorted in increasing order, so most "suspicious" (high number of Errors/Warnings) logs\n'\
+         '   could be found in the bottom of this section.\n'\
+         '2) Exported unique messages...\n'\
          '   Basing on your understanding from the previous section,\n'\
-         '   you might want to see the exported data for particular "suspicious" log.\n'\
+         '   you might want to see the exported Error/Warning blocks for particular log file.\n'\
          '   Simply copy log path and try to search for this string inside the result file\n'\
-         "   You'll be able to find the exported Errors/Warnings (usually more than one appearance)\n\n"\
-         'There are two kinds of log files: "Standard" and "Not Standard".\n' \
-         'Standard logs - debug level string and timestamp have been successfully detected in log lines, example line:\n'\
+         "   You'll be able to find the exported Errors/Warnings blocks inside this section, pass through all\n"\
+         "   exported blocks (press 'n' in case when VI/VIM is your text editor) and try \n" \
+         "   to figure out if the current block that you see, could be a 'root cause' you are searching for\n\n"\
+         '*** There are two kinds of log files: "Standard" and "Not Standard" ***.\n' \
+         'Standard logs - debug level string and timestamp both have been detected in log lines, example line:\n'\
          '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi" \n'\
-         'Not Standard - all the rest, example line:\n'\
+         'Not Standard - all the rest, example line does not include timestamp:\n'\
          '  "Debug: Evicting cache entry for environment "production"\n'\
          "Note: this is the reason for having 4 sections in total.\n"
     append_to_file(result_file,info)
