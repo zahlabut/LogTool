@@ -352,8 +352,8 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
     append_to_file(fil,msg_start)
     for l in lis:
         append_to_file(fil,msg_delimeter)
-        for k in list(l.keys()):
-            append_to_file(fil,str(k)+' --> '+str(str(l[k]))+'\n')
+        for k in l.keys():
+            append_to_file(fil,str(k)+' --> '+str(l[k])+'\n')
 
 def write_list_to_file(fil, list, add_new_line=True):
     for item in list:
@@ -607,11 +607,26 @@ if __name__ == "__main__":
 
 
     ### Add basic description about the results into result file ###
-    info='There are two kinds of log files supported by LogTool: "Standard" and "Not Standard".' \
-         '\nStandard logs - debug level string and timestamp have been successfully detected in log lines, example line:' \
-         '\n2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi ' \
-         '\nNot Standard - all the rest, example line:' \
-         '\nDebug: Evicting cache entry for environment "production"'
+    info='############################################# Usage Instruction ############################################\n' \
+         "LogTool result file has some logical structure, it's divided into the sections.\n" \
+         "On the bottom of the result file you'll be able to find the 'Table of Content'\n"\
+         "that is simply pointing you into the start line of each section.\n\n"\
+         "There are two kinds of sections:\n"\
+         '1) Statistics - Number of Errors/Warnings\n'\
+         "   In this section you'll find log's path and the number of exported Errors/Warnings\n"\
+         '   which is used to sort logs in increasing order, so most "suspicious" logs\n'\
+         '   could be found on the bottom of this section.\n'\
+         '2) Exported unique messages\n'\
+         '   Basing on your understanding from the previous section,\n'\
+         '   you might want to see the exported data for particular "suspicious" log.\n'\
+         '   Simply copy log path and try to search for this string inside the result file\n'\
+         "   You'll be able to find the exported Errors/Warnings (usually more than one appearance)\n\n"\
+         'There are two kinds of log files: "Standard" and "Not Standard".\n' \
+         'Standard logs - debug level string and timestamp have been successfully detected in log lines, example line:\n'\
+         '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi" \n'\
+         'Not Standard - all the rest, example line:\n'\
+         '  "Debug: Evicting cache entry for environment "production"\n'\
+         "Note: this is the reason for having 4 sections in total.\n"
     append_to_file(result_file,info)
 
     ### Fill statistics section for Standard OSP logs###
@@ -620,10 +635,7 @@ if __name__ == "__main__":
     statistics_dic = sorted(list(statistics_dic.items()), key=operator.itemgetter(1))
     statistics_list=[{item[0]:item[1]} for item in statistics_dic]
     total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
-    if 'error' in string_for_grep.lower():
-        statistics_list.insert(0,{'Total_Number_Of_Errors':total_number_of_all_logs_errors})
-    if 'warn' in string_for_grep.lower():
-        statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
+    statistics_list.insert(0,{'Total_Number_Of_'+str(string_for_grep).replace(' ','')+'s':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
@@ -634,18 +646,16 @@ if __name__ == "__main__":
     statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
     statistics_list = sort_list_by_index(statistics_list, 1)
     total_number_of_errors=sum([i[1] for i in statistics_list])
-    if 'error' in string_for_grep.lower():
-        statistics_list.insert(0,['Total_Number_Of_Errors',total_number_of_errors])
-    if 'warn' in string_for_grep.lower():
-        statistics_list.insert(0,['Total_Number_Of_Warnings',total_number_of_errors])
+    statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
 
 
+
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
     #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Exported unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
     for item in analyzed_logs_result:
         #print 'LogPath --> '+item['Log']
         for block in item['AnalyzedBlocks']:
@@ -653,30 +663,12 @@ if __name__ == "__main__":
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
             append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-
             for line in block['BlockLines']:
                 append_to_file(result_file, line + '\n')
 
 
-
-            # if block['AnalyzedBlockLinesSize']<30:
-            #     for line in block['BlockLines']:
-            #         append_to_file(result_file,line+'\n')
-            # else:
-            #     for line in block['BlockLines'][0:10]:
-            #         append_to_file(result_file, line + '\n')
-            #     append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
-            #     for line in block['BlockLines'][-10:-1]:
-            #         append_to_file(result_file, line + '\n')
-            # #append_to_file(result_file, '~' * 100 + '\n')
-
-
-
-
-
-
-    ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
+    ### Exported Unique messages per NOT STANDARD log file, since ever  ###
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
@@ -689,12 +681,12 @@ if __name__ == "__main__":
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
         'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
-        'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
-        'Statistics - Unique messages per NOT STANDARD log file, since ever',
+        'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
+        'Exported unique messages per NOT STANDARD log file, since ever',
         #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
         ]
     for msg in messages:
-        section_indexes.append({msg:get_file_line_index(result_file,msg)})
+        section_indexes.append({msg:"SectionStartLine: "+get_file_line_index(result_file,msg)})
     write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
     exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
