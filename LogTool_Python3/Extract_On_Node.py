@@ -609,31 +609,33 @@ if __name__ == "__main__":
     ### Add basic description about the results into result file ###
     info='############################################# Usage Instruction ############################################\n'\
          "This LogTool result file have some logical structure and its content is divided into the several sections.\n" \
-         "On the bottom of this file you'll be able to find the 'Table of Content'\n"\
+         "On the bottom of this file you will be able to find the 'Table of Content'\n"\
          "that is simply pointing you into the start line of each section inside this file.\n\n"\
-         "*** There are two kinds of sections ***:\n"\
+         "There are two kinds of sections:\n"\
          '1) Statistics - Number of Errors/Warnings...\n'\
-         "   In this section you'll find log's path and the number of exported Errors/Warnings\n"\
-         '   blocks sorted in increasing order, so most "suspicious" (high number of Errors/Warnings) logs\n'\
-         '   could be found in the bottom of this section.\n'\
+         "   In this section you will find log's path and the number of exported Errors/Warnings\n"\
+         '   blocks sorted in increasing order, so most "suspicious"(high number of Errors/Warnings) logs\n'\
+         '   could be found in the bottom of this section.\n\n'\
          '2) Exported unique messages...\n'\
-         '   Basing on your understanding from the previous section,\n'\
-         '   you might want to see the exported Error/Warning blocks for particular log file.\n'\
-         '   Simply copy log path and try to search for this string inside the result file\n'\
-         "   You'll be able to find the exported Errors/Warnings blocks inside this section, pass through all\n"\
-         "   exported blocks (press 'n' in case when VI/VIM is your text editor) and try \n" \
-         "   to figure out if the current block that you see, could be a 'root cause' you are searching for\n"\
-         "   *** Note: you can always 'jump' directly into the beginning of this section, using the line number\n"\
+         '   This section contains all exported unique Errors/Warnings blocks (sequence of log lines)\n'\
+         '   Basing on your understanding from the previous Statistics section,\n'\
+         '   you will need to check/expert exported Error/Warning blocks for each "suspicious" log file.\n'\
+         '   In order to do that, copy log path string and search for this string inside this file. \n'\
+         "   By doing that you will be able to pass through all exported blocks for each certain log file.\n"\
+         "   Press 'n' in case when file is opened with VI/VIM text editor, pass through all blocks and try \n" \
+         "   to figure out which one of them could be the 'Root Cause' you are searching for.\n"\
+         "   Note:\n" \
+         "   You can always 'jump' directly into the beginning of this section, using section start line number\n"\
          "   provided in 'Table of Content' and to scroll down till you find the potential 'Root Cause' and it's OK\n"\
-         "   when you have like a tens of exported blocks, but when there is much more exported blocks, the efficient way\n"\
+         "   when you have let say tens of exported blocks, but when there are much more blocks, the efficient way\n"\
          "   would be trying to understand basing on 'Statistics' sections which logs are most 'suspicious' and then\n"\
-         "   trying to dig out using 'searching' method explained before.\n\n"\
-         '*** There are two kinds of log files: "Standard" and "Not Standard" ***.\n' \
-         'Standard logs - debug level string and timestamp both have been detected in log lines, example line:\n'\
-         '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi" \n'\
-         'Not Standard - all the rest, example line does not include timestamp:\n'\
-         '  "Debug: Evicting cache entry for environment "production"\n'\
-         "Note: this is the reason for having 4 sections in total.\n"
+         "   trying to dig out using 'searching' method explained here.\n\n"\
+         'There are two kinds of log files: "Standard" and "Not Standard":\n' \
+         'Standard logs - DEBUG level string + TIMESTAMP, both of them have been detected in log line, example line:\n'\
+         '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi..." \n'\
+         'Not Standard - all the rest, example line does not include TIMESTAMP:\n'\
+         '  "Debug: Evicting cache entry for environment "production"...\n'\
+         "Note: this is the reason for having four sections in total inside LogTool result file.\n"
     append_to_file(result_file,info)
 
     ### Fill statistics section for Standard OSP logs###
