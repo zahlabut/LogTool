@@ -162,7 +162,7 @@ class LogTool(unittest.TestCase):
 
         for key in workers_output:
             if 'Total_Number_Of_Errors:0' not in workers_output[key]:
-                report_data+=key+workers_output[key].splitlines()[-2]
+                report_data+='\n'+key+' --> '+workers_output[key].splitlines()[-2]
         if len(report_data)!=0:
             append_to_file(report_file_name,report_data+
                            '\nFor more details, check LogTool result files on your setup:'
