@@ -37,11 +37,6 @@ errors_on_execution = {}
 competed_nodes={}
 workers_output={}
 
-# Runtime Logs #
-#empty_file_content('Runtime.log')
-#empty_file_content('Error.log')
-#sys.stdout=MyOutput('Runtime.log')
-#sys.stderr=MyOutput('Error.log')
 
 ### Check given user_start_time ###
 if check_time(user_start_time)!=True:
@@ -63,10 +58,6 @@ for node in all_nodes:
 if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
 os.mkdir(result_dir)
-
-
-
-
 
 
 class LogTool(unittest.TestCase):
@@ -92,7 +83,7 @@ class LogTool(unittest.TestCase):
         print(com_result['Stdout'])  # Do not delete me!!!
         if 'SUCCESS!!!' in com_result['Stdout']:
             print_in_color(str(node) + ' --> OK', 'green')
-            workers_output[str(node)]=com_result['Stdout']
+            workers_output[str(node)]=com_result['Stdout'].splitlines()[-2]
             competed_nodes[node['Name']] = True
         else:
             print_in_color(str(node) + ' --> FAILED', 'yellow')
@@ -143,6 +134,7 @@ class LogTool(unittest.TestCase):
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+            workers_output['UndercloudNode'] = com_result['Stdout'].splitlines()[-2]
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
@@ -162,7 +154,7 @@ class LogTool(unittest.TestCase):
 
         for key in workers_output:
             if 'Total_Number_Of_Errors:0' not in workers_output[key]:
-                report_data+='\n'+key+' --> '+workers_output[key].splitlines()[-2]
+                report_data+='\n'+key+' --> '+workers_output[key]
         if len(report_data)!=0:
             append_to_file(report_file_name,report_data+
                            '\nFor more details, check LogTool result files on your setup:'
