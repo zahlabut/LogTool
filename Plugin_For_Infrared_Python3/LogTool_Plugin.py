@@ -154,11 +154,13 @@ class LogTool(unittest.TestCase):
         if report_file_name in os.listdir('.'):
             os.remove(report_file_name)
         failed_nodes={}
-        detected_unique_errors=''
         for fil in os.listdir(os.path.abspath(result_dir)):
             fil_path=os.path.join(os.path.abspath(result_dir),fil)
-            data=open(fil_path,'rb').read()
-            if 'Total_Number_Of_ERRORs --> 0' not in data:
+            unzip_file_path=fil_path.replace('.gz','')
+            exec_command_line_command('zcat '+fil_path+' > '+unzip_file_path)
+            data=open(unzip_file_path,'r').read()
+            if 'Total_Number_Of_ERRORs --> 0'.lower() not in data.lower():
+                print(exec_command_line_command('grep -i -B1 total_number_of_errors')['CommandOutput'])
                 failed_nodes[fil]=fil_path
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
