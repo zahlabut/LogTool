@@ -24,7 +24,7 @@
   - name:
     block:
       - name: Read content of Report File
-        shell: cat /home/stack/LogTool/Plugin_for_Infrared/LogTool_Report.log
+        shell: cat /home/stack/LogTool/Plugin_For_Infrared_Python3/LogTool_Report.log
         register: report_log_content
 
       - name: Print content of Report File
