@@ -23,7 +23,9 @@ import threading
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
-         '2) Type: "python -m unittest LogTool_Plugin" to start this script']
+         '2) cd python3 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
+         '3) python3 -m unittest LogTool_Plugin.LogTool',
+         '4) Start specific test: "python3 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors" to start this script']
 if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
     spec_print(usage, 'yellow')
     sys.exit(1)
@@ -81,8 +83,6 @@ class LogTool(unittest.TestCase):
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
             user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
-
-
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
         print(com_result['Stdout'])  # Do not delete me!!!
@@ -93,7 +93,7 @@ class LogTool(unittest.TestCase):
             print_in_color(str(node) + ' --> FAILED', 'yellow')
             self.raise_warning(str(node) + ' --> FAILED')
             errors_on_execution[node['Name']] = False
-        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
+        s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file+'.gz'))
         # Clean all #
         files_to_delete = ['Extract_On_Node.py', result_file]
         for fil in files_to_delete:
@@ -104,7 +104,6 @@ class LogTool(unittest.TestCase):
     def test_1_Export_Overcloud_Errors(self):
         print('\ntest_1_Export_Overcloud_Errors')
         mode_start_time = time.time()
-
         threads=[]
         for node in nodes:
             t=threading.Thread(target=self.run_on_node, args=(node,))
@@ -112,7 +111,6 @@ class LogTool(unittest.TestCase):
             t.start()
         for t in threads:
             t.join()
-
         script_end_time = time.time()
         if len(errors_on_execution) == 0:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
@@ -163,7 +161,9 @@ class LogTool(unittest.TestCase):
             if 'Total Number of Errors/Warnings is:0' not in str(data):
                 failed_nodes[fil]=fil_path
                 detected_unique_errors+='='*10+' Unique ERRORs in: '+fil+' '+'='*10
+
                 unique_section_start_index=int(data[-1].split(' --> ')[-1])
+
                 for line in data[unique_section_start_index:-7]:
                     detected_unique_errors+=line
                 detected_unique_errors+='\n'*5
