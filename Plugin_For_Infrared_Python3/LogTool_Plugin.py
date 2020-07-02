@@ -136,7 +136,7 @@ class LogTool(unittest.TestCase):
             result_file = 'Undercloud'+dir.replace('/','_')+'.log'
             command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" +dir+ "'" + " '" + grep_string + "'" + ' ' + result_file
             com_result=exec_command_line_command(command)
-            shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
+            shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
