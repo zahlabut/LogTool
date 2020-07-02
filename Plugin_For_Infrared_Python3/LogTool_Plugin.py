@@ -80,10 +80,10 @@ class LogTool(unittest.TestCase):
             user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
-        print(com_result['Stdout'])  # Do not delete me!!!
-        if 'SUCCESS!!!' in com_result['Stdout']:
+        print(com_result['CommandOutput'])  # Do not delete me!!!
+        if 'SUCCESS!!!' in com_result['CommandOutput']:
             print_in_color(str(node) + ' --> OK', 'green')
-            workers_output[str(node)]=com_result['Stdout'].splitlines()[-2]
+            workers_output[str(node)]=com_result['CommandOutput'].splitlines()[-2]
             competed_nodes[node['Name']] = True
         else:
             print_in_color(str(node) + ' --> FAILED', 'yellow')
@@ -134,7 +134,7 @@ class LogTool(unittest.TestCase):
         end_time=time.time()
         if com_result['ReturnCode']==0:
             spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
-            workers_output['UndercloudNode'] = com_result['Stdout'].splitlines()[-2]
+            workers_output['UndercloudNode'] = com_result['CommandOutput'].splitlines()[-2]
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
