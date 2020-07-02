@@ -167,6 +167,7 @@ class LogTool(unittest.TestCase):
             append_to_file(report_file_name,report_data.splitlines(-2)+
                            '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
 
+
         # failed_nodes={}
         # for fil in os.listdir(os.path.abspath(result_dir)):
         #     fil_path=os.path.join(os.path.abspath(result_dir),fil)
