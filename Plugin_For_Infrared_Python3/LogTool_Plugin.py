@@ -158,16 +158,8 @@ class LogTool(unittest.TestCase):
         for fil in os.listdir(os.path.abspath(result_dir)):
             fil_path=os.path.join(os.path.abspath(result_dir),fil)
             data=open(fil_path,'r').readlines()
-            if 'Total Number of Errors/Warnings is:0' not in str(data):
+            if 'Total_Number_Of_ERRORs --> 0' not in str(data):
                 failed_nodes[fil]=fil_path
-                detected_unique_errors+='='*10+' Unique ERRORs in: '+fil+' '+'='*10
-
-                unique_section_start_index=int(data[-1].split(' --> ')[-1])
-
-                for line in data[unique_section_start_index:-7]:
-                    detected_unique_errors+=line
-                detected_unique_errors+='\n'*5
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
-                        '\nDetected Unique ERRORs are:'+'\n'*5+detected_unique_errors+
                           '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
