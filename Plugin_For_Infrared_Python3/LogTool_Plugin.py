@@ -80,10 +80,10 @@ class LogTool(unittest.TestCase):
             user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
-        print(com_result['CommandOutput'])  # Do not delete me!!!
-        if 'SUCCESS!!!' in com_result['CommandOutput']:
+        print(com_result['Stdout'])  # Do not delete me!!!
+        if 'SUCCESS!!!' in com_result['Stdout']:
             print_in_color(str(node) + ' --> OK', 'green')
-            workers_output[str(node)]=com_result['CommandOutput'].splitlines()[-2]
+            workers_output[str(node)]=com_result['Stdout'].splitlines()[-2]
             competed_nodes[node['Name']] = True
         else:
             print_in_color(str(node) + ' --> FAILED', 'yellow')
@@ -121,6 +121,7 @@ class LogTool(unittest.TestCase):
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
         if len(competed_nodes)==0:
             self.raise_warning('LogTool execution has failed to be executed on all Overcloud nodes :-(')
+
 
     """ Start LogTool and export Errors from Undercloud """
     def test_2_Export_Undercloud_Errors(self):
