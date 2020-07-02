@@ -157,5 +157,5 @@ class LogTool(unittest.TestCase):
                 report_data+='\n'+key+' --> '+workers_output[key]
         if len(report_data)!=0:
             append_to_file(report_file_name,report_data+
-                           '\nFor more details, check LogTool result files on your setup:'
+                           '\n\nFor more details, check LogTool result files on your setup:'
                            '\n'+os.path.abspath(result_dir))
