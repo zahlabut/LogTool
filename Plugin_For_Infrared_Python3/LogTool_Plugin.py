@@ -132,22 +132,22 @@ class LogTool(unittest.TestCase):
             self.raise_warning('LogTool execution has failed to be executed on all Overcloud nodes :-(')
 
     """ Start LogTool and export Errors from Undercloud """
-    # def test_2_Export_Undercloud_Errors(self):
-    #     print('\ntest_2_Export_Undercloud_Errors')
-    #     mode_start_time = time.time()
-    #     for dir in undercloud_logs_dir:
-    #         result_file = 'Undercloud'+dir.replace('/','_')+'.log'
-    #         command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" +dir+ "'" + " '" + grep_string + "'" + ' ' + result_file
-    #         com_result=exec_command_line_command(command)
-    #         shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
-    #     end_time=time.time()
-    #     if com_result['ReturnCode']==0:
-    #         spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
-    #     else:
-    #         spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-    #                     'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
-    #     if com_result['ReturnCode']!=0:
-    #         self.raise_warning('LogTool execution has failed to be executed on Underloud logs :-(')
+    def test_2_Export_Undercloud_Errors(self):
+        print('\ntest_2_Export_Undercloud_Errors')
+        mode_start_time = time.time()
+        for dir in undercloud_logs_dir:
+            result_file = 'Undercloud'+dir.replace('/','_')+'.log'
+            command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" +dir+ "'" + " '" + grep_string + "'" + ' ' + result_file
+            com_result=exec_command_line_command(command)
+            shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(end_time-mode_start_time)+'[sec]'],'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Execution Time: ' + str(end_time - mode_start_time) + '[sec]'], 'red')
+        if com_result['ReturnCode']!=0:
+            self.raise_warning('LogTool execution has failed to be executed on Underloud logs :-(')
 
     """ This test will create a Final report. The report file will be created only when ERRORs have been detected.
         Report file will be used as indication to ansible to PASS or FAIl, in case of failure it will "cat" its
@@ -167,17 +167,3 @@ class LogTool(unittest.TestCase):
             append_to_file(report_file_name,report_data+
                            '\nFor more details, check LogTool result files on your setup:'
                            '\n'+os.path.abspath(result_dir))
-
-
-        # failed_nodes={}
-        # for fil in os.listdir(os.path.abspath(result_dir)):
-        #     fil_path=os.path.join(os.path.abspath(result_dir),fil)
-        #     unzip_file_path=fil_path.replace('.gz','')
-        #     exec_command_line_command('zcat '+fil_path+' > '+unzip_file_path)
-        #     data=open(unzip_file_path,'r').read()
-        #     if 'Total_Number_Of_ERRORs --> 0'.lower() not in data.lower():
-        #         print(exec_command_line_command('grep -i -B1 total_number_of_errors')['CommandOutput'])
-        #         failed_nodes[fil]=fil_path
-        # if len(failed_nodes)!=0:
-        #     append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
-        #                   '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
