@@ -164,8 +164,8 @@ class LogTool(unittest.TestCase):
             if 'Total_Number_Of_Errors:0' not in workers_output[key]:
                 report_data+='Errors have been detected on:'+key+'\n'+ workers_output[key]
         if len(report_data)!=0:
-            append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(workers_output.keys()))+
-                          '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
+            append_to_file(report_file_name,report_data+
+                           '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
 
         # failed_nodes={}
         # for fil in os.listdir(os.path.abspath(result_dir)):
