@@ -157,8 +157,8 @@ class LogTool(unittest.TestCase):
         detected_unique_errors=''
         for fil in os.listdir(os.path.abspath(result_dir)):
             fil_path=os.path.join(os.path.abspath(result_dir),fil)
-            data=open(fil_path,'r').readlines()
-            if 'Total_Number_Of_ERRORs --> 0' not in str(data):
+            data=open(fil_path,'r').read()
+            if 'Total_Number_Of_ERRORs --> 0' not in data:
                 failed_nodes[fil]=fil_path
         if len(failed_nodes)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
