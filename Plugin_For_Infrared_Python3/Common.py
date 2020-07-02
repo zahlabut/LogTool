@@ -225,5 +225,7 @@ def download_jenkins_job_logs(node_names_list,url):
     response = urllib.request.urlopen(url)
     html= response.read(url)
 
-
+def append_to_file(log_file, msg):
+    log_file = open(log_file, 'a')
+    log_file.write(msg)
 
