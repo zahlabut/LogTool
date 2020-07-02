@@ -35,6 +35,7 @@ if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
 # Parameters #
 errors_on_execution = {}
 competed_nodes={}
+workers_output={}
 
 # Runtime Logs #
 #empty_file_content('Runtime.log')
@@ -65,6 +66,9 @@ os.mkdir(result_dir)
 
 
 
+
+
+
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
@@ -88,6 +92,7 @@ class LogTool(unittest.TestCase):
         print(com_result['Stdout'])  # Do not delete me!!!
         if 'SUCCESS!!!' in com_result['Stdout']:
             print_in_color(str(node) + ' --> OK', 'green')
+            workers_output[str(node)]=com_result['Stdout']
             competed_nodes[node['Name']] = True
         else:
             print_in_color(str(node) + ' --> FAILED', 'yellow')
@@ -153,15 +158,24 @@ class LogTool(unittest.TestCase):
         report_file_name = 'LogTool_Report.log'
         if report_file_name in os.listdir('.'):
             os.remove(report_file_name)
-        failed_nodes={}
-        for fil in os.listdir(os.path.abspath(result_dir)):
-            fil_path=os.path.join(os.path.abspath(result_dir),fil)
-            unzip_file_path=fil_path.replace('.gz','')
-            exec_command_line_command('zcat '+fil_path+' > '+unzip_file_path)
-            data=open(unzip_file_path,'r').read()
-            if 'Total_Number_Of_ERRORs --> 0'.lower() not in data.lower():
-                print(exec_command_line_command('grep -i -B1 total_number_of_errors')['CommandOutput'])
-                failed_nodes[fil]=fil_path
-        if len(failed_nodes)!=0:
+        report_data=''
+
+        for key in workers_output:
+            if 'Total_Number_Of_Errors:0' not in workers_output[key]:
+                report_data+='Errors have been detected on:'+key+'\n'+ workers_output[key]
+        if len(report_data)!=0:
             append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
                           '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
+
+        # failed_nodes={}
+        # for fil in os.listdir(os.path.abspath(result_dir)):
+        #     fil_path=os.path.join(os.path.abspath(result_dir),fil)
+        #     unzip_file_path=fil_path.replace('.gz','')
+        #     exec_command_line_command('zcat '+fil_path+' > '+unzip_file_path)
+        #     data=open(unzip_file_path,'r').read()
+        #     if 'Total_Number_Of_ERRORs --> 0'.lower() not in data.lower():
+        #         print(exec_command_line_command('grep -i -B1 total_number_of_errors')['CommandOutput'])
+        #         failed_nodes[fil]=fil_path
+        # if len(failed_nodes)!=0:
+        #     append_to_file(report_file_name,'Failed - Errors have been detected on: '+str(list(failed_nodes.keys()))+
+        #                   '\n*** For more details, check LogTool result files on your setup: '+os.path.abspath(result_dir))
