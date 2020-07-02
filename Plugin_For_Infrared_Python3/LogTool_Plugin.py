@@ -134,7 +134,6 @@ class LogTool(unittest.TestCase):
         mode_start_time = time.time()
         for dir in undercloud_logs_dir:
             result_file = 'Undercloud'+dir.replace('/','_')+'.log'
-            log_root_dir = str(undercloud_logs)
             command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" + log_root_dir + "'" \
                     + " '" + grep_string + "'" + ' ' + result_file
             com_result=exec_command_line_command(command)
