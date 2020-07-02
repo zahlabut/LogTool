@@ -36,3 +36,12 @@ source_rc_file_path='/home/stack/'
 
 # Start time that will be used to export Errors/Warnings
 user_start_time='2019-03-01 00:00:00'
+
+# Save raw data section inside the result file
+save_raw_data='yes'
+
+# Analyze all  logs, another option for this parameter is: osp_logs_only
+log_type='all_logs'
+
+# Directories on Undercloud host that are going to be analyzed
+undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']

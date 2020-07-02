@@ -77,10 +77,12 @@ class LogTool(unittest.TestCase):
         result_file = node['Name'].replace(' ', '') + '.log'
         s = SSH(node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
         s.ssh_connect_key()
-        s.scp_upload('Extract_On_Node_NEW.py', overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node_NEW.py')
-        command = "sudo " + overcloud_home_dir + "Extract_On_Node_NEW.py '" + str(
-            user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file
+        s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
+        s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
+        command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
+            user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
+
+
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
         print(com_result['Stdout'])  # Do not delete me!!!
@@ -93,7 +95,7 @@ class LogTool(unittest.TestCase):
             errors_on_execution[node['Name']] = False
         s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file))
         # Clean all #
-        files_to_delete = ['Extract_On_Node_NEW.py', result_file]
+        files_to_delete = ['Extract_On_Node.py', result_file]
         for fil in files_to_delete:
             s.ssh_command('rm -rf ' + fil)
         s.ssh_close()
@@ -132,7 +134,9 @@ class LogTool(unittest.TestCase):
         mode_start_time = time.time()
         for dir in undercloud_logs_dir:
             result_file = 'Undercloud'+dir.replace('/','_')+'.log'
-            command="sudo python Extract_On_Node_NEW.py '" + str(user_start_time) + "' " + dir + " '" + grep_string + "'" + ' ' + result_file
+            log_root_dir = str(undercloud_logs)
+            command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" + log_root_dir + "'" \
+                    + " '" + grep_string + "'" + ' ' + result_file
             com_result=exec_command_line_command(command)
             shutil.move(result_file, os.path.join(os.path.abspath(result_dir),result_file))
         end_time=time.time()
