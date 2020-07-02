@@ -231,4 +231,5 @@ def download_jenkins_job_logs(node_names_list,url):
 def append_to_file(log_file, msg):
     log_file = open(log_file, 'a')
     log_file.write(msg)
+    log_file.close()
 
