@@ -40,10 +40,16 @@ destination_dir = 'Jenkins_Job_Files'
 
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
 download_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir + ' ' + artifacts_url
+
+
+
 print download_command+'\n\n'
 
 
 return_code = exec_command_line_command(download_command)
+
+
+
 
 
 
