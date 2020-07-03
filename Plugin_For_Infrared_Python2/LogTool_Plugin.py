@@ -221,6 +221,8 @@ class LogTool(unittest.TestCase):
                             os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
 
 
+
+
     # Unzip all downloaded .tar.gz files
     for fil in os.listdir(os.path.abspath(destination_dir)):
         if fil.endswith('.tar.gz'):
