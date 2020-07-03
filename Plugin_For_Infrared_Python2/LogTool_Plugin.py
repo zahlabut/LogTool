@@ -48,8 +48,6 @@ print start_time
 
 
 
-
-
 sys.exit(1)
 
 
