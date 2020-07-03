@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import os
 import paramiko
 import time
@@ -19,9 +20,10 @@ import subprocess
 import json
 import sys
 import re
-import urllib.request, urllib.error, urllib.parse
-from urllib.parse import urlparse
-from urllib.parse import urljoin
+import urllib2
+import difflib
+from urllib2 import urlparse
+from string import digits
 
 
 def empty_file_content(log_file_name):
