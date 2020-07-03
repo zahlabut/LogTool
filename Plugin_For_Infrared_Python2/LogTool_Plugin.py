@@ -22,8 +22,6 @@ import warnings
 import threading
 import sys
 import time
-import urllib2
-import  urllib
 
 def set_default_arg_by_index(index, default):
     try:
