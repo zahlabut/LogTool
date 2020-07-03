@@ -34,23 +34,20 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/')
+
+job_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/')
+artifact_url=job_url+'artifacts/'
+tempest_url=artifact_url+'tempest-results/'
 start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
 destination_dir = 'Jenkins_Job_Files'
-
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-download_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir + ' ' + artifacts_url
 
-
-
-
-
-print download_command+'\n\n'
-
-
-return_code = exec_command_line_command(download_command)
-
-
+artifact_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P artifacts ' + artifact_url
+print artifact_command+'\n\n'
+return_code = exec_command_line_command(artifact_command)
+tempest_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P tempest ' + tempest_url
+print tempest_command+'\n\n'
+return_code = exec_command_line_command(tempest_command)
 
 
 
