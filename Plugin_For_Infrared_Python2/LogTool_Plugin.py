@@ -203,22 +203,22 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
 
-        # Download console.log
-        console_log_url = artifacts_url.strip().replace('artifact', 'consoleFull').strip('/')
-        os.system('wget -P ' + destination_dir + ' ' + console_log_url)
-        shutil.move(os.path.join(destination_dir, 'consoleFull'),
-                    os.path.join(destination_dir, 'consoleFull.log'))
+            # Download console.log
+            console_log_url = artifacts_url.strip().replace('artifact', 'consoleFull').strip('/')
+            os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+            shutil.move(os.path.join(destination_dir, 'consoleFull'),
+                        os.path.join(destination_dir, 'consoleFull.log'))
 
-        # Download Infared Logs .sh, files in .sh directory on Jenkins
-        if len(ir_logs_urls) != 0:
-            for url in ir_logs_urls:
-                os.system('wget -P ' + destination_dir + ' ' + url)
+            # Download Infared Logs .sh, files in .sh directory on Jenkins
+            if len(ir_logs_urls) != 0:
+                for url in ir_logs_urls:
+                    os.system('wget -P ' + destination_dir + ' ' + url)
 
-        # Download tempest log (html #)
-        if tempest_log_url != None:
-            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
-            shutil.move(os.path.join(destination_dir, tempest_html),
-                        os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
+            # Download tempest log (html #)
+            if tempest_log_url != None:
+                os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+                shutil.move(os.path.join(destination_dir, tempest_html),
+                            os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
 
 
     # Unzip all downloaded .tar.gz files
