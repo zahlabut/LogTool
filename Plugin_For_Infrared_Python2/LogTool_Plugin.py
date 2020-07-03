@@ -34,7 +34,7 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/')
+artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/')
 start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
 destination_dir = 'Jenkins_Job_Files'
 
