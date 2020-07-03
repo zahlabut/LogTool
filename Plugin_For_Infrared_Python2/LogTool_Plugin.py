@@ -191,9 +191,8 @@ class LogTool(unittest.TestCase):
         user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
         if job_url.endswith('/')==False:
             job_url+='/'
-        urls={'Job':job_url,
-              'artifact':job_url+'artifact',
-              'IrLogs':job_url+'artifact/.sh',
+        urls={'artifact':job_url+'artifact/',
+              'IrLogs':job_url+'artifact/.sh/',
               'Tempest':job_url+'artifact/tempest-results/'}
         for key in urls.keys():
             command="wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
