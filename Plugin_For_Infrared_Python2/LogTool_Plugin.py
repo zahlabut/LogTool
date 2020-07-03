@@ -209,28 +209,28 @@ class LogTool(unittest.TestCase):
             shutil.move(os.path.join(destination_dir, 'consoleFull'),
                         os.path.join(destination_dir, 'consoleFull.log'))
 
-            # Download Infared Logs .sh, files in .sh directory on Jenkins
-            if len(ir_logs_urls) != 0:
-                for url in ir_logs_urls:
-                    os.system('wget -P ' + destination_dir + ' ' + url)
+        # Download Infared Logs .sh, files in .sh directory on Jenkins
+        if len(ir_logs_urls) != 0:
+            for url in ir_logs_urls:
+                os.system('wget -P ' + destination_dir + ' ' + url)
 
-            # Download tempest log (html #)
-            if tempest_log_url != None:
-                os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
-                shutil.move(os.path.join(destination_dir, tempest_html),
-                            os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
-
-
+        # Download tempest log (html #)
+        if tempest_log_url != None:
+            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+            shutil.move(os.path.join(destination_dir, tempest_html),
+                        os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
 
 
-    # Unzip all downloaded .tar.gz files
-    for fil in os.listdir(os.path.abspath(destination_dir)):
-        if fil.endswith('.tar.gz'):
-            cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
-                destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
-                os.path.abspath(destination_dir), fil)
-            print_in_color('Unzipping ' + fil + '...', 'bold')
-            os.system(cmd)
+
+
+        # Unzip all downloaded .tar.gz files
+        for fil in os.listdir(os.path.abspath(destination_dir)):
+            if fil.endswith('.tar.gz'):
+                cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
+                    destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
+                    os.path.abspath(destination_dir), fil)
+                print_in_color('Unzipping ' + fil + '...', 'bold')
+                os.system(cmd)
 
     # Run LogTool analyzing
     print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
