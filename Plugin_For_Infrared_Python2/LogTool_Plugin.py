@@ -23,9 +23,7 @@ import threading
 import sys
 import time
 import urllib
-import requests
-import urllib2
-from urllib2 import urlparse
+
 
 
 def set_default_arg_by_index(index, default):
@@ -180,7 +178,7 @@ class LogTool(unittest.TestCase):
         response = urllib.urlopen(artifacts_url)
         html = response.read()
 
-        parsed_url = urllib2.urlparse(artifacts_url)
+        parsed_url = urlparse(artifacts_url)
 
         base_url = parsed_url.scheme + '://' + parsed_url.netloc
         # soup = BeautifulSoup(html)
