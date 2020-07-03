@@ -281,6 +281,8 @@ class LogTool(unittest.TestCase):
         #                'red')
 
 
+
+
         def test_4_create_final_report(self):
             print('\ntest_3_create_final_report')
             report_file_name = 'LogTool_Report.log'
