@@ -33,7 +33,7 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-artifacts_url=set_default_arg_by_index(1,'http://google.com')
+artifacts_url=set_default_arg_by_index(1,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15927/artifact/')
 
 start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
 
