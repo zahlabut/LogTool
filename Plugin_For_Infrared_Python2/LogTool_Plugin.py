@@ -47,6 +47,13 @@ start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
 print start_time
 
 
+
+
+
+sys.exit(1)
+
+
+
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
          '2) python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
