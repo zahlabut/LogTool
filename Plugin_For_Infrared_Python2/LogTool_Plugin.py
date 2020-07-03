@@ -33,7 +33,7 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-artifacts_url=set_default_arg_by_index(1,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15927/artifact/')
+artifacts_url=set_default_arg_by_index(3,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15927/artifact/')
 
 
 print artifacts_url
