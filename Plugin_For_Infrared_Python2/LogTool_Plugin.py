@@ -203,7 +203,7 @@ class LogTool(unittest.TestCase):
 
         # Download log files
 
-        response = urllib.urlopen(artifacts_url)
+        response = urllib.urlopen(artifact_url)
         html = response.read()
         #
         # parsed_url = urlparse(artifacts_url)
