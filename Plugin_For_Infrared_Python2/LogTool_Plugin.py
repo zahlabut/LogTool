@@ -185,16 +185,20 @@ class LogTool(unittest.TestCase):
         os.mkdir(destination_dir)
 
         # Download log files
-        job_url = set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/')
-        artifact_url = job_url + 'artifact/'
-        tempest_url = artifact_url + 'tempest-results/'
         start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
+        job_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/')
         user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+        if job_url.endswith('/')==False:
+            job_url+='/'
+        urls={'Job':job_url,
+              'artifact':job_url+'artifact',
+              'IrLogs':job_url+'artifact/.sh',
+              'Tempest':job_url+'artifact/tempest-results/'}
+        for key in urls.keys():
+            command="wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir +'/'+key + urls[key]
+            print command
+            exec_command_line_command(command)
 
-        artifact_command = "wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir + '/artifacts ' + artifact_url
-        exec_command_line_command(artifact_command)
-        tempest_command = "wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir + '/tempest ' + tempest_url
-        exec_command_line_command(tempest_command)
 
         # Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
