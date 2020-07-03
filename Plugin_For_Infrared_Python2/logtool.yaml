@@ -11,7 +11,7 @@
       src: logtool.sh.j2
       dest: /home/stack/logtool.sh
       group: stack
-      mode: 0744
+      mode: 0755
 
   - name: Execute LogTool Start Script
     command: /home/stack/logtool.sh
