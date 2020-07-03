@@ -48,7 +48,7 @@ return_code = exec_command_line_command(download_command)
 
 
 
-parsed_url = urlparse(artifacts_url)
+#parsed_url = urlparse(artifacts_url)
 
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
