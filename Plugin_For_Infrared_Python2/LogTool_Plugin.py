@@ -205,7 +205,7 @@ class LogTool(unittest.TestCase):
         urls={'AllZip':job_url}
 
         for key in urls.keys():
-            command="wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
+            command="wget -r --random-wait --accept-regex='.zip' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
             print '\n'+command
             exec_command_line_command(command)
 
