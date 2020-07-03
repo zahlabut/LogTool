@@ -25,7 +25,6 @@ import time
 import urllib
 
 
-
 def set_default_arg_by_index(index, default):
     try:
         value=sys.argv[index]
