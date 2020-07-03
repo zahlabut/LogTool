@@ -34,20 +34,7 @@ def set_default_arg_by_index(index, default):
         return default
 
 artifacts_url=set_default_arg_by_index(3,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15927/artifact/')
-
-
-print artifacts_url
-
-
-
 start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
-
-
-
-print start_time
-
-
-sys.exit(1)
 
 
 
