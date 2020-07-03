@@ -19,10 +19,10 @@ import subprocess
 import json
 import sys
 import re
+import urllib.request, urllib.error, urllib.parse
+from urllib.parse import urlparse
+from urllib.parse import urljoin
 
-def append_to_file(log_file, msg):
-    log_file = open(log_file, 'a')
-    log_file.write(msg)
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -41,17 +41,17 @@ def print_in_color(string,color_or_format=None):
         BOLD = '\033[1m'
         UNDERLINE = '\033[4m'
     if color_or_format == 'green':
-        print bcolors.OKGREEN + string + bcolors.ENDC
+        print(bcolors.OKGREEN + string + bcolors.ENDC)
     elif color_or_format =='red':
-        print bcolors.FAIL + string + bcolors.ENDC
+        print(bcolors.FAIL + string + bcolors.ENDC)
     elif color_or_format =='yellow':
-        print bcolors.WARNING + string + bcolors.ENDC
+        print(bcolors.WARNING + string + bcolors.ENDC)
     elif color_or_format =='blue':
-        print bcolors.OKBLUE + string + bcolors.ENDC
+        print(bcolors.OKBLUE + string + bcolors.ENDC)
     elif color_or_format =='bold':
-        print bcolors.BOLD + string + bcolors.ENDC
+        print(bcolors.BOLD + string + bcolors.ENDC)
     else:
-        print string
+        print(string)
 
 class MyOutput():
     def __init__(self, logfile):
@@ -61,18 +61,19 @@ class MyOutput():
     def write(self, text):
         self.stdout.write(text)
         self.log.write(text)
-        self.log.flush()
+        #self.log.flush()
   
     def close(self):
         self.stdout.close()
         self.log.close()
 
+
 def check_ping(ip):
     try:
         if subprocess.check_output(["ping", "-c", "1", ip]):
             return True
-    except Exception, e:
-        print 'Ping to '+ip+' failed with '+str(e)
+    except Exception as e:
+        print('Ping to '+ip+' failed with '+str(e))
         return False
 
 class SSH():
@@ -89,7 +90,7 @@ class SSH():
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(self.host, username=self.user, password=self.password)
             return {'Status':True}
-        except Exception, e:
+        except Exception as e:
             print_in_color(str(e),'red')
             return {'Status':False,'Exception':e}
 
@@ -100,7 +101,7 @@ class SSH():
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(self.host, username=self.user, key_filename=self.key_path)
             return {'Status':True}
-        except Exception, e:
+        except Exception as e:
             print_in_color(str(e), 'red')
             return {'Status':False,'Exception':e}
 
@@ -109,9 +110,9 @@ class SSH():
         #stdin.close()
         self.output=''
         self.stderr=''
-        for line in stdout.read().splitlines():
+        for line in stdout.read().decode().splitlines():
             self.output+=line+'\n'
-        for line in stderr.read().splitlines():
+        for line in stderr.read().decode().splitlines():
             self.stderr+=line+'\n'
         result= {'Stdout':self.output, 'Stderr':self.stderr}
         if len(result['Stderr'])!=0 and 'warning' in str(result['Stderr']).lower():
@@ -122,7 +123,7 @@ class SSH():
 
     def ssh_command_only(self, command):
         self.stdin,self.stdout,self.stderr=self.client.exec_command(command)
-        return {'Stdout':self.stdout.read(),'Stderr':self.stderr.read()}
+        return {'Stdout':self.stdout.read(),'Stderr':self.stderr.read().decode()}
 
     def scp_upload(self, src_abs_path, dst_abs_path):
         try:
@@ -132,7 +133,7 @@ class SSH():
             ftp.put(src_abs_path,dst_abs_path)
             t2=time.time()
             return {'Status':True,'AverageBW':file_size/(t2-t1),'ExecutionTime':t2-t1}
-        except  Exception, e:
+        except  Exception as e:
             print_in_color(str(e), 'red')
             return {'Status':False,'Exception':e}
 
@@ -144,7 +145,7 @@ class SSH():
             t2 = time.time()
             file_size=os.path.getsize(local_abs_path)
             return {'Status': True,'AverageBW':file_size/(t2-t1),'ExecutionTime':t2-t1}
-        except  Exception, e:
+        except  Exception as e:
             print_in_color(str(e), 'red')
             return {'Status': False, 'Exception': e}
 
@@ -155,7 +156,7 @@ def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True)
+        result = subprocess.check_output(command, shell=True, encoding='UTF-8', stderr=subprocess.STDOUT, stdin=True)
         json_output = None
         try:
             json_output = json.loads(result.lower())
@@ -163,8 +164,10 @@ def exec_command_line_command(command):
             pass
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
-        print_in_color(str(e),'red')
-        return {'ReturnCode': e.returncode, 'CommandOutput': str(e)}
+        if 'wget -r' not in command:
+            print_in_color(command,'red')
+            print_in_color(e.output, 'red')
+        return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def spec_print(string_list,color=None):
     len_list=[]
@@ -178,27 +181,27 @@ def spec_print(string_list,color=None):
     print_in_color("#"*max_len+'\n',color)
 
 def choose_option_from_list(list_object, msg):
-    print ''
+    print('')
     try:
         if (len(list_object)==0):
-            print "Nothing to choose :( "
-            print "Execution will stop!"
+            print("Nothing to choose :( ")
+            print("Execution will stop!")
             time.sleep(5)
             exit("Connot continue execution!!!")
             sys.exit(1)
-        print msg
+        print(msg)
         counter=1
         for item in list_object:
-            print str(counter)+') - '+item
+            print(str(counter)+') - '+item)
             counter=counter+1
-        choosed_option=raw_input("Choose option by entering the suitable number! ")
+        choosed_option=input("Choose your option:")
         while (int(choosed_option)<0 or int(choosed_option)> len(list_object)):
-            print "No such option - ", choosed_option
-            choosed_option=raw_input("Choose option by entering the suitable number! ")
+            print("No such option - ", choosed_option)
+            choosed_option=input("Choose your option:")
         print_in_color("Option is: '"+list_object[int(choosed_option)-1]+"'"+'\n','bold')
         return [True,list_object[int(choosed_option)-1]]
-    except Exception, e:
-        print '*** No such option!!!***', e
+    except Exception as e:
+        print('*** No such option!!!***', e)
         return[False, str(e)]
 
 def exit(string):
@@ -206,9 +209,9 @@ def exit(string):
     sys.exit(1)
 
 def print_dic(dic):
-    for k in dic.keys():
-        print '~'*80
-        print k,' --> ',dic[k]
+    for k in list(dic.keys()):
+        print('~'*80)
+        print(k,' --> ',dic[k])
 
 def check_string_for_spev_chars(string):
     return True if re.match("^[a-zA-Z0-9_]*$", string) else False
@@ -220,4 +223,12 @@ def check_time(time_string):
     except:
         return False
 
+def download_jenkins_job_logs(node_names_list,url):
+    response = urllib.request.urlopen(url)
+    html= response.read(url)
+
+def append_to_file(log_file, msg):
+    log_file = open(log_file, 'a')
+    log_file.write(msg)
+    log_file.close()
 
