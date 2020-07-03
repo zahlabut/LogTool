@@ -26,26 +26,6 @@ import operator
 import collections
 from string import digits
 import re
-import signal
-import resource
-import os
-
-
-# checking time limit exceed
-def time_exceeded(signo, frame):
-    print("Time's up !")
-    raise SystemExit(1)
-
-
-def set_max_runtime(seconds):
-    # setting up the resource limit
-    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-    resource.setrlimit(resource.RLIMIT_CPU, (seconds, hard))
-    signal.signal(signal.SIGXCPU, time_exceeded)
-
-def limit_memory(maxsize):
-    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    resource.setrlimit(resource.RLIMIT_AS, (maxsize, hard))
 
 def set_default_arg_by_index(index, default):
     try:
@@ -585,7 +565,6 @@ def sort_list_by_index(lis, index):
     return (sorted(lis, key=lambda x: x[index]))
 
 if __name__ == "__main__":
-    set_max_runtime(60*10)
     not_standard_logs=[]
     analyzed_logs_result=[]
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}

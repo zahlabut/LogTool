@@ -568,42 +568,41 @@ if __name__ == "__main__":
     not_standard_logs=[]
     analyzed_logs_result=[]
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
-    if __name__ == "__main__":
-        empty_file_content(result_file)
-        start_time=time.time()
-        logs=collect_log_paths(log_root_dir)
-        for log in logs:
-            print_in_color(log,'bold')
-            # Skip log file if bigger than 1GB, save this information into not standard logs section
-            log_size = os.path.getsize(log)
-            if log_size > 1024 * 1024 * 1024:  # 1GB
-                print_in_color(log + ' size is too big, skipped!!!', 'yellow')
-                append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
-                               + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
-                continue
-            Log_Analyze_Info = {}
-            Log_Analyze_Info['Log']=log
-            Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
-            # Try to check if there is a known timestamp in last 100 lines
-            last_line=get_file_last_line(log,'100')
-            is_known_time_format=False
-            for line in last_line.splitlines():
-                last_line_date=get_line_date(line)
-                if last_line_date['Error']==None:
-                    is_known_time_format=True
-                    break
-            Log_Analyze_Info['ParseLogTime']=last_line_date
-            if is_known_time_format==True:
-                if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
-                    analyzed_logs_result.append(log_result)
-            else:
-                if to_analyze_osp_logs_only=='all_logs':
-                    if 'WARNING' in string_for_grep:
-                        string_for_grep='WARN'
-                    if 'ERROR' in string_for_grep:
-                        string_for_grep=' ERROR'
-                    not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
+    empty_file_content(result_file)
+    start_time=time.time()
+    logs=collect_log_paths(log_root_dir)
+    for log in logs:
+        print_in_color(log,'bold')
+        # Skip log file if bigger than 1GB, save this information into not standard logs section
+        log_size = os.path.getsize(log)
+        if log_size > 1024 * 1024 * 1024:  # 1GB
+            print_in_color(log + ' size is too big, skipped!!!', 'yellow')
+            append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
+                           + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
+            continue
+        Log_Analyze_Info = {}
+        Log_Analyze_Info['Log']=log
+        Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
+        # Try to check if there is a known timestamp in last 100 lines
+        last_line=get_file_last_line(log,'100')
+        is_known_time_format=False
+        for line in last_line.splitlines():
+            last_line_date=get_line_date(line)
+            if last_line_date['Error']==None:
+                is_known_time_format=True
+                break
+        Log_Analyze_Info['ParseLogTime']=last_line_date
+        if is_known_time_format==True:
+            if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
+                log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
+                analyzed_logs_result.append(log_result)
+        else:
+            if to_analyze_osp_logs_only=='all_logs':
+                if 'WARNING' in string_for_grep:
+                    string_for_grep='WARN'
+                if 'ERROR' in string_for_grep:
+                    string_for_grep=' ERROR'
+                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
 
 
     ### Add basic description about the results into result file ###
