@@ -158,7 +158,7 @@ def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
-        result = subprocess.check_output(command, shell=True, encoding='UTF-8', stderr=subprocess.STDOUT, stdin=True)
+        result = subprocess.check_output(command,  shell=True, stderr=subprocess.STDOUT,stdin=True)
         json_output = None
         try:
             json_output = json.loads(result.lower())
