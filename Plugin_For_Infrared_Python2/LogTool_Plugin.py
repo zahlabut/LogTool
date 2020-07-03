@@ -23,7 +23,7 @@ import threading
 import sys
 import time
 import urllib
-import urllib2
+
 import difflib
 from urllib2 import urlparse
 
@@ -39,7 +39,7 @@ start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
 
 
 
-parsed_url = urllib2.urlparse(artifacts_url)
+parsed_url = urlparse(artifacts_url)
 
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
