@@ -280,6 +280,7 @@ class LogTool(unittest.TestCase):
         #                 'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
         #                'red')
 
+
         def test_4_create_final_report(self):
             print('\ntest_3_create_final_report')
             report_file_name = 'LogTool_Report.log'
