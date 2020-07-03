@@ -23,9 +23,9 @@ import threading
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
-         '2) cd python3 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
-         '3) python3 -m unittest LogTool_Plugin.LogTool',
-         '4) Start specific test: "python3 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors" to start this script']
+         '2) cd python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
+         '3) python2 -m unittest LogTool_Plugin.LogTool',
+         '4) Start specific test: "python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors" to start this script']
 if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
     spec_print(usage, 'yellow')
     sys.exit(1)
@@ -129,7 +129,7 @@ class LogTool(unittest.TestCase):
         mode_start_time = time.time()
         result_file = 'Undercloud.log'
         log_root_dir=str(undercloud_logs)
-        command = "sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" + log_root_dir + "'" + " '" + grep_string + "'" + ' ' + result_file
+        command = "sudo python2 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" + log_root_dir + "'" + " '" + grep_string + "'" + ' ' + result_file
         com_result=exec_command_line_command(command)
         shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
         end_time=time.time()
