@@ -196,7 +196,7 @@ class LogTool(unittest.TestCase):
               'IrLogs':job_url+'artifact/.sh',
               'Tempest':job_url+'artifact/tempest-results/'}
         for key in urls.keys():
-            command="wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir +'/'+key + urls[key]
+            command="wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir +'/'+key +' '+ urls[key]
             print '\n'+command
             exec_command_line_command(command)
 
