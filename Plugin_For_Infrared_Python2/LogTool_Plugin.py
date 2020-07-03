@@ -20,6 +20,17 @@ from Params import *
 import unittest
 import warnings
 import threading
+import sys
+import time
+
+def set_default_arg_by_index(index, default):
+    try:
+        value=sys.argv[index]
+        return value.strip()
+    except:
+        return default
+
+artifacts_url=set_default_arg_by_index(1,'http://google.com')
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
@@ -146,7 +157,106 @@ class LogTool(unittest.TestCase):
         Report file will be used as indication to ansible to PASS or FAIl, in case of failure it will "cat" its
         content.
     """
-    def test_3_create_final_report(self):
+
+
+    def test_3_download_jenkins_job(selfself):
+        # Create destination directory
+        destination_dir = 'Jenkins_Job_Files'
+        destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+
+        # Download log files
+        response = urllib.request.urlopen(artifacts_url)
+        html = response.read()
+        parsed_url = urlparse(artifacts_url)
+        base_url = parsed_url.scheme + '://' + parsed_url.netloc
+        # soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, 'lxml')
+        tar_gz_files = []
+        ir_logs_urls = []
+
+        # Create tempest log url #
+        tempest_log_url = None
+        for link in soup.findAll('a'):
+            if 'tempest-results' in link:
+                tempest_results_url = urljoin(artifacts_url, link.get('href'))
+                tempest_response = urllib.request.urlopen(tempest_results_url)
+                html = tempest_response.read()
+                soup = BeautifulSoup(html, 'lxml')
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.html'):
+                        tempest_html = link.get('href')
+                        tempest_log_url = urljoin(artifacts_url, 'tempest-results') + '/' + tempest_html
+                        break
+            if str(link.get('href')).endswith('.tar.gz'):
+                tar_gz_files.append(link)
+                tar_link = urljoin(artifacts_url, link.get('href'))
+                os.system('wget -P ' + destination_dir + ' ' + tar_link)
+            if str(link.get('href')).endswith('.sh'):
+                sh_page_link = urljoin(artifacts_url, link.get('href'))
+                response = urllib.request.urlopen(sh_page_link)
+                html = response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.log'):
+                        ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
+
+        # Download console.log
+        console_log_url = artifacts_url.strip().replace('artifact', 'consoleFull').strip('/')
+        os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+        shutil.move(os.path.join(destination_dir, 'consoleFull'),
+                    os.path.join(destination_dir, 'consoleFull.log'))
+
+        # Download Infared Logs .sh, files in .sh directory on Jenkins
+        if len(ir_logs_urls) != 0:
+            for url in ir_logs_urls:
+                os.system('wget -P ' + destination_dir + ' ' + url)
+
+        # Download tempest log (html #)
+        if tempest_log_url != None:
+            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+            shutil.move(os.path.join(destination_dir, tempest_html),
+                        os.path.join(destination_dir, tempest_html.replace('.html', '.log')))
+
+
+    # Unzip all downloaded .tar.gz files
+    for fil in os.listdir(os.path.abspath(destination_dir)):
+        if fil.endswith('.tar.gz'):
+            cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
+                destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
+                os.path.abspath(destination_dir), fil)
+            print_in_color('Unzipping ' + fil + '...', 'bold')
+            os.system(cmd)
+
+    # Run LogTool analyzing
+    print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
+    result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
+    if os.path.exists(os.path.abspath(result_dir)):
+        shutil.rmtree(os.path.abspath(result_dir))
+    result_file = os.path.join(os.path.abspath(result_dir),
+                               'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+    command = "python3 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+        destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+    # shutil.copytree(destination_dir, os.path.abspath(result_dir))
+    exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+    print_in_color('\n --> ' + command, 'bold')
+    start_time = time.time()
+    com_result = exec_command_line_command(command)
+    # print (com_result['CommandOutput'])
+    end_time = time.time()
+    if com_result['ReturnCode'] == 0:
+        spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                    'Result Directory: ' + result_dir,
+                    'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                   'green')
+    else:
+        spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                    'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                   'red')
+
+    def test_4_create_final_report(self):
         print('\ntest_3_create_final_report')
         report_file_name = 'LogTool_Report.log'
         if report_file_name in os.listdir('.'):
