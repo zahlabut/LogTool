@@ -73,8 +73,7 @@ analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deplo
 
 
 def remove_digits_from_string(s):
-    remove_digits = str.maketrans('', '', digits)
-    return str(s).translate(remove_digits)
+    return str(s).translate(None, digits)
 
 def exec_command_line_command(command):
     try:
