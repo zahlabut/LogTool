@@ -24,6 +24,8 @@ import sys
 import time
 import urllib
 import requests
+import urllib2
+from urllib2 import urlparse
 
 
 def set_default_arg_by_index(index, default):
