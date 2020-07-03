@@ -129,7 +129,7 @@ class LogTool(unittest.TestCase):
         mode_start_time = time.time()
 
         result_file = 'Undercloud.log'
-        command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" +dir+ "'" + " '" + grep_string + "'" + ' ' + result_file
+        command="sudo python3 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" +str(dir)+ "'" + " '" + grep_string + "'" + ' ' + result_file
         com_result=exec_command_line_command(command)
         shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
         end_time=time.time()
