@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # Copyright 2018 Arkady Shtempler.
 #
@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import subprocess,time,os,sys
 import itertools
 import json
@@ -26,6 +25,7 @@ import operator
 import collections
 from string import digits
 import re
+
 
 def set_default_arg_by_index(index, default):
     try:
@@ -44,16 +44,14 @@ result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 operation_mode=set_default_arg_by_index(6,'None') # Operation mode
 to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
-magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error', 'failure'] # Used to cut huge size lines
+magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace', 'failure'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
                 '= CRITICAL ']
-
 logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
-
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
                    'EOFError','ImportError','ModuleNotFoundError','LookupError','IndexError','KeyError',
@@ -67,14 +65,11 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 
 # These logs are standard (contains proper debug level + timestamp),
 # but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
-# so that is why LogTool will analyze such logs including "magic_strings" without line limitation
-# (Debig lebel is in first 60 characters)
+# so that is why LogTool will analyze such logs including "magic_strings".
 analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
-
 def remove_digits_from_string(s):
-    remove_digits = str.maketrans('', '', digits)
-    return str(s).translate(remove_digits)
+    return str(s).translate(None, digits)
 
 def exec_command_line_command(command):
     try:
@@ -94,8 +89,8 @@ def get_file_last_line(log, tail_lines='1'):
         command=command.replace('cat','zcat')
     try:
         return exec_command_line_command(command)['CommandOutput']
-    except Exception as e:
-        print (e)
+    except Exception,e:
+        print e
         return ''
 
 def print_in_color(string,color_or_format=None):
@@ -110,17 +105,17 @@ def print_in_color(string,color_or_format=None):
         BOLD = '\033[1m'
         UNDERLINE = '\033[4m'
     if color_or_format == 'green':
-        print(bcolors.OKGREEN + string + bcolors.ENDC)
+        print bcolors.OKGREEN + string + bcolors.ENDC
     elif color_or_format =='red':
-        print(bcolors.FAIL + string + bcolors.ENDC)
+        print bcolors.FAIL + string + bcolors.ENDC
     elif color_or_format =='yellow':
-        print(bcolors.WARNING + string + bcolors.ENDC)
+        print bcolors.WARNING + string + bcolors.ENDC
     elif color_or_format =='blue':
-        print(bcolors.OKBLUE + string + bcolors.ENDC)
+        print bcolors.OKBLUE + string + bcolors.ENDC
     elif color_or_format =='bold':
-        print(bcolors.BOLD + string + bcolors.ENDC)
+        print bcolors.BOLD + string + bcolors.ENDC
     else:
-        print(string)
+        print string
 
 def similar(a, b):
     return difflib.SequenceMatcher(None,remove_digits_from_string(a), remove_digits_from_string(b)).ratio()
@@ -340,12 +335,12 @@ def analyze_log(log, string, time_grep, last_line_date):
 def print_list(lis):
     for l in lis:
         if l!='':
-            print(str(l).strip())
+            print str(l).strip()
 
 def print_dic(dic):
-    for k in list(dic.keys()):
-        print('~'*80)
-        print(k,' --> ',dic[k])
+    for k in dic.keys():
+        print '~'*80
+        print k,' --> ',dic[k]
 
 def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
     append_to_file(fil,msg_start)
@@ -373,6 +368,7 @@ def is_single_line_file(log):
 
 def unique_list_by_fuzzy(lis,fuzzy):
     unique_messages=[]
+
     for item in lis:
         to_add = True
         for key in unique_messages:
@@ -387,7 +383,7 @@ def get_file_line_index(fil,line):
     return exec_command_line_command("grep -n '"+line+"' "+fil)['CommandOutput'].split(':')[0]
 
 def unique_list(lis):
-    return list(collections.OrderedDict.fromkeys(lis).keys())
+    return collections.OrderedDict.fromkeys(lis).keys()
 
 #This function is used for Non Standard logs only
 def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
@@ -504,7 +500,7 @@ def extract_log_unique_greped_lines(log, string_for_grep):
         commands.append('grep -in -E ^stderr: -A7 -B2 '+log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -n -A7 -B2 STDERR ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 failed ' + log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-        commands.append("grep -in -A7 -B2 fatal " + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
+        commands.append('grep -in -A7 -B2 fatal ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 critical ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         commands.append('grep -in -A7 -B2 |ERR| ' + log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
         for string in python_exceptions:
@@ -563,77 +559,57 @@ def extract_log_unique_greped_lines(log, string_for_grep):
 def sort_list_by_index(lis, index):
     return (sorted(lis, key=lambda x: x[index]))
 
+# import signalftrace
+# signal.signal(signal.SIGALRM, analyze_log)
+# signal.alarm(3)
+
 if __name__ == "__main__":
     not_standard_logs=[]
     analyzed_logs_result=[]
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
-    empty_file_content(result_file)
-    start_time=time.time()
-    logs=collect_log_paths(log_root_dir)
-    for log in logs:
-        print_in_color(log,'bold')
-        # Skip log file if bigger than 1GB, save this information into not standard logs section
-        log_size = os.path.getsize(log)
-        if log_size > 1024 * 1024 * 1024:  # 1GB
-            print_in_color(log + ' size is too big, skipped!!!', 'yellow')
-            append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
-                           + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
-            continue
-        Log_Analyze_Info = {}
-        Log_Analyze_Info['Log']=log
-        Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
-        # Try to check if there is a known timestamp in last 100 lines
-        last_line=get_file_last_line(log,'100')
-        is_known_time_format=False
-        for line in last_line.splitlines():
-            last_line_date=get_line_date(line)
-            if last_line_date['Error']==None:
-                is_known_time_format=True
-                break
-        Log_Analyze_Info['ParseLogTime']=last_line_date
-        if is_known_time_format==True:
-            if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
-                analyzed_logs_result.append(log_result)
-        else:
-            if to_analyze_osp_logs_only=='all_logs':
-                if 'WARNING' in string_for_grep:
-                    string_for_grep='WARN'
-                if 'ERROR' in string_for_grep:
-                    string_for_grep=' ERROR'
-                not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
-
+    if __name__ == "__main__":
+        empty_file_content(result_file)
+        start_time=time.time()
+        logs=collect_log_paths(log_root_dir)
+        for log in logs:
+            print_in_color(log,'bold')
+            # Skip log file if bigger than 1GB, save this information into not standard logs section
+            log_size = os.path.getsize(log)
+            if log_size > 1024 * 1024 * 1024:  # 1GB
+                print_in_color(log + ' size is too big, skipped!!!', 'yellow')
+                append_to_file(result_file,'~'*100+'\nWARNING the size of:'+log+' is: '
+                               + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
+                continue
+            Log_Analyze_Info = {}
+            Log_Analyze_Info['Log']=log
+            Log_Analyze_Info['IsSingleLine']=is_single_line_file(log)
+            # Try to check if there is a known timestamp in last 100 lines
+            last_line=get_file_last_line(log,'100')
+            is_known_time_format=False
+            for line in last_line.splitlines():
+                last_line_date=get_line_date(line)
+                if last_line_date['Error']==None:
+                    is_known_time_format=True
+                    break
+            Log_Analyze_Info['ParseLogTime']=last_line_date
+            if is_known_time_format==True:
+                if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
+                    log_result=analyze_log(Log_Analyze_Info['Log'],string_for_grep,time_grep,last_line_date['Date'])
+                    analyzed_logs_result.append(log_result)
+            else:
+                if to_analyze_osp_logs_only=='all_logs':
+                    if 'WARNING' in string_for_grep:
+                        string_for_grep='WARN'
+                    if 'ERROR' in string_for_grep:
+                        string_for_grep=' ERROR'
+                    not_standard_logs_unique_messages.append(extract_log_unique_greped_lines(log, string_for_grep))
 
     ### Add basic description about the results into result file ###
-    info='############################################# Usage Instruction ############################################\n'\
-         "This LogTool result file have some logical structure and its content is divided into the several sections.\n" \
-         "On the bottom of this file you will be able to find the 'Table of Content'\n"\
-         "that is simply pointing you into the start line of each section inside this file.\n\n"\
-         "There are two kinds of sections:\n"\
-         '1) Statistics - Number of Errors/Warnings...\n'\
-         "   In this section you will find log's path and the number of exported Errors/Warnings\n"\
-         '   blocks sorted in increasing order, so most "suspicious"(high number of Errors/Warnings) logs\n'\
-         '   could be found in the bottom of this section.\n\n'\
-         '2) Exported unique messages...\n'\
-         '   This section contains all exported unique Errors/Warnings blocks (sequence of log lines)\n'\
-         '   Basing on your understanding from the previous Statistics section,\n'\
-         '   you will need to check/expert exported Error/Warning blocks for each "suspicious" log file.\n'\
-         '   In order to do that, copy log path string and search for this string inside this file. \n'\
-         "   By doing that you will be able to pass through all exported blocks for each certain log file.\n"\
-         "   Press 'n' in case when file is opened with VI/VIM text editor, pass through all blocks and try \n" \
-         "   to figure out which one of them could be the 'Root Cause' you are searching for.\n"\
-         "   Note:\n" \
-         "   You can always 'jump' directly into the beginning of this section, using section start line number\n"\
-         "   provided in 'Table of Content' and to scroll down till you find the potential 'Root Cause' and it's OK\n"\
-         "   when you have let say tens of exported blocks, but when there are much more blocks, the efficient way\n"\
-         "   would be trying to understand basing on 'Statistics' sections which logs are most 'suspicious' and then\n"\
-         "   trying to dig out using 'searching' method explained here.\n\n"\
-         'There are two kinds of log files: "Standard" and "Not Standard":\n' \
-         'Standard logs - DEBUG level string + TIMESTAMP, both of them have been detected in log line, example line:\n'\
-         '  "2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi..." \n'\
-         'Not Standard - all the rest, example line does not include TIMESTAMP:\n'\
-         '  "Debug: Evicting cache entry for environment "production"...\n'\
-         "Note: this is the reason for having four sections in total inside LogTool result file.\n"
+    info='There are two kinds of log files supported by LogTool: "Standard" and "Not Standard".' \
+         '\nStandard logs - debug level string and timestamp have been successfully detected in log lines, example line:' \
+         '\n2020-04-25 07:10:30.697 27 DEBUG ceilometer.publisher.gnocchi ' \
+         '\nNot Standard - all the rest, example line:' \
+         '\nDebug: Evicting cache entry for environment "production"'
     append_to_file(result_file,info)
 
     ### Fill statistics section for Standard OSP logs###
@@ -642,7 +618,10 @@ if __name__ == "__main__":
     statistics_dic = sorted(list(statistics_dic.items()), key=operator.itemgetter(1))
     statistics_list=[{item[0]:item[1]} for item in statistics_dic]
     total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
-    statistics_list.insert(0,{'Total_Number_Of_'+str(string_for_grep).replace(' ','')+'s':total_number_of_all_logs_errors})
+    if 'error' in string_for_grep.lower():
+        statistics_list.insert(0,{'Total_Number_Of_Errors':total_number_of_all_logs_errors})
+    if 'warn' in string_for_grep.lower():
+        statistics_list.insert(0,{'Total_Number_Of_Warnings':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
@@ -653,16 +632,18 @@ if __name__ == "__main__":
     statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
     statistics_list = sort_list_by_index(statistics_list, 1)
     total_number_of_errors=sum([i[1] for i in statistics_list])
-    statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
+    if 'error' in string_for_grep.lower():
+        statistics_list.insert(0,['Total_Number_Of_Errors',total_number_of_errors])
+    if 'warn' in string_for_grep.lower():
+        statistics_list.insert(0,['Total_Number_Of_Warnings',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
 
 
-
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
     #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Exported unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
     for item in analyzed_logs_result:
         #print 'LogPath --> '+item['Log']
         for block in item['AnalyzedBlocks']:
@@ -670,12 +651,19 @@ if __name__ == "__main__":
             append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
             append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
             append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-            for line in block['BlockLines']:
-                append_to_file(result_file, line + '\n')
+            if block['AnalyzedBlockLinesSize']<30:
+                for line in block['BlockLines']:
+                    append_to_file(result_file,line+'\n')
+            else:
+                for line in block['BlockLines'][0:10]:
+                    append_to_file(result_file, line + '\n')
+                append_to_file(result_file,'...\n---< BLOCK IS TOO LONG >---\n...\n')
+                for line in block['BlockLines'][-10:-1]:
+                    append_to_file(result_file, line + '\n')
+            #append_to_file(result_file, '~' * 100 + '\n')
 
-
-    ### Exported Unique messages per NOT STANDARD log file, since ever  ###
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
+    ### Statistics - Unique messages per NOT STANDARD log file, since ever  ###
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
     for dir in not_standard_logs_unique_messages:
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
@@ -688,15 +676,13 @@ if __name__ == "__main__":
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
         'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
         'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
-        'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
-        'Exported unique messages per NOT STANDARD log file, since ever',
+        'Statistics - Unique messages, per STANDARD OSP log file since: '+time_grep,
+        'Statistics - Unique messages per NOT STANDARD log file, since ever',
         #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
         ]
     for msg in messages:
-        section_indexes.append({msg:"SectionStartLine: "+get_file_line_index(result_file,msg)})
+        section_indexes.append({msg:get_file_line_index(result_file,msg)})
     write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
     exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
-    if total_number_of_all_logs_errors+total_number_of_errors>0:
-        print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
     print('SUCCESS!!!')
