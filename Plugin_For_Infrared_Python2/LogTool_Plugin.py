@@ -45,7 +45,7 @@ user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 artifact_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P '+destination_dir+'/artifacts ' + artifact_url
 print artifact_command+'\n\n'
 return_code = exec_command_line_command(artifact_command)
-tempest_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P '+destination_dir+'+/tempest ' + tempest_url
+tempest_command = "wget -r --random-wait --accept-regex='.gz|.log|.html' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P '+destination_dir+'/tempest ' + tempest_url
 print tempest_command+'\n\n'
 return_code = exec_command_line_command(tempest_command)
 
