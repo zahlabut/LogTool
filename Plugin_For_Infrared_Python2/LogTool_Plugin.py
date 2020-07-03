@@ -35,7 +35,17 @@ def set_default_arg_by_index(index, default):
 
 artifacts_url=set_default_arg_by_index(1,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15927/artifact/')
 
+
+print artifacts_url
+
+
+
 start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
+
+
+
+print start_time
+
 
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
