@@ -35,7 +35,7 @@ overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 source_rc_file_path='/home/stack/'
 
 # Start time that will be used to export Errors/Warnings
-user_start_time='2019-03-01 00:00:00'
+user_start_time='2020-07-01 00:00:00'
 
 # Save raw data section inside the result file
 save_raw_data='yes'
