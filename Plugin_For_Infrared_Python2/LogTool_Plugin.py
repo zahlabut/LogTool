@@ -32,9 +32,11 @@ def set_default_arg_by_index(index, default):
 
 artifacts_url=set_default_arg_by_index(1,'http://google.com')
 
+start_time=set_default_arg_by_index(2,'2020-07-01 00:00:00')
+
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
-         '2) cd python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
+         '2) python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
          '3) python2 -m unittest LogTool_Plugin.LogTool',
          '4) Start specific test: "python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors" to start this script']
 if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
@@ -49,7 +51,7 @@ competed_nodes={}
 workers_output={}
 
 
-### Check given user_start_time ###
+### Check given by user_start_time ###
 if check_time(user_start_time)!=True:
     print_in_color('FATAL ERROR - provided "user_start_time" value: "'+user_start_time+'" in Params.py is incorrect!!!')
     sys.exit(1)
@@ -239,7 +241,7 @@ class LogTool(unittest.TestCase):
         shutil.rmtree(os.path.abspath(result_dir))
     result_file = os.path.join(os.path.abspath(result_dir),
                                'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-    command = "python3 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+    command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
         destination_dir) + " '" + grep_string + "'" + ' ' + result_file
     # shutil.copytree(destination_dir, os.path.abspath(result_dir))
     exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
