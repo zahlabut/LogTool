@@ -173,7 +173,15 @@ class LogTool(unittest.TestCase):
         os.mkdir(destination_dir)
 
         # Download log files
+
+
+        print artifacts_url
+
         response = urllib.urlopen(artifacts_url)
+
+
+        print response
+
         html = response.read()
         parsed_url = urlparse(artifacts_url)
         base_url = parsed_url.scheme + '://' + parsed_url.netloc
