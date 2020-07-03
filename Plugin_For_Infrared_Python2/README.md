@@ -11,13 +11,13 @@ OSP component, that could be used for deeper investigation. The plan is to inclu
 *git clone https://github.com/redhat-openstack/infrared.git<br/>*
 *cd infrared<br/>*
 *virtualenv .venv && source .venv/bin/activate<br/>*
-*pip install --upgrade pip<br/>*
-*pip install --upgrade setuptools<br/>*
-*pip install .<br/>*
+*sudo pip install --upgrade pip<br/>*
+*sudo pip install --upgrade setuptools<br/>*
+*sudo pip install . <br/>*
 
 
 # Install LogTool Plugin
-*ir plugin add https://github.com/zahlabut/LogTool.git --src-path Plugin_for_Infrared*
+*ir plugin add https://github.com/zahlabut/LogTool.git --src-path Plugin_For_Infrared_Python3*
 
 # Uninstall LogTool Plugin
 *ir plugin remove logtool*
