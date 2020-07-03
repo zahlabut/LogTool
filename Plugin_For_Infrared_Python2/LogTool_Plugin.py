@@ -234,43 +234,43 @@ class LogTool(unittest.TestCase):
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 os.system(cmd)
 
-    # Run LogTool analyzing
-    print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
-    result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
-    if os.path.exists(os.path.abspath(result_dir)):
-        shutil.rmtree(os.path.abspath(result_dir))
-    result_file = os.path.join(os.path.abspath(result_dir),
-                               'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-    command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
-        destination_dir) + " '" + grep_string + "'" + ' ' + result_file
-    # shutil.copytree(destination_dir, os.path.abspath(result_dir))
-    exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
-    print_in_color('\n --> ' + command, 'bold')
-    start_time = time.time()
-    com_result = exec_command_line_command(command)
-    # print (com_result['CommandOutput'])
-    end_time = time.time()
-    if com_result['ReturnCode'] == 0:
-        spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
-                    'Result Directory: ' + result_dir,
-                    'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-                   'green')
-    else:
-        spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                    'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-                   'red')
+        # Run LogTool analyzing
+        print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
+        result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir),
+                                   'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+        command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+            destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+        # shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+        print_in_color('\n --> ' + command, 'bold')
+        start_time = time.time()
+        com_result = exec_command_line_command(command)
+        # print (com_result['CommandOutput'])
+        end_time = time.time()
+        if com_result['ReturnCode'] == 0:
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                       'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                       'red')
 
-    def test_4_create_final_report(self):
-        print('\ntest_3_create_final_report')
-        report_file_name = 'LogTool_Report.log'
-        if report_file_name in os.listdir('.'):
-            os.remove(report_file_name)
-        report_data=''
+        def test_4_create_final_report(self):
+            print('\ntest_3_create_final_report')
+            report_file_name = 'LogTool_Report.log'
+            if report_file_name in os.listdir('.'):
+                os.remove(report_file_name)
+            report_data=''
 
-        for key in workers_output:
-            if 'Total_Number_Of_Errors:0' not in workers_output[key]:
-                report_data+='\n'+key+' --> '+workers_output[key]
-        if len(report_data)!=0:
-            append_to_file(report_file_name,report_data+
-                           '\n\nFor more details, check LogTool result files on your setup:'
-                           '\n'+os.path.abspath(result_dir))
+            for key in workers_output:
+                if 'Total_Number_Of_Errors:0' not in workers_output[key]:
+                    report_data+='\n'+key+' --> '+workers_output[key]
+            if len(report_data)!=0:
+                append_to_file(report_file_name,report_data+
+                               '\n\nFor more details, check LogTool result files on your setup:'
+                               '\n'+os.path.abspath(result_dir))
