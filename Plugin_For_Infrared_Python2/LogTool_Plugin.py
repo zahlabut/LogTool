@@ -177,6 +177,7 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
+        mode_start_time=time.time()
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
@@ -196,7 +197,7 @@ class LogTool(unittest.TestCase):
               'Tempest':job_url+'artifact/tempest-results/'}
         for key in urls.keys():
             command="wget -r --random-wait --accept-regex='.gz|.log|.html|.sh' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir +'/'+key + urls[key]
-            print command
+            print '\n'+command
             exec_command_line_command(command)
 
 
