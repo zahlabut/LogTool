@@ -177,19 +177,10 @@ class LogTool(unittest.TestCase):
 
         # Download log files
 
-
-        print artifacts_url
-
         response = urllib.urlopen(artifacts_url)
-
-
-        print response
-
         html = response.read()
 
-        print html
-
-        parsed_url = urlparse(artifacts_url)
+        parsed_url = urllib2.urlparse(artifacts_url)
 
         base_url = parsed_url.scheme + '://' + parsed_url.netloc
         # soup = BeautifulSoup(html)
