@@ -25,6 +25,9 @@ import time
 from urllib2 import urlparse
 from urlparse import urljoin
 
+spec_print([artifact_url,start_time])
+
+
 def set_default_arg_by_index(index, default):
     try:
         value=sys.argv[index]
@@ -237,8 +240,10 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+
         command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
         print_in_color('\n --> ' + command, 'bold')
