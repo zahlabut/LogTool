@@ -256,13 +256,17 @@ class LogTool(unittest.TestCase):
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
 
+
+
         worker_path=os.path.abspath('Extract_On_Node.py')
+        print '\n'+worker_path*100
 
 
 
         command = "python2 "+worker_path+" '" + start_time + "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
         print_in_color(command,'green')
+        print '\n'+command*100
 
 
 
