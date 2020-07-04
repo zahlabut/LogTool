@@ -181,7 +181,7 @@ class LogTool(unittest.TestCase):
         # Command Line parameters
         mode_start_time=time.time()
         start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
-        artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/')
+        artifacts_url=set_default_arg_by_index(3,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/')
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
