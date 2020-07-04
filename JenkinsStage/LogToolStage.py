@@ -135,12 +135,11 @@ class LogTool(unittest.TestCase):
             spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
 
             spec_print(['Completed!!!',
-                        "You can find the results in Job's 'Build Artifacts' Directory",
-                        'BuildArtifactDirectory:' +os.path.abspath(result_dir),
-                        'ResultFile is:', result_file,
-                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-                        'green')
-
+                        "\nLogTool results are in: 'Build Artifacts'",
+                        os.path.abspath(result_dir),
+                        '\nLogTool ResultFile is:', result_file,
+                        'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                        'blue')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
