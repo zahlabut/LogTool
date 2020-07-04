@@ -1,0 +1,133 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?><project>
+  <actions/>
+  <description>&lt;br/&gt;Each time when CI Job fails, we might want to check log files and to try figuring out what went wrong.&#13;
+&lt;br/&gt;There are cases when finding the "Root Cause" is not so complicated stuff to acomplish, it depends on your&#13;
+&lt;br/&gt;experience and knowledge. If you familiar with failed "area", you'll probably know where the relevant &#13;
+&lt;br/&gt;Error message could be logged and you'll probably will be able to figure out the "Root Cause".&#13;
+&lt;br/&gt;&lt;b&gt;But, if:&lt;/b&gt;&#13;
+&lt;strong&gt;&lt;br/&gt;  1) Saving time - does mater to you!&#13;
+&lt;br/&gt;  2) "Donkey work" is not the best choice for you!&#13;
+&lt;br/&gt;  3) You think that finding the "Root Cause" manually is going to be too complicated!&#13;
+&lt;/strong&gt;&#13;
+&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do is to provide 2 parameters:&#13;
+&lt;br/&gt;1) Job Artifact URL&#13;
+&lt;br/&gt;2) Start Time that will be used to filter out not relevant messages in term of time.&#13;
+&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; you can also use LogTool installed on Undercloud or on your Desktop, for more details:&#13;
+&lt;br/&gt;&lt;a href="https://github.com/zahlabut"&gt;Zahlabut GitHub&lt;/a&gt; &#13;
+&lt;br/&gt;&lt;a href="https://opensource.com/article/20/1/logtool-root-cause-identification"&gt;LogTool on OpenSource.com&lt;/a&gt;&#13;
+&lt;br/&gt;&lt;a href="https://developer.51cto.com/art/202002/610536.htm"&gt;LogTool on Chinese site&lt;/a&gt;&#13;
+&#13;
+&#13;
+&#13;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.0"/>
+    <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+      <useBuildBlocker>false</useBuildBlocker>
+      <blockLevel>GLOBAL</blockLevel>
+      <scanQueueFor>DISABLED</scanQueueFor>
+      <blockingJobs/>
+    </hudson.plugins.buildblocker.BuildBlockerProperty>
+    <com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty plugin="build-failure-analyzer@1.26.0">
+      <doNotScan>false</doNotScan>
+    </com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty>
+    <org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty plugin="zmq-event-publisher@0.0.5">
+      <enabled>false</enabled>
+    </org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>artifact_url</name>
+          <description>Job's "Build Artifacts" link, for Example:
+https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/</description>
+          <defaultValue>https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15924/artifact/</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>user_tart_time</name>
+          <description>You might want to see the Errors occured after some time in the past, for example if you trying to
+investigate Overcloud Deployment stage started at: 2020-07-04 12:00:00 all Errors happened before this time
+are probably won't be relevant.
+Important: use exactly the same format as in default!</description>
+          <defaultValue>2020-07-01 00:00:00</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.2">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <categories class="java.util.concurrent.CopyOnWriteArrayList"/>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+      <limitOneJobWithMatchingParams>false</limitOneJobWithMatchingParams>
+      <paramsToUseForLimit/>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/zahlabut/LogTool.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command># HTTP Download and Analyze log #
+df -h
+hostname
+virtualenv .venv &amp;&amp; source .venv/bin/activate
+pip install beautifulsoup
+pip install request
+pip install paramiko
+git clone https://github.com/zahlabut/LogTool.git
+echo "start_time='"$user_tart_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+      <followSymlinks>false</followSymlinks>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter/>
+      <externalDelete/>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.0">
+      <colorMapName>xterm</colorMapName>
+    </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
+  </buildWrappers>
+</project>
