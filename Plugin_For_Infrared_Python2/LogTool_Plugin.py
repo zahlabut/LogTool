@@ -36,14 +36,14 @@ def set_default_arg_by_index(index, default):
 
 
 
-import argparse
-parser = argparse.ArgumentParser(description='StartTime')
-parser.add_argument('--StartTime', type=str, help='StartTime')
-parser.add_argument('--ArtifactURL', type=str, help='ArtifactURL')
-args = parser.parse_args()
-start_time=args.StartTime
-artifacts_url= args.ArtifactURL
-
+# import argparse
+# parser = argparse.ArgumentParser(description='StartTime')
+# parser.add_argument('--StartTime', type=str, help='StartTime')
+# parser.add_argument('--ArtifactURL', type=str, help='ArtifactURL')
+# args = parser.parse_args()
+# start_time=args.StartTime
+# artifacts_url= args.ArtifactURL
+#
 
 
 
@@ -98,6 +98,20 @@ os.mkdir(result_dir)
 
 
 class LogTool(unittest.TestCase):
+
+    def setUp(self):
+        self.start_time = sys.argv[1]
+        self.artifacts_url = sys.argv[2]
+
+    # import argparse
+    # parser = argparse.ArgumentParser(description='StartTime')
+    # parser.add_argument('--StartTime', type=str, help='StartTime')
+    # parser.add_argument('--ArtifactURL', type=str, help='ArtifactURL')
+    # args = parser.parse_args()
+    # start_time=args.StartTime
+    # artifacts_url= args.ArtifactURL
+    #
+
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
@@ -188,7 +202,8 @@ class LogTool(unittest.TestCase):
         mode_start_time=time.time()
 
 
-
+        start_time=self.start_time
+        artifacts_url=self.artifacts_url
 
 
         #start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
