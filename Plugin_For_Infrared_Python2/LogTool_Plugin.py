@@ -72,7 +72,7 @@ if check_time(user_start_time)!=True:
     sys.exit(1)
 
 ### Get all nodes ###
-if os.path.isdir('home/stack')==False:
+try:
     nodes=[]
     all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
     all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
@@ -81,7 +81,9 @@ if os.path.isdir('home/stack')==False:
             nodes.append(node)
         else:
             print_in_color('Warning - ' + str(node) + ' will be skipped, due to connectivity issue!!!', 'yellow')
-
+except Exception, e:
+    print str(e)
+    print "It's OK for test_3_download_jenkins_job :-)"
 
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):
