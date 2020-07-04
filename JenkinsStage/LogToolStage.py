@@ -137,7 +137,7 @@ class LogTool(unittest.TestCase):
             spec_print(['Completed!!!',
                         "\nLogTool results are in: 'Build Artifacts'",
                         os.path.abspath(result_dir),
-                        '\nLogTool ResultFile is:', result_file,
+                        '\nLogTool ResultFile is: '+os.path.basename(result_file),
                         'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                         'blue')
         else:
