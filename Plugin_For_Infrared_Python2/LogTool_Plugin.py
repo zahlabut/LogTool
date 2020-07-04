@@ -247,7 +247,7 @@ class LogTool(unittest.TestCase):
                     os.path.abspath(destination_dir), fil)
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 os.system(cmd)
-                os.system('rm -y '+fil)
+                os.system('rm -rf '+fil)
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
         result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
@@ -255,8 +255,19 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-        command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+
+        worker_path=os.path.abspath('Extract_On_Node.py')
+
+
+
+        command = "python2 "+worker_path+" '" + start_time + "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+        print_in_color(command,'green')
+
+
+
+
+
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
         print_in_color('\n --> ' + command, 'bold')
