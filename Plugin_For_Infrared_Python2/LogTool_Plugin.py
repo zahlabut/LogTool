@@ -74,6 +74,8 @@ if result_dir in os.listdir('.'):
 os.mkdir(result_dir)
 
 
+
+
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
@@ -161,7 +163,6 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
-        from Params import *
         mode_start_time=time.time()
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
