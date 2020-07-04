@@ -25,7 +25,7 @@ import time
 from urllib2 import urlparse
 from urlparse import urljoin
 
-spec_print([artifact_url,start_time])
+spec_print([artifact_url,user_tart_time])
 
 
 def set_default_arg_by_index(index, default):
@@ -49,9 +49,9 @@ errors_on_execution = {}
 competed_nodes={}
 workers_output={}
 
-### Check given by start_time ###
+### Check given by user user_start_time ###
 if check_time(start_time)!=True:
-    print_in_color('FATAL ERROR - provided "start_time" value: "'+start_time+'" in Params.py is incorrect!!!')
+    print_in_color('FATAL ERROR - provided "start_time" value: "'+user_start_time+'" in Params.py is incorrect!!!')
     sys.exit(1)
 
 ### Get all nodes ###
@@ -249,7 +249,7 @@ class LogTool(unittest.TestCase):
         print artifact_url
         print user_tart_time
         print undercloud_logs
-        command = "python2 Extract_On_Node.py '" +start_time+ "' " + os.path.abspath(
+        command = "python2 Extract_On_Node.py '" +user_tart_time+ "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
 
 
@@ -259,7 +259,6 @@ class LogTool(unittest.TestCase):
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
         print_in_color('\n --> ' + command, 'bold')
-        start_time = time.time()
         com_result = exec_command_line_command(command)
         # print (com_result['CommandOutput'])
         end_time = time.time()
