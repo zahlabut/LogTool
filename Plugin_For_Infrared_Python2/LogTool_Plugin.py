@@ -247,7 +247,7 @@ class LogTool(unittest.TestCase):
 
 
         print artifact_url
-        print start_time
+        print user_tart_time
         print undercloud_logs
         command = "python2 Extract_On_Node.py '" +start_time+ "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
