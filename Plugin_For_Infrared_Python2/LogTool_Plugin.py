@@ -161,6 +161,7 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
+        from Params import *
         mode_start_time=time.time()
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
