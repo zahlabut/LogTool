@@ -46,9 +46,9 @@ errors_on_execution = {}
 competed_nodes={}
 workers_output={}
 
-### Check given by user_start_time ###
-if check_time(user_start_time)!=True:
-    print_in_color('FATAL ERROR - provided "user_start_time" value: "'+user_start_time+'" in Params.py is incorrect!!!')
+### Check given by start_time ###
+if check_time(start_time)!=True:
+    print_in_color('FATAL ERROR - provided "start_time" value: "'+start_time+'" in Params.py is incorrect!!!')
     sys.exit(1)
 
 ### Get all nodes ###
@@ -88,7 +88,7 @@ class LogTool(unittest.TestCase):
         s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py')
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
-            user_start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
+            start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+log_type
         print('Executed command on host --> ', command)
         com_result = s.ssh_command(command)
         print(com_result['Stdout'])  # Do not delete me!!!
@@ -139,7 +139,7 @@ class LogTool(unittest.TestCase):
         mode_start_time = time.time()
         result_file = 'Undercloud.log'
         log_root_dir=str(undercloud_logs)
-        command = "sudo python2 Extract_On_Node.py '" + str(user_start_time) + "' " + "'" + log_root_dir + "'" + " '" + grep_string + "'" + ' ' + result_file
+        command = "sudo python2 Extract_On_Node.py '" + str(start_time) + "' " + "'" + log_root_dir + "'" + " '" + grep_string + "'" + ' ' + result_file
         com_result=exec_command_line_command(command)
         shutil.move(result_file+'.gz', os.path.join(os.path.abspath(result_dir),result_file+'.gz'))
         end_time=time.time()
