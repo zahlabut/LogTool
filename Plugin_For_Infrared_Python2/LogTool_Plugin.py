@@ -175,33 +175,16 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
+        # Command Line parameters
         mode_start_time=time.time()
+        start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
+        artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/')
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-
-        # Command Line parameters
-        start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
-        artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/')
-
-        # # Download log files
-        # start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
-        # job_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/*zip*/archive.zip')
-        # user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-        # if job_url.endswith('/')==False:
-        #     job_url+='/'
-        # urls={'artifact':job_url+'artifact/',
-        #       'IrLogs':job_url+'artifact/.sh/',
-        #       'Tempest':job_url+'artifact/tempest-results/'}
-        # for key in urls.keys():
-        #     command="wget -r --random-wait --accept-regex='.zip' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
-        #     print '\n'+command
-        #     exec_command_line_command(command)
-
-
         #Import BeautifulSoup
         try:
             from BeautifulSoup import BeautifulSoup
@@ -209,8 +192,6 @@ class LogTool(unittest.TestCase):
             print_in_color(str(e), 'red')
             print_in_color('Execute "pip install beautifulsoup" to install it!', 'yellow')
             exit('Install beautifulsoup and rerun!')
-
-
         # Download logs
         response = urllib2.urlopen(artifacts_url)
         html = response.read()
@@ -243,72 +224,51 @@ class LogTool(unittest.TestCase):
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
-
         # Download console.log
         console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
-
         # Download Infared Logs .sh, files in .sh directory on Jenkins
         if len(ir_logs_urls)!=0:
             for url in ir_logs_urls:
                 os.system('wget -P ' + destination_dir + ' ' + url)
-
         # Download tempest log (html #)
         if tempest_log_url!=None:
             os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
             shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
-
-
-
-        #
-        #
-        # # Unzip all downloaded .tar.gz files
-        # for fil in os.listdir(os.path.abspath(destination_dir)):
-        #     if fil.endswith('.tar.gz'):
-        #         cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
-        #             destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
-        #             os.path.abspath(destination_dir), fil)
-        #         print_in_color('Unzipping ' + fil + '...', 'bold')
-        #         os.system(cmd)
-        #
-        # # Run LogTool analyzing
-        # print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
-        # result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
-        # if os.path.exists(os.path.abspath(result_dir)):
-        #     shutil.rmtree(os.path.abspath(result_dir))
-        # result_file = os.path.join(os.path.abspath(result_dir),
-        #                            'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-        # command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
-        #     destination_dir) + " '" + grep_string + "'" + ' ' + result_file
-        # # shutil.copytree(destination_dir, os.path.abspath(result_dir))
-        # exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
-        # print_in_color('\n --> ' + command, 'bold')
-        # start_time = time.time()
-        # com_result = exec_command_line_command(command)
-        # # print (com_result['CommandOutput'])
-        # end_time = time.time()
-        # if com_result['ReturnCode'] == 0:
-        #     spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
-        #                 'Result Directory: ' + result_dir,
-        #                 'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-        #                'green')
-        # else:
-        #     spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-        #                 'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-        #                'red')
-        #
-        #
-        #
-
-
-
-
-
-
-
-
-
+        # Unzip all downloaded .tar.gz files
+        for fil in os.listdir(os.path.abspath(destination_dir)):
+            if fil.endswith('.tar.gz'):
+                cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
+                    destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
+                    os.path.abspath(destination_dir), fil)
+                print_in_color('Unzipping ' + fil + '...', 'bold')
+                os.system(cmd)
+        # Run LogTool analyzing
+        print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
+        result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir),
+                                   'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+        command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+            destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+        # shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+        print_in_color('\n --> ' + command, 'bold')
+        start_time = time.time()
+        com_result = exec_command_line_command(command)
+        # print (com_result['CommandOutput'])
+        end_time = time.time()
+        if com_result['ReturnCode'] == 0:
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                       'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                       'red')
 
         def test_4_create_final_report(self):
             print('\ntest_3_create_final_report')
