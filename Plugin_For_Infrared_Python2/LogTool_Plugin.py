@@ -203,8 +203,14 @@ class LogTool(unittest.TestCase):
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
+
         # Download console.log
+
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
+        print console_log_url
+
+
+
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
         # Download Infared Logs .sh, files in .sh directory on Jenkins
