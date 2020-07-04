@@ -132,13 +132,13 @@ class LogTool(unittest.TestCase):
         end_time = time.time()
         if 'SUCCESS!!!' in com_result['CommandOutput']:
 
-            spec_print(com_result['CommandOutput'].splitlines()[-3:],'blue')
+            spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
 
             spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
                         "All the results are in Job's Build Artifacts Directory",
                         'BuildArtifactDirectory:' +os.path.abspath(result_dir),
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-                       'green')
+                       'blue')
 
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
