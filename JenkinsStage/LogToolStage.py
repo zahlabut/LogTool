@@ -137,6 +137,7 @@ class LogTool(unittest.TestCase):
             spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
                         "All the results are in Job's Build Artifacts Directory",
                         'BuildArtifactDirectory:' +os.path.abspath(result_dir),
+                        'ResultFile is:', result_file,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                        'blue')
 
