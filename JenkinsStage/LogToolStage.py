@@ -37,25 +37,10 @@ if check_time(user_start_time)!=True:
     print_in_color('FATAL ERROR - provided "start_time" value: "'+user_start_time+'" in Params.py is incorrect!!!')
     sys.exit(1)
 
-### Get all nodes ###
-try:
-    nodes=[]
-    all_nodes = exec_command_line_command('source ' + source_rc_file_path + 'stackrc;openstack server list -f json')['JsonOutput']
-    all_nodes = [{'Name': item['name'], 'ip': item['networks'].split('=')[-1]} for item in all_nodes]
-    for node in all_nodes:
-        if check_ping(node['ip']) is True:
-            nodes.append(node)
-        else:
-            print_in_color('Warning - ' + str(node) + ' will be skipped, due to connectivity issue!!!', 'yellow')
-except Exception, e:
-    print str(e)
-    print "It's OK for test_3_download_jenkins_job :-)"
-
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
 os.mkdir(result_dir)
-
 
 class LogTool(unittest.TestCase):
     @staticmethod
@@ -145,7 +130,7 @@ class LogTool(unittest.TestCase):
         com_result = exec_command_line_command(command)
         # print (com_result['CommandOutput'])
         end_time = time.time()
-        if com_result['ReturnCode'] == 0:
+        if 'SUCCESS!!!' in com_result['CommandOutput']:
             spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
                         'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
