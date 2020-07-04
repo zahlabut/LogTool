@@ -100,8 +100,8 @@ os.mkdir(result_dir)
 class LogTool(unittest.TestCase):
 
     def setUp(self):
-        self.start_time = sys.argv[1]
-        self.artifacts_url = sys.argv[2]
+        self.start_time = sys.argv[2]
+        self.artifacts_url = sys.argv[3]
 
     # import argparse
     # parser = argparse.ArgumentParser(description='StartTime')
