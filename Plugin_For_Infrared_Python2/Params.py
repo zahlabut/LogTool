@@ -43,12 +43,11 @@ log_type='all_logs'
 # Directories on Undercloud host that are going to be analyzed
 undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
 
+#Parameter is added with: echo "start_time='"$start_time"'" >> Params.py
+start_time='2020-07-01 00:00:00'
 
-#start_time='2020-07-01 00:00:00' is added from Jenkins parameter as follow
-#echo "start_time='"$start_time"'" >> Params.py
-
-#artifacts_url is added from Jenkins parameter as follow
-#echo "artifact_url='"$artifacts_url"'" >> Params.py
+#Parameter is added with: echo "artifact_url='"$artifacts_url"'" >> Params.py
+artifacts_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
 
 
 

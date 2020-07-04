@@ -172,9 +172,9 @@ class LogTool(unittest.TestCase):
             print_in_color('Execute "pip install beautifulsoup" to install it!', 'yellow')
             exit('Install beautifulsoup and rerun!')
         # Download logs
-        response = urllib2.urlopen(artifacts_url)
+        response = urllib2.urlopen(artifact_url)
         html = response.read()
-        parsed_url = urlparse.urlparse(artifacts_url)
+        parsed_url = urlparse.urlparse(artifact_url)
         base_url = parsed_url.scheme + '://' + parsed_url.netloc
         soup = BeautifulSoup(html)
         tar_gz_files = []
@@ -182,21 +182,21 @@ class LogTool(unittest.TestCase):
         tempest_log_url = None
         for link in soup.findAll('a'):
             if 'tempest-results' in link:
-                tempest_results_url = urljoin(artifacts_url, link.get('href'))
+                tempest_results_url = urljoin(artifact_url, link.get('href'))
                 tempest_response = urllib2.urlopen(tempest_results_url)
                 html = tempest_response.read()
                 soup = BeautifulSoup(html)
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.html'):
                         tempest_html = link.get('href')
-                        tempest_log_url = urljoin(artifacts_url, 'tempest-results') + '/' + tempest_html
+                        tempest_log_url = urljoin(artifact_url, 'tempest-results') + '/' + tempest_html
                         break
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_gz_files.append(link)
-                tar_link = urlparse.urljoin(artifacts_url, link.get('href'))
+                tar_link = urlparse.urljoin(artifact_url, link.get('href'))
                 os.system('wget -P ' + destination_dir + ' ' + tar_link)
             if str(link.get('href')).endswith('.sh'):
-                sh_page_link = urlparse.urljoin(artifacts_url, link.get('href'))
+                sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
                 response = urllib2.urlopen(sh_page_link)
                 html = response.read()
                 soup = BeautifulSoup(html)
@@ -204,7 +204,7 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         # Download console.log
-        console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
+        console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
         # Download Infared Logs .sh, files in .sh directory on Jenkins
