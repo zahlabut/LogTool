@@ -161,6 +161,7 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
+        mode_start_time=time.time()
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
@@ -241,8 +242,17 @@ class LogTool(unittest.TestCase):
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
 
-        command = "python2 Extract_On_Node.py '" + start_time + "' " + os.path.abspath(
+
+
+        print artifact_url
+        print start_time
+        print undercloud_logs
+        command = "python2 Extract_On_Node.py '" +start_time+ "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
+
+
+
+
 
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
