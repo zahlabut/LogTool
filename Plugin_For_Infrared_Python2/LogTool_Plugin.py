@@ -185,30 +185,55 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
 
-        # Download log files
-        start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
-        job_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/*zip*/archive.zip')
-
-
-
-
-
-        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-        if job_url.endswith('/')==False:
-            job_url+='/'
-
-
+        # # Download log files
+        # start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
+        # job_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/*zip*/archive.zip')
+        # user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+        # if job_url.endswith('/')==False:
+        #     job_url+='/'
         # urls={'artifact':job_url+'artifact/',
         #       'IrLogs':job_url+'artifact/.sh/',
         #       'Tempest':job_url+'artifact/tempest-results/'}
+        # for key in urls.keys():
+        #     command="wget -r --random-wait --accept-regex='.zip' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
+        #     print '\n'+command
+        #     exec_command_line_command(command)
 
-        urls={'AllZip':job_url}
 
-        for key in urls.keys():
-            command="wget -r --random-wait --accept-regex='.zip' " + '"' + user_agent + '"' + ' --no-parent -e robots=off -P ' + destination_dir+'/'+key+' '+urls[key]
-            print '\n'+command
-            exec_command_line_command(command)
+        start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
+        artifacts_url=set_default_arg_by_index(3,'http://staging-jenkins2-qe-playground.usersys.redhat.com/job/DFG-hardware_provisioning-rqci-13_director-rhel-7.8-vqfx-ipv4-vlan-IR-networking_ansible-poc/67/artifact/')
 
+        response = urllib2.urlopen(artifacts_url)
+        html = response.read()
+        parsed_url = urlparse.urlparse(artifacts_url)
+        base_url = parsed_url.scheme + '://' + parsed_url.netloc
+        soup = BeautifulSoup(html)
+        tar_gz_files = []
+        ir_logs_urls = []
+        tempest_log_url = None
+        for link in soup.findAll('a'):
+            if 'tempest-results' in link:
+                tempest_results_url = urljoin(artifacts_url, link.get('href'))
+                tempest_response = urllib2.urlopen(tempest_results_url)
+                html = tempest_response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.html'):
+                        tempest_html = link.get('href')
+                        tempest_log_url = urljoin(artifacts_url, 'tempest-results') + '/' + tempest_html
+                        break
+            if str(link.get('href')).endswith('.tar.gz'):
+                tar_gz_files.append(link)
+                tar_link = urlparse.urljoin(artifacts_url, link.get('href'))
+                os.system('wget -P ' + destination_dir + ' ' + tar_link)
+            if str(link.get('href')).endswith('.sh'):
+                sh_page_link = urlparse.urljoin(artifacts_url, link.get('href'))
+                response = urllib2.urlopen(sh_page_link)
+                html = response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.log'):
+                        ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
 
         # Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
@@ -244,6 +269,12 @@ class LogTool(unittest.TestCase):
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                        'red')
+
+
+
+
+
+
 
 
 
