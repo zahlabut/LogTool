@@ -36,7 +36,13 @@ def set_default_arg_by_index(index, default):
 
 
 
-
+import argparse
+parser = argparse.ArgumentParser(description='StartTime')
+parser.add_argument('StartTime', type=str, help='StartTime')
+parser.add_argument('ArtifactURL', type=str, help='ArtifactURL')
+args = parser.parse_args()
+start_time=args.StartTime
+artifacts_url= args.ArtifactURL
 
 
 
@@ -180,13 +186,7 @@ class LogTool(unittest.TestCase):
     def test_3_download_jenkins_job(selfself):
         # Command Line parameters
         mode_start_time=time.time()
-        import argparse
-        parser = argparse.ArgumentParser(description='StartTime')
-        parser.add_argument('StartTime', type=str, help='StartTime')
-        parser.add_argument('ArtifactURL', type=str, help='ArtifactURL')
-        args = parser.parse_args()
-        start_time=args.StartTime
-        artifacts_url= args.ArtifactURL
+
 
 
 
