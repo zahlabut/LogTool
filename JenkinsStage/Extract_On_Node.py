@@ -298,15 +298,14 @@ def analyze_log(log, string, time_grep, last_line_date):
             if is_standard_log==False:
                 relevant_block=True
             if relevant_block==True:
-                LogDataDic['TotalNumberOfErrors'] += 1
                 if third_line not in third_lines:
                     third_lines.append(third_line)
                     block=cut_huge_block(block)
                     if block!=None:
                         block_lines=block.splitlines()
-
                     else:
                         block_lines=[]
+                    LogDataDic['TotalNumberOfErrors'] += 1
                 else:
                     continue
                 # Check fuzzy match and count matches #
