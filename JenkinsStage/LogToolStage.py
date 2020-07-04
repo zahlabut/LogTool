@@ -143,3 +143,5 @@ class LogTool(unittest.TestCase):
 
                        'red')
 
+
+
