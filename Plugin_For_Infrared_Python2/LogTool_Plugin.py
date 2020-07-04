@@ -247,6 +247,7 @@ class LogTool(unittest.TestCase):
                     os.path.abspath(destination_dir), fil)
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 os.system(cmd)
+                os.system('rm -y '+fil)
         # Run LogTool analyzing
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
         result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
