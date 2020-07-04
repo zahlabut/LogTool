@@ -48,8 +48,8 @@ class LogTool(unittest.TestCase):
         warnings.warn(message=msg, category=Warning)
 
     def test_1_download_jenkins_job(selfself):
-        mode_start_time=time.time()
         # Create destination directory
+        mode_start_time=time.time()
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
         if os.path.exists(destination_dir):
@@ -131,9 +131,7 @@ class LogTool(unittest.TestCase):
         # print (com_result['CommandOutput'])
         end_time = time.time()
         if 'SUCCESS!!!' in com_result['CommandOutput']:
-
             spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
-
             spec_print(['Completed!!!',
                         "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
                         '\nLogTool ResultFile is: '+os.path.basename(result_file),
