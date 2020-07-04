@@ -32,29 +32,6 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-
-
-
-
-# import argparse
-# parser = argparse.ArgumentParser(description='StartTime')
-# parser.add_argument('--StartTime', type=str, help='StartTime')
-# parser.add_argument('--ArtifactURL', type=str, help='ArtifactURL')
-# args = parser.parse_args()
-# start_time=args.StartTime
-# artifacts_url= args.ArtifactURL
-#
-
-
-
-
-
-
-
-
-
-
-
 usage = ['LogTool - extracts Overcloud Errors and provides statistics',
          '1) Set needed configuration in Params.py configuration file.',
          '2) python2 -m unittest LogTool_Plugin.LogTool.test_1_Export_Overcloud_Errors',
@@ -64,13 +41,10 @@ if len(sys.argv)==1 or (sys.argv[1] in ['-h','--help']):
     spec_print(usage, 'yellow')
     sys.exit(1)
 
-
-
 # Parameters #
 errors_on_execution = {}
 competed_nodes={}
 workers_output={}
-
 
 ### Check given by user_start_time ###
 if check_time(user_start_time)!=True:
@@ -98,20 +72,6 @@ os.mkdir(result_dir)
 
 
 class LogTool(unittest.TestCase):
-
-    def setUp(self):
-        self.start_time = sys.argv[2]
-        self.artifacts_url = sys.argv[3]
-
-    # import argparse
-    # parser = argparse.ArgumentParser(description='StartTime')
-    # parser.add_argument('--StartTime', type=str, help='StartTime')
-    # parser.add_argument('--ArtifactURL', type=str, help='ArtifactURL')
-    # args = parser.parse_args()
-    # start_time=args.StartTime
-    # artifacts_url= args.ArtifactURL
-    #
-
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
@@ -198,17 +158,6 @@ class LogTool(unittest.TestCase):
     """
 
     def test_3_download_jenkins_job(selfself):
-        # Command Line parameters
-        mode_start_time=time.time()
-
-
-        start_time=self.start_time
-        artifacts_url=self.artifacts_url
-
-
-        #start_time = set_default_arg_by_index(2, '2020-07-01 00:00:00')
-        #artifacts_url=set_default_arg_by_index(3,'https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/')
-
         # Create destination directory
         destination_dir = 'Jenkins_Job_Files'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)

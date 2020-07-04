@@ -34,9 +34,6 @@ overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 # Path to source files on Undercloud
 source_rc_file_path='/home/stack/'
 
-# Start time that will be used to export Errors/Warnings
-user_start_time='2020-07-01 00:00:00'
-
 # Save raw data section inside the result file
 save_raw_data='yes'
 
@@ -45,3 +42,13 @@ log_type='all_logs'
 
 # Directories on Undercloud host that are going to be analyzed
 undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
+
+# Start time that will be used to export Errors/Warnings
+#start_time='2020-07-01 00:00:00'
+#echo "start_time='"$start_time"'" >> Params.py
+
+#artifacts_url
+#echo "artifacts_url='"$artifacts_url"'" >> Params.py
+
+
+
