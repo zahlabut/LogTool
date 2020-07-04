@@ -1,4 +1,6 @@
 
+
+
 # HTTP Download and Analyze log #
 df -h
 hostname
