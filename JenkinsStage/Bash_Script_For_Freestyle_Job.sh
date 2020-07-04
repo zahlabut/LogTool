@@ -30,4 +30,4 @@ echo "artifact_url='"$artifact_url"'" >> LogTool/JenkinsStage/Params.py
 cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
 
 
-#Save artifacts with:JenkinsStage/**/*.*
+#Save artifacts with:LogTool/**/*.*
