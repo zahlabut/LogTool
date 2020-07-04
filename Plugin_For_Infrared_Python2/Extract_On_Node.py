@@ -298,6 +298,7 @@ def analyze_log(log, string, time_grep, last_line_date):
             if is_standard_log==False:
                 relevant_block=True
             if relevant_block==True:
+                LogDataDic['TotalNumberOfErrors'] += 1
                 if third_line not in third_lines:
                     third_lines.append(third_line)
                     block=cut_huge_block(block)
@@ -305,8 +306,6 @@ def analyze_log(log, string, time_grep, last_line_date):
                         block_lines=block.splitlines()
                     else:
                         block_lines=[]
-                    LogDataDic['TotalNumberOfErrors'] += 1
-
                 else:
                     continue
                 # Check fuzzy match and count matches #
@@ -637,7 +636,7 @@ if __name__ == "__main__":
 
     ### Fill statistics section for Standard OSP logs###
     print_in_color('\nAggregating statistics for Standard OSP logs','bold')
-    statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0}
+    statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']>1}
     statistics_dic = sorted(list(statistics_dic.items()), key=operator.itemgetter(1))
     statistics_list=[{item[0]:item[1]} for item in statistics_dic]
     total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
