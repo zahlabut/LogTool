@@ -131,26 +131,17 @@ class LogTool(unittest.TestCase):
         # print (com_result['CommandOutput'])
         end_time = time.time()
         if 'SUCCESS!!!' in com_result['CommandOutput']:
+
+            spec_print(com_result['CommandOutput'].splitlines()[-10:],'blue')
+
             spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
-                        'Result Directory: ' + result_dir,
+                        "All the results are in Job's Build Artifacts Directory",
+                        'BuildArtifactDirectory:' +os.path.abspath(result_dir),
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                        'green')
+
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                        'red')
 
-        def test_2_create_final_report(self):
-            print('\ntest_3_create_final_report')
-            report_file_name = 'LogTool_Report.log'
-            if report_file_name in os.listdir('.'):
-                os.remove(report_file_name)
-            report_data=''
-
-            for key in workers_output:
-                if 'Total_Number_Of_Errors:0' not in workers_output[key]:
-                    report_data+='\n'+key+' --> '+workers_output[key]
-            if len(report_data)!=0:
-                append_to_file(report_file_name,report_data+
-                               '\n\nFor more details, check LogTool result files on your setup:'
-                               '\n'+os.path.abspath(result_dir))
