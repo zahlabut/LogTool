@@ -46,8 +46,8 @@ undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
 #Parameter is added with: echo "start_time='"$start_time"'" >> Params.py
 start_time='2020-07-01 00:00:00'
 
-#Parameter is added with: echo "artifact_url='"$artifacts_url"'" >> Params.py
-artifacts_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
+#Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
+artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
 
 
 
