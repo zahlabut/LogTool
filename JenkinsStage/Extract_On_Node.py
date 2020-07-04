@@ -694,7 +694,7 @@ if __name__ == "__main__":
     for msg in messages:
         section_indexes.append({msg:"SectionStartLine: "+get_file_line_index(result_file,msg)})
     write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
-    exec_command_line_command('gzip '+result_file)
+    #exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
     if total_number_of_all_logs_errors+total_number_of_errors>0:
         print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
