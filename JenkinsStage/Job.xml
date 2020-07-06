@@ -126,7 +126,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
           <reportFiles>index.html</reportFiles>
           <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
           <reportTitles/>
-          <keepAll>false</keepAll>
+          <keepAll>true</keepAll>
           <allowMissing>false</allowMissing>
           <includes>**/*</includes>
           <escapeUnderscores>true</escapeUnderscores>
