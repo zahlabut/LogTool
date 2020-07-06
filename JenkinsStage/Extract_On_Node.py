@@ -668,6 +668,7 @@ if __name__ == "__main__":
         else:
             #append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
             print_in_color(item.items(),'red')
+            append_to_file(html_page, '<a href="' + item.items()[0] + '"></a>\n')
 
     #{'/home/stack/Jenkins_Job_Files/06-ir-tripleo-overcloud-introspect.log': 23}
 
