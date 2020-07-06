@@ -724,7 +724,8 @@ if __name__ == "__main__":
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
             html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_'))
-            append_to_file(html_log_file,str(dir['UniqueMessages']))
+            for line in dir['UniqueMessages']:
+                append_to_file(html_log_file,line)
 
 
     ### Fill statistics section - Table of Content: line+index ###
