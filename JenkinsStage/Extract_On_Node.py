@@ -26,6 +26,7 @@ import operator
 import collections
 from string import digits
 import re
+import shutil
 
 def set_default_arg_by_index(index, default):
     try:
@@ -656,7 +657,7 @@ if __name__ == "__main__":
     #Create HTTML index and Directory
     html_directory='ExtractedBlocks'
     if os.path.exists(html_directory)==True:
-        os.remove(html_directory)
+        shutil.rmtree(html_directory)
     os.makedirs(html_directory)
     html_page='index.html'
     empty_file_content(html_page)
