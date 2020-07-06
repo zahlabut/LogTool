@@ -669,6 +669,7 @@ if __name__ == "__main__":
             append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
 
 
+
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
     statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
