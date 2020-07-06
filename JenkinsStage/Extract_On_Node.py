@@ -662,7 +662,6 @@ if __name__ == "__main__":
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>Header Tag</title>\n'+'</head>\n'+'<body>\n')
-    append_to_file(html_page,)
     for item in statistics_list:
         append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
 
