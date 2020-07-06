@@ -663,8 +663,8 @@ if __name__ == "__main__":
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+'</head>\n'+'<body>\n')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
     for item in statistics_list:
-        if 'TotalNumberOfErrors' in str(item):
-            append_to_file(html_page, '<h1>'+str(item) + '<h1>\n')
+        if 'Total_Number_Of_ERRORs' in str(item):
+            append_to_file(html_page, '<h2>'+str(item) + '<h2>\n')
         else:
             append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
 
