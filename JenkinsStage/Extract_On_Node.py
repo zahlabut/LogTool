@@ -659,7 +659,7 @@ if __name__ == "__main__":
     if os.path.exists(html_directory)==True:
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
-    html_page='index.html'
+    html_page=os.path.join(html_directory,'index.html')
     empty_file_content(html_page)
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>Header Tag</title>\n'+'</head>\n'+'<body>\n')
     for item in statistics_list:
