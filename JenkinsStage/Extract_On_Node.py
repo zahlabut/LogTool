@@ -683,7 +683,7 @@ if __name__ == "__main__":
         if 'Total_Number_Of_' in str(item):
             append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
-            html_log_file = item[0][0].replace('/', '_')
+            html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
     append_to_file(html_page,'</body>\n'+'</html>\n')
 
@@ -724,7 +724,7 @@ if __name__ == "__main__":
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
             html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_'))
-            append_to_file(html_log_file,dir['UniqueMessages'])
+            append_to_file(html_log_file,str(dir['UniqueMessages']))
 
 
     ### Fill statistics section - Table of Content: line+index ###
