@@ -655,7 +655,7 @@ if __name__ == "__main__":
     write_list_of_dict_to_file(result_file,statistics_list,
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
     #Create HTTML index and Directory
-    html_directory='ExtractedBlocks'
+    html_directory='LogTool_HTML_Report'
     if os.path.exists(html_directory)==True:
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
