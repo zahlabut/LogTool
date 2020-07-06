@@ -323,13 +323,21 @@ def analyze_log(log, string, time_grep, last_line_date):
                         existing_messages[messages_index] = [counter + 1, message, is_trace, block_size]
                         break
                 if to_add == True and block_lines!=[]:
-                    existing_messages.append([1, block_lines, is_trace, block_size])
+                    if to_add == True and block_lines != []:
+                        existing_messages.append([1, block_lines, is_trace, block_size])
     for i in existing_messages:
         dic = {}
         dic['UniqueCounter'] = i[0]
         dic['BlockLines'] = i[1]
         dic['IsTracebackBlock'] = i[2]
         dic['AnalyzedBlockLinesSize'] = i[3]
+        unique_date=get_line_date(str(dic['BlockLines']))
+        if unique_date['Error']==None:
+            unique_block_date=unique_date['Date']
+        else:
+            unique_block_date='No timestamp in block, last  "parsed date" was used!'
+        dic['BlockDate']=unique_block_date
+        dic['Log']=log
         LogDataDic['AnalyzedBlocks'].append(dic)
     if os.path.exists(grep_file):
         os.remove(grep_file)
@@ -614,6 +622,7 @@ if __name__ == "__main__":
          '   could be found in the bottom of this section.\n\n'\
          '2) Exported unique messages...\n'\
          '   This section contains all exported unique Errors/Warnings blocks (sequence of log lines)\n'\
+         "   sorted by blocks' timestamps\n"\
          '   Basing on your understanding from the previous Statistics section,\n'\
          '   you will need to check/expert exported Error/Warning blocks for each "suspicious" log file.\n'\
          '   In order to do that, copy log path string and search for this string inside this file. \n'\
@@ -661,15 +670,19 @@ if __name__ == "__main__":
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
     #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
     append_to_file(result_file,'\n\n\n'+'#'*20+' Exported unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
+    common_list_of_all_blocks=[]
     for item in analyzed_logs_result:
-        #print 'LogPath --> '+item['Log']
         for block in item['AnalyzedBlocks']:
-            append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + item['Log']+' '+'-'*30+' \n')
-            append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
-            append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
-            append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-            for line in block['BlockLines']:
-                append_to_file(result_file, line + '\n')
+            common_list_of_all_blocks.append(block)
+    for block in sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate']):
+        append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
+        append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
+        append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
+        append_to_file(result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
+        append_to_file(result_file, 'BlockDate:' + str(block['BlockDate']) + '\n')
+        append_to_file(result_file, 'Log:' + str(block['Log']) + '\n')
+        for line in block['BlockLines']:
+            append_to_file(result_file, line + '\n')
 
 
     ### Exported Unique messages per NOT STANDARD log file, since ever  ###
