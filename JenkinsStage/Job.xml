@@ -110,7 +110,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*,LogTool/JenkinsStage/ExtractedBlocks/**/*.*</artifacts>
+      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*,LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*</artifacts>
       <allowEmptyArchive>false</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
@@ -122,7 +122,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
       <reportTargets>
         <htmlpublisher.HtmlPublisherTarget>
           <reportName>HTML Report</reportName>
-          <reportDir>LogTool/JenkinsStage/ExtractedBlocks</reportDir>
+          <reportDir>LogTool/JenkinsStage/LogTool_HTML_Report</reportDir>
           <reportFiles>index.html</reportFiles>
           <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
           <reportTitles/>
