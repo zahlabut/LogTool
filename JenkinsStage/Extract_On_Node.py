@@ -660,14 +660,11 @@ if __name__ == "__main__":
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
     html_page=os.path.join(html_directory,'index.html')
-    empty_file_content(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>Header Tag</title>\n'+'</head>\n'+'<body>\n')
     append_to_file(html_page,)
     for item in statistics_list:
-        if 'Statistics - Number of Errors/Warnings per Standard OSP log since' in str(item):
-            append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
-        else:
-            append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
+        append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
 
 
     ### Fill statistics section for Not Standard OSP logs###
