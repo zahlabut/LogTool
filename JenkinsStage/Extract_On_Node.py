@@ -680,7 +680,7 @@ if __name__ == "__main__":
             append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
         else:
             append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
-    append_to_file(html_page,'</body>\n','</html>\n')
+    append_to_file(html_page,'</body>\n'+'</html>\n')
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
