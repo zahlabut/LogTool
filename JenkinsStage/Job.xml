@@ -1,15 +1,15 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?><project>
   <actions/>
-  <description>&lt;br/&gt;Each time when CI Job fails, we might want to check log files and to try figuring out what went wrong.&#13;
-&lt;br/&gt;There are cases when finding the "Root Cause" is not so complicated stuff to acomplish, it depends on your&#13;
+  <description>&lt;br/&gt;Any time when CI Job fails, we might want to analyze log files to understand what went wrong.&#13;
+&lt;br/&gt;There are cases when finding the "Root Cause" doesn't seem to be an issue, it depends on your&#13;
 &lt;br/&gt;experience and knowledge. If you familiar with failed "area", you'll probably know where the relevant &#13;
-&lt;br/&gt;Error message could be logged and you'll probably will be able to figure out the "Root Cause".&#13;
+&lt;br/&gt;Error message could be logged and you'll be able to find the "Root Cause".&#13;
 &lt;br/&gt;&lt;b&gt;But, if:&lt;/b&gt;&#13;
 &lt;strong&gt;&lt;br/&gt;  1) Saving time - does mater to you!&#13;
-&lt;br/&gt;  2) "Donkey work" is not the best choice for you!&#13;
+&lt;br/&gt;  2) "Donkey work" - is not the best choice for you!&#13;
 &lt;br/&gt;  3) You think that finding the "Root Cause" manually is going to be too complicated!&#13;
 &lt;/strong&gt;&#13;
-&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do is to provide 2 parameters:&#13;
+&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do, is providing 2 parameters:&#13;
 &lt;br/&gt;1) Job Artifact URL&#13;
 &lt;br/&gt;2) Start Time that will be used to filter out not relevant messages in term of time.&#13;
 &lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; you can also use LogTool installed on Undercloud or on your Desktop, for more details:&#13;
@@ -110,7 +110,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*</artifacts>
+      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*,LogTool/JenkinsStage/ExtractedBlocks/**/*.*</artifacts>
       <allowEmptyArchive>false</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
@@ -118,6 +118,21 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
       <caseSensitive>true</caseSensitive>
       <followSymlinks>false</followSymlinks>
     </hudson.tasks.ArtifactArchiver>
+    <htmlpublisher.HtmlPublisher plugin="htmlpublisher@1.23">
+      <reportTargets>
+        <htmlpublisher.HtmlPublisherTarget>
+          <reportName>HTML Report</reportName>
+          <reportDir>LogTool/JenkinsStage/ExtractedBlocks</reportDir>
+          <reportFiles>index.html</reportFiles>
+          <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
+          <reportTitles/>
+          <keepAll>false</keepAll>
+          <allowMissing>false</allowMissing>
+          <includes>**/*</includes>
+          <escapeUnderscores>true</escapeUnderscores>
+        </htmlpublisher.HtmlPublisherTarget>
+      </reportTargets>
+    </htmlpublisher.HtmlPublisher>
   </publishers>
   <buildWrappers>
     <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
@@ -126,6 +141,16 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
       <externalDelete/>
       <disableDeferredWipeout>false</disableDeferredWipeout>
     </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.build__timeout.BuildTimeoutWrapper plugin="build-timeout@1.20">
+      <strategy class="hudson.plugins.build_timeout.impl.AbsoluteTimeOutStrategy">
+        <timeoutMinutes>60</timeoutMinutes>
+      </strategy>
+      <operationList/>
+    </hudson.plugins.build__timeout.BuildTimeoutWrapper>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.3"/>
+    <de.jamba.hudson.plugin.wsclean.PrePostClean plugin="hudson-wsclean-plugin@1.0.7">
+      <before>false</before>
+    </de.jamba.hudson.plugin.wsclean.PrePostClean>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.0">
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
