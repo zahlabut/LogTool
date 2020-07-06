@@ -666,13 +666,28 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '<h2>\n')
         else:
-            append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
+            #append_to_file(html_page,'<a href="'+str(item)+'"></a>\n')
+            print item.items()
+
+    #{'/home/stack/Jenkins_Job_Files/06-ir-tripleo-overcloud-introspect.log': 23}
 
 
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
     statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
+
+
+
+    # html_data=''
+    # for log in
+    #
+    # append_to_file(html_page, '<a href="' + str(item) + '">link text</a>\n')
+    #
+
+
+
+
     statistics_list = sort_list_by_index(statistics_list, 1)
     total_number_of_errors=sum([i[1] for i in statistics_list])
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
@@ -683,6 +698,7 @@ if __name__ == "__main__":
         if 'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever' in str(item):
             append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
         else:
+
             append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
     append_to_file(html_page,'</body>\n'+'</html>\n')
 
