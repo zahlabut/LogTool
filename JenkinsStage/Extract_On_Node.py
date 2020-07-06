@@ -660,7 +660,8 @@ if __name__ == "__main__":
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
     html_page=os.path.join(html_directory,'index.html')
-    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+'</head>\n'+'<body>\n')
+    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
+                   '</head>\n'+'<body style="background-color:yellow;\n')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
@@ -677,6 +678,7 @@ if __name__ == "__main__":
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
+    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Not Standard OSP log since ever<h1>\n')
     write_list_to_file(result_file,statistics_list,False)
     html_data=''
     for item in statistics_list:
@@ -685,7 +687,7 @@ if __name__ == "__main__":
         else:
             html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
-    append_to_file(html_page,'<body style="background-color:yellow;">\n'+'</html>\n')
+    append_to_file(html_page,'<body">\n'+'</html>\n')
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
