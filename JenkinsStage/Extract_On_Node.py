@@ -653,6 +653,17 @@ if __name__ == "__main__":
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
+    #Create HTTML index and Directory
+    html_directory='ExtractedBlocks'
+    os.makedirs(html_directory,True)
+    html_page='index.html'
+    empty_file_content(html_page)
+    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>Header Tag</title>\n'+'</head>\n'+'<body>\n')
+    for item in statistics_list:
+        if 'Statistics - Number of Errors/Warnings per Standard OSP log since' in str(item):
+            append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
+        else:
+            append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
 
 
     ### Fill statistics section for Not Standard OSP logs###
@@ -664,7 +675,12 @@ if __name__ == "__main__":
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
-
+    for item in statistics_list:
+        if 'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever' in str(item):
+            append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
+        else:
+            append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
+    append_to_file(html_page,'</body>\n','</html>\n')
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
@@ -674,7 +690,8 @@ if __name__ == "__main__":
     for item in analyzed_logs_result:
         for block in item['AnalyzedBlocks']:
             common_list_of_all_blocks.append(block)
-    for block in sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate']):
+    sorted_blocks=sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate'])
+    for block in sorted_blocks:
         append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -683,6 +700,8 @@ if __name__ == "__main__":
         append_to_file(result_file, 'Log:' + str(block['Log']) + '\n')
         for line in block['BlockLines']:
             append_to_file(result_file, line + '\n')
+        # Add block into dedicated file
+        append_to_file(os.path.join(os.path.abspath(html_directory),os.path.basename(block['Log'])))
 
 
     ### Exported Unique messages per NOT STANDARD log file, since ever  ###
