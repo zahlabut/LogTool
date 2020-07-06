@@ -661,7 +661,7 @@ if __name__ == "__main__":
     os.makedirs(html_directory)
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
-                   '</head>\n'+'<body style="background-color:grey;">\n')
+                   '</head>\n'+'<body style="background-color:yellow;">\n')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
