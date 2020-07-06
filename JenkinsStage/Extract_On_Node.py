@@ -685,7 +685,7 @@ if __name__ == "__main__":
         else:
             html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
-    append_to_file(html_page,'</body>\n'+'</html>\n')
+    append_to_file(html_page,'<body style="background-color:yellow;">\n'+'</html>\n')
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
