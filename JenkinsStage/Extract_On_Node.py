@@ -668,7 +668,7 @@ if __name__ == "__main__":
             append_to_file(html_page, '<h2>'+str(item) + '<h2>\n')
         else:
             html_log_file =  item.items()[0][0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace('log_root_dir','') + '</a><br>\n')
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
