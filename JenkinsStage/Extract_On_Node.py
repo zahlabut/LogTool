@@ -668,7 +668,7 @@ if __name__ == "__main__":
         else:
             print_in_color(item.items(),'red')
 
-            html_log_file = os.path.join(html_directory, item.items()[0][0].replace('/', '_'))
+            html_log_file = '/'+os.path.join(html_directory, item.items()[0][0].replace('/', '_'))
 
 
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
