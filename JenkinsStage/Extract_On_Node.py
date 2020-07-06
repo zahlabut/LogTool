@@ -655,7 +655,9 @@ if __name__ == "__main__":
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
     #Create HTTML index and Directory
     html_directory='ExtractedBlocks'
-    os.makedirs(html_directory,True)
+    #if os.path.exists(html_directory)==True:
+    #    os.remove(html_directory)
+    os.makedirs(html_directory,False)
     html_page='index.html'
     empty_file_content(html_page)
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>Header Tag</title>\n'+'</head>\n'+'<body>\n')
