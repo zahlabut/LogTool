@@ -666,44 +666,25 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '<h2>\n')
         else:
-            print_in_color(item.items(),'red')
-
-            #html_log_file = '/'+os.path.join(html_directory, item.items()[0][0].replace('/', '_'))
             html_log_file =  item.items()[0][0].replace('/', '_')
-
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
-
-    #{'/home/stack/Jenkins_Job_Files/06-ir-tripleo-overcloud-introspect.log': 23}
-
-
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
     statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
-
-
-
-    # html_data=''
-    # for log in
-    #
-    # append_to_file(html_page, '<a href="' + str(item) + '">link text</a>\n')
-    #
-
-
-
-
     statistics_list = sort_list_by_index(statistics_list, 1)
     total_number_of_errors=sum([i[1] for i in statistics_list])
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
+    html_data=''
     for item in statistics_list:
-        if 'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever' in str(item):
-            append_to_file(html_page,'<h1>'+str(item)+'</h1>\n')
+        if 'Total_Number_Of_' in str(item):
+            append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
-
-            append_to_file(html_page,'<a href="'+str(item)+'">link text</a>\n')
+            html_log_file = item[0][0].replace('/', '_')
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item) + '</a><br>\n')
     append_to_file(html_page,'</body>\n'+'</html>\n')
 
 
@@ -725,12 +706,7 @@ if __name__ == "__main__":
         for line in block['BlockLines']:
             append_to_file(result_file, line + '\n')
         # Add block into dedicated file
-
-
         html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'].replace('/','_'))
-        print_in_color(html_log_file,'red')
-
-
         append_to_file(html_log_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(html_log_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(html_log_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -747,6 +723,9 @@ if __name__ == "__main__":
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
+            html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_'))
+            append_to_file(html_log_file,dir['UniqueMessages'])
+
 
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]
