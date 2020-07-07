@@ -25,7 +25,7 @@ import time
 from urllib2 import urlparse
 from urlparse import urljoin
 
-spec_print([artifact_url,user_start_time])
+spec_print(['Job Parameters:',artifact_url,user_start_time],'bold')
 
 # Parameters #
 errors_on_execution = {}
@@ -128,7 +128,7 @@ class LogTool(unittest.TestCase):
             shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
 
         # Print list of downloaded files
-        spec_print(os.listdir(destination_dir),'bold')
+        spec_print(os.listdir(destination_dir).insert(0,'Downloaded files:'),'bold')
 
         # Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
