@@ -32,11 +32,11 @@ def download_file(url, dst_path):
     print '-'*1000
     print url
     print url.split('/')[-1]
-    print os.path.abspath(dst_path)+url.split('/')[-1].strip()
+    print os.path.join(os.path.abspath(dst_path),url.split('/')[-1])
 
 
     r = requests.get(url)
-    with open(os.path.abspath(dst_path)+url.split('/')[-1].strip(), 'wb') as f:
+    with open(os.path.join(os.path.abspath(dst_path),url.strip().split('/')[-1]), 'wb') as f:
         f.write(r.content)
     return {'Status':r.status_code}
 
