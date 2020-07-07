@@ -372,9 +372,6 @@ try:
                 print(s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil)))
             s.ssh_close()
 
-        # Print list of downloaded files
-        spec_print(os.listdir(destination_dir),'bold')
-
         #Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
             if fil.endswith('.tar.gz'):
