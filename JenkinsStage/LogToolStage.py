@@ -86,7 +86,7 @@ class LogTool(unittest.TestCase):
                 tar_gz_files.append(link)
                 tar_link = urlparse.urljoin(artifact_url, link.get('href'))
                 res=download_file(tar_link,destination_dir)
-                if re['Status']!=200:
+                if res['Status']!=200:
                     print_in_color('Failed to download: '+tar_link,'red')
                 else:
                     print_in_color('OK --> ' + tar_link, 'blue')
