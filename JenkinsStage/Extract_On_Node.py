@@ -660,14 +660,13 @@ if __name__ == "__main__":
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
     background_image='logtool.jpg'
-    print os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image)
     shutil.copyfile(os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image))
 
 
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
                    '</head>\n'+
-                   '<body style="background-image: url('+"'"+background_image+"'"+')\n')
+                   'body {background-image: url('+background_image+');}\n')
 
 
 
