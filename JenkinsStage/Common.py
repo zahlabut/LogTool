@@ -28,7 +28,7 @@ from string import digits
 
 
 def download_file(url, dst_path):
-    spec_print([url,dst_path,os.path.basename(url)])
+    spec_print([url,dst_path,os.path.basename(url),os.path.join(os.path.abspath(dst_path),os.path.basename(url))])
 
 
 
