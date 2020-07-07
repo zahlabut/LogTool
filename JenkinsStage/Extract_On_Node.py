@@ -688,7 +688,16 @@ if __name__ == "__main__":
         else:
             html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br><br><br><br><br>\n')
-    append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
+    #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
+
+
+    append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
+    append_to_file(html_page,'<img alt="Qries" src="'+background_image+'"\n')
+    append_to_file(html_page,'width=150" height="70">\n')
+
+
+
+
     append_to_file(html_page,'</body>\n'+'</html>\n')
 
 
