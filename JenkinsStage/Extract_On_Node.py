@@ -666,7 +666,7 @@ if __name__ == "__main__":
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
                    '</head>\n'+
-                   'body {background-image: url('+background_image+');}\n')
+                   '<style>body {background-image: url('+background_image+');}</style>\n')
 
 
 
