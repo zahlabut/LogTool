@@ -664,13 +664,18 @@ if __name__ == "__main__":
 
 
     html_page=os.path.join(html_directory,'index.html')
-    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
-                   '</head>\n'+
-                   '<style>body {background-image: url('+background_image+');}</style>\n')
+    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'
+
+                   +'html {\n'
+                   +'background: url('+background_image+') no-repeat center center fixed;\n'
+                   +'-webkit-background-size: cover;\n'
+                   +'-moz-background-size: cover;\n'
+                   +'-o-background-size: cover;\n'
+                   +'background-size: cover;\n'
+                   +'}\n'
 
 
-
-
+                   +'<head>\n'+'<title>LogTool_Report</title>\n'+'</head\n><body>\n')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'</h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
