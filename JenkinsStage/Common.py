@@ -28,9 +28,8 @@ from string import digits
 
 
 def download_file(url, dst_path):
-    a=urlparse(url)
     r = requests.get(url)
-    with open(os.path.join(os.path.abspath(dst_path),os.path.basename(a.path)), 'wb') as f:
+    with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
         f.write(r.content)
     return {'Status':r.status_code}
 
