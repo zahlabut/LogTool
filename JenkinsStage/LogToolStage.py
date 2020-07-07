@@ -90,7 +90,7 @@ class LogTool(unittest.TestCase):
                     print_in_color('Failed to download: '+tar_link,'red')
                 else:
                     print_in_color('OK --> ' + tar_link, 'blue')
-                #os.system('wget -P ' + destination_dir + ' ' + tar_link)
+
             if str(link.get('href')).endswith('.sh'):
                 sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
                 response = urllib2.urlopen(sh_page_link)
@@ -100,16 +100,31 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
-        os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+        res = download_file(console_log_url, destination_dir)
+        if res['Status'] != 200:
+            print_in_color('Failed to download: ' + console_log_url, 'red')
+        else:
+            print_in_color('OK --> ' + console_log_url, 'blue')
 
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
         # Download Infared Logs .sh, files in .sh directory on Jenkins
         if len(ir_logs_urls)!=0:
             for url in ir_logs_urls:
-                os.system('wget -P ' + destination_dir + ' ' + url)
+                res = download_file(url, destination_dir)
+                if res['Status'] != 200:
+                    print_in_color('Failed to download: ' + url, 'red')
+                else:
+                    print_in_color('OK --> ' + url, 'blue')
+
+
         # Download tempest log (html #)
         if tempest_log_url!=None:
-            os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
+            res = download_file(url, tempest_log_url)
+            if res['Status'] != 200:
+                print_in_color('Failed to download: ' + tempest_log_url, 'red')
+            else:
+                print_in_color('OK --> ' + tempest_log_url, 'blue')
+
             shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
 
         # Print list of downloaded files
