@@ -694,7 +694,7 @@ if __name__ == "__main__":
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
     append_to_file(html_page,'<img alt="Qries" src="'+background_image+'"\n')
     #append_to_file(html_page,'width=750" height="350">\n')
-
+    append_to_file(html_page, '<br>'*10)
 
 
 
