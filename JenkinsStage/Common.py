@@ -29,7 +29,7 @@ from string import digits
 
 def download_file(url, dst_path):
     r = requests.get(url)
-    with open(dst_path, 'wb') as f:
+    with open(os.path.join(os.path.abspath(dst_path),url.split('/')[-1]), 'wb') as f:
         f.write(r.content)
     return {'Status':r.status_code}
 
