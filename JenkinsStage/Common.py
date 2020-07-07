@@ -20,10 +20,18 @@ import subprocess
 import json
 import sys
 import re
+import requests
 import urllib2
 import difflib
 from urllib2 import urlparse
 from string import digits
+
+
+def download_file(url, dst_path):
+    r = requests.get(url)
+    with open(dst_path, 'wb') as f:
+        f.write(r.content)
+    return {'Status':r.status_code}
 
 
 def empty_file_content(log_file_name):
