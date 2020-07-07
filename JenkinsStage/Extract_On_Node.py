@@ -661,21 +661,8 @@ if __name__ == "__main__":
     os.makedirs(html_directory)
     background_image='logtool.jpg'
     shutil.copyfile(os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image))
-
-
     html_page=os.path.join(html_directory,'index.html')
-    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'
-
-                   +'html {\n'
-                   +'background: url('+background_image+') no-repeat center center fixed;\n'
-                   +'-webkit-background-size: cover;\n'
-                   +'-moz-background-size: cover;\n'
-                   +'-o-background-size: cover;\n'
-                   +'background-size: cover;\n'
-                   +'}\n'
-
-
-                   +'<head>\n'+'<title>LogTool_Report</title>\n'+'</head\n><body>\n')
+    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+'</head\n><body>\n')
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'</h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
