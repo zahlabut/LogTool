@@ -119,7 +119,7 @@ class LogTool(unittest.TestCase):
 
         # Download tempest log (html #)
         if tempest_log_url!=None:
-            res = download_file(url, tempest_log_url)
+            res = download_file(tempest_log_url,destination_dir)
             if res['Status'] != 200:
                 print_in_color('Failed to download: ' + tempest_log_url, 'red')
             else:
