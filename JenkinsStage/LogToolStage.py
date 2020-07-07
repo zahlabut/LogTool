@@ -105,6 +105,10 @@ class LogTool(unittest.TestCase):
         if tempest_log_url!=None:
             os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
             shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
+
+        # Print list of downloaded files
+        spec_print(os.listdir(destination_dir),'bold')
+
         # Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
             if fil.endswith('.tar.gz'):

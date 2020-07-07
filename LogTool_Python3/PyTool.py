@@ -372,6 +372,9 @@ try:
                 print(s.scp_download(os.path.join(job_full_path,fil),os.path.join(destination_dir,fil)))
             s.ssh_close()
 
+        # Print list of downloaded files
+        spec_print(os.listdir(destination_dir),'bold')
+
         #Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
             if fil.endswith('.tar.gz'):
@@ -399,7 +402,7 @@ try:
                         "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
                         '\nLogTool ResultFile is: '+os.path.basename(result_file),
                         'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-                        'blue')
+                        'green')
         else:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
@@ -474,12 +477,16 @@ try:
         com_result=exec_command_line_command(command)
         #print (com_result['CommandOutput'])
         end_time=time.time()
-        if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','You can find the result file + downloaded logs in:', 'Result Directory: '+result_dir,
-                        'Analyze logs execution time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+        if 'SUCCESS!!!' in com_result['CommandOutput']:
+            spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
+            spec_print(['Completed!!!',
+                        "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
+                        '\nLogTool ResultFile is: '+os.path.basename(result_file),
+                        'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                        'green')
         else:
-            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
+            spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
+                        'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
 
     if mode[1]=='Export ERRORs/WARNINGs from Undercloud logs':
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
