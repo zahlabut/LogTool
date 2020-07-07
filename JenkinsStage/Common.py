@@ -28,19 +28,10 @@ from string import digits
 
 
 def download_file(url, dst_path):
-
-
-
-
     r = requests.get(url)
-
-    spec_print([url,dst_path,os.path.basename(url),os.path.join(os.path.abspath(dst_path),os.path.basename(url)),str(r.status_code)])
-
-
     with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
         f.write(r.content)
     return {'Status':r.status_code}
-
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
