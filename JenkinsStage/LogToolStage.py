@@ -85,7 +85,12 @@ class LogTool(unittest.TestCase):
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_gz_files.append(link)
                 tar_link = urlparse.urljoin(artifact_url, link.get('href'))
-                os.system('wget -P ' + destination_dir + ' ' + tar_link)
+                res=download_file(tar_link,destination_dir)
+                if re['Status']!=200:
+                    print_in_color('Failed to download: '+tar_link,'red')
+                else:
+                    print_in_color('OK --> ' + tar_link, 'blue')
+                #os.system('wget -P ' + destination_dir + ' ' + tar_link)
             if str(link.get('href')).endswith('.sh'):
                 sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
                 response = urllib2.urlopen(sh_page_link)
@@ -96,6 +101,7 @@ class LogTool(unittest.TestCase):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
         os.system('wget -P ' + destination_dir + ' ' + console_log_url)
+
         shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
         # Download Infared Logs .sh, files in .sh directory on Jenkins
         if len(ir_logs_urls)!=0:
