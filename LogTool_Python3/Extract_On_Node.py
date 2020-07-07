@@ -206,9 +206,6 @@ def get_line_date(line):
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line)  #-07-06 20:14:56
     if match:
-        print_in_color('1','red')
-        print(match.group())
-        print
         date = datetime.datetime.strptime(year+match.group(), '%Y-%m-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     match = re.search(r'(...)\s\s\d{1}\s\d{2}:\d{2}:\d{2}', line) #Jul  6 22:19:00
