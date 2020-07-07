@@ -299,12 +299,12 @@ def analyze_log(log, string, time_grep, last_line_date):
             if is_standard_log==False:
                 relevant_block=True
             if relevant_block==True:
-                LogDataDic['TotalNumberOfErrors'] += 1
                 if third_line not in third_lines:
                     third_lines.append(third_line)
                     block=cut_huge_block(block)
                     if block!=None:
                         block_lines=block.splitlines()
+                        LogDataDic['TotalNumberOfErrors'] += 1
                     else:
                         block_lines=[]
                 else:
@@ -646,7 +646,7 @@ if __name__ == "__main__":
 
     ### Fill statistics section for Standard OSP logs###
     print_in_color('\nAggregating statistics for Standard OSP logs','bold')
-    statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']>1}
+    statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']>=1}
     statistics_dic = sorted(list(statistics_dic.items()), key=operator.itemgetter(1))
     statistics_list=[{item[0]:item[1]} for item in statistics_dic]
     total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
@@ -662,10 +662,10 @@ if __name__ == "__main__":
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+
                    '</head>\n'+'<body style="background-color:yellow;">\n')
-    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'<h1>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'</h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
-            append_to_file(html_page, '<h2>'+str(item) + '<h2>\n')
+            append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
             html_log_file =  item.items()[0][0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
@@ -678,12 +678,12 @@ if __name__ == "__main__":
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
-    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Not Standard OSP log since ever<h1>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Not Standard OSP log since ever</h1>\n')
     write_list_to_file(result_file,statistics_list,False)
     html_data=''
     for item in statistics_list:
         if 'Total_Number_Of_' in str(item):
-            append_to_file(html_page, '<h2>' + str(item) + '<h2>\n')
+            append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
             html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
