@@ -436,7 +436,7 @@ def escape_ansi(line):
     ansi_escape =re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
     return ansi_escape.sub('', line)
 
-def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
+def cut_huge_block(block, limit_line_size=300, number_of_characters_after_match=240,number_of_characters_before_match=100):
     block_lines=block.splitlines()
     # Check if not Jumbo block
     if len(block_lines)>5000:
