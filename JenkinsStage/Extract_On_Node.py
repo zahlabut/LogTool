@@ -182,30 +182,37 @@ def append_to_file(log_file, msg):
 
 def get_line_date(line):
     # try:
-    #line=line[0:50]
+    # line=line[0:50]
     now = datetime.datetime.now()
-    year=str(now.year)
-    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
+    year = str(now.year)
+    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)  # 2020-04-23 08:52:04
     if match:
-        string=match.group()
-        string = string[0:10]+' '+string[11:]
-        date=datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+        string = match.group()
+        string = string[0:10] + ' ' + string[11:]
+        date = datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)#27 Apr 2020 11:37:46
+    match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)  # 27 Apr 2020 11:37:46
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d %b %Y %H:%M:%S')
+        date = datetime.datetime.strptime(match.group().replace('T', ' '), '%d %b %Y %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'\d{2}/(...)/\d{4}.\d{2}:\d{2}:\d{2}', line)#30/Apr/2020:00:00:20
+    match = re.search(r'\d{2}/(...)/\d{4}.\d{2}:\d{2}:\d{2}', line)  # 30/Apr/2020:00:00:20
     if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d/%b/%Y:%H:%M:%S')
+        date = datetime.datetime.strptime(match.group().replace('T', ' '), '%d/%b/%Y:%H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct 29 16:25:47
+    match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line)  # Oct 29 16:25:47
     if match:
-        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b %d %H:%M:%S')
+        date = datetime.datetime.strptime(year + ' ' + match.group().replace('T', ' '), '%Y %b %d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct-29 16:25:51
+    match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line)  #-07-06 20:14:56
     if match:
-        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b-%d %H:%M:%S')
+        print_in_color('1','red')
+        print(match.group())
+        print
+        date = datetime.datetime.strptime(year+match.group(), '%Y-%m-%d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    match = re.search(r'(...)\s\s\d{1}\s\d{2}:\d{2}:\d{2}', line) #Jul  6 22:19:00
+    if match:
+        date=datetime.datetime.strptime(year+match.group(), '%Y%b  %d %H:%M:%S')
         return {'Error': None, 'Line': None, 'Date': str(date)}
     if len(line)>100:
         line=line[0:100]+'...'

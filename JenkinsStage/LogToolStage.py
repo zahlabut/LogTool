@@ -138,5 +138,5 @@ class LogTool(unittest.TestCase):
                         'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                         'blue')
         else:
-            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
+            spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
+                        'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')

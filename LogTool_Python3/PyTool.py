@@ -393,12 +393,17 @@ try:
         com_result=exec_command_line_command(command)
         #print (com_result['CommandOutput'])
         end_time=time.time()
-        if com_result['ReturnCode']==0:
-            spec_print(['Completed!!!','You can find the result file + downloaded logs in:', 'Result Directory: '+result_dir,
-                        'Analyze logs execution time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+        if 'SUCCESS!!!' in com_result['CommandOutput']:
+            spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
+            spec_print(['Completed!!!',
+                        "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
+                        '\nLogTool ResultFile is: '+os.path.basename(result_file),
+                        'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                        'blue')
         else:
-            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
-                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
+            spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
+                        'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
+
 
     if mode[1]=='Demo':
         wget_exists=exec_command_line_command('wget -h')
