@@ -128,7 +128,7 @@ class LogTool(unittest.TestCase):
             shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
 
         # Print list of downloaded files
-        spec_print(os.listdir(destination_dir).insert(0,'Downloaded files:'),'bold')
+        spec_print(['Downloaded files:']+os.listdir(destination_dir),'bold')
 
         # Unzip all downloaded .tar.gz files
         for fil in os.listdir(os.path.abspath(destination_dir)):
