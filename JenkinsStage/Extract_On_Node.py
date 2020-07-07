@@ -660,6 +660,7 @@ if __name__ == "__main__":
         shutil.rmtree(html_directory)
     os.makedirs(html_directory)
     background_image='logtool.jpg'
+    print os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image)
     shutil.copyfile(os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image))
 
 
