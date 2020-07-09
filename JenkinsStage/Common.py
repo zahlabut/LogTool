@@ -13,12 +13,7 @@
 # limitations under the License.
 
 
-import os
-import subprocess
-import json
-import sys
-import re
-import requests
+import os, datetime,subprocess,json,sys,re,requests
 import urllib2
 import difflib
 from urllib2 import urlparse
