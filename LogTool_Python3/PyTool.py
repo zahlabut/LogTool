@@ -274,9 +274,10 @@ try:
                            '\nOtherwise, press ENTER to continue: ')
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
-        if check_time(start_time)['Error']!=None:
-            print('Bad time format: '+start_time+' Execution will be stopped!')
-            exit(1)
+        else:
+            if check_time(start_time)['Error']!=None:
+                print('Bad time format: '+start_time+' Execution will be stopped!')
+                exit(1)
 
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
@@ -421,9 +422,10 @@ try:
                            '\nOtherwise, press ENTER to continue: ')
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
-        if check_time(start_time)['Error']!=None:
-            print('Bad time format: '+start_time+' Execution will be stopped!')
-            exit(1)
+        else:
+            if check_time(start_time)['Error']!=None:
+                print('Bad time format: '+start_time+' Execution will be stopped!')
+                exit(1)
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
