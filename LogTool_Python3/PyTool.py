@@ -401,7 +401,7 @@ try:
         if 'SUCCESS!!!' in com_result['CommandOutput']:
             spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
             spec_print(['Completed!!!',
-                        "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
+                        "\nCD to Result Directory: "+os.path.basename(result_dir),
                         '\nLogTool ResultFile is: '+os.path.basename(result_file),
                         'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                         'green')
@@ -485,7 +485,7 @@ try:
         if 'SUCCESS!!!' in com_result['CommandOutput']:
             spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
             spec_print(['Completed!!!',
-                        "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
+                        "\nCD to Result Directory: "+os.path.basename(result_dir),
                         '\nLogTool ResultFile is: '+os.path.basename(result_file),
                         'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
                         'green')
