@@ -35,10 +35,10 @@ workers_output={}
 ### Check given by user user_start_time ###
 if check_user_time(user_start_time)['Error']!=None:
     spec_print(['ERROR - Provided "user_start_time" value: "'+user_start_time+'" is invalid!',
-                'Provided user_start_time is: '+artifact_url,'See expected value, used by default.'],'red')
+                'Provided user_start_time is: '+user_start_time,'See expected value, used by default.'],'red')
     sys.exit(1)
 if 'artifact' not in artifact_url.lower():
-    spec_print(["ERROR - Provided URL doesn't seem to be proper artifact URL!",
+    spec_print(["ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!",
                 'Provided artifact_url is: '+artifact_url,'See expected value, used by default.'],'red')
     sys.exit(1)
 
