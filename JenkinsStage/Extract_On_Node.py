@@ -686,7 +686,7 @@ if __name__ == "__main__":
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
     append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever '+'#'*20)
-    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Not Standard OSP log since ever</h1>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever</h1>\n')
     write_list_to_file(result_file,statistics_list,False)
     html_data=''
     for item in statistics_list:
@@ -749,8 +749,8 @@ if __name__ == "__main__":
     messages=[
         #'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
-        'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
-        'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
+        'Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep,
+        'Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever',
         'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
         'Exported unique messages per NOT STANDARD log file, since ever',
         #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
