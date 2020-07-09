@@ -14,7 +14,6 @@
 
 
 import os
-import time
 import subprocess
 import json
 import sys
@@ -100,14 +99,17 @@ def print_dic(dic):
 def check_string_for_spev_chars(string):
     return True if re.match("^[a-zA-Z0-9_]*$", string) else False
 
-def check_time(time_string):
-    try:
-        t=time.strptime(time_string, '%Y-%m-%d %H:%M:%S')
-        return True
-    except:
-        return False
-
 def append_to_file(log_file, msg):
     log_file = open(log_file, 'a')
     log_file.write(msg)
     log_file.close()
+
+def check_user_time(start_time):
+    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', start_time)  # 2020-04-23 08:52:04
+    if match:
+        string = match.group()
+        string = string[0:10] + ' ' + string[11:]
+        date = datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    else:
+        return {'Error': 'Bad time format!', 'Line': start_time, 'Date':None}

@@ -72,7 +72,6 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 # (Debig lebel is in first 60 characters)
 analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
-
 def remove_digits_from_string(s):
     return str(s).translate(None, digits)
 
@@ -696,7 +695,6 @@ if __name__ == "__main__":
             html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
     #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
-
     append_to_file(html_page, '<br>'*3)
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
     append_to_file(html_page,'<img alt="Qries" src="'+background_image+'"\n')

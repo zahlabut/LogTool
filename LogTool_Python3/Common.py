@@ -211,13 +211,6 @@ def print_dic(dic):
 def check_string_for_spev_chars(string):
     return True if re.match("^[a-zA-Z0-9_]*$", string) else False
 
-def check_time(time_string):
-    try:
-        t=time.strptime(time_string, '%Y-%m-%d %H:%M:%S')
-        return True
-    except:
-        return False
-
 def download_jenkins_job_logs(node_names_list,url):
     response = urllib.request.urlopen(url)
     html= response.read(url)

@@ -275,7 +275,7 @@ try:
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
         else:
-            if check_time(start_time)['Error']!=None:
+            if check_user_time(start_time)['Error']!=None:
                 print('Bad time format: '+start_time+' Execution will be stopped!')
                 exit(1)
 
@@ -423,7 +423,7 @@ try:
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
         else:
-            if check_time(start_time)['Error']!=None:
+            if check_user_time(start_time)['Error']!=None:
                 print('Bad time format: '+start_time+' Execution will be stopped!')
                 exit(1)
         destination_dir='Jenkins_Job_Files'
@@ -497,7 +497,7 @@ try:
         undercloud_time=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')['CommandOutput'].strip()
         start_time=choose_time(undercloud_time,'Undercloud')
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
-        if check_time(start_time)==False:
+        if check_user_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
         options=[' ERROR ',' WARNING ']
@@ -574,7 +574,7 @@ try:
             s.ssh_close()
             print_in_color('Use the same date format as in previous output','blue')
             start_time = input('And Enter your "since time" to extract log messages: ')
-            if check_time(start_time)['Error'] != None:
+            if check_user_time(start_time)['Error'] != None:
                 print('Bad time format: ' + start_time + ' Execution will be stopped!')
                 exit(1)
             mode_start_time=time.time()
@@ -629,7 +629,7 @@ try:
         start_time=choose_time(overcloud_time,'Overcloud')
         print_in_color('\nYour "since time" is set to: '+start_time,'blue')
         mode_start_time = time.time()
-        if check_time(start_time)==False:
+        if check_user_time(start_time)==False:
             print_in_color('Bad timestamp format: '+start_time,'yellow')
             exit('Execution will be interrupted!')
         options=[' ERROR ',' WARNING ']
@@ -670,17 +670,17 @@ try:
     if mode[1]=='Extract messages for given time range':
         start_range_time = input('\nEnter range "start time":'
                            '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
-        if check_time(start_range_time)['Error']!=None:
+        if check_user_time(start_range_time)['Error']!=None:
             print('Bad time format: '+start_time+' Execution will be stopped!')
             exit(1)
         stop_range_time = input('\nEnter range "stop time":'
                            '\nTime format example: 2020-04-22 12:20:00 enter your time: ')
-        if check_time(stop_range_time)['Error']!=None:
+        if check_user_time(stop_range_time)['Error']!=None:
             print('Bad time format: '+start_time+' Execution will be stopped!')
             exit(1)
         mode_start_time = time.time()
         for item in [start_range_time,stop_range_time]:
-            if check_time(item)==False:
+            if check_user_time(item)==False:
                 print_in_color('Bad timestamp format: '+item,'yellow')
                 exit('Execution will be interrupted!')
         mode_result_dir='Overcloud_Exported_Time_Range'

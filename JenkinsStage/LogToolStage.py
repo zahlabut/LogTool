@@ -33,9 +33,16 @@ competed_nodes={}
 workers_output={}
 
 ### Check given by user user_start_time ###
-if check_time(user_start_time)!=True:
-    print_in_color('FATAL ERROR - provided "start_time" value: "'+user_start_time+'" in Params.py is incorrect!!!')
+if check_user_time(user_start_time)['Error']!=None:
+    spec_print(['ERROR - Provided "user_start_time" value: "'+user_start_time+'" is invalid!',
+                'Provided URL is: '+artifact_url,'See expected value, used by default.'],'red')
     sys.exit(1)
+if 'artifact' not in artifact_url.lower():
+    spec_print(["ERROR - Provided URL doesn't seem to be proper artifact URL!",
+                'Provided URL is: '+artifact_url,'See expected value, used by default.'],'red')
+    sys.exit(1)
+
+
 
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):

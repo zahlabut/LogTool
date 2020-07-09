@@ -45,11 +45,11 @@
           <name>artifact_url</name>
           <description>Job's "Build Artifacts" link, for Example:
 https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/</description>
-          <defaultValue>https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15924/artifact/</defaultValue>
+          <defaultValue>https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15950/artifact/</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>user_tart_time</name>
+          <name>user_start_time</name>
           <description>You might want to see the Errors occured after some time in the past, for example if you trying to
 investigate Overcloud Deployment stage started at: 2020-07-04 12:00:00 all Errors happened before this time
 are probably won't be relevant.
@@ -94,15 +94,12 @@ Important: use exactly the same format as in default!</description>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command># HTTP Download and Analyze log #
-df -h
-hostname
+      <command># Download CI artifact files and Analyze logs #
 virtualenv .venv &amp;&amp; source .venv/bin/activate
 pip install beautifulsoup
-pip install request
-pip install paramiko
+pip install requests
 git clone https://github.com/zahlabut/LogTool.git
-echo "start_time='"$user_tart_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
 </command>
@@ -110,8 +107,8 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/Jenkins_Job_ERROR/**/*.*,LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*</artifacts>
-      <allowEmptyArchive>false</allowEmptyArchive>
+      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*</artifacts>
+      <allowEmptyArchive>true</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
       <defaultExcludes>true</defaultExcludes>
