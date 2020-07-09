@@ -1,15 +1,15 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?><project>
   <actions/>
-  <description>&lt;br/&gt;Any time when CI Job fails, we might want to analyze log files to understand what went wrong.&#13;
-&lt;br/&gt;There are cases when finding the "Root Cause" doesn't seem to be an issue, it depends on your&#13;
-&lt;br/&gt;experience and knowledge. If you familiar with failed "area", you'll probably know where the relevant &#13;
-&lt;br/&gt;Error message could be logged and you'll be able to find the "Root Cause".&#13;
-&lt;br/&gt;&lt;b&gt;But, if:&lt;/b&gt;&#13;
+  <description>&lt;br/&gt;Any time when CI Job fails, you might want to analyze log files to understand what went wrong.&#13;
+&lt;br/&gt;Sometimes, finding a "Root Cause" is easy, it depends on your&#13;
+&lt;br/&gt;experience and knowledge. If you familiar with failed "area", you'll might know where the relevant &#13;
+&lt;br/&gt;Error message is logged, so probably you'll be able to find the "Root Cause".&#13;
+&lt;br/&gt;&lt;b&gt;But, if you think that:&lt;/b&gt;&#13;
 &lt;strong&gt;&lt;br/&gt;  1) Saving time - does mater to you!&#13;
 &lt;br/&gt;  2) "Donkey work" - is not the best choice for you!&#13;
-&lt;br/&gt;  3) You think that finding the "Root Cause" manually is going to be too complicated!&#13;
+&lt;br/&gt;  3) Finding the "Root Cause" manually is going to be too complicated!&#13;
 &lt;/strong&gt;&#13;
-&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do, is providing 2 parameters:&#13;
+&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do, is to provide two parameters:&#13;
 &lt;br/&gt;1) Job Artifact URL&#13;
 &lt;br/&gt;2) Start Time that will be used to filter out not relevant messages in term of time.&#13;
 &lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; you can also use LogTool installed on Undercloud or on your Desktop, for more details:&#13;
