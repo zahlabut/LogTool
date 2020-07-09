@@ -252,6 +252,11 @@ def choose_time(user_time, host):
         print_in_color('Current date on '+host+' is: ' + user_time, 'blue')
         print_in_color('Use the same date format as in previous output', 'blue')
         start_time = input('And enter your "since time" to extract log messages: ')
+        check_time = check_user_time(start_time)
+        if check_time['Error'] != None:
+            print_in_color(check_time,'yellow')
+            print('Please retry:')
+            start_time=choose_time(user_time, host)
     if start_time_option[1] == '10 Minutes ago':
         start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes=10)
     if start_time_option[1] == '30 Minutes ago':
@@ -267,3 +272,13 @@ def choose_time(user_time, host):
     if start_time_option[1] == 'Two Days ago':
         start_time = datetime.datetime.strptime(user_time, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=48)
     return str(start_time)
+
+def check_user_time(start_time):
+    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', start_time)  # 2020-04-23 08:52:04
+    if match:
+        string = match.group()
+        string = string[0:10] + ' ' + string[11:]
+        date = datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+        return {'Error': None, 'Line': None, 'Date': str(date)}
+    else:
+        return {'Error': 'Bad time format!', 'Line': start_time, 'Date':None}

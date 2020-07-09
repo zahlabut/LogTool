@@ -660,7 +660,7 @@ if __name__ == "__main__":
     statistics_list.insert(0,{'Total_Number_Of_'+str(string_for_grep).replace(' ','')+'s':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
-                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
+                               '\n\n\n'+'#'*20+' Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
     #Create HTTML index and Directory
     html_directory='LogTool_HTML_Report'
     if os.path.exists(html_directory)==True:
@@ -670,7 +670,7 @@ if __name__ == "__main__":
     shutil.copyfile(os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image))
     html_page=os.path.join(html_directory,'index.html')
     append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+'</head\n><body>\n')
-    append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+'</h1>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep+'</h1>\n')
     for item in statistics_list:
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
@@ -685,7 +685,7 @@ if __name__ == "__main__":
     total_number_of_errors=sum([i[1] for i in statistics_list])
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever '+'#'*20)
     append_to_file(html_page,'<h1>Statistics - Number of Errors/Warnings per Not Standard OSP log since ever</h1>\n')
     write_list_to_file(result_file,statistics_list,False)
     html_data=''
@@ -701,10 +701,6 @@ if __name__ == "__main__":
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
     append_to_file(html_page,'<img alt="Qries" src="'+background_image+'"\n')
     #append_to_file(html_page,'width=750" height="350">\n')
-
-
-
-
     append_to_file(html_page,'</body>\n'+'</html>\n')
 
 

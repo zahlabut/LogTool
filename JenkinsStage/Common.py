@@ -26,7 +26,6 @@ import difflib
 from urllib2 import urlparse
 from string import digits
 
-
 def download_file(url, dst_path):
     r = requests.get(url)
     with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:

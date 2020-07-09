@@ -274,6 +274,10 @@ try:
                            '\nOtherwise, press ENTER to continue: ')
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
+        if check_time(start_time)['Error']!=None:
+            print('Bad time format: '+start_time+' Execution will be stopped!')
+            exit(1)
+
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
@@ -404,7 +408,6 @@ try:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
 
-
     if mode[1]=='Demo':
         wget_exists=exec_command_line_command('wget -h')
         if wget_exists['ReturnCode']!=0:
@@ -418,6 +421,9 @@ try:
                            '\nOtherwise, press ENTER to continue: ')
         if start_time == '':
             start_time = '2019-01-01 00:00:00'
+        if check_time(start_time)['Error']!=None:
+            print('Bad time format: '+start_time+' Execution will be stopped!')
+            exit(1)
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
@@ -566,6 +572,9 @@ try:
             s.ssh_close()
             print_in_color('Use the same date format as in previous output','blue')
             start_time = input('And Enter your "since time" to extract log messages: ')
+            if check_time(start_time)['Error'] != None:
+                print('Bad time format: ' + start_time + ' Execution will be stopped!')
+                exit(1)
             mode_start_time=time.time()
             result_dir='Overcloud_Logs_Relevant'
             if result_dir in os.listdir('.'):
@@ -659,8 +668,14 @@ try:
     if mode[1]=='Extract messages for given time range':
         start_range_time = input('\nEnter range "start time":'
                            '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
+        if check_time(start_range_time)['Error']!=None:
+            print('Bad time format: '+start_time+' Execution will be stopped!')
+            exit(1)
         stop_range_time = input('\nEnter range "stop time":'
                            '\nTime format example: 2020-04-22 12:20:00 enter your time: ')
+        if check_time(stop_range_time)['Error']!=None:
+            print('Bad time format: '+start_time+' Execution will be stopped!')
+            exit(1)
         mode_start_time = time.time()
         for item in [start_range_time,stop_range_time]:
             if check_time(item)==False:
