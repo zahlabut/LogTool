@@ -107,7 +107,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*</artifacts>
+      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*,LogTool/JenkinsStage/Jenkins_Job_ERROR/LogTool_Result_ERROR.log</artifacts>
       <allowEmptyArchive>true</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
