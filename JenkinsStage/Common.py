@@ -21,25 +21,16 @@ from string import digits
 from requests import Request, Session
 
 def download_file(url, dst_path='.'):
-    s = Session()
-    req = Request('GET', url)
-    prepped = s.prepare_request(req)
-    # Merge environment settings into session
-    settings = s.merge_environment_settings(prepped.url, {}, None, None, None)
-    resp = s.send(prepped, **settings)
-    with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
-        f.write(resp.content)
-    return {'Status':resp.status_code,'Content':resp.content}
-
-    # r = requests.get(url,verify=False)
-    # with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
-    #     f.write(r.content)
-    # return {'Status':r.status_code}
-
-
-
-
-
+    print_in_color(url,'red')
+    try:
+        r = requests.get(url,verify=False)
+        with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
+            f.write(r.content)
+        return {'Status':r.status_code,'Content':r.content}
+    except Exception, e:
+        #print_in_color(str(e),'red')
+        #print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
+        return {'Status': None, 'Content':None}
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')

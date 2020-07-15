@@ -77,9 +77,9 @@ class LogTool(unittest.TestCase):
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
-        #response = urllib2.urlopen(artifact_url,c)
+        response = urllib2.urlopen(artifact_url)
 
-        response=download_file(artifact_url)['Content']
+        #response=download_file(artifact_url)['Content']
 
         html = response.read()
         parsed_url = urlparse.urlparse(artifact_url)
