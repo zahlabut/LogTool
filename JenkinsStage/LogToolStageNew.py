@@ -54,15 +54,15 @@ if ',' in undercloud_log_dirs:
 else:
     undercloud_log_dirs = [undercloud_log_dirs]
 
-
-print overcloud_log_dirs
-
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
+
+    '''This test is planned to validate all the parameters,provided by user'''
     def test_1_validate_parameterts(self):
+        print ('\ntest_1_validate_parameterts')
         self.assertEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
         self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
@@ -72,7 +72,10 @@ class LogTool(unittest.TestCase):
         self.assertIn('list',str(type(overcloud_log_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
         self.assertIn('list',str(type(undercloud_log_dirs)),'ERROR - "undercloud_log_dirs" is not list type!')
 
-    def test_2_get_all_links_from_artifact_url(self):
+    '''This test is planned to parse artifact_url and to create a dictionary
+    of relevant links: *.tar.gz file, IR logs, Tempest Logs and Console log'''
+    def test_2_parse_artifact_url(self):
+        print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
         response = urllib2.urlopen(artifact_url)
         html = response.read()
@@ -107,7 +110,64 @@ class LogTool(unittest.TestCase):
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
         all_links={'CosoleLog':console_log_url,'TempestLogs':tempest_log_urls,
                    'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files}
-        print_in_color(str(all_links),'green')
+        print_dic(all_links)
+        LogTool.all_links=all_links
+
+    '''This test is planned to filter the previous created dictionary (in test3) according to 
+    user's needs. In phase one it will only filter out tar.gz files, for example Undercloud
+     files if user is intresting in Overcloud nodes only, will be filtered out'''
+    def test_3_filtering_phase_one(self):
+        print('\ntest_3_filtering_phase_one')
+        filtered_urls=[]
+        tar_gz_urls = LogTool.all_links['TarGzFiles']
+        for url in tar_gz_urls:
+            a = urlparse.urlparse(url)
+            basename=os.path.basename(a.path)
+            if analyze_overcloud_logs==True:
+                for name in overcloud_node_names:
+                    if name.lower() in basename.lower():
+                        filtered_urls.append(url)
+                        break
+            if analyze_undercloud_logs==True:
+                for name in undercloud_node_names:
+                    if name.lower() in basename.lower():
+                        filtered_urls.append(url)
+                        break
+        spec_print(['Filtered *.tar.gz files after phase one filtering']+filtered_urls,'bold')
+        LogTool.all_links['TarGzFiles']=filtered_urls
+
+    def test_4_download_files(self):
+        print('\ntest_4_download_files')
+        print_dic(LogTool.all_links)
+
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
+
+
+        # Create temp directory
+        temp_dir = 'temp_dir'
+        temp_dir = os.path.join(os.path.dirname(os.path.abspath('.')), temp_dir)
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
+        os.mkdir(temp_dir)
+        for key in LogTool.all_links.keys():
+            for url in LogTool.all_links[key]:
+                print_in_color(url,'bold')
+                a = urlparse.urlparse(url)
+                basename = os.path.basename(a.path)
+                if url.endswith('.html'):
+                    res = download_file(url, temp_dir)
+                    if res['Status'] != 200:
+                        print_in_color('Failed to download: ' + url, 'red')
+                    else:
+                        print_in_color('OK --> ' + url, 'blue')
+                    shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir,basename.replace('.html','.log')))
+                else:
+                    res = download_file(url, temp_dir)
+                    if res['Status'] != 200:
+                        print_in_color('Failed to download: ' + url, 'red')
+                    else:
+                        print_in_color('OK --> ' + url, 'blue')
 
 
 
@@ -117,22 +177,7 @@ class LogTool(unittest.TestCase):
 
 
 
-
-    # def test_3_download_files(self):
-    #     # Create destination directory
-    #     mode_start_time=time.time()
-    #     destination_dir = 'Jenkins_Job_Files'
-    #     destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
-    #     if os.path.exists(destination_dir):
-    #         shutil.rmtree(destination_dir)
-    #     os.mkdir(destination_dir)
-    #
-    #     res = download_file(tar_link, destination_dir)
-    #     if res['Status'] != 200:
-    #         print_in_color('Failed to download: ' + tar_link, 'red')
-    #     else:
-    #         print_in_color('OK --> ' + tar_link, 'blue')
-    #
+        #destination_dir = 'Jenkins_Job_Files'
     #
     #
     #
@@ -157,7 +202,6 @@ class LogTool(unittest.TestCase):
     #         else:
     #             print_in_color('OK --> ' + tempest_log_url, 'blue')
     #
-    #         shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
     #
     #     # Print list of downloaded files
     #     spec_print(['Downloaded files:']+os.listdir(destination_dir),'bold')

@@ -32,9 +32,7 @@ log_type='all_logs'
 overcloud_node_names=['controller','compute','ceph']
 
 # Undercloud "node" names
-overcloud_node_names=['undercloud','hypervisor']
-
-
+undercloud_node_names=['undercloud','hypervisor']
 
 
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
@@ -46,7 +44,7 @@ artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase
 user_start_time='2020-01-01 00:00:00'
 
 #Parameter is added with: echo "analyze_overcloud_logs='"analyze_overcloud_logs"'" >> Params.py
-analyze_overcloud_logs='true'
+analyze_overcloud_logs='false'
 
 #Parameter is added with: echo "overcloud_logs_dirs='"overcloud_logs_dirs"'" >> Params.py
 overcloud_log_dirs = '/var/log/containers'

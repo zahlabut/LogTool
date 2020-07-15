@@ -20,7 +20,7 @@ from urllib2 import urlparse
 from string import digits
 
 def download_file(url, dst_path):
-    r = requests.get(url)
+    r = requests.get(url,verify=False)
     with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
         f.write(r.content)
     return {'Status':r.status_code}
