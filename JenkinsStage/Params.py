@@ -40,24 +40,24 @@ undercloud_node_names=['undercloud','hypervisor']
 
 
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-#artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
-artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase3/view/OSP%2016.1/view/storage/job/DFG-all-unified-16.1_director-rhel-virthost-3cont_2comp_3ceph-ipv4-geneve-ceph-native-default/104/artifact/'
+artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
+#artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase3/view/OSP%2016.1/view/storage/job/DFG-all-unified-16.1_director-rhel-virthost-3cont_2comp_3ceph-ipv4-geneve-ceph-native-default/104/artifact/'
 
 
 #Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py
 user_start_time='2020-01-01 00:00:00'
 
 #Parameter is added with: echo "analyze_overcloud_logs='"analyze_overcloud_logs"'" >> Params.py
-analyze_overcloud_logs='false'
+analyze_overcloud_logs='true'
 
 #Parameter is added with: echo "overcloud_logs_dirs='"overcloud_logs_dirs"'" >> Params.py
-overcloud_log_dirs = '/var/log/containers'
+overcloud_log_dirs = 'var/log/containers,home/heat-admin'
 
 #Parameter is added with: echo "analyze_undercloud_logs='"analyze_undercloud_logs"'" >> Params.py
 analyze_undercloud_logs='true'
 
 #Parameter is added with: echo "undercloud_log_dirs='"undercloud_log_dirs"'" >> Params.py
-undercloud_log_dirs = '/var/log,/home/stack,/usr/share/,/var/lib/'
+undercloud_log_dirs = 'var/log,home/stack,usr/share,var/lib,zababun'
 
 
 

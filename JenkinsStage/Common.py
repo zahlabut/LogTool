@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-import os, datetime,subprocess,json,sys,re,requests
+import os, datetime,subprocess,json,sys,re,requests,shutil
 import urllib2
 import difflib
 from urllib2 import urlparse
@@ -115,3 +115,8 @@ def check_user_time(start_time):
         return {'Error': None, 'Line': None, 'Date': str(date)}
     else:
         return {'Error': 'Bad time format!', 'Line': start_time, 'Date':None}
+
+def create_dir(dir_dst_path):
+    if os.path.isdir(dir_dst_path):
+        shutil.rmtree(dir_dst_path)
+    os.mkdir(dir_dst_path)

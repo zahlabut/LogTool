@@ -34,9 +34,7 @@ spec_print(['Job Parameters:','artifact_url: '+artifact_url,'user_start_time: '+
             'undercloud_log_dirs: '+undercloud_log_dirs],'bold')
 
 ### Create Result Folders ###
-if result_dir in os.listdir('.'):
-    shutil.rmtree(result_dir)
-os.mkdir(result_dir)
+create_dir(result_dir)
 
 # Set boolean parameters
 if analyze_overcloud_logs == 'true':
@@ -118,7 +116,7 @@ class LogTool(unittest.TestCase):
         print_dic(all_links)
         LogTool.all_links=all_links
 
-    '''This test is planned to filter the previous created dictionary (in test3) according to 
+    '''This test is planned to filter the previous created dictionary (in test3) according to
     user's needs. In phase one it will only filter out tar.gz files, for example Undercloud
      files if user is intresting in Overcloud nodes only, will be filtered out'''
     def test_3_filtering_phase_one(self):
@@ -141,77 +139,134 @@ class LogTool(unittest.TestCase):
         spec_print(['Filtered *.tar.gz files after phase one filtering']+filtered_urls,'bold')
         LogTool.all_links['TarGzFiles']=filtered_urls
 
+    ''''This test is planned to download all files after the first filtering phase'''
     def test_4_download_files(self):
         print('\ntest_4_download_files')
         # Create temp directory
-        temp_dir_path = os.path.join(os.path.dirname(os.path.abspath('.')), temp_dir)
-        if os.path.exists(temp_dir_path):
-            shutil.rmtree(temp_dir_path)
-        os.mkdir(temp_dir_path)
+        create_dir(temp_dir)
         for key in LogTool.all_links.keys():
             for url in LogTool.all_links[key]:
                 a = urlparse.urlparse(url)
                 basename = os.path.basename(a.path)
                 if url.endswith('.html'):
-                    res = download_file(url, temp_dir_path)
+                    res = download_file(url, temp_dir)
                     if res['Status'] != 200:
                         print_in_color('Failed to download: ' + url, 'red')
                     else:
                         print_in_color('OK --> ' + url, 'blue')
-                    shutil.move(os.path.join(temp_dir_path, basename),os.path.join(temp_dir_path,basename.replace('.html','.log')))
+                    shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir,basename.replace('.html','.log')))
                 else:
-                    res = download_file(url, temp_dir_path)
+                    res = download_file(url, temp_dir)
                     if res['Status'] != 200:
                         print_in_color('Failed to download: ' + url, 'red')
                     else:
                         print_in_color('OK --> ' + url, 'blue')
-
-    #def test_5_unzip_tar_gz_files(self):
-
+        spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
 
 
 
+    '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
+    def test_5_unzip_tar_gz_files(self):
+        print('\ntest_5_unzip_tar_gz_files')
+        for fil in os.listdir(os.path.abspath(temp_dir)):
+            if fil.endswith('.tar.gz'):
+                cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + os.path.abspath(
+                    temp_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
+                    os.path.abspath(temp_dir), fil)
+                print_in_color('Unzipping ' + fil + '...', 'bold')
+                print_in_color(cmd,'bold')
+                os.system(cmd)
+
+
+    ''''This test is planned to filter out all not relevant path (as provided by user in: "undercloud_log_dirs"
+    and "overcloud_log_dirs") parameters'''
+    def test_6_filtering_phase_two(self):
+        create_dir(destination_dir)
+        node_types=[(undercloud_node_names,undercloud_log_dirs),
+                    (overcloud_node_names,overcloud_log_dirs)]
+
+        node_types=[(overcloud_node_names,overcloud_log_dirs)]
+
+
+        for node_type in node_types:
+            node_dirs_to_copy=[]
+            for fil in os.listdir(temp_dir):
+                for name in node_type[0]:
+                    if (name.lower() in fil.lower()) and os.path.isdir(os.path.join(os.path.abspath(temp_dir),fil)):
+                        node_dirs_to_copy.append(os.path.join(os.path.abspath(temp_dir),fil))
+                        break
+            for item in node_dirs_to_copy:
+                print item
+                for path in node_type[1]:
+                    print path
+                    if os.path.isdir(os.path.join(item,path))==True:
+                        #print os.path.join(destination_dir,os.path.basename(item),path)
+                        print os.path.join(item,path),'-->',os.path.join(destination_dir,os.path.basename(item),path)
+                        #shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
+
+    # # Filter undercloud nodes only
+        # for fil in os.listdir(temp_dir):
+        #     for name in undercloud_node_names:
+        #         if (name.lower() in fil.lower()) and os.path.isdir(os.path.join(os.path.abspath(temp_dir),fil)):
+        #             undercloud_dirs.append(os.path.join(os.path.abspath(temp_dir),fil))
+        #             break
+        # for item in undercloud_dirs:
+        #     for path in undercloud_log_dirs:
+        #         if os.path.isdir(os.path.join(item,path))==True:
+        #             print os.path.join(destination_dir,os.path.basename(item),path)
+        #             shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
 
 
 
+        # if analyze_undercloud_logs==True:
+        #     temp_file_path=os.path.join(os.path.abspath(temp_dir),
+        #     for fil in os.listdir():
+        #
+        #         if os.path.isdir(os.path.join(os.path.abspath(temp_dir), dir)) == True:
+        #         for name in overcloud_node_names:
+        #             if name.lower() in dir.lower():
+        #                 overcloud_dirs.append(os.path.join(os.path.abspath(temp_dir), dir))
+        #                 break
+        #         for name in undercloud_node_names:
+        #             if name.lower() in dir.lower():
+        #                 undercloud_dirs.append(os.path.join(os.path.abspath(temp_dir), dir))
+        #
+        # if analyze_undercloud_logs==True:
+        #     for item in undercloud_dirs:
+        #         print os.path.join(os.path.join(os.path.abspath(temp_dir),dir))#+path
+        #         # print os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)
+        #         # if os.path.isdir(os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)):
+        #         #     #shutil.copytree(os.path.join(os.path.abspath(dir), path))
+        #         #     print os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)
+
+
+
+
+
+                #                 if os.path.isdir(os.path.join(os.path.abspath(dir),path)):
+                #                     shutil.copcopytree(os.path.join(os.path.abspath(dir),path),os.path.abspath(destination_dir))
+                # if analyze_undercloud_logs==True:
+                #     for name in undercloud_node_names:
+                #         if name.lower() in dir.lower():
+                #             print 2
+                #             for path in undercloud_log_dirs:
+
+                #
+
+
+
+
+
+
+
+
     #
-    #
-    #
-    #
-    #
-    #     shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
-    #     # Download Infared Logs .sh, files in .sh directory on Jenkins
-    #     if len(ir_logs_urls)!=0:
-    #         for url in ir_logs_urls:
-    #             res = download_file(url, destination_dir)
-    #             if res['Status'] != 200:
-    #                 print_in_color('Failed to download: ' + url, 'red')
-    #             else:
-    #                 print_in_color('OK --> ' + url, 'blue')
-    #
-    #
-    #     # Download tempest log (html #)
-    #     if tempest_log_url!=None:
-    #         res = download_file(tempest_log_url,destination_dir)
-    #         if res['Status'] != 200:
-    #             print_in_color('Failed to download: ' + tempest_log_url, 'red')
-    #         else:
-    #             print_in_color('OK --> ' + tempest_log_url, 'blue')
-    #
-    #
-    #     # Print list of downloaded files
-    #     spec_print(['Downloaded files:']+os.listdir(destination_dir),'bold')
-    #
-    #     # Unzip all downloaded .tar.gz files
-    #     for fil in os.listdir(os.path.abspath(destination_dir)):
-    #         if fil.endswith('.tar.gz'):
-    #             cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(destination_dir), fil) + ' -C ' + os.path.abspath(
-    #                 destination_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
-    #                 os.path.abspath(destination_dir), fil)
-    #             print_in_color('Unzipping ' + fil + '...', 'bold')
-    #             os.system(cmd)
-    #             os.system('rm -rf '+fil)
+
+
+
+
+
     #     # Run LogTool analyzing
     #     print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
     #     result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
