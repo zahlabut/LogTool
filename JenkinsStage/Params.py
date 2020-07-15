@@ -28,8 +28,19 @@ save_raw_data='yes'
 # Analyze all  logs, another option for this parameter is: osp_logs_only
 log_type='all_logs'
 
+# Overcloud node names
+overcloud_node_names=['controller','compute','ceph']
+
+# Undercloud "node" names
+overcloud_node_names=['undercloud','hypervisor']
+
+
+
+
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
+#artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
+artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase3/view/OSP%2016.1/view/storage/job/DFG-all-unified-16.1_director-rhel-virthost-3cont_2comp_3ceph-ipv4-geneve-ceph-native-default/104/artifact/'
+
 
 #Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py
 user_start_time='2020-01-01 00:00:00'

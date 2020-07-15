@@ -23,12 +23,12 @@ import sys
 import time
 from urllib2 import urlparse
 from urlparse import urljoin
+from BeautifulSoup import BeautifulSoup
 
 spec_print(['Job Parameters:','artifact_url: '+artifact_url,'user_start_time: '+user_start_time,
             'analyze_overcloud_logs: '+analyze_overcloud_logs,
             'overcloud_log_dirs: '+overcloud_log_dirs,'analyze_undercloud_logs: '+analyze_undercloud_logs,
             'undercloud_log_dirs: '+undercloud_log_dirs],'bold')
-
 
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):
@@ -40,7 +40,6 @@ if analyze_overcloud_logs == 'true':
     analyze_overcloud_logs = True
 else:
     analyze_overcloud_logs = False
-
 if analyze_undercloud_logs == 'true':
     analyze_undercloud_logs = True
 else:
@@ -54,7 +53,6 @@ if ',' in undercloud_log_dirs:
     undercloud_log_dirs = undercloud_log_dirs.split(',')
 else:
     undercloud_log_dirs = [undercloud_log_dirs]
-
 
 
 print overcloud_log_dirs
@@ -74,8 +72,53 @@ class LogTool(unittest.TestCase):
         self.assertIn('list',str(type(overcloud_log_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
         self.assertIn('list',str(type(undercloud_log_dirs)),'ERROR - "undercloud_log_dirs" is not list type!')
 
+    def test_2_get_all_links_from_artifact_url(self):
+        # Parse artifact_url html
+        response = urllib2.urlopen(artifact_url)
+        html = response.read()
+        parsed_url = urlparse.urlparse(artifact_url)
+        base_url = parsed_url.scheme + '://' + parsed_url.netloc
+        soup = BeautifulSoup(html)
+        tar_gz_files = []
+        ir_logs_urls = []
+        tempest_log_urls = []
+        for link in soup.findAll('a'):
+            if 'tempest-results' in link:
+                tempest_results_url = urljoin(artifact_url, link.get('href'))
+                tempest_response = urllib2.urlopen(tempest_results_url)
+                html = tempest_response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.html'):
+                        tempest_html = link.get('href')
+                        tempest_log_urls.append(urljoin(artifact_url, 'tempest-results') + '/' + tempest_html)
+            if str(link.get('href')).endswith('.tar.gz'):
+                tar_link = urlparse.urljoin(artifact_url, link.get('href'))
+                tar_gz_files.append(tar_link)
 
-    # def test_1_download_jenkins_job(self):
+            if str(link.get('href')).endswith('.sh'):
+                sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
+                response = urllib2.urlopen(sh_page_link)
+                html = response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).endswith('.log'):
+                        ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
+        console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
+        all_links={'CosoleLog':console_log_url,'TempestLogs':tempest_log_urls,
+                   'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files}
+        print_in_color(str(all_links),'green')
+
+
+
+
+
+
+
+
+
+
+    # def test_3_download_files(self):
     #     # Create destination directory
     #     mode_start_time=time.time()
     #     destination_dir = 'Jenkins_Job_Files'
@@ -83,56 +126,17 @@ class LogTool(unittest.TestCase):
     #     if os.path.exists(destination_dir):
     #         shutil.rmtree(destination_dir)
     #     os.mkdir(destination_dir)
-    #     #Import BeautifulSoup
-    #     try:
-    #         from BeautifulSoup import BeautifulSoup
-    #     except Exception as e:
-    #         print_in_color(str(e), 'red')
-    #         print_in_color('Execute "pip install beautifulsoup" to install it!', 'yellow')
-    #         exit('Install beautifulsoup and rerun!')
-    #     # Download logs
-    #     response = urllib2.urlopen(artifact_url)
-    #     html = response.read()
-    #     parsed_url = urlparse.urlparse(artifact_url)
-    #     base_url = parsed_url.scheme + '://' + parsed_url.netloc
-    #     soup = BeautifulSoup(html)
-    #     tar_gz_files = []
-    #     ir_logs_urls = []
-    #     tempest_log_url = None
-    #     for link in soup.findAll('a'):
-    #         if 'tempest-results' in link:
-    #             tempest_results_url = urljoin(artifact_url, link.get('href'))
-    #             tempest_response = urllib2.urlopen(tempest_results_url)
-    #             html = tempest_response.read()
-    #             soup = BeautifulSoup(html)
-    #             for link in soup.findAll('a'):
-    #                 if str(link.get('href')).endswith('.html'):
-    #                     tempest_html = link.get('href')
-    #                     tempest_log_url = urljoin(artifact_url, 'tempest-results') + '/' + tempest_html
-    #                     break
-    #         if str(link.get('href')).endswith('.tar.gz'):
-    #             tar_gz_files.append(link)
-    #             tar_link = urlparse.urljoin(artifact_url, link.get('href'))
-    #             res=download_file(tar_link,destination_dir)
-    #             if res['Status']!=200:
-    #                 print_in_color('Failed to download: '+tar_link,'red')
-    #             else:
-    #                 print_in_color('OK --> ' + tar_link, 'blue')
     #
-    #         if str(link.get('href')).endswith('.sh'):
-    #             sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
-    #             response = urllib2.urlopen(sh_page_link)
-    #             html = response.read()
-    #             soup = BeautifulSoup(html)
-    #             for link in soup.findAll('a'):
-    #                 if str(link.get('href')).endswith('.log'):
-    #                     ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
-    #     console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
-    #     res = download_file(console_log_url, destination_dir)
+    #     res = download_file(tar_link, destination_dir)
     #     if res['Status'] != 200:
-    #         print_in_color('Failed to download: ' + console_log_url, 'red')
+    #         print_in_color('Failed to download: ' + tar_link, 'red')
     #     else:
-    #         print_in_color('OK --> ' + console_log_url, 'blue')
+    #         print_in_color('OK --> ' + tar_link, 'blue')
+    #
+    #
+    #
+    #
+    #
     #
     #     shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
     #     # Download Infared Logs .sh, files in .sh directory on Jenkins
