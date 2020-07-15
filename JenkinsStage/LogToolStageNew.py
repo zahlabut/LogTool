@@ -57,15 +57,15 @@ class LogTool(unittest.TestCase):
                         '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
         self.assertIn(analyze_overcloud_logs,[True,False],'ERROR - boolean "analyze_overcloud_logs" is invalid!')
         self.assertIn(analyze_undercloud_logs,[True,False],'ERROR - boolean "analyze_undercloud_logs" is invalid!')
-        if ',' in overcloud_logs_dirs:
-            overcloud_logs_dirs=overcloud_logs_dirs.split(',')
+        if ',' in self.overcloud_logs_dirs:
+            overcloud_logs_dirs=self.overcloud_logs_dirs.split(',')
         else:
-            overcloud_logs_dirs=[overcloud_logs_dirs]
+            overcloud_logs_dirs=[self.overcloud_logs_dirs]
         self.assertIn('list',str(type(overcloud_logs_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
-        if ',' in undercloud_log_dirs:
-            undercloud_log_dirs=undercloud_log_dirs.split(',')
+        if ',' in self.undercloud_log_dirs:
+            undercloud_log_dirs=self.undercloud_log_dirs.split(',')
         else:
-            undercloud_log_dirs=[undercloud_log_dirs]
+            undercloud_log_dirs=[self.undercloud_log_dirs]
         self.assertIn('list',str(type(undercloud_log_dirs)),'ERROR - "undercloud_log_dirs" is not list type!')
 
         # Parameter is added with: echo "undercloud_log_dirs='"undercloud_log_dirs"'" >> Params.py
