@@ -21,7 +21,6 @@ from string import digits
 from requests import Request, Session
 
 def download_file(url, dst_path='.'):
-    print_in_color(url,'red')
     try:
         r = requests.get(url,verify=False)
         with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
