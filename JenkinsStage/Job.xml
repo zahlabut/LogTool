@@ -57,6 +57,34 @@ Important: use exactly the same format as in default!</description>
           <defaultValue>2020-07-01 00:00:00</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>analyze_overcloud_logs</name>
+          <description>If checked, all Overcloud *tar.gz files: Contoller.tar.gz, Compute.tar.gz ...
+will be downloaded and analyzed.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>overcloud_log_dirs</name>
+          <description>Log directories on Overcloud nodes that will be analyzed.
+Use komma character separator, to add more values, for example:
+Note: use relative path only!</description>
+          <defaultValue>var/log</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>analyze_undercloud_logs</name>
+          <description>If checked, all Undercloud *tar.gz files: undercloud.tar.gz and hypervisor.tar.gz
+will be downloaded and analyzed.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>undercloud_log_dirs</name>
+          <description>Log directories on Undercloud nodes that will be analyzed.
+Use komma character separator, to add more values.
+Note: use relative path only!</description>
+          <defaultValue>var/log,home/stack,usr/share,var/lib</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.2">
@@ -101,13 +129,17 @@ pip install requests
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
-cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
-</command>
+echo "analyze_overcloud_logs='"$analyze_overcloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "overcloud_log_dirs='"$overcloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "analyze_undercloud_logs='"$analyze_undercloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "undercloud_log_dirs='"$undercloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+#cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
+cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*,LogTool/JenkinsStage/Jenkins_Job_ERROR/LogTool_Result_ERROR.log</artifacts>
+      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*,LogTool/JenkinsStage/Jenkins_Job_ERROR/LogTool_Result_ERROR.log,LogTool/JenkinsStage/Params.py</artifacts>
       <allowEmptyArchive>true</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
