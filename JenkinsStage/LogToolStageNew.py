@@ -51,7 +51,7 @@ class LogTool(unittest.TestCase):
         warnings.warn(message=msg, category=Warning)
 
     def test_1_validate_parameterts(self):
-        self.assertNotEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
+        self.assertEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
         self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
                         '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
