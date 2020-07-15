@@ -79,7 +79,7 @@ class LogTool(unittest.TestCase):
         # Parse artifact_url html
         #response = urllib2.urlopen(artifact_url,c)
 
-        response=r = requests.get(artifact_url,verify=False).content
+        response=requests.get(artifact_url,verify=False).content
 
         html = response.read()
         parsed_url = urlparse.urlparse(artifact_url)
