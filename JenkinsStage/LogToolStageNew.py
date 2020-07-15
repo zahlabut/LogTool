@@ -51,10 +51,10 @@ class LogTool(unittest.TestCase):
         warnings.warn(message=msg, category=Warning)
 
     def test_1_validate_parameterts(self):
-        self.assertNotEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!\n'+
-                        'Provided value  was: ' + user_start_time, 'See expected value, used by default.')
-        self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!\n"+
-                        'Provided value  was: ' + artifact_url+'See expected value, used by default.')
+        self.assertNotEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
+                        '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
+        self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
+                        '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
         self.assertIn(analyze_overcloud_logs,[True,False],'ERROR - boolean "analyze_overcloud_logs" is invalid!')
         self.assertIn(analyze_undercloud_logs,[True,False],'ERROR - boolean "analyze_undercloud_logs" is invalid!')
         if ',' in overcloud_logs_dirs:
