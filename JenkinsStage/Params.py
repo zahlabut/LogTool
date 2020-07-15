@@ -51,13 +51,13 @@ user_start_time='2020-01-01 00:00:00'
 analyze_overcloud_logs='true'
 
 #Parameter is added with: echo "overcloud_logs_dirs='"overcloud_logs_dirs"'" >> Params.py
-overcloud_log_dirs = 'var/log/containers,home/heat-admin'
+overcloud_log_dirs = 'var/log/'
 
 #Parameter is added with: echo "analyze_undercloud_logs='"analyze_undercloud_logs"'" >> Params.py
 analyze_undercloud_logs='true'
 
 #Parameter is added with: echo "undercloud_log_dirs='"undercloud_log_dirs"'" >> Params.py
-undercloud_log_dirs = 'var/log,home/stack,usr/share,var/lib,zababun'
+undercloud_log_dirs = 'var/log,home/stack,usr/share,var/lib,etc/ssh'
 
 
 

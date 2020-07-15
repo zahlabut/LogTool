@@ -183,12 +183,7 @@ class LogTool(unittest.TestCase):
     and "overcloud_log_dirs") parameters'''
     def test_6_filtering_phase_two(self):
         create_dir(destination_dir)
-        node_types=[(undercloud_node_names,undercloud_log_dirs),
-                    (overcloud_node_names,overcloud_log_dirs)]
-
-        node_types=[(overcloud_node_names,overcloud_log_dirs)]
-
-
+        node_types=[(undercloud_node_names,undercloud_log_dirs),(overcloud_node_names,overcloud_log_dirs)]
         for node_type in node_types:
             node_dirs_to_copy=[]
             for fil in os.listdir(temp_dir):
@@ -197,99 +192,35 @@ class LogTool(unittest.TestCase):
                         node_dirs_to_copy.append(os.path.join(os.path.abspath(temp_dir),fil))
                         break
             for item in node_dirs_to_copy:
-                print item
                 for path in node_type[1]:
-                    print path
                     if os.path.isdir(os.path.join(item,path))==True:
-                        #print os.path.join(destination_dir,os.path.basename(item),path)
-                        print os.path.join(item,path),'-->',os.path.join(destination_dir,os.path.basename(item),path)
-                        #shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
+                        shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
 
-    # # Filter undercloud nodes only
-        # for fil in os.listdir(temp_dir):
-        #     for name in undercloud_node_names:
-        #         if (name.lower() in fil.lower()) and os.path.isdir(os.path.join(os.path.abspath(temp_dir),fil)):
-        #             undercloud_dirs.append(os.path.join(os.path.abspath(temp_dir),fil))
-        #             break
-        # for item in undercloud_dirs:
-        #     for path in undercloud_log_dirs:
-        #         if os.path.isdir(os.path.join(item,path))==True:
-        #             print os.path.join(destination_dir,os.path.basename(item),path)
-        #             shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
+    ''''This test is analyzing logs'''
+    def test_7_analyze_logs(self):
+        mode_start_time=time.time()
+        print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
+        result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir),
+                                   'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+        command = "python2 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
+            destination_dir) + " '" + grep_string + "'" + ' ' + result_file
 
-
-
-        # if analyze_undercloud_logs==True:
-        #     temp_file_path=os.path.join(os.path.abspath(temp_dir),
-        #     for fil in os.listdir():
-        #
-        #         if os.path.isdir(os.path.join(os.path.abspath(temp_dir), dir)) == True:
-        #         for name in overcloud_node_names:
-        #             if name.lower() in dir.lower():
-        #                 overcloud_dirs.append(os.path.join(os.path.abspath(temp_dir), dir))
-        #                 break
-        #         for name in undercloud_node_names:
-        #             if name.lower() in dir.lower():
-        #                 undercloud_dirs.append(os.path.join(os.path.abspath(temp_dir), dir))
-        #
-        # if analyze_undercloud_logs==True:
-        #     for item in undercloud_dirs:
-        #         print os.path.join(os.path.join(os.path.abspath(temp_dir),dir))#+path
-        #         # print os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)
-        #         # if os.path.isdir(os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)):
-        #         #     #shutil.copytree(os.path.join(os.path.abspath(dir), path))
-        #         #     print os.path.join(os.path.join(os.path.abspath(temp_dir),dir), item)
-
-
-
-
-
-                #                 if os.path.isdir(os.path.join(os.path.abspath(dir),path)):
-                #                     shutil.copcopytree(os.path.join(os.path.abspath(dir),path),os.path.abspath(destination_dir))
-                # if analyze_undercloud_logs==True:
-                #     for name in undercloud_node_names:
-                #         if name.lower() in dir.lower():
-                #             print 2
-                #             for path in undercloud_log_dirs:
-
-                #
-
-
-
-
-
-
-
-
-    #
-
-
-
-
-
-    #     # Run LogTool analyzing
-    #     print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
-    #     result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
-    #     if os.path.exists(os.path.abspath(result_dir)):
-    #         shutil.rmtree(os.path.abspath(result_dir))
-    #     result_file = os.path.join(os.path.abspath(result_dir),
-    #                                'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-    #     command = "python2 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
-    #         destination_dir) + " '" + grep_string + "'" + ' ' + result_file
-    #
-    #     # shutil.copytree(destination_dir, os.path.abspath(result_dir))
-    #     exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
-    #     print_in_color('\n --> ' + command, 'bold')
-    #     com_result = exec_command_line_command(command)
-    #     # print (com_result['CommandOutput'])
-    #     end_time = time.time()
-    #     if 'SUCCESS!!!' in com_result['CommandOutput']:
-    #         spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
-    #         spec_print(['Completed!!!',
-    #                     "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
-    #                     '\nLogTool ResultFile is: '+os.path.basename(result_file),
-    #                     'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
-    #                     'blue')
-    #     else:
-    #         spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
-    #                     'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
+        # shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+        print_in_color('\n --> ' + command, 'bold')
+        com_result = exec_command_line_command(command)
+        # print (com_result['CommandOutput'])
+        end_time = time.time()
+        if 'SUCCESS!!!' in com_result['CommandOutput']:
+            spec_print(com_result['CommandOutput'].splitlines()[-3:],'bold')
+            spec_print(['Completed!!!',
+                        "\nCheck LogTool results in 'Build Artifacts' directory: "+os.path.basename(result_dir),
+                        '\nLogTool ResultFile is: '+os.path.basename(result_file),
+                        'Analyzing time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],
+                        'blue')
+        else:
+            spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
+                        'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
