@@ -12,24 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-### Parameters ###
 
 # Log debug level to export #
 grep_string = ' ERROR '
 
 # Path that will be used for saving LogTool result files
 result_dir = 'LogTool_Result_Files'
-
-# Path to OSP logs on Overcloud nodes
-overcloud_logs_dir = '/var/log/containers'
-
-# Path to OSP logs on Undercloud
-undercloud_logs_dir = ['/var/log/containers','/home/stack']
-
-# SSH credentials used for connection to Overcloud nodes
-overcloud_ssh_user = 'heat-admin'
-overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
-overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 
 # Path to source files on Undercloud
 source_rc_file_path='/home/stack/'
@@ -40,14 +28,20 @@ save_raw_data='yes'
 # Analyze all  logs, another option for this parameter is: osp_logs_only
 log_type='all_logs'
 
-# Directories on Undercloud host that are going to be analyzed
-undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
+#Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
+artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
 
 #Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py
 user_start_time='2020-07-01 00:00:00'
 
-#Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
+#Parameter is added with: echo "analyze_overcloud_logs='"analyze_overcloud_logs"'" >> Params.py
+analyze_overcloud_logs='true'
 
+#Parameter is added with: echo "overcloud_logs_dirs='"overcloud_logs_dirs"'" >> Params.py
+overcloud_log_dirs = '/var/log/containers'
 
+#Parameter is added with: echo "analyze_undercloud_logs='"analyze_undercloud_logs"'" >> Params.py
+analyze_undercloud_logs='true'
 
+#Parameter is added with: echo "undercloud_log_dirs='"undercloud_log_dirs"'" >> Params.py
+undercloud_log_dirs = '/var/log,/home/stack,/usr/share/,/var/lib/'

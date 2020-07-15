@@ -25,7 +25,9 @@ import time
 from urllib2 import urlparse
 from urlparse import urljoin
 
-spec_print(['Job Parameters:',artifact_url,user_start_time],'bold')
+
+spec_print(['Job Parameters:',artifact_url,user_start_time,analyze_overcloud_logs,
+            overcloud_log_dirs,analyze_undercloud_logs,undercloud_log_dirs],'bold')
 
 # Parameters #
 errors_on_execution = {}
