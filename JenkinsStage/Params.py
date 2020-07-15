@@ -32,7 +32,7 @@ log_type='all_logs'
 artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/'
 
 #Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py
-user_start_time='2020-07-01 00:00:00'
+user_start_time='2020-01-01 00:00:00'
 
 #Parameter is added with: echo "analyze_overcloud_logs='"analyze_overcloud_logs"'" >> Params.py
 analyze_overcloud_logs='true'
@@ -45,3 +45,7 @@ analyze_undercloud_logs='true'
 
 #Parameter is added with: echo "undercloud_log_dirs='"undercloud_log_dirs"'" >> Params.py
 undercloud_log_dirs = '/var/log,/home/stack,/usr/share/,/var/lib/'
+
+
+
+
