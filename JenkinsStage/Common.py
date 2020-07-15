@@ -18,7 +18,9 @@ import urllib2
 import difflib
 from urllib2 import urlparse
 from string import digits
-from requests import Request, Session
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 def download_file(url, dst_path='.'):
     try:
@@ -27,8 +29,7 @@ def download_file(url, dst_path='.'):
             f.write(r.content)
         return {'Status':r.status_code,'Content':r.content}
     except Exception, e:
-        #print_in_color(str(e),'red')
-        #print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
+        print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
         return {'Status': None, 'Content':None}
 
 def empty_file_content(log_file_name):

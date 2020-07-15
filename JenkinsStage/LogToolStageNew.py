@@ -25,6 +25,9 @@ from urllib2 import urlparse
 from urlparse import urljoin
 from BeautifulSoup import BeautifulSoup
 
+
+
+
 spec_print(['Job Parameters:','artifact_url: '+artifact_url,'user_start_time: '+user_start_time,
             'analyze_overcloud_logs: '+analyze_overcloud_logs,
             'overcloud_log_dirs: '+overcloud_log_dirs,'analyze_undercloud_logs: '+analyze_undercloud_logs,
@@ -54,6 +57,10 @@ if ',' in undercloud_log_dirs:
 else:
     undercloud_log_dirs = [undercloud_log_dirs]
 
+
+
+
+
 class LogTool(unittest.TestCase):
     @staticmethod
     def raise_warning(msg):
@@ -79,8 +86,6 @@ class LogTool(unittest.TestCase):
         # Parse artifact_url html
         response = urllib2.urlopen(artifact_url)
         html = response.read()
-        parsed_url = urlparse.urlparse(artifact_url)
-        base_url = parsed_url.scheme + '://' + parsed_url.netloc
         soup = BeautifulSoup(html)
         tar_gz_files = []
         ir_logs_urls = []
@@ -108,7 +113,7 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
-        all_links={'CosoleLog':console_log_url,'TempestLogs':tempest_log_urls,
+        all_links={'CosoleLog':[console_log_url],'TempestLogs':tempest_log_urls,
                    'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files}
         print_dic(all_links)
         LogTool.all_links=all_links
@@ -138,37 +143,30 @@ class LogTool(unittest.TestCase):
 
     def test_4_download_files(self):
         print('\ntest_4_download_files')
-        print_dic(LogTool.all_links)
-
-        import ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-
-
         # Create temp directory
-        temp_dir = 'temp_dir'
-        temp_dir = os.path.join(os.path.dirname(os.path.abspath('.')), temp_dir)
-        if os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir)
-        os.mkdir(temp_dir)
+        temp_dir_path = os.path.join(os.path.dirname(os.path.abspath('.')), temp_dir)
+        if os.path.exists(temp_dir_path):
+            shutil.rmtree(temp_dir_path)
+        os.mkdir(temp_dir_path)
         for key in LogTool.all_links.keys():
             for url in LogTool.all_links[key]:
-                print_in_color(url,'bold')
                 a = urlparse.urlparse(url)
                 basename = os.path.basename(a.path)
                 if url.endswith('.html'):
-                    res = download_file(url, temp_dir)
+                    res = download_file(url, temp_dir_path)
                     if res['Status'] != 200:
                         print_in_color('Failed to download: ' + url, 'red')
                     else:
                         print_in_color('OK --> ' + url, 'blue')
-                    shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir,basename.replace('.html','.log')))
+                    shutil.move(os.path.join(temp_dir_path, basename),os.path.join(temp_dir_path,basename.replace('.html','.log')))
                 else:
-                    res = download_file(url, temp_dir)
+                    res = download_file(url, temp_dir_path)
                     if res['Status'] != 200:
                         print_in_color('Failed to download: ' + url, 'red')
                     else:
                         print_in_color('OK --> ' + url, 'blue')
 
+    #def test_5_unzip_tar_gz_files(self):
 
 
 
@@ -177,7 +175,6 @@ class LogTool(unittest.TestCase):
 
 
 
-        #destination_dir = 'Jenkins_Job_Files'
     #
     #
     #

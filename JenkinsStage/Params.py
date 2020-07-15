@@ -19,6 +19,10 @@ grep_string = ' ERROR '
 # Path that will be used for saving LogTool result files
 result_dir = 'LogTool_Result_Files'
 
+# Directories names needed for execution
+temp_dir = 'temp_dir'
+destination_dir = 'Jenkins_Job_Files'
+
 # Path to source files on Undercloud
 source_rc_file_path='/home/stack/'
 
