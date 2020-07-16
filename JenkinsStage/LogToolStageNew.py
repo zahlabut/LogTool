@@ -237,7 +237,7 @@ class LogTool(unittest.TestCase):
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
 
     '''This test is planned to run "grep" mode'''
-    @unittest.skipIf(grep_command=='','No provided grep command')
+    #@unittest.skipIf(grep_command=='','No provided grep command')
     def test_8_grep_string(self):
         print '\ntest_8_grep_string'
         grep_result_folder='Grep_HTML_Report'
