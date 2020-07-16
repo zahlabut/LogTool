@@ -93,7 +93,7 @@ For example the default "grep" command will be modified to:
 grep  -C5 ' ERROR ' -r DOWNLOADED_LOGS_DIRECTORY
 HTML report with the output of "grep" command will be published.
 </description>
-          <defaultValue>grep  -C5 ' ERROR ' </defaultValue>
+          <defaultValue>grep  -B2 -A7 ' ERROR ' </defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.BooleanParameterDefinition>
