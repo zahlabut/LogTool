@@ -249,7 +249,7 @@ class LogTool(unittest.TestCase):
 
 
     def test_8_grep_string(self):
-        print grep_command
+        grep_command=grep_command+' '+destination_dir
         file_name='GrepCommandOutput.txt'
         empty_file_content(file_name)
         output=exec_command_line_command(grep_command)
