@@ -59,8 +59,6 @@ if grep_string_only=='true':
     grep_string_only=True
     analyze_overcloud_logs=True
     analyze_undercloud_logs=True
-    overcloud_log_dirs=[]
-    undercloud_log_dirs=[]
 if delete_downloaded_files=='true':
     delete_downloaded_files=True
 
@@ -202,6 +200,7 @@ class LogTool(unittest.TestCase):
 
     ''''This test is planned to filter out all not relevant path (as provided by user in: "undercloud_log_dirs"
     and "overcloud_log_dirs") parameters'''
+    @unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
     def test_6_filtering_phase_two(self):
         create_dir(destination_dir)
         node_types=[(undercloud_node_names,undercloud_log_dirs),(overcloud_node_names,overcloud_log_dirs)]
@@ -221,6 +220,7 @@ class LogTool(unittest.TestCase):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
     ''''This test is analyzing logs and running grep mode if enabled'''
+    @unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
     def test_7_analyze_logs(self):
         mode_start_time=time.time()
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
@@ -254,13 +254,13 @@ class LogTool(unittest.TestCase):
         print '\ntest_8_grep_string'
         grep_result_folder='GrepResult'
         create_dir(grep_result_folder)
-        command=grep_command+' '+destination_dir
+        command=grep_command+' '+temp_dir
         print_in_color(command,'bold')
         file_name='GrepCommandOutput.txt'
         empty_file_content(file_name)
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
-        shutil.move(file_name,grep_result_folder)
+        shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
 
     '''This test is planned to delete all downloaded files'''
     def test_9_delete_downloaded_files(self):
