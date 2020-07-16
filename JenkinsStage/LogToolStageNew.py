@@ -246,10 +246,11 @@ class LogTool(unittest.TestCase):
         empty_file_content(file_name)
         for log in collect_log_paths(destination_dir,[]):
             command=grep_command+' '+log
-            print_in_color(command,'bold')
+            #print_in_color(command,'bold')
             output=exec_command_line_command(command)
-            append_to_file(file_name,'\n\n'+log)
-            append_to_file(file_name,output['CommandOutput'])
+            if output['ReturnCode']==0:
+                append_to_file(file_name,'\n\n\n### '+log)
+                append_to_file(file_name,output['CommandOutput'])
         shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
 
     '''This test is planned to delete all downloaded files'''
