@@ -259,3 +259,4 @@ class LogTool(unittest.TestCase):
         if delete_downloaded_files==True:
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
+
