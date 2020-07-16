@@ -120,3 +120,40 @@ def create_dir(dir_dst_path):
     if os.path.isdir(dir_dst_path):
         shutil.rmtree(dir_dst_path)
     os.mkdir(dir_dst_path)
+
+def collect_log_paths(log_root_path,black_list=None):
+    logs=[]
+    if '[' in log_root_path:
+        log_root_path=log_root_path.replace('[','').replace(']','').replace(' ','')
+        log_root_path=log_root_path.split(',')
+    else:
+        log_root_path=[log_root_path]
+    for path in log_root_path:
+        for root, dirs, files in os.walk(path):
+            for name in files:
+                if '.log' in name or 'var/log/messages' in name:
+                    to_add=False
+                    file_abs_path=os.path.join(os.path.abspath(root), name)
+                    if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
+                        if 'Jenkins_Job_Files' in file_abs_path:
+                            to_add = True
+                        if 'Zuul_Log_Files' in file_abs_path:
+                            to_add=True
+                    if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
+                        to_add = True
+                    if to_add==True:
+                        logs.append(file_abs_path)
+    logs=list(set(logs))
+    # Remove all logs that are in black list
+    filtered_logs=[]
+    for log in logs:
+        to_add=True
+        for path in black_list:
+            if path in log:
+                to_add=False
+                break
+        if to_add==True:
+            filtered_logs.append(log)
+    if len(filtered_logs)==0:
+        sys.exit('Failed - No log files detected in: '+log_root_path)
+    return filtered_logs

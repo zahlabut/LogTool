@@ -242,12 +242,14 @@ class LogTool(unittest.TestCase):
         print '\ntest_8_grep_string'
         grep_result_folder='Grep_HTML_Report'
         create_dir(grep_result_folder)
-        command=grep_command+' -r '+destination_dir
-        print_in_color(command,'bold')
-        file_name='GrepCommandOutput.txt'
+        file_name = 'GrepCommandOutput.txt'
         empty_file_content(file_name)
-        output=exec_command_line_command(command)
-        append_to_file(file_name,output['CommandOutput'])
+        for log in collect_log_paths(destination_dir):
+            command=grep_command+' '+log
+            print_in_color(command,'bold')
+            output=exec_command_line_command(command)
+            append_to_file(file_name,'\n\n'+log)
+            append_to_file(file_name,output['CommandOutput'])
         shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
 
     '''This test is planned to delete all downloaded files'''
