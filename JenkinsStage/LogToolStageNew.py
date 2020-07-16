@@ -255,7 +255,7 @@ class LogTool(unittest.TestCase):
         print '\ntest_8_grep_string'
         grep_result_folder='Grep_HTML_Report'
         create_dir(grep_result_folder)
-        command=grep_command+' '+temp_dir
+        command=grep_command+' -r '+temp_dir
         print_in_color(command,'bold')
         file_name='GrepCommandOutput.txt'
         empty_file_content(file_name)
