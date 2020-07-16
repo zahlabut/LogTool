@@ -28,23 +28,23 @@ from BeautifulSoup import BeautifulSoup
 
 
 
-spec_print(['Job Parameters:','artifact_url: '+artifact_url,'user_start_time: '+user_start_time,
-            'analyze_overcloud_logs: '+analyze_overcloud_logs,
-            'overcloud_log_dirs: '+overcloud_log_dirs,'analyze_undercloud_logs: '+analyze_undercloud_logs,
-            'undercloud_log_dirs: '+undercloud_log_dirs],'bold')
+spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
+            'download_overcloud_logs: ' + download_overcloud_logs,
+            'overcloud_log_dirs: ' + overcloud_log_dirs,'download_undercloud_logs: ' + download_undercloud_logs,
+            'undercloud_log_dirs: ' + undercloud_log_dirs],'bold')
 
 ### Create Result Folders ###
 create_dir(result_dir)
 
 # Set boolean parameters
-if analyze_overcloud_logs == 'true':
-    analyze_overcloud_logs = True
+if download_overcloud_logs == 'true':
+    download_overcloud_logs = True
 else:
-    analyze_overcloud_logs = False
-if analyze_undercloud_logs == 'true':
-    analyze_undercloud_logs = True
+    download_overcloud_logs = False
+if download_undercloud_logs == 'true':
+    download_undercloud_logs = True
 else:
-    analyze_undercloud_logs = False
+    download_undercloud_logs = False
 # Set List parameters
 if ',' in overcloud_log_dirs:
     overcloud_log_dirs = overcloud_log_dirs.split(',')
@@ -57,8 +57,6 @@ else:
 # Add grep mode parameters
 if grep_string_only=='true':
     grep_string_only=True
-    analyze_overcloud_logs=True
-    analyze_undercloud_logs=True
 if delete_downloaded_files=='true':
     delete_downloaded_files=True
 
@@ -84,8 +82,8 @@ class LogTool(unittest.TestCase):
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
         self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
                         '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
-        self.assertIn(analyze_overcloud_logs,[True,False],'ERROR - boolean "analyze_overcloud_logs" is invalid!')
-        self.assertIn(analyze_undercloud_logs,[True,False],'ERROR - boolean "analyze_undercloud_logs" is invalid!')
+        self.assertIn(download_overcloud_logs, [True, False], 'ERROR - boolean "download_overcloud_logs" is invalid!')
+        self.assertIn(download_undercloud_logs,[True,False],'ERROR - boolean "download_undercloud_logs" is invalid!')
         self.assertIn('list',str(type(overcloud_log_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
         self.assertIn('list',str(type(undercloud_log_dirs)),'ERROR - "undercloud_log_dirs" is not list type!')
         if grep_string_only==True and 'grep' not in grep_command:
@@ -143,12 +141,12 @@ class LogTool(unittest.TestCase):
         for url in tar_gz_urls:
             a = urlparse.urlparse(url)
             basename=os.path.basename(a.path)
-            if analyze_overcloud_logs==True:
+            if download_overcloud_logs==True:
                 for name in overcloud_node_names:
                     if name.lower() in basename.lower():
                         filtered_urls.append(url)
                         break
-            if analyze_undercloud_logs==True:
+            if download_undercloud_logs==True:
                 for name in undercloud_node_names:
                     if name.lower() in basename.lower():
                         filtered_urls.append(url)
@@ -257,7 +255,7 @@ class LogTool(unittest.TestCase):
         create_dir(grep_result_folder)
         command=grep_command+' -r '+temp_dir
         print_in_color(command,'bold')
-        file_name='GrepCommandOutput.ini'
+        file_name='GrepCommandOutput.txt'
         empty_file_content(file_name)
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
