@@ -200,7 +200,7 @@ class LogTool(unittest.TestCase):
 
     ''''This test is planned to filter out all not relevant path (as provided by user in: "undercloud_log_dirs"
     and "overcloud_log_dirs") parameters'''
-    @unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
+    #@unittest.skipIf(grep_command==True,'Grep Only Mode used')
     def test_6_filtering_phase_two(self):
         create_dir(destination_dir)
         node_types=[(undercloud_node_names,undercloud_log_dirs),(overcloud_node_names,overcloud_log_dirs)]
@@ -220,7 +220,7 @@ class LogTool(unittest.TestCase):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
     ''''This test is analyzing logs and running grep mode if enabled'''
-    @unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
+    #@unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
     def test_7_analyze_logs(self):
         mode_start_time=time.time()
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
@@ -250,6 +250,7 @@ class LogTool(unittest.TestCase):
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
 
     '''This test is planned to run "grep" mode'''
+    @unittest.skipIf(grep_command=='','No provided grep command')
     def test_8_grep_string(self):
         print '\ntest_8_grep_string'
         grep_result_folder='GrepResult'
