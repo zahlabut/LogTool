@@ -54,12 +54,23 @@ if ',' in undercloud_log_dirs:
     undercloud_log_dirs = undercloud_log_dirs.split(',')
 else:
     undercloud_log_dirs = [undercloud_log_dirs]
+# Add grep mode parameters
+if grep_string_only=='true':
+    grep_string_only=True
+    analyze_overcloud_logs=True
+    analyze_undercloud_logs=True
+    overcloud_log_dirs=[]
+    undercloud_log_dirs=[]
 
 
-
-
-
+#class LogTool(unittest.TestCase):
 class LogTool(unittest.TestCase):
+    def run(self, result=None):
+        if result.failures or result.errors:
+            print "\nAborted"
+        else:
+            super(LogTool, self).run(result)
+
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
@@ -67,6 +78,7 @@ class LogTool(unittest.TestCase):
 
     '''This test is planned to validate all the parameters,provided by user'''
     def test_1_validate_parameterts(self):
+        print ('\ntest_1_validate_parameterts')
         print ('\ntest_1_validate_parameterts')
         self.assertEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
@@ -76,9 +88,14 @@ class LogTool(unittest.TestCase):
         self.assertIn(analyze_undercloud_logs,[True,False],'ERROR - boolean "analyze_undercloud_logs" is invalid!')
         self.assertIn('list',str(type(overcloud_log_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
         self.assertIn('list',str(type(undercloud_log_dirs)),'ERROR - "undercloud_log_dirs" is not list type!')
+        if grep_string_only==True and 'grep' not in grep_command:
+            to_fail=True
+            self.assertEqual(to_fail,False,"ERROR - 'grep_string_only' options is checked, but there is no proper 'grep_command' detected!"+
+                             '\nProvided value  was: \n' + grep_command+'\nSee an example value, used by default.')
 
     '''This test is planned to parse artifact_url and to create a dictionary
     of relevant links: *.tar.gz file, IR logs, Tempest Logs and Console log'''
+    #@unittest.skipIf(LogTool.stop_execution==True,'Skip!')
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
@@ -111,7 +128,7 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
-        all_links={'CosoleLog':[console_log_url],'TempestLogs':tempest_log_urls,
+        all_links={'ConsoleLog':[console_log_url],'TempestLogs':tempest_log_urls,
                    'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files}
         print_dic(all_links)
         LogTool.all_links=all_links
@@ -161,6 +178,8 @@ class LogTool(unittest.TestCase):
                         print_in_color('Failed to download: ' + url, 'red')
                     else:
                         print_in_color('OK --> ' + url, 'blue')
+                    if key=='ConsoleLog':
+                        shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir, basename+'.log'))
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
 
@@ -195,8 +214,11 @@ class LogTool(unittest.TestCase):
                 for path in node_type[1]:
                     if os.path.isdir(os.path.join(item,path))==True:
                         shutil.copytree(os.path.join(item,path),os.path.join(destination_dir,os.path.basename(item),path))
+        for log in os.listdir(temp_dir):
+            if log.endswith('.log'):
+                shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
-    ''''This test is analyzing logs'''
+    ''''This test is analyzing logs and running grep mode if enabled'''
     def test_7_analyze_logs(self):
         mode_start_time=time.time()
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
@@ -224,3 +246,11 @@ class LogTool(unittest.TestCase):
         else:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
+
+
+    def test_8_grep_string(self):
+        print grep_command
+        file_name='GrepCommandOutput.txt'
+        empty_file_content(file_name)
+        output=exec_command_line_command(grep_command)
+        append_to_file(file_name,output['CommandOutput'])
