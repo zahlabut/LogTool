@@ -257,7 +257,7 @@ class LogTool(unittest.TestCase):
         create_dir(grep_result_folder)
         command=grep_command+' -r '+temp_dir
         print_in_color(command,'bold')
-        file_name='GrepCommandOutput.html'
+        file_name='GrepCommandOutput.ini'
         empty_file_content(file_name)
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
