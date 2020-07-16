@@ -63,3 +63,4 @@ undercloud_log_dirs = 'var/log,home/stack,usr/share,var/lib,etc/ssh'
 grep_string_only=True
 grep_command="grep -ir -C1 'There are no enabled repositories' "
 
+delete_downloaded_files='true'
