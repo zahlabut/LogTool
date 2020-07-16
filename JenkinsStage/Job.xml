@@ -85,6 +85,22 @@ Note: use relative path only!</description>
           <defaultValue>var/log,home/stack,usr/share,var/lib</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>grep_command</name>
+          <description>You can provide your own "grep" command that will be executed on downoaded log files directory.
+For example if default is used it will save the output of:
+grep -ir -C5 'There are no enabled repositories' Jenkins_Job_Files
+into a file, that will be saved in "Build Artifacts" as GrepCommandOutput.txt
+Note: Jenkins_Job_Files is directory name used to keep downloaded log files.</description>
+          <defaultValue>grep -ir -C5 'There are no enabled repositories' </defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>delete_downloaded_files</name>
+          <description>This Job keeps all its data in Build Artifacts, by default it will delete all downloaded logs, but
+if you want this files to be saved in "Build Artifacts", uncheck this box.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.2">
@@ -122,7 +138,8 @@ Note: use relative path only!</description>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command># Download CI artifact files and Analyze logs #
+      <command>#!/bin/bash
+# Download CI artifact files and Analyze logs #
 virtualenv .venv &amp;&amp; source .venv/bin/activate
 pip install beautifulsoup
 pip install requests
@@ -133,13 +150,16 @@ echo "analyze_overcloud_logs='"$analyze_overcloud_logs"'" &gt;&gt; LogTool/Jenki
 echo "overcloud_log_dirs='"$overcloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "analyze_undercloud_logs='"$analyze_undercloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "undercloud_log_dirs='"$undercloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "grep_string_only='"$grep_string_only"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "delete_downloaded_files='"$delete_downloaded_files"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "grep_command='''"$grep_command"'''" &gt;&gt; LogTool/JenkinsStage/Params.py
 #cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
 cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>LogTool/JenkinsStage/LogTool_HTML_Report/**/*.*,LogTool/JenkinsStage/Jenkins_Job_ERROR/LogTool_Result_ERROR.log,LogTool/JenkinsStage/Params.py</artifacts>
+      <artifacts>LogTool/JenkinsStage/**/*.*</artifacts>
       <allowEmptyArchive>true</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
@@ -150,9 +170,20 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
     <htmlpublisher.HtmlPublisher plugin="htmlpublisher@1.23">
       <reportTargets>
         <htmlpublisher.HtmlPublisherTarget>
-          <reportName>HTML Report</reportName>
+          <reportName>Analyzed Logs Report</reportName>
           <reportDir>LogTool/JenkinsStage/LogTool_HTML_Report</reportDir>
           <reportFiles>index.html</reportFiles>
+          <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
+          <reportTitles/>
+          <keepAll>true</keepAll>
+          <allowMissing>false</allowMissing>
+          <includes>**/*</includes>
+          <escapeUnderscores>true</escapeUnderscores>
+        </htmlpublisher.HtmlPublisherTarget>
+        <htmlpublisher.HtmlPublisherTarget>
+          <reportName>Grep Command Output Report</reportName>
+          <reportDir>LogTool/JenkinsStage/Grep_HTML_Report</reportDir>
+          <reportFiles>GrepCommandOutput.txt</reportFiles>
           <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
           <reportTitles/>
           <keepAll>true</keepAll>
