@@ -247,8 +247,9 @@ class LogTool(unittest.TestCase):
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
 
-
+    '''This test is planned to run "grep" mode'''
     def test_8_grep_string(self):
+        print '\ntest_8_grep_string'
         command=grep_command+' '+destination_dir
         print_in_color(command,'bold')
         file_name='GrepCommandOutput.txt'
@@ -256,4 +257,10 @@ class LogTool(unittest.TestCase):
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
 
+
+    def test_9_delete_downloaded_files(self):
+        print '\ntest_9_delete_downloaded_files'
+        if delete_downloaded_files=='true':
+            shutil.rmtree(destination_dir)
+            shutil.rmtree(temp_dir)
 
