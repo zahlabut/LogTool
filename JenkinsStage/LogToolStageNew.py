@@ -244,7 +244,7 @@ class LogTool(unittest.TestCase):
         create_dir(grep_result_folder)
         file_name = 'GrepCommandOutput.txt'
         empty_file_content(file_name)
-        for log in collect_log_paths(destination_dir):
+        for log in collect_log_paths(destination_dir,[]):
             command=grep_command+' '+log
             print_in_color(command,'bold')
             output=exec_command_line_command(command)

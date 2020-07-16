@@ -121,7 +121,7 @@ def create_dir(dir_dst_path):
         shutil.rmtree(dir_dst_path)
     os.mkdir(dir_dst_path)
 
-def collect_log_paths(log_root_path,black_list=None):
+def collect_log_paths(log_root_path,black_list):
     logs=[]
     if '[' in log_root_path:
         log_root_path=log_root_path.replace('[','').replace(']','').replace(' ','')
