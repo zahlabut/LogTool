@@ -61,6 +61,8 @@ if grep_string_only=='true':
     analyze_undercloud_logs=True
     overcloud_log_dirs=[]
     undercloud_log_dirs=[]
+if delete_downloaded_files=='true':
+    delete_downloaded_files=True
 
 
 #class LogTool(unittest.TestCase):
@@ -260,7 +262,7 @@ class LogTool(unittest.TestCase):
 
     def test_9_delete_downloaded_files(self):
         print '\ntest_9_delete_downloaded_files'
-        if delete_downloaded_files=='true':
+        if delete_downloaded_files==True:
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
 
