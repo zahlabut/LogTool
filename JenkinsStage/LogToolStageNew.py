@@ -253,11 +253,11 @@ class LogTool(unittest.TestCase):
     @unittest.skipIf(grep_command=='','No provided grep command')
     def test_8_grep_string(self):
         print '\ntest_8_grep_string'
-        grep_result_folder='GrepResult'
+        grep_result_folder='Grep_HTML_Report'
         create_dir(grep_result_folder)
         command=grep_command+' '+temp_dir
         print_in_color(command,'bold')
-        file_name='Grep_HTML_Report.html'
+        file_name='GrepCommandOutput.html'
         empty_file_content(file_name)
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
