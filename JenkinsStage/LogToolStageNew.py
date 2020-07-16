@@ -254,3 +254,5 @@ class LogTool(unittest.TestCase):
         empty_file_content(file_name)
         output=exec_command_line_command(grep_command)
         append_to_file(file_name,output['CommandOutput'])
+
+
