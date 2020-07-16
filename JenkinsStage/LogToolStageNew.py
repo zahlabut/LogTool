@@ -26,8 +26,6 @@ from urlparse import urljoin
 from BeautifulSoup import BeautifulSoup
 
 
-
-
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
             'download_overcloud_logs: ' + download_overcloud_logs,
             'overcloud_log_dirs: ' + overcloud_log_dirs,'download_undercloud_logs: ' + download_undercloud_logs,
@@ -45,7 +43,6 @@ if download_undercloud_logs == 'true':
     download_undercloud_logs = True
 else:
     download_undercloud_logs = False
-# Set List parameters
 if ',' in overcloud_log_dirs:
     overcloud_log_dirs = overcloud_log_dirs.split(',')
 else:
@@ -60,23 +57,20 @@ if grep_string_only=='true':
 if delete_downloaded_files=='true':
     delete_downloaded_files=True
 
-
 #class LogTool(unittest.TestCase):
 class LogTool(unittest.TestCase):
+    # This will stop the execution on any failure/error
     def run(self, result=None):
         if result.failures or result.errors:
             print "\nAborted"
         else:
             super(LogTool, self).run(result)
-
     @staticmethod
     def raise_warning(msg):
         warnings.warn(message=msg, category=Warning)
 
-
-    '''This test is planned to validate all the parameters,provided by user'''
+    '''This test is planned to validate all the parameters, provided by user'''
     def test_1_validate_parameterts(self):
-        print ('\ntest_1_validate_parameterts')
         print ('\ntest_1_validate_parameterts')
         self.assertEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
@@ -116,7 +110,6 @@ class LogTool(unittest.TestCase):
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_link = urlparse.urljoin(artifact_url, link.get('href'))
                 tar_gz_files.append(tar_link)
-
             if str(link.get('href')).endswith('.sh'):
                 sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
                 response = urllib2.urlopen(sh_page_link)
@@ -180,9 +173,6 @@ class LogTool(unittest.TestCase):
                         shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir, basename+'.log'))
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
-
-
-
     '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
     def test_5_unzip_tar_gz_files(self):
         print('\ntest_5_unzip_tar_gz_files')
@@ -194,7 +184,6 @@ class LogTool(unittest.TestCase):
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 print_in_color(cmd,'bold')
                 os.system(cmd)
-
 
     ''''This test is planned to filter out all not relevant path (as provided by user in: "undercloud_log_dirs"
     and "overcloud_log_dirs") parameters'''
@@ -267,4 +256,3 @@ class LogTool(unittest.TestCase):
         if delete_downloaded_files==True:
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
-

@@ -58,7 +58,7 @@ Important: use exactly the same format as in default!</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.BooleanParameterDefinition>
-          <name>analyze_overcloud_logs</name>
+          <name>download_overcloud_logs</name>
           <description>If checked, all Overcloud *tar.gz files: Contoller.tar.gz, Compute.tar.gz ...
 will be downloaded and analyzed.</description>
           <defaultValue>true</defaultValue>
@@ -72,7 +72,7 @@ Note: use relative path only!</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.BooleanParameterDefinition>
-          <name>analyze_undercloud_logs</name>
+          <name>download_undercloud_logs</name>
           <description>If checked, all Undercloud *tar.gz files: undercloud.tar.gz and hypervisor.tar.gz
 will be downloaded and analyzed.</description>
           <defaultValue>true</defaultValue>
@@ -88,11 +88,12 @@ Note: use relative path only!</description>
         <hudson.model.StringParameterDefinition>
           <name>grep_command</name>
           <description>You can provide your own "grep" command that will be executed on downoaded log files directory.
-For example if default is used it will save the output of:
-grep -ir -C5 'There are no enabled repositories' Jenkins_Job_Files
-into a file, that will be saved in "Build Artifacts" as GrepCommandOutput.txt
-Note: Jenkins_Job_Files is directory name used to keep downloaded log files.</description>
-          <defaultValue>grep -ir -C5 'There are no enabled repositories' </defaultValue>
+Important: (-r DOWNLOADED_LOGS_DIRECTORY) will be added to provided command automatically.
+For example the default "grep" command will be modified to:
+grep  -C5 ' ERROR ' -r DOWNLOADED_LOGS_DIRECTORY
+HTML report with the output of "grep" command will be published.
+</description>
+          <defaultValue>grep  -C5 ' ERROR ' </defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.BooleanParameterDefinition>
@@ -146,9 +147,9 @@ pip install requests
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
-echo "analyze_overcloud_logs='"$analyze_overcloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "download_overcloud_logs='"$download_overcloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "overcloud_log_dirs='"$overcloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
-echo "analyze_undercloud_logs='"$analyze_undercloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "download_undercloud_logs='"$download_undercloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "undercloud_log_dirs='"$undercloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "grep_string_only='"$grep_string_only"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "delete_downloaded_files='"$delete_downloaded_files"'" &gt;&gt; LogTool/JenkinsStage/Params.py
