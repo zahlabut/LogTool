@@ -45,7 +45,6 @@ if 'artifact' not in artifact_url.lower():
     sys.exit(1)
 
 
-
 ### Create Result Folders ###
 if result_dir in os.listdir('.'):
     shutil.rmtree(result_dir)
