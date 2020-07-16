@@ -252,14 +252,17 @@ class LogTool(unittest.TestCase):
     '''This test is planned to run "grep" mode'''
     def test_8_grep_string(self):
         print '\ntest_8_grep_string'
+        grep_result_folder='GrepResult'
+        create_dir(grep_result_folder)
         command=grep_command+' '+destination_dir
         print_in_color(command,'bold')
         file_name='GrepCommandOutput.txt'
         empty_file_content(file_name)
         output=exec_command_line_command(command)
         append_to_file(file_name,output['CommandOutput'])
+        shutil.move(file_name,grep_result_folder)
 
-
+    '''This test is planned to delete all downloaded files'''
     def test_9_delete_downloaded_files(self):
         print '\ntest_9_delete_downloaded_files'
         if delete_downloaded_files==True:
