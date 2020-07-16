@@ -1,3 +1,4 @@
+#!/bin/bash
 # Download CI artifact files and Analyze logs #
 virtualenv .venv && source .venv/bin/activate
 pip install beautifulsoup
