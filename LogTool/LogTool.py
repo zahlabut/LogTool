@@ -26,31 +26,32 @@ import operator
 import collections
 from string import digits
 import re
-
-# Read conf.ini file
 import configparser
-config = configparser.ConfigParser()
-config.read('conf.ini')
-fuzzy_match = config.getfloat("Settings", "fuzzy_match")
-time_grep = config.get("Settings", "time_grep")
-log_root_dir = eval(config.get("Settings", "log_root_dir"))
-string_for_grep=config.get("Settings", "string_for_grep")
-log_tool_result_file = config.get("Settings", "log_tool_result_file")
-magic_words = eval(config.get("Settings", "magic_words"))
-ignore_strings = eval(config.get("Settings", "ignore_strings"))
-logs_to_ignore = eval(config.get("Settings", "logs_to_ignore"))
-python_exceptions = eval(config.get("Settings", "python_exceptions"))
-create_logtool_result_file = config.get("Settings", "create_logtool_result_file").lower()
-log_tool_result_file = os.path.join(os.path.abspath('.'), log_tool_result_file)
-analyze_log_as_not_standard = eval(config.get("Settings", "analyze_log_as_not_standard"))
-save_standard_logs_raw_data_file = eval(config.get("Settings", "save_standard_logs_raw_data_file"))
-save_not_standard_logs_raw_data_file = eval(config.get("Settings", "save_not_standard_logs_raw_data_file"))
 
+from sys import platform
+if 'linux' not in platform:
+    print('Your OS: '+platform+' is not supported! \nThis tool is running on Linux only!')
+    sys.exit(1)
 
 class LogTool:
-
-    def __init__(self, log):
-        self.log = log # log path
+    def __init__(self, log,fuzzy_match,time_grep,log_root_dir,string_for_grep,log_tool_result_file,
+                 magic_words,ignore_strings,logs_to_ignore,python_exceptions,create_logtool_result_file,
+                 analyze_log_as_not_standard,save_standard_logs_raw_data_file,save_not_standard_logs_raw_data_file
+                 ):
+        self.log=log
+        self.fuzzy_match=fuzzy_match
+        self.time_grep=time_grep
+        self.log_root_dir=log_root_dir
+        self.string_for_grep=string_for_grep
+        self.log_tool_result_file=log_tool_result_file
+        self.magic_words=magic_words
+        self.ignore_strings=ignore_strings
+        self.logs_to_ignore=logs_to_ignore
+        self.python_exceptions=python_exceptions
+        self.create_logtool_result_file=create_logtool_result_file
+        self.analyze_log_as_not_standard=analyze_log_as_not_standard
+        self.save_standard_logs_raw_data_file=save_standard_logs_raw_data_file
+        self.save_not_standard_logs_raw_data_file=save_not_standard_logs_raw_data_file
 
     @staticmethod
     def remove_digits_from_string(s):
@@ -101,8 +102,13 @@ class LogTool:
         return difflib.SequenceMatcher(None,LogTool.remove_digits_from_string(a), LogTool.remove_digits_from_string(b)).ratio()
 
     @staticmethod
-    def collect_log_paths(log_root_dir,black_list=logs_to_ignore):
+    def collect_log_paths(log_root_dir, logs_to_ignore):
         logs=[]
+        black_list=logs_to_ignore
+        print(log_root_dir)
+        print (logs_to_ignore)
+
+        black_list=logs_to_ignore
         for path in log_root_dir:
             for root, dirs, files in os.walk(path):
                 for name in files:
@@ -128,7 +134,7 @@ class LogTool:
             if to_add==True:
                 filtered_logs.append(log)
         if len(filtered_logs)==0:
-            sys.exit('Failed - No log files detected in: '+log_root_path)
+            sys.exit('Failed - No log files detected in: '+log_root_dir)
         return filtered_logs
 
     @staticmethod
@@ -231,7 +237,7 @@ class LogTool:
 
     @staticmethod
     #This function is used for Non Standard logs only
-    def ignore_block(block, ignore_strings=ignore_strings, indicator_line=2):
+    def ignore_block(block, ignore_strings, indicator_line=2):
         block_lines=block.splitlines()
         if len(block_lines)<3:
             return False
@@ -273,8 +279,7 @@ class LogTool:
     def sort_list_by_index(lis, index):
         return (sorted(lis, key=lambda x: x[index]))
 
-    @staticmethod
-    def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
+    def cut_huge_block(self,block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
         block_lines=block.splitlines()
         # Check if not Jumbo block
         if len(block_lines)>5000:
@@ -290,7 +295,7 @@ class LogTool:
         new_block=''
         matches = []
         for line in block_lines:
-            for string in magic_words+python_exceptions:
+            for string in self.magic_words+self.python_exceptions:
                 match_indexes=LogTool.find_all_string_matches_in_line(line.lower(),string.lower())
                 if match_indexes!=[]:
                     for item in match_indexes:
@@ -314,14 +319,14 @@ class LogTool:
             if len(matches)>100:
                 unique_matches = LogTool.unique_list_by_fuzzy(matches, 0.2) #To reduce execution time
             else:
-                unique_matches = LogTool.unique_list_by_fuzzy(matches, fuzzy_match)
+                unique_matches = LogTool.unique_list_by_fuzzy(matches, self.fuzzy_match)
             for item in unique_matches:
                 new_block+=item+'\n'
-                new_block+=LogTool.create_underline(item,magic_words+python_exceptions)+'\n'
+                new_block+=LogTool.create_underline(item,self.magic_words+self.python_exceptions)+'\n'
         if matches==[]: #Nothing was found, so it's not relevant block
             new_block=None
         # Drop if not relevant block using "ignore_block"
-        if LogTool.ignore_block(block,ignore_strings)==True:
+        if self.ignore_block(block,self.ignore_strings)==True:
             new_block=None
         # If block is too long, cut it
         if new_block!=None:
@@ -342,13 +347,13 @@ class LogTool:
         return new_block
 
     # Extract WARN or ERROR messages from log and return unique messages #
-    def extract_log_unique_greped_lines(self, string_for_grep):
+    def extract_log_unique_greped_lines(self):
         temp_grep_result_file = 'zahlabut.txt'
         unique_messages = []
         if os.path.exists(temp_grep_result_file):
             os.remove(temp_grep_result_file)
-        commands=["grep -in -A7 -B2 '" + string_for_grep.lower() + "' " + self.log+" >> "+temp_grep_result_file]
-        if 'error' in string_for_grep.lower():
+        commands=["grep -in -A7 -B2 '" + self.string_for_grep.lower() + "' " + self.log+" >> "+temp_grep_result_file]
+        if 'error' in self.string_for_grep.lower():
             commands.append("grep -in -A7 -B2 traceback " + self.log+" >> "+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
             commands.append('grep -in -E ^stderr: -A7 -B2 '+self.log+' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
             commands.append('grep -n -A7 -B2 STDERR ' + self.log + ' >> '+temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
@@ -356,11 +361,11 @@ class LogTool:
             commands.append("grep -in -A7 -B2 fatal " + self.log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
             commands.append('grep -in -A7 -B2 critical ' + self.log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
             commands.append('grep -in -A7 -B2 |ERR| ' + self.log + ' >> ' + temp_grep_result_file+"; echo -e '--' >> "+temp_grep_result_file)
-            for string in python_exceptions:
+            for string in self.python_exceptions:
                 commands.append(
                     'grep -n -A7 -B2 '+string+' ' + self.log + ' >> ' + temp_grep_result_file + "; echo -e '--' >> " + temp_grep_result_file)
         if '/var/log/messages' in self.log:
-            if 'error' in string_for_grep.lower():
+            if 'error' in self.string_for_grep.lower():
                 string_for_grep='level=error'
             if 'warn' in string_for_grep.lower():
                 string_for_grep = 'level=warn'
@@ -383,7 +388,7 @@ class LogTool:
         else: #zahlabut.txt is empty
             return {'UniqueMessages': unique_messages, 'AnalyzedBlocks': len(unique_messages), 'Log': self.log}
         # Pass through all blocks and normilize the size (huge blocks oredering) and filter it out if not relevant block is detected
-        list_of_blocks=[LogTool.cut_huge_block(block)+'\n' for block in list_of_blocks if LogTool.cut_huge_block(block)!=None]
+        list_of_blocks=[self.cut_huge_block(block)+'\n' for block in list_of_blocks if self.cut_huge_block(block)!=None]
         # Fill out "relevant_blocks" by filtering out all "ignore strings" and by "third_line" if such a line was already handled before
         relevant_blocks = []
         third_lines = []
@@ -400,7 +405,7 @@ class LogTool:
         for block in relevant_blocks:
             to_add=True
             for key in unique_messages:
-                if LogTool.similar(key, block) >= fuzzy_match:
+                if LogTool.similar(key, block) >= self.fuzzy_match:
                     to_add = False
                     break
             if to_add == True:
@@ -419,12 +424,14 @@ class LogTool:
             print (e)
             return ''
 
-    def analyze_log(self, string, time_grep, last_line_date):
+    #log_result = obj.analyze_log(string_for_grep, time_grep, last_line_date['Date'])
+    def analyze_log(self, last_line_date):
         grep_file='zahlabut.txt'
         strings=[]
+        string=self.string_for_grep
         third_lines=[]
         LogDataDic={'Log':self.log, 'AnalyzedBlocks':[],'TotalNumberOfErrors':0}
-        time_grep=time.strptime(time_grep, '%Y-%m-%d %H:%M:%S')
+        time_grep=time.strptime(self.time_grep, '%Y-%m-%d %H:%M:%S')
         last_line_date=time.strptime(last_line_date, '%Y-%m-%d %H:%M:%S')
         existing_messages = []
         # Let's check if log has standard DEBUG level
@@ -437,7 +444,7 @@ class LogTool:
                 break
         # Sorry, but this block will change the "is_standard_log" to False,
         # once by default log is listed in "analyze_log_as_not_standard"
-        for item in analyze_log_as_not_standard:
+        for item in self.analyze_log_as_not_standard:
             if item in self.log:
                 is_standard_log=False
                 break
@@ -451,11 +458,11 @@ class LogTool:
             basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR', ' FAILED']
             strings=basic_strings
         if is_standard_log==False:
-            strings = python_exceptions+[' ' + item for item in magic_words]
+            strings = self.python_exceptions+[' ' + item for item in self.magic_words]
             for item in strings:
                 command+="grep -B2 -A7 -in '"+item+"' " + self.log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
         if is_standard_log==True:
-            for item in strings+python_exceptions:
+            for item in strings+self.python_exceptions:
                 command+="grep -B2 -A7 -in '"+item+"' " +self.log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
         if self.log.endswith('.gz'):
             command.replace('grep','zgrep')
@@ -500,7 +507,7 @@ class LogTool:
                     cut_line = third_line[0:60].lower()
                     legal_debug_strings = strings
                     legal_debug_strings.append('warn')
-                    for item in legal_debug_strings+python_exceptions:
+                    for item in legal_debug_strings+self.python_exceptions:
                         if item.lower() in cut_line.lower():
                             relevant_block=True
                             break
@@ -524,7 +531,7 @@ class LogTool:
                         is_trace = True
                     block_size = len(block_lines)
                     for key in existing_messages:
-                        if self.similar(key[1], str(block_lines)) >=fuzzy_match:
+                        if self.similar(key[1], str(block_lines)) >=self.fuzzy_match:
                             to_add = False
                             messages_index = existing_messages.index(key)
                             counter = existing_messages[messages_index][0]
@@ -553,25 +560,48 @@ class LogTool:
         return LogDataDic
 
     def is_single_line_file(self):
-        if log.endswith('.gz'):
-            result=LogTool.exec_command_line_command('zcat ' + log + ' | wc -l')['CommandOutput'].strip()
+        if self.log.endswith('.gz'):
+            result=LogTool.exec_command_line_command('zcat ' + self.log + ' | wc -l')['CommandOutput'].strip()
         else:
-            result = LogTool.exec_command_line_command('cat ' + log + ' | wc -l')['CommandOutput'].strip()
+            result = LogTool.exec_command_line_command('cat ' + self.log + ' | wc -l')['CommandOutput'].strip()
         if result=='1':
             return True
         else:
             return False
 
-if __name__ == "__main__":
-    not_standard_logs=[]
+def start_analyzing(conf_file):
+    # Load *ini file
+    config = configparser.ConfigParser()
+    config.read(conf_file)
+    fuzzy_match = config.getfloat("Settings", "fuzzy_match")
+    time_grep = config.get("Settings", "time_grep")
+    log_root_dir = eval(config.get("Settings", "log_root_dir"))
+    string_for_grep = config.get("Settings", "string_for_grep")
+    log_tool_result_file = config.get("Settings", "log_tool_result_file")
+    magic_words = eval(config.get("Settings", "magic_words"))
+    ignore_strings = eval(config.get("Settings", "ignore_strings"))
+    logs_to_ignore = eval(config.get("Settings", "logs_to_ignore"))
+    python_exceptions = eval(config.get("Settings", "python_exceptions"))
+    create_logtool_result_file = config.get("Settings", "create_logtool_result_file").lower()
+    log_tool_result_file = os.path.join(os.path.abspath('.'), log_tool_result_file)
+    analyze_log_as_not_standard = eval(config.get("Settings", "analyze_log_as_not_standard"))
+    save_standard_logs_raw_data_file = eval(config.get("Settings", "save_standard_logs_raw_data_file"))
+    save_not_standard_logs_raw_data_file = eval(config.get("Settings", "save_not_standard_logs_raw_data_file"))
+    log_tool_result_file = os.path.join(os.path.abspath('.'), log_tool_result_file)
+
+
+    # Start the process
     analyzed_logs_result=[]
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
     if create_logtool_result_file!='no':
         LogTool.empty_file_content(log_tool_result_file)
     start_time=time.time()
-    logs=LogTool.collect_log_paths(log_root_dir)
+    logs=LogTool.collect_log_paths(log_root_dir, logs_to_ignore)
     for log in logs:
-        obj=LogTool(log)
+        obj=LogTool(log,fuzzy_match,time_grep,log_root_dir,string_for_grep,log_tool_result_file, magic_words,ignore_strings,
+                    logs_to_ignore,python_exceptions,create_logtool_result_file,analyze_log_as_not_standard,
+                    save_standard_logs_raw_data_file,save_not_standard_logs_raw_data_file)
+
         LogTool.print_in_color(log,'bold')
         # Skip log file if bigger than 1GB, save this information into not standard logs section
         log_size = os.path.getsize(obj.log)
@@ -583,7 +613,7 @@ if __name__ == "__main__":
             continue
         Log_Analyze_Info = {}
         Log_Analyze_Info['Log']=obj.log
-        Log_Analyze_Info['IsSingleLine']=LogTool.is_single_line_file(obj.log)
+        Log_Analyze_Info['IsSingleLine']=obj.is_single_line_file()
         # Try to check if there is a known timestamp in last 100 lines
         last_line=obj.get_file_last_line('100')
         is_known_time_format=False
@@ -595,14 +625,14 @@ if __name__ == "__main__":
         Log_Analyze_Info['ParseLogTime']=last_line_date
         if is_known_time_format==True:
             if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
-                log_result=obj.analyze_log(string_for_grep,time_grep,last_line_date['Date'])
+                log_result=obj.analyze_log(last_line_date['Date'])
                 analyzed_logs_result.append(log_result)
         else:
             if 'WARNING' in string_for_grep:
                 string_for_grep='WARN'
             if 'ERROR' in string_for_grep:
                 string_for_grep=' ERROR'
-            not_standard_logs_unique_messages.append(obj.extract_log_unique_greped_lines(string_for_grep))
+            not_standard_logs_unique_messages.append(obj.extract_log_unique_greped_lines())
 
     # Generate LogTool result file
     if create_logtool_result_file!='no':
@@ -715,3 +745,6 @@ if __name__ == "__main__":
         LogTool.append_to_file(save_not_standard_logs_raw_data_file,str(not_standard_logs_unique_messages))
     print('Execution time:' + str(time.time() - start_time))
     print('SUCCESS!!!')
+
+if __name__ == "__main__":
+    start_analyzing('conf.ini')
