@@ -33,7 +33,7 @@ config = configparser.ConfigParser()
 config.read('conf.ini')
 fuzzy_match = config.getfloat("Settings", "fuzzy_match")
 time_grep = config.get("Settings", "time_grep")
-log_root_dir = config.get("Settings", "log_root_dir")
+log_root_dir = eval(config.get("Settings", "log_root_dir"))
 string_for_grep=config.get("Settings", "string_for_grep")
 log_tool_result_file = config.get("Settings", "log_tool_result_file")
 magic_words = eval(config.get("Settings", "magic_words"))
@@ -103,12 +103,7 @@ class LogTool:
     @staticmethod
     def collect_log_paths(log_root_dir,black_list=logs_to_ignore):
         logs=[]
-        if '[' in log_root_dir:
-            log_root_path=log_root_dir.replace('[','').replace(']','').replace(' ','')
-            log_root_path=log_root_path.split(',')
-        else:
-            log_root_path=[log_root_dir]
-        for path in log_root_path:
+        for path in log_root_dir:
             for root, dirs, files in os.walk(path):
                 for name in files:
                     if '.log' in name or 'var/log/messages' in name:
@@ -602,7 +597,12 @@ if __name__ == "__main__":
             if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
                 log_result=obj.analyze_log(string_for_grep,time_grep,last_line_date['Date'])
                 analyzed_logs_result.append(log_result)
-
+        else:
+            if 'WARNING' in string_for_grep:
+                string_for_grep='WARN'
+            if 'ERROR' in string_for_grep:
+                string_for_grep=' ERROR'
+            not_standard_logs_unique_messages.append(obj.extract_log_unique_greped_lines(string_for_grep))
 
     # Generate LogTool result file
     if create_logtool_result_file!='no':
@@ -709,11 +709,9 @@ if __name__ == "__main__":
     # Save raw data to file
     if save_standard_logs_raw_data_file!='':
         LogTool.empty_file_content(save_standard_logs_raw_data_file)
-        statistics_dic={item['Log']:item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']>=1}
-        LogTool.append_to_file(save_standard_logs_raw_data_file,str(statistics_dic))
+        LogTool.append_to_file(save_standard_logs_raw_data_file,str(analyzed_logs_result))
     if save_not_standard_logs_raw_data_file!='':
         LogTool.empty_file_content(save_not_standard_logs_raw_data_file)
-        statistics_list = [[item['Log'],item['AnalyzedBlocks']] for item in not_standard_logs_unique_messages if item['AnalyzedBlocks']!=0]
-        LogTool.append_to_file(save_not_standard_logs_raw_data_file,str(statistics_list))
+        LogTool.append_to_file(save_not_standard_logs_raw_data_file,str(not_standard_logs_unique_messages))
     print('Execution time:' + str(time.time() - start_time))
     print('SUCCESS!!!')
