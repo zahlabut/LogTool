@@ -64,3 +64,4 @@ grep_string_only=True
 grep_command="grep ' ERROR '"
 
 delete_downloaded_files=True
+# Do not remove this line!!! #
