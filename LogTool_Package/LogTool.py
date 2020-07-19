@@ -120,7 +120,7 @@ class LogTool:
                                 to_add = True
                             if 'Zuul_Log_Files' in file_abs_path:
                                 to_add=True
-                        if os.path.getsize(file_abs_path) != 0 and 'LogTool' not in file_abs_path:
+                        if os.path.getsize(file_abs_path):
                             logs.append(file_abs_path)
         logs=list(set(logs))
         # Remove all logs that are in black list

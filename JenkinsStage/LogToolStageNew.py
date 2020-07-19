@@ -74,8 +74,11 @@ class LogTool(unittest.TestCase):
         print ('\ntest_1_validate_parameterts')
         self.assertEqual(check_user_time(user_start_time)['Error'],None,'ERROR - Provided "user_start_time" is invalid!'+
                         '\nProvided value  was: ' + user_start_time+ '\nSee expected value, used by default.')
-        self.assertIn('artifact',artifact_url.lower(),"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
-                        '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
+
+        self.assertEqual((artifact_url.lower().endswith('artifact') or artifact_url.lower().endswith('artifact/')),
+                         True,"ERROR - Provided 'artifact_url' doesn't seem to be proper artifact URL!"+
+                         '\nProvided value  was: ' + artifact_url+'\nSee expected value, used by default.')
+
         self.assertIn(download_overcloud_logs, [True, False], 'ERROR - boolean "download_overcloud_logs" is invalid!')
         self.assertIn(download_undercloud_logs,[True,False],'ERROR - boolean "download_undercloud_logs" is invalid!')
         self.assertIn('list',str(type(overcloud_log_dirs)),'ERROR - "overcloud_logs_dirs" is not list type!')
