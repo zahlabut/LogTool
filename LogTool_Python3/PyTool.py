@@ -298,8 +298,9 @@ try:
                 exit('Install beautifulsoup and rerun!')
             artifacts_url = input('Copy and paste Jenkins URL to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
 
-            if 'artifact' not in artifacts_url.lower():
-                print_in_color("Provided URL doesn't seem to be proper artifact URL, please rerun using correct URL address!",'red')
+            if (artifacts_url.lower().endswith('artifact') or artifacts_url.lower().endswith('artifact/'))==False:
+                print_in_color("Provided URL doesn't seem to be proper artifact URL, please rerun using correct URL address!"
+                               "\nas given in the above example of artifact URL!",'red')
                 sys.exit(1)
             # Use since time
 
