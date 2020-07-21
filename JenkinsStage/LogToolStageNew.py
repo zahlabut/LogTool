@@ -263,5 +263,3 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
 
-
-
