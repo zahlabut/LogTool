@@ -38,7 +38,7 @@ overcloud_node_names=['aio', 'ceph', 'cfme', 'cfme_tester', 'compute', 'compute_
                       'heat', 'ironic', 'loadbalancer', 'mds', 'messaging', 'monitor', 'networker',
                       'novacontrol', 'odl', 'openshift-infra', 'openshift-master', 'openshift-tester',
                       'openshift-worker', 'opstools', 'osdcompute', 'patcher', 'radosgw', 'serviceapi',
-                      'standalone', 'swift', 'telemetry', 'tester', 'tripleo', 'veos', 'vqfx-pfe', 'vqfx']
+                      'standalone', 'swift', 'telemetry', 'tester', 'tripleo','veos', 'vqfx-pfe', 'vqfx']
 
 # Undercloud "node" names
 undercloud_node_names=['undercloud','hypervisor']
