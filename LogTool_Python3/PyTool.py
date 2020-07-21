@@ -36,7 +36,8 @@ overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
 undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
 source_rc_file_path='/home/stack/'
 log_storage_host='cougar11.scl.lab.tlv.redhat.com'
-log_storage_directory='/srv/static'
+#log_storage_directory='/srv/static'
+log_storage_directory='/rhos-infra/jenkins-logs'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 
 # On interrupt "ctrl+c" executed script will be killed
@@ -314,6 +315,7 @@ try:
             tar_gz_files=[]
             ir_logs_urls = []
             # Create tempest log url #
+            tempest_logs=[]
             tempest_log_url = None
             for link in soup.findAll('a'):
                 if 'tempest-results' in link:
@@ -325,7 +327,7 @@ try:
                         if str(link.get('href')).endswith('.html'):
                             tempest_html=link.get('href')
                             tempest_log_url=urljoin(artifacts_url,'tempest-results')+'/'+tempest_html
-                            break
+                            tempest_logs.append(tempest_log_url)
                 if str(link.get('href')).endswith('.tar.gz'):
                     tar_gz_files.append(link)
                     tar_link = urljoin(artifacts_url, link.get('href'))
@@ -348,11 +350,11 @@ try:
             if len(ir_logs_urls)!=0:
                 for url in ir_logs_urls:
                     os.system('wget -P ' + destination_dir + ' ' + url)
-
             # Download tempest log (html #)
-            if tempest_log_url!=None:
-                os.system('wget -P ' + destination_dir + ' ' + tempest_log_url)
-                shutil.move(os.path.join(destination_dir, tempest_html),os.path.join(destination_dir,tempest_html.replace('.html','.log')))
+            for tempest_log in tempest_logs:
+                os.system('wget -P ' + destination_dir + ' ' + tempest_log)
+                shutil.move(os.path.join(destination_dir, os.path.basename(tempest_log)),
+                            os.path.join(destination_dir,os.path.basename(tempest_log).replace('.html','.log')))
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed
             try:
