@@ -33,7 +33,13 @@ save_raw_data='yes'
 log_type='all_logs'
 
 # Overcloud node names
-overcloud_node_names=['controller','compute','ceph']
+overcloud_node_names=['aio', 'ceph', 'cfme', 'cfme_tester', 'compute', 'compute_dvr', 'computehci',
+                      'contnet', 'controller', 'database', 'diskless', 'freeipa', 'hcicephall',
+                      'heat', 'ironic', 'loadbalancer', 'mds', 'messaging', 'monitor', 'networker',
+                      'novacontrol', 'odl', 'openshift-infra', 'openshift-master', 'openshift-tester',
+                      'openshift-worker', 'opstools', 'osdcompute', 'patcher', 'radosgw', 'serviceapi',
+                      'standalone', 'swift', 'telemetry', 'tester', 'tripleo', 'undercloud', 'veos',
+                      'vqfx-pfe', 'vqfx']
 
 # Undercloud "node" names
 undercloud_node_names=['undercloud','hypervisor']
