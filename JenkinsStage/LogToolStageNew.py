@@ -148,7 +148,7 @@ class LogTool(unittest.TestCase):
                         filtered_urls.append(url)
                         break
         spec_print(['Filtered *.tar.gz files after phase one filtering']+filtered_urls,'bold')
-        LogTool.all_links['TarGzFiles']=filtered_urls
+        LogTool.all_links['TarGzFiles']=list(set(filtered_urls))
 
     ''''This test is planned to download all files after the first filtering phase'''
     def test_4_download_files(self):
