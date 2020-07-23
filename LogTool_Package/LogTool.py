@@ -590,6 +590,7 @@ LogTool.save_standard_logs_raw_data_file = eval(config.get("Settings", "save_sta
 LogTool.save_not_standard_logs_raw_data_file = eval(config.get("Settings", "save_not_standard_logs_raw_data_file"))
 
 
+
 def start_analyzing():
     # Start the process
     analyzed_logs_result=[]
