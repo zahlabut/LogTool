@@ -27,31 +27,29 @@ import collections
 from string import digits
 import re
 import configparser
-
 from sys import platform
 if 'linux' not in platform:
     print('Your OS: '+platform+' is not supported! \nThis tool is running on Linux only!')
     sys.exit(1)
 
 class LogTool:
-    def __init__(self, log,fuzzy_match,time_grep,log_root_dir,string_for_grep,log_tool_result_file,
-                 magic_words,ignore_strings,logs_to_ignore,python_exceptions,create_logtool_result_file,
-                 analyze_log_as_not_standard,save_standard_logs_raw_data_file,save_not_standard_logs_raw_data_file
-                 ):
+    # Class attrributes
+    fuzzy_match = 0.55
+    time_grep = None
+    log_root_dir = None
+    string_for_grep = None
+    log_tool_result_file = None
+    magic_words = None
+    ignore_strings = None
+    logs_to_ignore = None
+    python_exceptions = None
+    create_logtool_result_file = None
+    analyze_log_as_not_standard = None
+    save_standard_logs_raw_data_file = None
+    save_not_standard_logs_raw_data_file = None
+
+    def __init__(self, log):
         self.log=log
-        self.fuzzy_match=fuzzy_match
-        self.time_grep=time_grep
-        self.log_root_dir=log_root_dir
-        self.string_for_grep=string_for_grep
-        self.log_tool_result_file=log_tool_result_file
-        self.magic_words=magic_words
-        self.ignore_strings=ignore_strings
-        self.logs_to_ignore=logs_to_ignore
-        self.python_exceptions=python_exceptions
-        self.create_logtool_result_file=create_logtool_result_file
-        self.analyze_log_as_not_standard=analyze_log_as_not_standard
-        self.save_standard_logs_raw_data_file=save_standard_logs_raw_data_file
-        self.save_not_standard_logs_raw_data_file=save_not_standard_logs_raw_data_file
 
     @staticmethod
     def remove_digits_from_string(s):
@@ -279,7 +277,7 @@ class LogTool:
     def sort_list_by_index(lis, index):
         return (sorted(lis, key=lambda x: x[index]))
 
-    def cut_huge_block(self,block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
+    def cut_huge_block(self, block, limit_line_size=150, number_of_characters_after_match=120,number_of_characters_before_match=50):
         block_lines=block.splitlines()
         # Check if not Jumbo block
         if len(block_lines)>5000:
@@ -569,46 +567,46 @@ class LogTool:
         else:
             return False
 
-def start_analyzing(conf_file):
-    # Load *ini file
-    config = configparser.ConfigParser()
-    config.read(conf_file)
-    fuzzy_match = config.getfloat("Settings", "fuzzy_match")
-    time_grep = config.get("Settings", "time_grep")
-    log_root_dir = eval(config.get("Settings", "log_root_dir"))
-    string_for_grep = config.get("Settings", "string_for_grep")
-    log_tool_result_file = config.get("Settings", "log_tool_result_file")
-    magic_words = eval(config.get("Settings", "magic_words"))
-    ignore_strings = eval(config.get("Settings", "ignore_strings"))
-    logs_to_ignore = eval(config.get("Settings", "logs_to_ignore"))
-    python_exceptions = eval(config.get("Settings", "python_exceptions"))
-    create_logtool_result_file = config.get("Settings", "create_logtool_result_file").lower()
-    log_tool_result_file = os.path.join(os.path.abspath('.'), log_tool_result_file)
-    analyze_log_as_not_standard = eval(config.get("Settings", "analyze_log_as_not_standard"))
-    save_standard_logs_raw_data_file = eval(config.get("Settings", "save_standard_logs_raw_data_file"))
-    save_not_standard_logs_raw_data_file = eval(config.get("Settings", "save_not_standard_logs_raw_data_file"))
-    log_tool_result_file = os.path.join(os.path.abspath('.'), log_tool_result_file)
+# Load *ini file
+config = configparser.ConfigParser()
+if len(sys.argv) > 1:
+    conf_file=sys.argv[1]
+else:
+    conf_file = 'conf.ini'
+print(conf_file)
+config.read(conf_file)
+LogTool.time_grep = config.get("Settings", "time_grep")
+LogTool.log_root_dir = eval(config.get("Settings", "log_root_dir"))
+LogTool.string_for_grep = config.get("Settings", "string_for_grep")
+LogTool.log_tool_result_file = config.get("Settings", "log_tool_result_file")
+LogTool.magic_words = eval(config.get("Settings", "magic_words"))
+LogTool.ignore_strings = eval(config.get("Settings", "ignore_strings"))
+LogTool.logs_to_ignore = eval(config.get("Settings", "logs_to_ignore"))
+LogTool.python_exceptions = eval(config.get("Settings", "python_exceptions"))
+LogTool.create_logtool_result_file = config.get("Settings", "create_logtool_result_file").lower()
+LogTool.log_tool_result_file = os.path.join(os.path.abspath('.'), LogTool.log_tool_result_file)
+LogTool.analyze_log_as_not_standard = eval(config.get("Settings", "analyze_log_as_not_standard"))
+LogTool.save_standard_logs_raw_data_file = eval(config.get("Settings", "save_standard_logs_raw_data_file"))
+LogTool.save_not_standard_logs_raw_data_file = eval(config.get("Settings", "save_not_standard_logs_raw_data_file"))
 
 
+def start_analyzing():
     # Start the process
     analyzed_logs_result=[]
     not_standard_logs_unique_messages=[] #Use it for all NOT STANDARD log files, add to this list {log_path:[list of all unique messages]}
-    if create_logtool_result_file!='no':
-        LogTool.empty_file_content(log_tool_result_file)
+    if LogTool.create_logtool_result_file!='no':
+        LogTool.empty_file_content(LogTool.log_tool_result_file)
     start_time=time.time()
-    logs=LogTool.collect_log_paths(log_root_dir, logs_to_ignore)
+    logs=LogTool.collect_log_paths(LogTool.log_root_dir, LogTool.logs_to_ignore)
     for log in logs:
-        obj=LogTool(log,fuzzy_match,time_grep,log_root_dir,string_for_grep,log_tool_result_file, magic_words,ignore_strings,
-                    logs_to_ignore,python_exceptions,create_logtool_result_file,analyze_log_as_not_standard,
-                    save_standard_logs_raw_data_file,save_not_standard_logs_raw_data_file)
-
+        obj=LogTool(log)
         LogTool.print_in_color(log,'bold')
         # Skip log file if bigger than 1GB, save this information into not standard logs section
         log_size = os.path.getsize(obj.log)
         if log_size > 1024 * 1024 * 1024:  # 1GB
             LogTool.print_in_color(log + ' size is too big, skipped!!!', 'yellow')
-            if create_logtool_result_file != 'no':
-                LogTool.append_to_file(log_tool_result_file,'~'*100+'\nWARNING the size of:'+obj.log+' is: '
+            if LogTool.create_logtool_result_file != 'no':
+                LogTool.append_to_file(LogTool.log_tool_result_file,'~'*100+'\nWARNING the size of:'+obj.log+' is: '
                             + str(log_size /(1024.0*1024.0*1024.0)) + ' [GB] LogTool is hardcoded to support log files up to 1GB, this log was skipped!\n')
             continue
         Log_Analyze_Info = {}
@@ -624,18 +622,18 @@ def start_analyzing(conf_file):
                 break
         Log_Analyze_Info['ParseLogTime']=last_line_date
         if is_known_time_format==True:
-            if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(time_grep, '%Y-%m-%d %H:%M:%S'):
+            if time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S') >= time.strptime(LogTool.time_grep, '%Y-%m-%d %H:%M:%S'):
                 log_result=obj.analyze_log(last_line_date['Date'])
                 analyzed_logs_result.append(log_result)
         else:
-            if 'WARNING' in string_for_grep:
+            if 'WARNING' in LogTool.string_for_grep:
                 string_for_grep='WARN'
-            if 'ERROR' in string_for_grep:
+            if 'ERROR' in LogTool.string_for_grep:
                 string_for_grep=' ERROR'
             not_standard_logs_unique_messages.append(obj.extract_log_unique_greped_lines())
 
     # Generate LogTool result file
-    if create_logtool_result_file!='no':
+    if LogTool.create_logtool_result_file!='no':
         ### Add basic description about the results into result file ###
         info='############################################# Usage Instruction ############################################\n'\
              "This LogTool result file have some logical structure and its content is divided into the several sections.\n" \
@@ -667,7 +665,7 @@ def start_analyzing(conf_file):
              'Not Standard - all the rest, example line does not include TIMESTAMP:\n'\
              '  "Debug: Evicting cache entry for environment "production"...\n'\
              "Note: this is the reason for having four sections in total inside LogTool result file.\n"
-        LogTool.append_to_file(log_tool_result_file,info)
+        LogTool.append_to_file(LogTool.log_tool_result_file,info)
 
         ### Fill statistics section for Standard OSP logs###
         LogTool.print_in_color('\nAggregating statistics for Standard OSP logs','bold')
@@ -677,8 +675,8 @@ def start_analyzing(conf_file):
         total_number_of_all_logs_errors=sum([item['TotalNumberOfErrors'] for item in analyzed_logs_result if item['TotalNumberOfErrors']!=0])
         statistics_list.insert(0,{'Total_Number_Of_'+str(string_for_grep).replace(' ','')+'s':total_number_of_all_logs_errors})
         LogTool.print_list(statistics_list)
-        LogTool.write_list_of_dict_to_file(log_tool_result_file,statistics_list,
-                                   '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
+        LogTool.write_list_of_dict_to_file(LogTool.log_tool_result_file,statistics_list,
+                                   '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+LogTool.time_grep+' '+'#'*20+'\n')
 
 
         ### Fill statistics section for Not Standard OSP logs###
@@ -688,63 +686,63 @@ def start_analyzing(conf_file):
         total_number_of_errors=sum([i[1] for i in statistics_list])
         statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
         LogTool.print_list(statistics_list)
-        LogTool.append_to_file(log_tool_result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
-        LogTool.write_list_to_file(log_tool_result_file,statistics_list,False)
+        LogTool.append_to_file(LogTool.log_tool_result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
+        LogTool.write_list_to_file(LogTool.log_tool_result_file,statistics_list,False)
 
 
 
         ### Fill Statistics - Unique(Fuzzy Matching) section ###
         #print_in_color('\nArrange Statistics - Unique(Fuzzy Matching) per log file ','bold')
-        LogTool.append_to_file(log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages, per STANDARD OSP log file since: '+time_grep+'#'*20+'\n')
+        LogTool.append_to_file(LogTool.log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages, per STANDARD OSP log file since: '+LogTool.time_grep+'#'*20+'\n')
         common_list_of_all_blocks=[]
         for item in analyzed_logs_result:
             for block in item['AnalyzedBlocks']:
                 common_list_of_all_blocks.append(block)
         for block in sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate']):
-            LogTool.append_to_file(log_tool_result_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
-            LogTool.append_to_file(log_tool_result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
-            LogTool.append_to_file(log_tool_result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
-            LogTool.append_to_file(log_tool_result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-            LogTool.append_to_file(log_tool_result_file, 'BlockDate:' + str(block['BlockDate']) + '\n')
-            LogTool.append_to_file(log_tool_result_file, 'Log:' + str(block['Log']) + '\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, 'BlockDate:' + str(block['BlockDate']) + '\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file, 'Log:' + str(block['Log']) + '\n')
             for line in block['BlockLines']:
-                LogTool.append_to_file(log_tool_result_file, line + '\n')
+                LogTool.append_to_file(LogTool.log_tool_result_file, line + '\n')
 
 
         ### Exported Unique messages per NOT STANDARD log file, since ever  ###
-            LogTool.append_to_file(log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
+            LogTool.append_to_file(LogTool.log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
         for dir in not_standard_logs_unique_messages:
             if len(dir['UniqueMessages'])>0:
-                LogTool.append_to_file(log_tool_result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
-                LogTool.write_list_to_file(log_tool_result_file,dir['UniqueMessages'])
+                LogTool.append_to_file(LogTool.log_tool_result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
+                LogTool.write_list_to_file(LogTool.log_tool_result_file,dir['UniqueMessages'])
 
         ### Fill statistics section - Table of Content: line+index ###
         section_indexes=[]
         messages=[
             #'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
             # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
-            'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
+            'Statistics - Number of Errors/Warnings per Standard OSP log since: '+LogTool.time_grep,
             'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
-            'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
+            'Exported unique messages, per STANDARD OSP log file since: '+LogTool.time_grep,
             'Exported unique messages per NOT STANDARD log file, since ever',
             #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
             ]
         for msg in messages:
-            section_indexes.append({msg:"SectionStartLine: "+LogTool.get_file_line_index(log_tool_result_file,msg)})
-        LogTool.write_list_of_dict_to_file(log_tool_result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
+            section_indexes.append({msg:"SectionStartLine: "+LogTool.get_file_line_index(LogTool.log_tool_result_file,msg)})
+        LogTool.write_list_of_dict_to_file(LogTool.log_tool_result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
         print('Execution time:'+str(time.time()-start_time))
         if total_number_of_all_logs_errors+total_number_of_errors>0:
             print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
 
     # Save raw data to file
-    if save_standard_logs_raw_data_file!='':
-        LogTool.empty_file_content(save_standard_logs_raw_data_file)
-        LogTool.append_to_file(save_standard_logs_raw_data_file,str(analyzed_logs_result))
-    if save_not_standard_logs_raw_data_file!='':
-        LogTool.empty_file_content(save_not_standard_logs_raw_data_file)
-        LogTool.append_to_file(save_not_standard_logs_raw_data_file,str(not_standard_logs_unique_messages))
+    if LogTool.save_standard_logs_raw_data_file!='':
+        LogTool.empty_file_content(LogTool.save_standard_logs_raw_data_file)
+        LogTool.append_to_file(LogTool.save_standard_logs_raw_data_file,str(analyzed_logs_result))
+    if LogTool.save_not_standard_logs_raw_data_file!='':
+        LogTool.empty_file_content(LogTool.save_not_standard_logs_raw_data_file)
+        LogTool.append_to_file(LogTool.save_not_standard_logs_raw_data_file,str(not_standard_logs_unique_messages))
     print('Execution time:' + str(time.time() - start_time))
     print('SUCCESS!!!')
 
 if __name__ == "__main__":
-    start_analyzing('conf.ini')
+    start_analyzing()
