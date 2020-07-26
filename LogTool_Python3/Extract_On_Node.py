@@ -172,17 +172,6 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return filtered_logs
 
-
-out=collect_log_paths('/var/log')
-for i in out:
-    if 'messages' in i:
-        print (i)
-sys.exit(1)
-
-
-
-
-
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
     f.write('')
