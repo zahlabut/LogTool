@@ -142,7 +142,7 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
     for path in log_root_path:
         for root, dirs, files in os.walk(path):
             for name in files:
-                if '.log' in name or 'var/log/messages' in name:
+                if '.log' in name or 'messages' in name:
                     to_add=False
                     file_abs_path=os.path.join(os.path.abspath(root), name)
                     if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
@@ -171,6 +171,17 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
     if len(filtered_logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return filtered_logs
+
+
+out=collect_log_paths('/var/log')
+for i in out:
+    if 'messages' in i:
+        print (i)
+sys.exit(1)
+
+
+
+
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
