@@ -742,6 +742,18 @@ if __name__ == "__main__":
                 append_to_file(html_log_file,line)
 
 
+    # Create all unique "Potential problematical lines"
+    append_to_file(result_file,'\n\n\n' + '#' * 20 + ' Standard Log Files Unique Problematical lines ' + '#' * 20)
+    all_problematical_lines=[]
+    for block in common_list_of_all_blocks:
+        block_lines=block['BlockLines']
+        start_from_index=block_lines.index("LogTool --> POTENTIAL BLOCK'S ISSUES: ")+1
+        for line in block_lines[start_from_index:]:
+            if ('^^' not in line) and (line not in all_problematical_lines):
+                all_problematical_lines.append(line.strip())
+    write_list_to_file(result_file, unique_list(all_problematical_lines),False)
+
+
     ### Fill statistics section - Table of Content: line+index ###
     section_indexes=[]
     messages=[
@@ -751,7 +763,7 @@ if __name__ == "__main__":
         'Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever',
         'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
         'Exported unique messages per NOT STANDARD log file, since ever',
-        #'Statistics - Unique(Fuzzy Matching for all messages in total for standard OSP logs'
+        'Standard Log Files Unique Problematical lines'
         ]
     for msg in messages:
         section_indexes.append({msg:"SectionStartLine: "+get_file_line_index(result_file,msg)})
