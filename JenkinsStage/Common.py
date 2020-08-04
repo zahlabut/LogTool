@@ -22,15 +22,22 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def download_file(url, dst_path='.'):
+def download_file(url, dst_path='.',extension='.log'):
     try:
         r = requests.get(url,verify=False)
-        with open(os.path.join(os.path.abspath(dst_path),os.path.basename(url)), 'wb') as f:
-            f.write(r.content)
-        return {'Status':r.status_code,'Content':r.content}
+        if os.path.basename(url)!='':
+            file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url))
+            with open(file_path, 'wb') as f:
+                f.write(r.content)
+        else:
+            url=url.strip('/')+extension
+            file_path=os.path.join(os.path.abspath(dst_path),os.path.basename(url))
+            with open(file_path, 'wb') as f:
+                f.write(r.content)
+        return {'Status':r.status_code,'Content':r.content,'FilePath':file_path}
     except Exception, e:
         print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
-        return {'Status': None, 'Content':None}
+        return {'Status': None, 'Content':None, 'FilePath':None}
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')

@@ -45,7 +45,7 @@ undercloud_node_names=['undercloud','hypervisor']
 
 
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/16020/artifact/'
+artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase3/view/OSP%2016.1/view/PidOne/job/DFG-pidone-sanity-16.1_director-rhel-virthost-3cont_2comp-ipv4-geneve-tobiko_faults-sanity/14/artifact/'
 #artifact_url='https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/view/Phase3/view/OSP%2016.1/view/storage/job/DFG-all-unified-16.1_director-rhel-virthost-3cont_2comp_3ceph-ipv4-geneve-ceph-native-default/104/artifact/'
 
 

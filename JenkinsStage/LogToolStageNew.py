@@ -100,6 +100,7 @@ class LogTool(unittest.TestCase):
         tar_gz_files = []
         ir_logs_urls = []
         tempest_log_urls = []
+        tobiko_log_urls=[]
         for link in soup.findAll('a'):
             if 'tempest-results' in link:
                 tempest_results_url = urljoin(artifact_url, link.get('href'))
@@ -110,6 +111,19 @@ class LogTool(unittest.TestCase):
                     if str(link.get('href')).endswith('.html'):
                         tempest_html = link.get('href')
                         tempest_log_urls.append(urljoin(artifact_url, 'tempest-results') + '/' + tempest_html)
+
+            if 'Test Result' in link:
+                tobiko_results_url = urljoin(artifact_url, link.get('href'))
+                tobiko_link_name=link.get('href')
+                tobiko_response = urllib2.urlopen(tobiko_results_url)
+                html = tobiko_response.read()
+                soup = BeautifulSoup(html)
+                for link in soup.findAll('a'):
+                    if str(link.get('href')).startswith('tobiko.tests'):
+                        tobiko_html = link.get('href')
+                        tobiko_log_urls.append(urljoin(artifact_url, tobiko_link_name) + '/' + tobiko_html)
+                tobiko_log_urls=list(set(tobiko_log_urls))
+
             if str(link.get('href')).endswith('.tar.gz'):
                 tar_link = urlparse.urljoin(artifact_url, link.get('href'))
                 tar_gz_files.append(tar_link)
@@ -123,7 +137,7 @@ class LogTool(unittest.TestCase):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
         console_log_url=artifact_url.strip().replace('artifact','consoleFull').strip('/')
         all_links={'ConsoleLog':[console_log_url],'TempestLogs':tempest_log_urls,
-                   'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files}
+                   'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files,'TobikoLogs':tobiko_log_urls}
         print_dic(all_links)
         LogTool.all_links=all_links
 
@@ -157,23 +171,15 @@ class LogTool(unittest.TestCase):
         create_dir(temp_dir)
         for key in LogTool.all_links.keys():
             for url in LogTool.all_links[key]:
-                a = urlparse.urlparse(url)
-                basename = os.path.basename(a.path)
-                if url.endswith('.html'):
-                    res = download_file(url, temp_dir)
-                    if res['Status'] != 200:
-                        print_in_color('Failed to download: ' + url, 'red')
-                    else:
-                        print_in_color('OK --> ' + url, 'blue')
-                    shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir,basename.replace('.html','.log')))
+                res = download_file(url, temp_dir)
+                if res['Status'] != 200:
+                    print_in_color('Failed to download: ' + url, 'red')
                 else:
-                    res = download_file(url, temp_dir)
-                    if res['Status'] != 200:
-                        print_in_color('Failed to download: ' + url, 'red')
-                    else:
-                        print_in_color('OK --> ' + url, 'blue')
-                    if key=='ConsoleLog':
-                        shutil.move(os.path.join(temp_dir, basename),os.path.join(temp_dir, basename+'.log'))
+                    print_in_color('OK --> ' + url, 'blue')
+                if key=='TempestLogs':
+                    shutil.move(res['FilePath'],res['FilePath'].replace('.html','.log'))
+                if key=='ConsoleLog':
+                    shutil.move(res['FilePath'],res['FilePath']+'.log')
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
     '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
