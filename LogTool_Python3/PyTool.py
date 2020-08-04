@@ -282,9 +282,8 @@ try:
 
         destination_dir='Jenkins_Job_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
-        if os.path.exists(destination_dir):
-            shutil.rmtree(destination_dir)
-        os.mkdir(destination_dir)
+        create_dir(destination_dir)
+
         #Download log files
         options=["Download files through Jenkins Artifacts URL using HTTP", "Download files using SCP from: "+log_storage_host]
         option=choose_option_from_list(options,'Please choose your option to download files: ')
@@ -297,64 +296,71 @@ try:
                 print_in_color('Execute "sudo yum install python3-setuptools" to install pip3', 'yellow')
                 print_in_color('Execute "pip3 install beautifulsoup4" to install it!', 'yellow')
                 exit('Install beautifulsoup and rerun!')
-            artifacts_url = input('Copy and paste Jenkins URL to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
+            artifact_url = input('Copy and paste Jenkins URL to Job Artifacts for example \nhttps://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/DFG-hardware_provisioning-rqci-14_director-7.6-vqfx-ipv4-vxlan-IR-networking_ansible/39/artifact/\nYour URL: ')
 
-            if (artifacts_url.lower().endswith('artifact') or artifacts_url.lower().endswith('artifact/'))==False:
+            if (artifact_url.lower().endswith('artifact') or artifact_url.lower().endswith('artifact/'))==False:
                 print_in_color("Provided URL doesn't seem to be proper artifact URL, please rerun using correct URL address!"
                                "\nas given in the above example of artifact URL!",'red')
                 sys.exit(1)
-            # Use since time
-
-            mode_start_time=time.time()
-            response = urllib.request.urlopen(artifacts_url)
+            # Collect log URLs to download
+            mode_start_time = time.time()
+            response = urllib.request.urlopen(artifact_url)
             html = response.read()
-            parsed_url = urlparse(artifacts_url)
-            base_url = parsed_url.scheme + '://' + parsed_url.netloc
-            #soup = BeautifulSoup(html)
             soup = BeautifulSoup(html, 'lxml')
-            tar_gz_files=[]
+            tar_gz_files = []
             ir_logs_urls = []
-            # Create tempest log url #
-            tempest_logs=[]
-            tempest_log_url = None
+            tempest_log_urls = []
+            tobiko_log_urls = []
+            all_links={}
             for link in soup.findAll('a'):
                 if 'tempest-results' in link:
-                    tempest_results_url=urljoin(artifacts_url, link.get('href'))
+                    tempest_results_url = urljoin(artifact_url, link.get('href'))
                     tempest_response = urllib.request.urlopen(tempest_results_url)
                     html = tempest_response.read()
-                    soup = BeautifulSoup(html, 'lxml')
+                    soup = BeautifulSoup(html)
                     for link in soup.findAll('a'):
                         if str(link.get('href')).endswith('.html'):
-                            tempest_html=link.get('href')
-                            tempest_log_url=urljoin(artifacts_url,'tempest-results')+'/'+tempest_html
-                            tempest_logs.append(tempest_log_url)
+                            tempest_html = link.get('href')
+                            tempest_log_urls.append(urljoin(artifact_url, 'tempest-results') + '/' + tempest_html)
+                if 'Test Result' in link:
+                    tobiko_results_url = urljoin(artifact_url, link.get('href'))
+                    tobiko_link_name = link.get('href')
+                    tobiko_response = urllib.request.urlopen(tobiko_results_url)
+                    html = tobiko_response.read()
+                    soup = BeautifulSoup(html)
+                    for link in soup.findAll('a'):
+                        if str(link.get('href')).startswith('tobiko.tests'):
+                            tobiko_html = link.get('href')
+                            tobiko_log_urls.append(urljoin(artifact_url, tobiko_link_name) + '/' + tobiko_html)
+                    tobiko_log_urls = list(set(tobiko_log_urls))
                 if str(link.get('href')).endswith('.tar.gz'):
-                    tar_gz_files.append(link)
-                    tar_link = urljoin(artifacts_url, link.get('href'))
-                    os.system('wget -P ' + destination_dir + ' ' + tar_link)
+                    tar_link = urljoin(artifact_url, link.get('href'))
+                    tar_gz_files.append(tar_link)
                 if str(link.get('href')).endswith('.sh'):
-                    sh_page_link=urljoin(artifacts_url, link.get('href'))
+                    sh_page_link = urljoin(artifact_url, link.get('href'))
                     response = urllib.request.urlopen(sh_page_link)
                     html = response.read()
                     soup = BeautifulSoup(html)
                     for link in soup.findAll('a'):
                         if str(link.get('href')).endswith('.log'):
-                            ir_logs_urls.append(sh_page_link+'/'+link.get('href'))
+                            ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
+            console_log_url = artifact_url.strip().replace('artifact', 'consoleFull').strip('/')
+            all_links = {'ConsoleLog': [console_log_url], 'TempestLogs': tempest_log_urls,
+                         'InfraredLogs': ir_logs_urls, 'TarGzFiles': tar_gz_files, 'TobikoLogs': tobiko_log_urls}
+            # Download logs
+            for key in all_links.keys():
+                for url in all_links[key]:
+                    res = download_file(url, destination_dir)
+                    if res['Status'] != 200:
+                        print_in_color('Failed to download: ' + url, 'red')
+                    else:
+                        print_in_color('OK --> ' + url, 'blue')
+                    if key == 'TempestLogs':
+                        shutil.move(res['FilePath'], res['FilePath'].replace('.html', '.log'))
+                    if key == 'ConsoleLog':
+                        shutil.move(res['FilePath'], res['FilePath'] + '.log')
+            spec_print(['Downloaded files:'] + os.listdir(destination_dir), 'bold')
 
-            # Download console.log
-            console_log_url=artifacts_url.strip().replace('artifact','consoleFull').strip('/')
-            os.system('wget -P ' + destination_dir + ' ' + console_log_url)
-            shutil.move(os.path.join(destination_dir, 'consoleFull'),os.path.join(destination_dir,'consoleFull.log'))
-
-            # Download Infared Logs .sh, files in .sh directory on Jenkins
-            if len(ir_logs_urls)!=0:
-                for url in ir_logs_urls:
-                    os.system('wget -P ' + destination_dir + ' ' + url)
-            # Download tempest log (html #)
-            for tempest_log in tempest_logs:
-                os.system('wget -P ' + destination_dir + ' ' + tempest_log)
-                shutil.move(os.path.join(destination_dir, os.path.basename(tempest_log)),
-                            os.path.join(destination_dir,os.path.basename(tempest_log).replace('.html','.log')))
         if option[1]=="Download files using SCP from: "+log_storage_host:
             # Make sure that Paramiko is installed
             try:

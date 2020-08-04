@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, paramiko, time, subprocess, json, sys, re, difflib, datetime
+import os, paramiko, time, subprocess, json, sys, re, difflib, datetime, shutil,requests
 import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
 from urllib.parse import urljoin
 from string import digits
+
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 def empty_file_content(log_file_name):
     f = open(log_file_name, 'w')
@@ -275,3 +279,27 @@ def check_user_time(start_time):
         return {'Error': None, 'Line': None, 'Date': str(date)}
     else:
         return {'Error': 'Bad time format!', 'Line': start_time, 'Date':None}
+
+
+def create_dir(dir_dst_path):
+    if os.path.isdir(dir_dst_path):
+        shutil.rmtree(dir_dst_path)
+    os.mkdir(dir_dst_path)
+
+
+def download_file(url, dst_path='.',extension='.log'):
+    try:
+        r = requests.get(url,verify=False)
+        if os.path.basename(url)!='':
+            file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url))
+            with open(file_path, 'wb') as f:
+                f.write(r.content)
+        else:
+            url=url.strip('/')+extension
+            file_path=os.path.join(os.path.abspath(dst_path),os.path.basename(url))
+            with open(file_path, 'wb') as f:
+                f.write(r.content)
+        return {'Status':r.status_code,'Content':r.content,'FilePath':file_path}
+    except Exception as e:
+        print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
+        return {'Status': None, 'Content':None, 'FilePath':None}
