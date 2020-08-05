@@ -52,7 +52,7 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                 '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
                 '= CRITICAL ','"Error": "",','stderr F','fatal_exception_format_errors','failed=0   ']
 
-logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+logs_to_ignore=['/var/lib/containers/storage/overlay', '/var/log/anaconda'] #These logs won't be analysed
 
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
