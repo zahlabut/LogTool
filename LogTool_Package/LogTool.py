@@ -573,7 +573,10 @@ if len(sys.argv) > 1:
     conf_file=sys.argv[1]
 else:
     conf_file = 'conf.ini'
-print(conf_file)
+print
+
+LogTool.print_in_color('Provided configuration file is: '+conf_file,'green')
+
 config.read(conf_file)
 LogTool.time_grep = config.get("Settings", "time_grep")
 LogTool.log_root_dir = eval(config.get("Settings", "log_root_dir"))
