@@ -103,6 +103,8 @@ class LogTool(unittest.TestCase):
 
 
 
+
+
         #response = urllib2.urlopen(artifact_url)
 
         html = response.read()
