@@ -21,9 +21,16 @@ import unittest
 import warnings
 import sys
 import time
+import ssl
 from urllib2 import urlparse
 from urlparse import urljoin
 from BeautifulSoup import BeautifulSoup
+
+
+
+request = urllib2.Request('https://somedomain.co/')
+response = urllib2.urlopen(request, context=ssl._create_unverified_context())
+
 
 
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
@@ -94,7 +101,20 @@ class LogTool(unittest.TestCase):
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
-        response = urllib2.urlopen(artifact_url)
+
+
+
+        request = urllib2.Request(artifact_url)
+        response = urllib2.urlopen(request, context=ssl._create_unverified_context())
+
+
+
+        #response = urllib2.urlopen(artifact_url)
+
+
+
+
+
         html = response.read()
         soup = BeautifulSoup(html)
         tar_gz_files = []
