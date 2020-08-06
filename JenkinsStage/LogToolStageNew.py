@@ -26,13 +26,6 @@ from urllib2 import urlparse
 from urlparse import urljoin
 from BeautifulSoup import BeautifulSoup
 
-
-
-request = urllib2.Request('https://somedomain.co/')
-response = urllib2.urlopen(request, context=ssl._create_unverified_context())
-
-
-
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
             'download_overcloud_logs: ' + download_overcloud_logs,
             'overcloud_log_dirs: ' + overcloud_log_dirs,'download_undercloud_logs: ' + download_undercloud_logs,
@@ -101,19 +94,10 @@ class LogTool(unittest.TestCase):
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
-
-
-
         request = urllib2.Request(artifact_url)
         response = urllib2.urlopen(request, context=ssl._create_unverified_context())
 
-
-
         #response = urllib2.urlopen(artifact_url)
-
-
-
-
 
         html = response.read()
         soup = BeautifulSoup(html)
