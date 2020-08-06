@@ -98,14 +98,27 @@ class LogTool(unittest.TestCase):
         #request = urllib2.Request(artifact_url)
         #response = urllib2.urlopen(request, context=ssl._create_unverified_context())
 
-        ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
-        response=urllib2.urlopen(artifact_url, context=ctx)
+        #ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+        #response=urllib2.urlopen(artifact_url, context=ctx)
 
 
 
         #response = urllib2.urlopen(artifact_url)
 
+
+
+
+
+
+        import urllib.request
+        opener = urllib.request.FancyURLopener({})
+        response = opener.open(artifact_url)
         html = response.read()
+
+
+
+
+
         soup = BeautifulSoup(html)
         tar_gz_files = []
         ir_logs_urls = []
