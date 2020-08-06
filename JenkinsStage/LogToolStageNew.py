@@ -109,11 +109,9 @@ class LogTool(unittest.TestCase):
 
 
 
-        import urllib.request
-        opener = urllib.request.FancyURLopener({})
-        response = opener.open(artifact_url)
-        html = response.read()
 
+
+        html=download_file(artifact_url)['Content']
 
 
 
