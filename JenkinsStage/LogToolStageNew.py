@@ -99,7 +99,7 @@ class LogTool(unittest.TestCase):
         #response = urllib2.urlopen(request, context=ssl._create_unverified_context())
 
         ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
-        urllib2.urlopen(artifact_url, context=ctx)
+        response=urllib2.urlopen(artifact_url, context=ctx)
 
 
 
