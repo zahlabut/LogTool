@@ -362,7 +362,7 @@ class LogTool:
         if '/var/log/messages' in self.log:
             if 'error' in self.string_for_grep.lower():
                 string_for_grep='level=error'
-            if 'warn' in string_for_grep.lower():
+            if 'warn' in self.string_for_grep.lower():
                 string_for_grep = 'level=warn'
             commands = ["grep -n '" + string_for_grep + "' " + self.log + " > "+temp_grep_result_file]
         if 'consoleFull' in self.log:
@@ -711,7 +711,7 @@ def start_analyzing():
 
 
         ### Exported Unique messages per NOT STANDARD log file, since ever  ###
-            LogTool.append_to_file(LogTool.log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
+        LogTool.append_to_file(LogTool.log_tool_result_file,'\n\n\n'+'#'*20+' Exported unique messages per NOT STANDARD log file, since ever '+'#'*20+'\n')
         for dir in not_standard_logs_unique_messages:
             if len(dir['UniqueMessages'])>0:
                 LogTool.append_to_file(LogTool.log_tool_result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
