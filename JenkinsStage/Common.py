@@ -18,8 +18,14 @@ import urllib2
 import difflib
 from urllib2 import urlparse
 from string import digits
+
+
+#import urllib3
+#urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
 import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+urllib3.disable_warnings()
 
 
 def download_file(url, dst_path='.',extension='.log'):
