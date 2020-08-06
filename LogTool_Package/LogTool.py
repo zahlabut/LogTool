@@ -103,9 +103,6 @@ class LogTool:
     def collect_log_paths(log_root_dir, logs_to_ignore):
         logs=[]
         black_list=logs_to_ignore
-        print(log_root_dir)
-        print (logs_to_ignore)
-
         black_list=logs_to_ignore
         for path in log_root_dir:
             for root, dirs, files in os.walk(path):
