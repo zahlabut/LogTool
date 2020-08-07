@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-import os, datetime,subprocess,json,sys,re,requests,shutil
+import os, datetime,subprocess,json,sys,re,requests,shutil,ssl
 import urllib2
 import difflib
 from urllib2 import urlparse
@@ -28,9 +28,10 @@ import urllib3
 urllib3.disable_warnings()
 
 
+
 def download_file(url, dst_path='.',extension='.log'):
     try:
-        r = requests.get(url,verify=False)
+        r = requests.get(url, verify=False)
         if os.path.basename(url)!='':
             file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url))
             with open(file_path, 'wb') as f:

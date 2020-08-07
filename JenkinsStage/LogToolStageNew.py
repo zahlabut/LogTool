@@ -94,28 +94,7 @@ class LogTool(unittest.TestCase):
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
-
-        #request = urllib2.Request(artifact_url)
-        #response = urllib2.urlopen(request, context=ssl._create_unverified_context())
-
-        #ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
-        #response=urllib2.urlopen(artifact_url, context=ctx)
-
-
-
-        #response = urllib2.urlopen(artifact_url)
-
-
-
-
-
-
-
         html=download_file(artifact_url)['Content']
-
-
-
-
         soup = BeautifulSoup(html)
         tar_gz_files = []
         ir_logs_urls = []
