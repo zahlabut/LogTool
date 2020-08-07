@@ -31,7 +31,7 @@ urllib3.disable_warnings()
 
 def download_file(url, dst_path='.',extension='.log'):
     try:
-        r = requests.get(url, verify=False)
+        r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'},verify=False)
         if os.path.basename(url)!='':
             file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url))
             with open(file_path, 'wb') as f:
