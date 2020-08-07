@@ -94,7 +94,15 @@ class LogTool(unittest.TestCase):
     def test_2_parse_artifact_url(self):
         print('\ntest_2_parse_artifact_url')
         # Parse artifact_url html
+
+        import os, ssl
+        if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+                getattr(ssl, '_create_unverified_context', None)):
+            ssl._create_default_https_context = ssl._create_unverified_context
         html=download_file(artifact_url)['Content']
+
+
+
         soup = BeautifulSoup(html)
         tar_gz_files = []
         ir_logs_urls = []
