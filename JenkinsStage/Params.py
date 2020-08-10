@@ -45,7 +45,7 @@ undercloud_node_names=['undercloud','hypervisor']
 
 
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-artifact_url='https://rhos-ci-jenkins.lab.eng.tlv2.redhat.com/job/OSPD-Customized-Deployment-virt/5/artifact/'
+artifact_url='https://rhos-ci-jenkins.lab.eng.tlv2.redhat.com/view/DFG/view/network/view/octavia/job/DFG-network-octavia-16_director-rhel-virthost-3cont_2comp_3net-ipv4-geneve-composable/1/artifact/'
 
 
 #Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py

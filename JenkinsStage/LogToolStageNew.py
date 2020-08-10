@@ -179,10 +179,10 @@ class LogTool(unittest.TestCase):
         for key in LogTool.all_links.keys():
             for url in LogTool.all_links[key]:
                 res = download_file(url, temp_dir)
-                if res['Status'] != 200:
-                    print_in_color('Failed to download: ' + url, 'red')
-                else:
+                if res['Status'] == 200:
                     print_in_color('OK --> ' + url, 'blue')
+                else:
+                    print_in_color('Failed to download: ' + url, 'red')
                 if key=='TempestLogs':
                     shutil.move(res['FilePath'],res['FilePath'].replace('.html','.log'))
                 if key=='ConsoleLog':
