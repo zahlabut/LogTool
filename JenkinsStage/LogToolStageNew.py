@@ -250,7 +250,7 @@ class LogTool(unittest.TestCase):
                         'blue')
         else:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
-                        'Execution time: ' + str(round(end_time - mode_start_time), 2) + '[sec]',
+                        'Execution time: ' + str(round(end_time-mode_start_time, 2)) + '[sec]',
                         'Worker output was:'],'red')
             print_in_color(com_result['CommandOutput'],'red')
 
