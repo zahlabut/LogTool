@@ -250,7 +250,8 @@ class LogTool(unittest.TestCase):
                         'blue')
         else:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
-                        'Execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'],'red')
+                        'Execution time: ' + str(round(end_time - mode_start_time, 2),'Worker output was:') + '[sec]'],'red')
+            print_in_color(com_result['CommandOutput'],'red')
 
     '''This test is planned to run "grep" mode'''
     #@unittest.skipIf(grep_command=='','No provided grep command')
