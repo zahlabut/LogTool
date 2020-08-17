@@ -48,7 +48,7 @@ errors_on_execution = {}
 
 # Get all Overcloud Nodes #
 is_undercloud_host=False
-if os.path.isdir('/home/stack/')==True:
+if os.path.isfile('/home/stack/core_puddle_version')==True:
     try:
         print_in_color('Connectivity check to all OC nodes...','bold')
         overcloud_nodes = []
