@@ -143,7 +143,7 @@ def execute_on_node(**kwargs):
         com_result=s.ssh_command(command)
         print(com_result['Stdout']) # Do not delete me!!!
         if 'SUCCESS!!!' in com_result['Stdout']:
-            print_in_color(str(node)+' --> OK','green')
+            print_in_color(kwargs['Node']['Name']+' --> OK','green')
         else:
             print_in_color(str(node) + ' --> FAILED','red')
             errors_on_execution[node['Name']]=False
