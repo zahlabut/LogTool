@@ -138,7 +138,7 @@ def execute_on_node(**kwargs):
     if kwargs['Mode']=='Download_Relevant_Logs':
         print(s.scp_upload('Download_Logs_By_Timestamp.py', overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
         print(s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Download_Logs_By_Timestamp.py'))
-        command="sudo " + overcloud_home_dir + "Download_Logs_By_Timestamp.py '" + str(start_time) + "' " + overcloud_logs_dir +' '+ node['Name']
+        command="sudo " + overcloud_home_dir + "Download_Logs_By_Timestamp.py '" + str(start_time) + "' " + overcloud_logs_dir +' '+ kwargs['Node']['Name']
         print(command)
         com_result=s.ssh_command(command)
         print(com_result['Stdout']) # Do not delete me!!!
