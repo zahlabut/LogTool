@@ -147,7 +147,7 @@ def execute_on_node(**kwargs):
         else:
             print_in_color(str(node) + ' --> FAILED','red')
             errors_on_execution[node['Name']]=False
-        print(s.scp_download(overcloud_home_dir + node['Name']+'.zip', os.path.join(os.path.abspath(kwargs['ResultDir']), kwargs['Node']['Name']+'.zip')))
+        print(s.scp_download(overcloud_home_dir + kwargs['Node']['Name']+'.zip', os.path.join(os.path.abspath(kwargs['ResultDir']), kwargs['Node']['Name']+'.zip')))
         # Clean all #
         files_to_delete=['Download_Logs_By_Timestamp.py',kwargs['Node']['Name']+'.zip', kwargs['Node']['Name']]
     for fil in files_to_delete:
