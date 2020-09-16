@@ -1,0 +1,5 @@
+1) Save the xml Job's content into config.xml
+   Content is here: https://github.com/zahlabut/LogTool/blob/master/JenkinsStage/Job.xml
+2) Download Jenkins Jar file from: http://staging-jenkins2-qe-playground.usersys.redhat.com/jnlpJars/jenkins-cli.jar
+3) Execute (in the same folder wher both: Jar and conf.xml) the following command:
+   java -jar jenkins-cli.jar -s http://staging-jenkins2-qe-playground.usersys.redhat.com/ -webSocket create-job zahlabut < config.xml
