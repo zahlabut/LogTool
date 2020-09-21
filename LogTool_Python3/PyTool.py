@@ -730,7 +730,9 @@ try:
         lb_list = 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer list -f json'
         lb_id=exec_command_line_command(lb_list)['JsonOutput']['id']
         lb_show= 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer show '+lb_id+' -f json'
-        lb_ip=exec_command_line_command(lb_show)['JsonOutput']['id']
+        lb_vip=exec_command_line_command(lb_show)['JsonOutput']['vip_address']
+        fip_list='source ' + source_rc_file_path + 'overcloudrc;openstack floating ip list -f json'
+        lb_fip=[item['floating ip address'] for item in exec_command_line_command(fip_list)['JsonOutput'] if item['fixed ip address']==lb_vip ]
 
 
 
