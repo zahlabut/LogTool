@@ -163,7 +163,8 @@ try:
            'Download Overcloud Logs',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
-           'Analyze Gerrit(Zuul) failed gate logs']
+           'Analyze Gerrit(Zuul) failed gate logs',
+           'Octavia - find Master']
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
@@ -724,6 +725,14 @@ try:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + mode_result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
+
+    if mode[1]=='Octavia - find Master':
+        lb_list = 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer list -f json'
+        lb_id=exec_command_line_command(lb_list)['JsonOutput']['id']
+        lb_show= 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer show '+lb_id+' -f json'
+        lb_ip=exec_command_line_command(lb_show)['JsonOutput']['id']
+
+
 
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
