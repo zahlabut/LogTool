@@ -728,7 +728,7 @@ try:
 
     if mode[1]=='Octavia - find Master':
         lb_list = 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer list -f json'
-        lb_id=exec_command_line_command(lb_list)['JsonOutput']['id']
+        lb_id=exec_command_line_command(lb_list)[0]['JsonOutput']['id']
         lb_show= 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer show '+lb_id+' -f json'
         lb_vip=exec_command_line_command(lb_show)['JsonOutput']['vip_address']
         fip_list='source ' + source_rc_file_path + 'overcloudrc;openstack floating ip list -f json'
