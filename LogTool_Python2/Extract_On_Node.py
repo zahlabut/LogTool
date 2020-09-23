@@ -50,8 +50,11 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                     'No error reported.','--exit-command-arg error','Use errors="ignore" instead of skip.',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
-                '= CRITICAL ']
-logs_to_ignore=['/var/lib/containers/storage/overlay'] #These logs won't be analysed
+                '= CRITICAL ','"Error": "",','stderr F','fatal_exception_format_errors','failed=0   ','--log-level error',
+                '--exit - command - arg error']
+
+logs_to_ignore=['/var/lib/containers/storage/overlay', '/var/log/anaconda','container_info.log'] #These logs won't be analysed
+
 python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','FloatingPointError',
                    'OverflowError','ZeroDivisionError','AssertionError','AttributeError','BufferError',
                    'EOFError','ImportError','ModuleNotFoundError','LookupError','IndexError','KeyError',
