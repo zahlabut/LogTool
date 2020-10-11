@@ -111,7 +111,7 @@ class LogTool(unittest.TestCase):
                 tempest_results_url = urljoin(artifact_url, link.get('href'))
                 tempest_response = urllib.request.urlopen(tempest_results_url)
                 html = tempest_response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.html'):
                         tempest_html = link.get('href')
@@ -122,7 +122,7 @@ class LogTool(unittest.TestCase):
                 tobiko_link_name=link.get('href')
                 tobiko_response = urllib.request.urlopen(tobiko_results_url)
                 html = tobiko_response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).startswith('tobiko.tests'):
                         tobiko_html = link.get('href')
@@ -136,7 +136,7 @@ class LogTool(unittest.TestCase):
                 sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
                 response = urllib.request.urlopen(sh_page_link)
                 html = response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
