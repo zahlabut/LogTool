@@ -26,6 +26,7 @@ import operator
 import collections
 from string import digits
 import re
+import shutil
 
 def set_default_arg_by_index(index, default):
     try:
@@ -664,6 +665,22 @@ if __name__ == "__main__":
     write_list_of_dict_to_file(result_file,statistics_list,
                                '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
 
+    #Create HTTML index and Directory
+    html_directory='LogTool_HTML_Report'
+    if os.path.exists(html_directory)==True:
+        shutil.rmtree(html_directory)
+    os.makedirs(html_directory)
+    background_image='logtool.jpg'
+    shutil.copyfile(os.path.abspath(background_image),os.path.join(os.path.abspath(html_directory),background_image))
+    html_page=os.path.join(html_directory,'index.html')
+    append_to_file(html_page,'<!DOCTYPE html>\n'+'<html>\n'+'<head>\n'+'<title>LogTool_Report</title>\n'+'</head\n><body>\n')
+    append_to_file(html_page,'<h1>Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep+'</h1>\n')
+    for item in statistics_list:
+        if 'Total_Number_Of_ERRORs' in str(item):
+            append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
+        else:
+            html_log_file =  item.items()[0][0].replace('/', '_')
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
