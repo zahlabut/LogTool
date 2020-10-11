@@ -1,0 +1,219 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?><project>
+  <actions/>
+  <description>&lt;br/&gt;Any time when CI Job fails, you might want to analyze log files to understand what went wrong.&#13;
+&lt;br/&gt;Sometimes, finding a "Root Cause" is easy, it depends on your&#13;
+&lt;br/&gt;experience and knowledge. If you familiar with failed "area", you'll might know where the relevant &#13;
+&lt;br/&gt;Error message is logged, so probably you'll be able to find the "Root Cause".&#13;
+&lt;br/&gt;&lt;b&gt;But, if you think that:&lt;/b&gt;&#13;
+&lt;strong&gt;&lt;br/&gt;  1) Saving time - does mater to you!&#13;
+&lt;br/&gt;  2) "Donkey work" - is not the best choice for you!&#13;
+&lt;br/&gt;  3) Finding the "Root Cause" manually is going to be too complicated!&#13;
+&lt;/strong&gt;&#13;
+&lt;br/&gt;Try using this "LogTool Jenkins Stage", all you'll have to do, is to provide two parameters:&#13;
+&lt;br/&gt;1) Job Artifact URL&#13;
+&lt;br/&gt;2) Start Time that will be used to filter out not relevant messages in term of time.&#13;
+&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; you can also use LogTool installed on Undercloud or on your Desktop, for more details:&#13;
+&lt;br/&gt;&lt;a href="https://github.com/zahlabut"&gt;Zahlabut GitHub&lt;/a&gt; &#13;
+&lt;br/&gt;&lt;a href="https://opensource.com/article/20/1/logtool-root-cause-identification"&gt;LogTool on OpenSource.com&lt;/a&gt;&#13;
+&lt;br/&gt;&lt;a href="https://developer.51cto.com/art/202002/610536.htm"&gt;LogTool on Chinese site&lt;/a&gt;&#13;
+&#13;
+&#13;
+&#13;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.0"/>
+    <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+      <useBuildBlocker>false</useBuildBlocker>
+      <blockLevel>GLOBAL</blockLevel>
+      <scanQueueFor>DISABLED</scanQueueFor>
+      <blockingJobs/>
+    </hudson.plugins.buildblocker.BuildBlockerProperty>
+    <com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty plugin="build-failure-analyzer@1.26.0">
+      <doNotScan>false</doNotScan>
+    </com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty>
+    <org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty plugin="zmq-event-publisher@0.0.5">
+      <enabled>false</enabled>
+    </org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>artifact_url</name>
+          <description>Job's "Build Artifacts" link, for Example:
+https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15926/artifact/</description>
+          <defaultValue>https://rhos-qe-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/OSPD-Customized-Deployment-virt/15950/artifact/</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>user_start_time</name>
+          <description>You might want to see the Errors occured after some time in the past, for example if you trying to
+investigate Overcloud Deployment stage started at: 2020-07-04 12:00:00 all Errors happened before this time
+are probably won't be relevant.
+Important: use exactly the same format as in default!</description>
+          <defaultValue>2020-07-01 00:00:00</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>download_overcloud_logs</name>
+          <description>If checked, all Overcloud *tar.gz files: Contoller.tar.gz, Compute.tar.gz ...
+will be downloaded and analyzed.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>overcloud_log_dirs</name>
+          <description>Log directories on Overcloud nodes that will be analyzed.
+Use komma character separator, to add more values, for example:
+Note: use relative path only!</description>
+          <defaultValue>var/log</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>download_undercloud_logs</name>
+          <description>If checked, all Undercloud *tar.gz files: undercloud.tar.gz and hypervisor.tar.gz
+will be downloaded and analyzed.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>undercloud_log_dirs</name>
+          <description>Log directories on Undercloud nodes that will be analyzed.
+Use komma character separator, to add more values.
+Note: use relative path only!</description>
+          <defaultValue>var/log,home/stack,usr/share,var/lib</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>grep_command</name>
+          <description>You can provide your own "grep" command that will be executed on downoaded log files directory.
+Important: (-r DOWNLOADED_LOGS_DIRECTORY) will be added to provided command automatically.
+For example the default "grep" command will be modified to:
+grep  -C5 ' ERROR ' -r DOWNLOADED_LOGS_DIRECTORY
+HTML report with the output of "grep" command will be published.
+</description>
+          <defaultValue>grep  -B2 -A7 ' ERROR ' </defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>delete_downloaded_files</name>
+          <description>This Job keeps all its data in Build Artifacts, by default it will delete all downloaded logs, but
+if you want this files to be saved in "Build Artifacts", uncheck this box.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.2">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <categories class="java.util.concurrent.CopyOnWriteArrayList"/>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+      <limitOneJobWithMatchingParams>false</limitOneJobWithMatchingParams>
+      <paramsToUseForLimit/>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/zahlabut/LogTool.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+# Download CI artifact files and Analyze logs #
+virtualenv .venv &amp;&amp; source .venv/bin/activate
+pip install beautifulsoup
+pip install requests
+git clone https://github.com/zahlabut/LogTool.git
+echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "download_overcloud_logs='"$download_overcloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "overcloud_log_dirs='"$overcloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "download_undercloud_logs='"$download_undercloud_logs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "undercloud_log_dirs='"$undercloud_log_dirs"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "grep_string_only='"$grep_string_only"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "delete_downloaded_files='"$delete_downloaded_files"'" &gt;&gt; LogTool/JenkinsStage/Params.py
+echo "grep_command='''"$grep_command"'''" &gt;&gt; LogTool/JenkinsStage/Params.py
+#cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
+cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>LogTool/JenkinsStage/**/*.*</artifacts>
+      <allowEmptyArchive>true</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+      <followSymlinks>false</followSymlinks>
+    </hudson.tasks.ArtifactArchiver>
+    <htmlpublisher.HtmlPublisher plugin="htmlpublisher@1.23">
+      <reportTargets>
+        <htmlpublisher.HtmlPublisherTarget>
+          <reportName>Analyzed Logs Report</reportName>
+          <reportDir>LogTool/JenkinsStage/LogTool_HTML_Report</reportDir>
+          <reportFiles>index.html</reportFiles>
+          <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
+          <reportTitles/>
+          <keepAll>true</keepAll>
+          <allowMissing>false</allowMissing>
+          <includes>**/*</includes>
+          <escapeUnderscores>true</escapeUnderscores>
+        </htmlpublisher.HtmlPublisherTarget>
+        <htmlpublisher.HtmlPublisherTarget>
+          <reportName>Grep Command Output Report</reportName>
+          <reportDir>LogTool/JenkinsStage/Grep_HTML_Report</reportDir>
+          <reportFiles>GrepCommandOutput.txt</reportFiles>
+          <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
+          <reportTitles/>
+          <keepAll>true</keepAll>
+          <allowMissing>false</allowMissing>
+          <includes>**/*</includes>
+          <escapeUnderscores>true</escapeUnderscores>
+        </htmlpublisher.HtmlPublisherTarget>
+      </reportTargets>
+    </htmlpublisher.HtmlPublisher>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.38">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter/>
+      <externalDelete/>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+    <hudson.plugins.build__timeout.BuildTimeoutWrapper plugin="build-timeout@1.20">
+      <strategy class="hudson.plugins.build_timeout.impl.AbsoluteTimeOutStrategy">
+        <timeoutMinutes>60</timeoutMinutes>
+      </strategy>
+      <operationList/>
+    </hudson.plugins.build__timeout.BuildTimeoutWrapper>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.3"/>
+    <de.jamba.hudson.plugin.wsclean.PrePostClean plugin="hudson-wsclean-plugin@1.0.7">
+      <before>false</before>
+    </de.jamba.hudson.plugin.wsclean.PrePostClean>
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.0">
+      <colorMapName>xterm</colorMapName>
+    </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
+  </buildWrappers>
+</project>
