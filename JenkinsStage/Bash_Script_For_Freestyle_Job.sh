@@ -14,4 +14,5 @@ echo "undercloud_log_dirs='"$undercloud_log_dirs"'" >> LogTool/JenkinsStage/Para
 echo "grep_string_only='"$grep_string_only"'" >> LogTool/JenkinsStage/Params.py
 echo "delete_downloaded_files='"$delete_downloaded_files"'" >> LogTool/JenkinsStage/Params.py
 echo "grep_command='''"$grep_command"'''" >> LogTool/JenkinsStage/Params.py
-cd LogTool/JenkinsStagePython3; python3 -m unittest LogToolStageNew
+#cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
+cd LogTool/JenkinsStage; python -m unittest LogToolStageNew
