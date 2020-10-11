@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
 #
@@ -73,12 +73,15 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 # (Debig lebel is in first 60 characters)
 analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
+
 def remove_digits_from_string(s):
-    return str(s).translate(None, digits)
+    remove_digits = str.maketrans('', '', digits)
+    return str(s).translate(remove_digits)
 
 def exec_command_line_command(command):
     try:
-        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True)
+        #result = subprocess.check_output(command, shell=True, encoding='UTF-8')
+        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True,encoding='UTF-8')
         json_output = None
         try:
             json_output = json.loads(result.lower())
@@ -660,7 +663,8 @@ if __name__ == "__main__":
     statistics_list.insert(0,{'Total_Number_Of_'+str(string_for_grep).replace(' ','')+'s':total_number_of_all_logs_errors})
     print_list(statistics_list)
     write_list_of_dict_to_file(result_file,statistics_list,
-                               '\n\n\n'+'#'*20+' Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
+                               '\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep+' '+'#'*20+'\n')
+
     #Create HTTML index and Directory
     html_directory='LogTool_HTML_Report'
     if os.path.exists(html_directory)==True:
@@ -675,7 +679,8 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
-            html_log_file =  item.items()[0][0].replace('/', '_')
+            html_log_file =  list(item.items())[0][0].replace('/', '_')
+            print_in_color(html_log_file, 'red')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
@@ -685,22 +690,9 @@ if __name__ == "__main__":
     total_number_of_errors=sum([i[1] for i in statistics_list])
     statistics_list.insert(0,['Total_Number_Of_'+string_for_grep.replace(' ','')+'s',total_number_of_errors])
     print_list(statistics_list)
-    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever '+'#'*20)
-    append_to_file(html_page,'<h1>Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever</h1>\n')
+    append_to_file(result_file,'\n\n\n'+'#'*20+' Statistics - Number of Errors/Warnings per Not Standard OSP log since ever '+'#'*20)
     write_list_to_file(result_file,statistics_list,False)
-    html_data=''
-    for item in statistics_list:
-        if 'Total_Number_Of_' in str(item):
-            append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
-        else:
-            html_log_file = item[0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
-    #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
-    append_to_file(html_page, '<br>'*3)
-    append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
-    append_to_file(html_page,'<img alt="Qries" src="'+background_image+'"\n')
-    #append_to_file(html_page,'width=750" height="350">\n')
-    append_to_file(html_page,'</body>\n'+'</html>\n')
+
 
 
     ### Fill Statistics - Unique(Fuzzy Matching) section ###
@@ -710,8 +702,7 @@ if __name__ == "__main__":
     for item in analyzed_logs_result:
         for block in item['AnalyzedBlocks']:
             common_list_of_all_blocks.append(block)
-    sorted_blocks=sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate'])
-    for block in sorted_blocks:
+    for block in sorted(common_list_of_all_blocks,key=lambda i: i['BlockDate']):
         append_to_file(result_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(result_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(result_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -720,16 +711,6 @@ if __name__ == "__main__":
         append_to_file(result_file, 'Log:' + str(block['Log']) + '\n')
         for line in block['BlockLines']:
             append_to_file(result_file, line + '\n')
-        # Add block into dedicated file
-        html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'].replace('/','_'))
-        append_to_file(html_log_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
-        append_to_file(html_log_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
-        append_to_file(html_log_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
-        append_to_file(html_log_file, 'AnalyzedBlockLinesSize:' + str(block['AnalyzedBlockLinesSize']) + '\n')
-        append_to_file(html_log_file, 'BlockDate:' + str(block['BlockDate']) + '\n')
-        append_to_file(html_log_file, 'Log:' + str(block['Log']) + '\n')
-        for line in block['BlockLines']:
-            append_to_file(html_log_file, line + '\n')
 
 
     ### Exported Unique messages per NOT STANDARD log file, since ever  ###
@@ -738,9 +719,7 @@ if __name__ == "__main__":
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
-            html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_'))
-            for line in dir['UniqueMessages']:
-                append_to_file(html_log_file,line)
+
 
 
     # Create all unique "Potential problematical lines"
@@ -760,8 +739,8 @@ if __name__ == "__main__":
     messages=[
         #'Raw Data - extracted Errors/Warnings from standard OSP logs since: '+time_grep,
         # 'Skipped logs - no debug level string (Error, Info, Debug...) has been detected',
-        'Statistics - Number of '+string_for_grep.replace(' ','')+'s per Standard OSP log since: '+time_grep,
-        'Statistics - Number of '+string_for_grep.replace(' ','')+'s per Not Standard OSP log since ever',
+        'Statistics - Number of Errors/Warnings per Standard OSP log since: '+time_grep,
+        'Statistics - Number of Errors/Warnings per Not Standard OSP log since ever',
         'Exported unique messages, per STANDARD OSP log file since: '+time_grep,
         'Exported unique messages per NOT STANDARD log file, since ever',
         'Standard Log Files Unique Problematical lines'
@@ -769,7 +748,7 @@ if __name__ == "__main__":
     for msg in messages:
         section_indexes.append({msg:"SectionStartLine: "+get_file_line_index(result_file,msg)})
     write_list_of_dict_to_file(result_file,section_indexes,'\n\n\n'+'#'*20+' Table of content (Section name --> Line number)'+'#'*20+'\n')
-    #exec_command_line_command('gzip '+result_file)
+    exec_command_line_command('gzip '+result_file)
     print('Execution time:'+str(time.time()-start_time))
     if total_number_of_all_logs_errors+total_number_of_errors>0:
         print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
