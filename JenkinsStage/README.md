@@ -1,9 +1,5 @@
-Designed for CI users that do inrested in LogTool stage.
-Usage:
-1) Enter Job's artifact URL
-2) Enter "start_time" to use for analyzing
-3) Have fun, enjoy exported Errors and good luck in finding the "Root Cause"
-
-
-
-
+Jenkins Freestyle project to run LogTool on failed CI jobs.
+Start the Job using "Build with parameters" options.
+Set all needed values and run it.
+Once completed, follow generated/published HTML report to see
+exported unique Errors.

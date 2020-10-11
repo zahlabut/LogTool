@@ -22,16 +22,19 @@
 </description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.0"/>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.1"/>
     <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
       <useBuildBlocker>false</useBuildBlocker>
       <blockLevel>GLOBAL</blockLevel>
       <scanQueueFor>DISABLED</scanQueueFor>
       <blockingJobs/>
     </hudson.plugins.buildblocker.BuildBlockerProperty>
-    <com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty plugin="build-failure-analyzer@1.26.0">
+    <com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty plugin="build-failure-analyzer@1.27.1">
       <doNotScan>false</doNotScan>
     </com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.13">
+      <gitLabConnection/>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
     <org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty plugin="zmq-event-publisher@0.0.5">
       <enabled>false</enabled>
     </org.jenkinsci.plugins.ZMQEventPublisher.HudsonNotificationProperty>
@@ -104,7 +107,7 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
         </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
-    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.2">
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.3">
       <maxConcurrentPerNode>0</maxConcurrentPerNode>
       <maxConcurrentTotal>0</maxConcurrentTotal>
       <categories class="java.util.concurrent.CopyOnWriteArrayList"/>
@@ -115,7 +118,7 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
     </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
 
   </properties>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.4.4">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
@@ -142,8 +145,9 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
       <command>#!/bin/bash
 # Download CI artifact files and Analyze logs #
 virtualenv .venv &amp;&amp; source .venv/bin/activate
-pip install beautifulsoup
-pip install requests
+pip3 install beautifulsoup4
+pip3 install requests
+pip3 install lxml
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
@@ -156,6 +160,7 @@ echo "delete_downloaded_files='"$delete_downloaded_files"'" &gt;&gt; LogTool/Jen
 echo "grep_command='''"$grep_command"'''" &gt;&gt; LogTool/JenkinsStage/Params.py
 #cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
 cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
+      <configuredLocalRules/>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
@@ -208,11 +213,11 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
       </strategy>
       <operationList/>
     </hudson.plugins.build__timeout.BuildTimeoutWrapper>
-    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.3"/>
-    <de.jamba.hudson.plugin.wsclean.PrePostClean plugin="hudson-wsclean-plugin@1.0.7">
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.5"/>
+    <de.jamba.hudson.plugin.wsclean.PrePostClean plugin="hudson-wsclean-plugin@1.0.8">
       <before>false</before>
     </de.jamba.hudson.plugin.wsclean.PrePostClean>
-    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.0">
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.3">
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
   </buildWrappers>
