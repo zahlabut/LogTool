@@ -22,9 +22,7 @@ import warnings
 import sys
 import time
 import ssl
-from urllib2 import urlparse
-from urllib.parse import urljoin
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
             'download_overcloud_logs: ' + download_overcloud_logs,
