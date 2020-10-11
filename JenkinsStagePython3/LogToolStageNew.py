@@ -98,6 +98,7 @@ class LogTool(unittest.TestCase):
                 getattr(ssl, '_create_unverified_context', None)):
             ssl._create_default_https_context = ssl._create_unverified_context
         html=download_file(artifact_url)['Content']
+        print(html)
         soup = BeautifulSoup(html, 'lxml')
         tar_gz_files = []
         ir_logs_urls = []
