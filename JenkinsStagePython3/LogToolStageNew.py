@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import shutil
-from .Common import *
-from .Params import *
+from Common import *
+from Params import *
 import unittest
 import warnings
 import sys
