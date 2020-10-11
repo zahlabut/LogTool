@@ -1,9 +1,8 @@
 #!/bin/bash
 # Download CI artifact files and Analyze logs #
 virtualenv .venv && source .venv/bin/activate
-pip3 install beautifulsoup4
-pip3 install requests
-pip3 install lxml
+pip install beautifulsoup
+pip install requests
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" >> LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" >> LogTool/JenkinsStage/Params.py
@@ -14,4 +13,5 @@ echo "undercloud_log_dirs='"$undercloud_log_dirs"'" >> LogTool/JenkinsStage/Para
 echo "grep_string_only='"$grep_string_only"'" >> LogTool/JenkinsStage/Params.py
 echo "delete_downloaded_files='"$delete_downloaded_files"'" >> LogTool/JenkinsStage/Params.py
 echo "grep_command='''"$grep_command"'''" >> LogTool/JenkinsStage/Params.py
-cd LogTool/JenkinsStagePython3; python3 -m unittest LogToolStageNew
+#cd LogTool/JenkinsStage; python -m unittest LogToolStage.LogTool.test_1_download_jenkins_job
+cd LogTool/JenkinsStage; python -m unittest LogToolStageNew
