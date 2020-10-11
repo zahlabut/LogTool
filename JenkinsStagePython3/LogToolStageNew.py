@@ -127,7 +127,7 @@ class LogTool(unittest.TestCase):
                 tobiko_log_urls=list(set(tobiko_log_urls))
 
             if str(link.get('href')).endswith('.tar.gz'):
-                tar_link = urlparse.urljoin(artifact_url, link.get('href'))
+                tar_link = urljoin(artifact_url, link.get('href'))
                 tar_gz_files.append(tar_link)
             if str(link.get('href')).endswith('.sh'):
                 sh_page_link = urljoin(artifact_url, link.get('href'))
