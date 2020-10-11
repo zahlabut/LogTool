@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
 #
@@ -230,7 +230,7 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-        command = "python2 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
+        command = "python3 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
 
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
