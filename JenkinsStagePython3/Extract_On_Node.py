@@ -679,12 +679,7 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
-            print(1, item)
-            print(2, item.items())
-            print(3, item.items()[0])
-            print(4, item.items()[0][0])
-            print(5,item.items()[0][0].replace('/', '_'))
-            html_log_file =  item.items()[0][0].replace('/', '_')
+            html_log_file =  list(item.items())[0][0].replace('/', '_')
             print_in_color(html_log_file, 'red')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
