@@ -303,3 +303,8 @@ def download_file(url, dst_path='.',extension='.log'):
     except Exception as e:
         print_in_color('Failed to download: \n'+url+'\n'+str(e),'yellow')
         return {'Status': None, 'Content':None, 'FilePath':None}
+
+def append_to_file(log_file, msg):
+    log_file = open(log_file, 'a')
+    log_file.write(msg)
+    log_file.close()
