@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, paramiko, time, subprocess, json, sys, re, difflib, datetime, shutil,requests
+import os, time, subprocess, json, sys, re, difflib, datetime, shutil, requests
 import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
 from urllib.parse import urljoin
