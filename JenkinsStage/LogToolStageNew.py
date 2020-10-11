@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
 #
@@ -22,9 +22,8 @@ import warnings
 import sys
 import time
 import ssl
-from urllib2 import urlparse
-from urlparse import urljoin
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
             'download_overcloud_logs: ' + download_overcloud_logs,
@@ -62,7 +61,7 @@ class LogTool(unittest.TestCase):
     # This will stop the execution on any failure/error
     def run(self, result=None):
         if result.failures or result.errors:
-            print "\nAborted"
+            print("\nAborted")
         else:
             super(LogTool, self).run(result)
     @staticmethod
@@ -100,10 +99,7 @@ class LogTool(unittest.TestCase):
                 getattr(ssl, '_create_unverified_context', None)):
             ssl._create_default_https_context = ssl._create_unverified_context
         html=download_file(artifact_url)['Content']
-
-
-
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, 'lxml')
         tar_gz_files = []
         ir_logs_urls = []
         tempest_log_urls = []
@@ -111,9 +107,9 @@ class LogTool(unittest.TestCase):
         for link in soup.findAll('a'):
             if 'tempest-results' in link:
                 tempest_results_url = urljoin(artifact_url, link.get('href'))
-                tempest_response = urllib2.urlopen(tempest_results_url)
+                tempest_response = urllib.request.urlopen(tempest_results_url)
                 html = tempest_response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.html'):
                         tempest_html = link.get('href')
@@ -122,9 +118,9 @@ class LogTool(unittest.TestCase):
             if 'Test Result' in link:
                 tobiko_results_url = urljoin(artifact_url, link.get('href'))
                 tobiko_link_name=link.get('href')
-                tobiko_response = urllib2.urlopen(tobiko_results_url)
+                tobiko_response = urllib.request.urlopen(tobiko_results_url)
                 html = tobiko_response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).startswith('tobiko.tests'):
                         tobiko_html = link.get('href')
@@ -132,13 +128,13 @@ class LogTool(unittest.TestCase):
                 tobiko_log_urls=list(set(tobiko_log_urls))
 
             if str(link.get('href')).endswith('.tar.gz'):
-                tar_link = urlparse.urljoin(artifact_url, link.get('href'))
+                tar_link = urljoin(artifact_url, link.get('href'))
                 tar_gz_files.append(tar_link)
             if str(link.get('href')).endswith('.sh'):
-                sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
-                response = urllib2.urlopen(sh_page_link)
+                sh_page_link = urljoin(artifact_url, link.get('href'))
+                response = urllib.request.urlopen(sh_page_link)
                 html = response.read()
-                soup = BeautifulSoup(html)
+                soup = BeautifulSoup(html, 'lxml')
                 for link in soup.findAll('a'):
                     if str(link.get('href')).endswith('.log'):
                         ir_logs_urls.append(sh_page_link + '/' + link.get('href'))
@@ -156,7 +152,7 @@ class LogTool(unittest.TestCase):
         filtered_urls=[]
         tar_gz_urls = LogTool.all_links['TarGzFiles']
         for url in tar_gz_urls:
-            a = urlparse.urlparse(url)
+            a = urlparse(url)
             basename=os.path.basename(a.path)
             if download_overcloud_logs==True:
                 for name in overcloud_node_names:
@@ -176,7 +172,7 @@ class LogTool(unittest.TestCase):
         print('\ntest_4_download_files')
         # Create temp directory
         create_dir(temp_dir)
-        for key in LogTool.all_links.keys():
+        for key in list(LogTool.all_links.keys()):
             for url in LogTool.all_links[key]:
                 res = download_file(url, temp_dir)
                 if res['Status'] == 200:
@@ -222,9 +218,28 @@ class LogTool(unittest.TestCase):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
-    ''''This test is analyzing logs and running grep mode if enabled'''
+    '''This test is planned to run "grep" mode'''
+    #@unittest.skipIf(grep_command=='','No provided grep command')
+    def test_7_grep_string(self):
+        print('\ntest_7_grep_string')
+        grep_result_folder='Grep_HTML_Report'
+        create_dir(grep_result_folder)
+        file_name = 'GrepCommandOutput.txt'
+        empty_file_content(file_name)
+        append_to_file(file_name, '--- Grep Report ---\n')
+        for log in collect_log_paths(destination_dir,[]):
+            command=grep_command+' '+log
+            #print_in_color(command,'bold')
+            output=exec_command_line_command(command)
+            if output['ReturnCode']==0:
+                append_to_file(file_name,'\n\n\n### '+log+' ###\n')
+                append_to_file(file_name,output['CommandOutput'])
+        shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
+
+    ''''This test is analyzing logs'''
     #@unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
-    def test_7_analyze_logs(self):
+    def test_8_analyze_logs(self):
+        print('\ntest_8_analyze_logs')
         mode_start_time=time.time()
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
         result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
@@ -232,7 +247,7 @@ class LogTool(unittest.TestCase):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir),
                                    'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
-        command = "python2 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
+        command = "python3 Extract_On_Node.py '" +user_start_time+ "' " + os.path.abspath(
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
 
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
@@ -251,28 +266,11 @@ class LogTool(unittest.TestCase):
         else:
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time-mode_start_time, 2)) + '[sec]'],'red')
-            print(com_result['CommandOutput'])
-
-    '''This test is planned to run "grep" mode'''
-    #@unittest.skipIf(grep_command=='','No provided grep command')
-    def test_8_grep_string(self):
-        print '\ntest_8_grep_string'
-        grep_result_folder='Grep_HTML_Report'
-        create_dir(grep_result_folder)
-        file_name = 'GrepCommandOutput.txt'
-        empty_file_content(file_name)
-        for log in collect_log_paths(destination_dir,[]):
-            command=grep_command+' '+log
-            #print_in_color(command,'bold')
-            output=exec_command_line_command(command)
-            if output['ReturnCode']==0:
-                append_to_file(file_name,'\n\n\n### '+log+' ###\n')
-                append_to_file(file_name,output['CommandOutput'])
-        shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
+            print((com_result['CommandOutput']))
 
     '''This test is planned to delete all downloaded files'''
     def test_9_delete_downloaded_files(self):
-        print '\ntest_9_delete_downloaded_files'
+        print('\ntest_9_delete_downloaded_files')
         if delete_downloaded_files==True:
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
