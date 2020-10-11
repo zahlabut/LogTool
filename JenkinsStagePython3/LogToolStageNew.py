@@ -218,9 +218,28 @@ class LogTool(unittest.TestCase):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
-    ''''This test is analyzing logs and running grep mode if enabled'''
+    '''This test is planned to run "grep" mode'''
+    #@unittest.skipIf(grep_command=='','No provided grep command')
+    def test_7_grep_string(self):
+        print('\ntest_7_grep_string')
+        grep_result_folder='Grep_HTML_Report'
+        create_dir(grep_result_folder)
+        file_name = 'GrepCommandOutput.txt'
+        empty_file_content(file_name)
+        append_to_file(file_name, '--- Grep Report ---\n')
+        for log in collect_log_paths(destination_dir,[]):
+            command=grep_command+' '+log
+            #print_in_color(command,'bold')
+            output=exec_command_line_command(command)
+            if output['ReturnCode']==0:
+                append_to_file(file_name,'\n\n\n### '+log+' ###\n')
+                append_to_file(file_name,output['CommandOutput'])
+        shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
+
+    ''''This test is analyzing logs'''
     #@unittest.skipIf(grep_string_only==True,'Grep Only Mode used')
-    def test_7_analyze_logs(self):
+    def test_8_analyze_logs(self):
+        print('\ntest_8_analyze_logs')
         mode_start_time=time.time()
         print_in_color('\nStart analyzing downloaded OSP logs locally', 'bold')
         result_dir = 'Jenkins_Job_' + grep_string.replace(' ', '')
@@ -248,24 +267,6 @@ class LogTool(unittest.TestCase):
             spec_print(['Failed to analyze logs :-(', 'Result Directory: ' + result_dir,
                         'Execution time: ' + str(round(end_time-mode_start_time, 2)) + '[sec]'],'red')
             print((com_result['CommandOutput']))
-
-    '''This test is planned to run "grep" mode'''
-    #@unittest.skipIf(grep_command=='','No provided grep command')
-    def test_8_grep_string(self):
-        print('\ntest_8_grep_string')
-        grep_result_folder='Grep_HTML_Report'
-        create_dir(grep_result_folder)
-        file_name = 'GrepCommandOutput.txt'
-        empty_file_content(file_name)
-        append_to_file(file_name, '--- Grep Report ---\n')
-        for log in collect_log_paths(destination_dir,[]):
-            command=grep_command+' '+log
-            #print_in_color(command,'bold')
-            output=exec_command_line_command(command)
-            if output['ReturnCode']==0:
-                append_to_file(file_name,'\n\n\n### '+log+' ###\n')
-                append_to_file(file_name,output['CommandOutput'])
-        shutil.move(os.path.abspath(file_name),os.path.abspath(grep_result_folder))
 
     '''This test is planned to delete all downloaded files'''
     def test_9_delete_downloaded_files(self):
