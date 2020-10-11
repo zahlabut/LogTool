@@ -23,6 +23,7 @@ import sys
 import time
 import ssl
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 spec_print(['Job Parameters:','artifact_url: ' + artifact_url,'user_start_time: ' + user_start_time,
             'download_overcloud_logs: ' + download_overcloud_logs,
@@ -151,7 +152,7 @@ class LogTool(unittest.TestCase):
         filtered_urls=[]
         tar_gz_urls = LogTool.all_links['TarGzFiles']
         for url in tar_gz_urls:
-            a = urlparse.urlparse(url)
+            a = urlparse(url)
             basename=os.path.basename(a.path)
             if download_overcloud_logs==True:
                 for name in overcloud_node_names:
