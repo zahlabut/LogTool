@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
 #
@@ -73,12 +73,15 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
 # (Debig lebel is in first 60 characters)
 analyze_log_as_not_standard=['heat_api_cfn.log', 'ansible.log', 'overcloud_deployment','install-undercloud']
 
+
 def remove_digits_from_string(s):
-    return str(s).translate(None, digits)
+    remove_digits = str.maketrans('', '', digits)
+    return str(s).translate(remove_digits)
 
 def exec_command_line_command(command):
     try:
-        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True)
+        #result = subprocess.check_output(command, shell=True, encoding='UTF-8')
+        result = subprocess.check_output(command, stdin=True, stderr=subprocess.STDOUT, shell=True,encoding='UTF-8')
         json_output = None
         try:
             json_output = json.loads(result.lower())
