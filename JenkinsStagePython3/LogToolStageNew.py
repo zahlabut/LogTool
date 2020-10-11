@@ -130,7 +130,7 @@ class LogTool(unittest.TestCase):
                 tar_link = urlparse.urljoin(artifact_url, link.get('href'))
                 tar_gz_files.append(tar_link)
             if str(link.get('href')).endswith('.sh'):
-                sh_page_link = urlparse.urljoin(artifact_url, link.get('href'))
+                sh_page_link = urljoin(artifact_url, link.get('href'))
                 response = urllib.request.urlopen(sh_page_link)
                 html = response.read()
                 soup = BeautifulSoup(html, 'lxml')
