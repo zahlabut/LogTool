@@ -77,7 +77,7 @@ def execute_on_node(**kwargs):
     if kwargs['Mode']=='Export_Range':
         result_file=kwargs['ResultFile']+'.gz' # This file will be created by worker script
         result_dir=kwargs['ResultDir']
-        print(s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py'))
+        print('Upload script result:', s.scp_upload('Extract_Range.py', overcloud_home_dir + 'Extract_Range.py'))
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_Range.py')
         command = "sudo "+overcloud_home_dir+"Extract_Range.py '"+kwargs['StartRange']+"' '"+kwargs['StopRange']+\
                   "' "+kwargs['LogDir']+" "+kwargs['ResultFile']+' '+kwargs['ResultDir']
@@ -95,7 +95,7 @@ def execute_on_node(**kwargs):
     if kwargs['Mode']=='Export_Overcloud_Errors':
         result_file = kwargs['Node']['Name'].replace(' ', '') + '_' + grep_string.replace(' ', '_') + '.log'
         result_dir = kwargs['ResultDir']
-        print(s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py'))
+        print('Upload script result:',s.scp_upload('Extract_On_Node.py', overcloud_home_dir + 'Extract_On_Node.py'))
         s.ssh_command('chmod 777 ' + overcloud_home_dir + 'Extract_On_Node.py')
         command = "sudo " + overcloud_home_dir + "Extract_On_Node.py '" + str(
             start_time) + "' " + overcloud_logs_dir + " '" + grep_string + "'" + ' ' + result_file + ' ' + save_raw_data+' None '+kwargs['LogsType']
@@ -108,7 +108,7 @@ def execute_on_node(**kwargs):
             print_in_color(kwargs['Node']['Name'] + ' --> FAILED', 'red')
             errors_on_execution[node['Name']] = False
         result_file=result_file+'.gz'
-        print(s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file)))
+        print('Download result file result:',s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file)))
         files_to_delete = ['Extract_On_Node.py', result_file]
     if kwargs['Mode']=='Download_All_Logs':
         zip_file_name=kwargs['Node']['Name']+'.zip'
