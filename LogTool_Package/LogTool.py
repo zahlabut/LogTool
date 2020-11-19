@@ -129,7 +129,7 @@ class LogTool:
             if to_add==True:
                 filtered_logs.append(log)
         if len(filtered_logs)==0:
-            sys.exit('Failed - No log files detected in: '+log_root_dir)
+            sys.exit('Failed - No log files detected in: '+str(log_root_dir))
         return filtered_logs
 
     @staticmethod
