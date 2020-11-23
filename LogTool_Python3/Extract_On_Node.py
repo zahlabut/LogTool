@@ -182,6 +182,7 @@ def append_to_file(log_file, msg):
     log_file = open(log_file, 'a')
     log_file.write(msg)
 
+
 def get_line_date(line):
     try:
         # line=line[0:50]
