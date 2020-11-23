@@ -194,6 +194,10 @@ def get_line_date(line):
             string = string[0:10] + ' ' + string[11:]
             date = datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
             return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'\d{4}/\d{2}/\d{2}.\d{2}:\d{2}:\d{2}', line)  # 2020/04/23 08:52:04
+        if match:
+            date = datetime.datetime.strptime(match.group(), '%Y/%m/%d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
         match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)  # 27 Apr 2020 11:37:46
         if match:
             date = datetime.datetime.strptime(match.group().replace('T', ' '), '%d %b %Y %H:%M:%S')
@@ -206,20 +210,19 @@ def get_line_date(line):
         if match:
             date = datetime.datetime.strptime(year + ' ' + match.group().replace('T', ' '), '%Y %b %d %H:%M:%S')
             return {'Error': None, 'Line': None, 'Date': str(date)}
-        match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line)  #Oct-15 13:30:46
+        match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line)  # Oct-15 13:30:46
         if match:
-            print(line)
-            date = datetime.datetime.strptime(year+match.group(), '%Y%b-%d %H:%M:%S')
+            date = datetime.datetime.strptime(year + match.group(), '%Y%b-%d %H:%M:%S')
             return {'Error': None, 'Line': None, 'Date': str(date)}
-        match = re.search(r'(...)\s\s\d{1}\s\d{2}:\d{2}:\d{2}', line) #Jul  6 22:19:00
+        match = re.search(r'(...)\s\s\d{1}\s\d{2}:\d{2}:\d{2}', line)  # Jul  6 22:19:00
         if match:
-            date=datetime.datetime.strptime(year+match.group(), '%Y%b  %d %H:%M:%S')
+            date = datetime.datetime.strptime(year + match.group(), '%Y%b  %d %H:%M:%S')
             return {'Error': None, 'Line': None, 'Date': str(date)}
-        if len(line)>100:
-            line=line[0:100]+'...'
-        return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date':None}
+        if len(line) > 100:
+            line = line[0:100] + '...'
+        return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date': None}
     except Exception as e:
-        return {'Error': str(e), 'Line': line.strip(), 'Date':None}
+        return {'Error': str(e), 'Line': line.strip(), 'Date': None}
 
 def analyze_log(log, string, time_grep, last_line_date):
     grep_file='zahlabut.txt'
