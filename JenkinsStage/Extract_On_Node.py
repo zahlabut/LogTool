@@ -182,6 +182,7 @@ def empty_file_content(log_file_name):
 def append_to_file(log_file, msg):
     log_file = open(log_file, 'a')
     log_file.write(msg)
+    log_file.close()
 
 def get_line_date(line):
     try:
@@ -266,7 +267,8 @@ def analyze_log(log, string, time_grep, last_line_date):
         command.replace('grep','zgrep')
     exec_command_line_command(command)
     if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
-        temp_data = open(grep_file, 'r').read()
+        with open(grep_file, 'r') as f:
+            temp_data = f.read()
         if '--\n' in temp_data:
             list_of_blocks = temp_data.split('--\n')
         else:
@@ -277,7 +279,11 @@ def analyze_log(log, string, time_grep, last_line_date):
     # Try to get block date
     last_parsed_date=last_line_date
     for block in list_of_blocks:
-        block_date=get_line_date(block)
+        # Get block date starting from the last line in reverse order
+        for line in reversed(block.splitlines()):
+            block_date = get_line_date(line)
+            if block_date['Error'] == None:
+                break
         if block_date['Error']==None:
             date=time.strptime(block_date['Date'], '%Y-%m-%d %H:%M:%S')
         else:
@@ -605,7 +611,7 @@ if __name__ == "__main__":
         # Try to check if there is a known timestamp in last 100 lines
         last_line=get_file_last_line(log,'100')
         is_known_time_format=False
-        for line in last_line.splitlines():
+        for line in reversed(last_line.splitlines()):
             last_line_date=get_line_date(line)
             if last_line_date['Error']==None:
                 is_known_time_format=True
