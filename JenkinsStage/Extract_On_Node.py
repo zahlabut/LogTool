@@ -464,6 +464,12 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
     # Normilize block
     block_lines=block.splitlines()
     block_lines=[escape_ansi(line) for line in block_lines]
+    # Kombina
+    block_last_five_lines = []
+    try:
+        block_last_five_lines = block_lines[-5:]
+    except:
+        pass
     new_block=''
     matches = []
     for line in block_lines:
@@ -508,7 +514,10 @@ def cut_huge_block(block, limit_line_size=150, number_of_characters_after_match=
             new_small_block=''
             for line in block_lines[0:5]:
                 new_small_block+=line+'\n'
-            new_small_block+='...\n...\n...\nLogTool --> THIS BLOCK IS TOO LONG!\n'
+            new_small_block += '...\n'*3
+            for line in block_last_five_lines:
+                new_small_block+=line+'\n'
+            new_small_block+='...\n...\n...\nLogTool --> ORIGINAL BLOCK IS TOO LONG!\n'
             if "LogTool --> POTENTIAL BLOCK'S ISSUES:" in new_block:
                 new_small_block+=new_block[new_block.find("LogTool --> POTENTIAL BLOCK'S ISSUES:"):]
             else:
