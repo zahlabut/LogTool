@@ -290,8 +290,8 @@ def analyze_log(log, string, time_grep, last_line_date):
             print_in_color('Failed to get block date\n: '+block_date['Line'],'yellow')
             print('Last known parsed date was: '+str(last_parsed_date))
             date=last_parsed_date
-            block="*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your" \
-                  " time range! ***\n"+block
+            block+="\n*** LogTool --> this block is missing timestamp, therefore could be irrelevant to your" \
+                  " time range! ***"
         if date>time_grep:
             # Create list of third lines, do not analyze the same blocks again and again
             block_lines=block.splitlines()
