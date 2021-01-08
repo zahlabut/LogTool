@@ -264,7 +264,7 @@ def analyze_log(log, string, time_grep, last_line_date):
         for item in strings+python_exceptions:
             command+="grep -B2 -A7 -in '"+item+"' " +log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if log.endswith('.gz'):
-        command.replace('grep','zgrep')
+        command=command.replace('grep','zgrep')
     exec_command_line_command(command)
     if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
         with open(grep_file, 'r') as f:

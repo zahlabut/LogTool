@@ -460,7 +460,7 @@ class LogTool:
             for item in strings+self.python_exceptions:
                 command+="grep -B2 -A7 -in '"+item+"' " +self.log+ " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
         if self.log.endswith('.gz'):
-            command.replace('grep','zgrep')
+            command=command.replace('grep','zgrep')
         self.exec_command_line_command(command)
         if os.path.exists(grep_file) and os.path.getsize(grep_file)!=0:
             temp_data = open(grep_file, 'r').read()
