@@ -17,6 +17,11 @@ import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urlparse
 from urllib.parse import urljoin
 from string import digits
+import zstandard
+import pathlib
+import shutil
+import os
+
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -343,3 +348,14 @@ def collect_log_paths(log_root_path,black_list):
     if len(filtered_logs)==0:
         sys.exit('Failed - No log files detected in: '+log_root_path)
     return filtered_logs
+
+def decompress_zstandard_to_folder(input_file,destination_dir):
+    input_file = pathlib.Path(input_file)
+    with open(input_file, 'rb') as compressed:
+        decomp = zstandard.ZstdDecompressor()
+        output_path = pathlib.Path(destination_dir) / input_file.stem
+        with open(output_path, 'wb') as destination:
+            decomp.copy_stream(compressed, destination)
+
+
+    return os.path.abspath(output_path)

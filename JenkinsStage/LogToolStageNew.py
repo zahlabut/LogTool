@@ -208,18 +208,22 @@ class LogTool(unittest.TestCase):
                     shutil.move(res['FilePath'], res['FilePath']+'.zstd')
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
-
     '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
     def test_5_unzip_compressed_files(self):
         print('\ntest_5_unzip_tar_gz_files')
         for fil in os.listdir(os.path.abspath(temp_dir)):
             if fil.endswith('.log') is False:
+                temp_dir_path=os.path.abspath(temp_dir)
                 if fil.endswith('.tar.gz'):
-                    cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + os.path.abspath(temp_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(os.path.abspath(temp_dir), fil)
+                    cmd = 'tar -zxvf ' + os.path.join(temp_dir_path, fil) + ' -C ' + temp_dir_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(temp_dir_path, fil)
                 if fil.endswith('.zstd'):
-                    download_dir_path = os.path.join(os.path.abspath(temp_dir),'download')
-                    os.system('mkdir '+download_dir_path)
-                    cmd = 'tar -I zstd -xvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + download_dir_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(os.path.abspath(temp_dir), fil)
+                    zstd_file=os.path.join(os.path.abspath(temp_dir), fil)
+                    tar_file=os.path.abspath(temp_dir)
+                    tar_file=decompress_zstandard_to_folder(zstd_file,tar_file)
+                    # Now file named "download" and it is a *tar file
+                    download_folder_path=os.path.join(temp_dir_path,'Download')
+                    os.mkdir(download_folder_path)
+                    cmd = 'mv '+tar_file+' '+tar_file+'.tar;tar -xvf ' + tar_file+'.tar' + ' -C ' + download_folder_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(temp_dir_path, fil)
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 print_in_color(cmd,'bold')
                 os.system(cmd)
@@ -244,7 +248,7 @@ class LogTool(unittest.TestCase):
         for log in os.listdir(temp_dir):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
-            if log.endswith('download'):
+            if log.endswith('Download'):
                 command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,log)
                 exec_command_line_command(command)
                 #shutil.copytree(os.path.join(temp_dir,log),os.path.join(destination_dir,log))

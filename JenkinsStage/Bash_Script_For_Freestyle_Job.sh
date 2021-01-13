@@ -4,7 +4,7 @@ virtualenv .venv && source .venv/bin/activate
 pip3 install beautifulsoup4
 pip3 install requests
 pip3 install lxml
-sudo yum install zstd
+pip3 install zstandard
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" >> LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" >> LogTool/JenkinsStage/Params.py
