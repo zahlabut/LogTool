@@ -45,10 +45,10 @@ undercloud_node_names=['undercloud','hypervisor']
 
 
 #Parameter is added with: echo "artifact_url='"$artifact_url"'" >> Params.py
-artifact_url='https://rhos-ci-jenkins.lab.eng.tlv2.redhat.com/job/OSPD-Customized-Deployment-virt/426/artifact/'
+artifact_url='https://rhos-ci-jenkins.lab.eng.tlv2.redhat.com/job/DFG-network-octavia-16.1_director-rhel-virthost-3cont_2comp-ipv4-geneve-actstby/66/artifact/'
 
 
-#Parameter is added with: echo "start_time='"suser_tart_time"'" >> Params.py
+#Parameter is added with: echo "start_time='"user_tart_time"'" >> Params.py
 user_start_time='2020-01-01 00:00:00'
 
 #Parameter is added with: echo "download_overcloud_logs='"download_overcloud_logs"'" >> Params.py

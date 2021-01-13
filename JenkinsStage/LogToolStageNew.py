@@ -142,6 +142,27 @@ class LogTool(unittest.TestCase):
         all_links={'ConsoleLog':[console_log_url],'TempestLogs':tempest_log_urls,
                    'InfraredLogs':ir_logs_urls,'TarGzFiles':tar_gz_files,'TobikoLogs':tobiko_log_urls}
         print_dic(all_links)
+
+        # Check if there are also logs in "browse logs"
+        job_url=artifact_url.replace('/artifact/','')
+        print_in_color(job_url,'green')
+        html=download_file(job_url)['Content']
+        soup = BeautifulSoup(html, 'lxml')
+        browse_logs=None
+        download_all_logs=None
+        for link in soup.findAll('a'):
+            if 'browse logs' in str(link).lower():
+                browse_logs = link.get('href')
+                break
+        if browse_logs != None:
+            html = download_file(browse_logs)['Content']
+            soup = BeautifulSoup(html, 'lxml')
+            for link in soup.findAll('a'):
+                if 'download' in str(link).lower():
+                    browse_logs = urljoin(browse_logs,link.get('href'))
+                    break
+        if browse_logs!=None:
+            all_links['BrowseLogsDownloadAll'] = [browse_logs]
         LogTool.all_links=all_links
 
     '''This test is planned to filter the previous created dictionary (in test3) according to
@@ -183,16 +204,22 @@ class LogTool(unittest.TestCase):
                     shutil.move(res['FilePath'],res['FilePath'].replace('.html','.log'))
                 if key=='ConsoleLog':
                     shutil.move(res['FilePath'],res['FilePath']+'.log')
+                if key=='BrowseLogsDownloadAll':
+                    shutil.move(res['FilePath'], res['FilePath']+'.zstd')
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
+
     '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
-    def test_5_unzip_tar_gz_files(self):
+    def test_5_unzip_compressed_files(self):
         print('\ntest_5_unzip_tar_gz_files')
         for fil in os.listdir(os.path.abspath(temp_dir)):
-            if fil.endswith('.tar.gz'):
-                cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + os.path.abspath(
-                    temp_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(
-                    os.path.abspath(temp_dir), fil)
+            if fil.endswith('.log') is False:
+                if fil.endswith('.tar.gz'):
+                    cmd = 'tar -zxvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + os.path.abspath(temp_dir) + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(os.path.abspath(temp_dir), fil)
+                if fil.endswith('.zstd'):
+                    download_dir_path = os.path.join(os.path.abspath(temp_dir),'download')
+                    os.system('mkdir '+download_dir_path)
+                    cmd = 'tar -I zstd -xvf ' + os.path.join(os.path.abspath(temp_dir), fil) + ' -C ' + download_dir_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(os.path.abspath(temp_dir), fil)
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 print_in_color(cmd,'bold')
                 os.system(cmd)
@@ -217,6 +244,10 @@ class LogTool(unittest.TestCase):
         for log in os.listdir(temp_dir):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
+            if log.endswith('download'):
+                command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,log)
+                exec_command_line_command(command)
+                #shutil.copytree(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
     '''This test is planned to run "grep" mode'''
     #@unittest.skipIf(grep_command=='','No provided grep command')
@@ -229,6 +260,8 @@ class LogTool(unittest.TestCase):
         append_to_file(file_name, '--- Grep Report ---\n')
         for log in collect_log_paths(destination_dir,[]):
             command=grep_command+' '+log
+            if log.endswith('.gz'):
+                command=command.replace('grep','zgrep')
             #print_in_color(command,'bold')
             output=exec_command_line_command(command)
             if output['ReturnCode']==0:
@@ -251,7 +284,9 @@ class LogTool(unittest.TestCase):
             destination_dir) + " '" + grep_string + "'" + ' ' + result_file
 
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
-        exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+        copy_command='cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir)
+        print_in_color(copy_command,'bold')
+        exec_command_line_command(copy_command)
         print_in_color('\n --> ' + command, 'bold')
         com_result = exec_command_line_command(command)
         # print (com_result['CommandOutput'])
@@ -274,4 +309,3 @@ class LogTool(unittest.TestCase):
         if delete_downloaded_files==True:
             shutil.rmtree(destination_dir)
             shutil.rmtree(temp_dir)
-

@@ -288,7 +288,7 @@ def download_file(url, dst_path='.',extension='.log'):
     try:
         r = requests.get(url,verify=False)
         if os.path.basename(url)!='':
-            file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url))
+            file_path = os.path.join(os.path.abspath(dst_path), os.path.basename(url).replace('?',''))
             with open(file_path, 'wb') as f:
                 f.write(r.content)
         else:
