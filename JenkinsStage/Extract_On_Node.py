@@ -715,7 +715,7 @@ if __name__ == "__main__":
             append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
             html_log_file = item[0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
+            append_to_file(html_page, '<a href="' + html_log_file.replace('.log.gz','.log') + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
     #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
     append_to_file(html_page, '<br>'*3)
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
