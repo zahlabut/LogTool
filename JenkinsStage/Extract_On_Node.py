@@ -714,7 +714,7 @@ if __name__ == "__main__":
         if 'Total_Number_Of_' in str(item):
             append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
-            html_log_file = item[0].replace('/', '_').replace('.log.gz','.log')
+            html_log_file = item[0].replace('/', '_')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
     #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
     append_to_file(html_page, '<br>'*3)
@@ -743,8 +743,6 @@ if __name__ == "__main__":
             append_to_file(result_file, line + '\n')
         # Add block into dedicated file
         html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'].replace('/','_'))
-        if 'Browse_Logs' in html_log_file:
-            html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'][block['Log'].find('Browse_Logs'):].replace('/','_'))
         append_to_file(html_log_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(html_log_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(html_log_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -762,8 +760,6 @@ if __name__ == "__main__":
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
             html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_'))
-            if 'Browse_Logs' in html_log_file:
-                html_log_file = os.path.join(os.path.abspath(html_directory),block['Log'][block['Log'].find('Browse_Logs'):].replace('/', '_'))
             for line in dir['UniqueMessages']:
                 append_to_file(html_log_file,line)
 
@@ -798,4 +794,3 @@ if __name__ == "__main__":
     print('Execution time:'+str(time.time()-start_time))
     if total_number_of_all_logs_errors+total_number_of_errors>0:
         print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
-    print('SUCCESS!!!')

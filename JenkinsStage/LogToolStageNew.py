@@ -248,9 +248,26 @@ class LogTool(unittest.TestCase):
         for log in os.listdir(temp_dir):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
-            if log.endswith('Download'):
-                command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,'Browse_Logs')
-                exec_command_line_command(command)
+            # if log.endswith('Download'):
+            #     command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,log)
+            #     exec_command_line_command(command)
+            #
+            #
+            #     download_dir_path= os.path.join(os.path.abspath(temp_dir),'Download')
+            #     print(download_dir_path)
+            #     print(os.listdir(download_dir_path))
+            #
+            #
+            #
+            #     for item in os.listdir(download_dir_path):
+            #         new_item=item
+            #         if len(item)>10:
+            #             new_item=item[1:3]+'_'+item[-3:]
+            #         exec_command_line_command('mv '+os.path.join(download_dir_path, item) + os.path.join(os.path.abspath(temp_dir),new_item))
+            #     sys.exit(1)
+
+
+
                 #shutil.copytree(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
     '''This test is planned to run "grep" mode'''
