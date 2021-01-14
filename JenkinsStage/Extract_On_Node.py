@@ -697,6 +697,10 @@ if __name__ == "__main__":
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
             html_log_file =  list(item.items())[0][0].replace('/', '_')
+
+            if html_log_file.endswith('.log.gz'):
+                shutil.move(os.path.abspath(html_log_file),os.path.abspath(html_log_file.replace('.log.gz','.log')))
+                html_log_file=html_log_file.replace('.log.gz','.log')
             append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
