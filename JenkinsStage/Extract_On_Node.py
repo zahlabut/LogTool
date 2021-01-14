@@ -696,8 +696,8 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
-            html_log_file =  list(item.items())[0][0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'')+'.html ' + '</a><br>\n')
+            html_log_file =  list(item.items())[0][0].replace('/', '_')+'.html'
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
@@ -714,8 +714,8 @@ if __name__ == "__main__":
         if 'Total_Number_Of_' in str(item):
             append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
-            html_log_file = item[0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'')+'.html ' + '</a><br>\n')
+            html_log_file = item[0].replace('/', '_')+'.html'
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
     #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
     append_to_file(html_page, '<br>'*3)
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
