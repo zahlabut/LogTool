@@ -249,7 +249,7 @@ class LogTool(unittest.TestCase):
             if log.endswith('.log'):
                 shutil.copyfile(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
             if log.endswith('Download'):
-                command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,log)
+                command='cp -r '+os.path.join(temp_dir,log)+' '+os.path.join(destination_dir,'Browse_Logs')
                 exec_command_line_command(command)
                 #shutil.copytree(os.path.join(temp_dir,log),os.path.join(destination_dir,log))
 
