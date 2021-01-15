@@ -27,6 +27,10 @@ import collections
 from string import digits
 import re
 import shutil
+import hashlib
+
+def md5(string):
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
 
 def set_default_arg_by_index(index, default):
     try:
@@ -696,8 +700,8 @@ if __name__ == "__main__":
         if 'Total_Number_Of_ERRORs' in str(item):
             append_to_file(html_page, '<h2>'+str(item) + '</h2>\n')
         else:
-            html_log_file =  list(item.items())[0][0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file+'.log' + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
+            html_log_file = md5(list(item.items())[0][0])+'.log'
+            append_to_file(html_page, '<a href="' + html_log_file+ '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
 
     ### Fill statistics section for Not Standard OSP logs###
     print_in_color('\nAggregating statistics for Not Standard OSP logs','bold')
@@ -714,8 +718,8 @@ if __name__ == "__main__":
         if 'Total_Number_Of_' in str(item):
             append_to_file(html_page, '<h2>' + str(item) + '</h2>\n')
         else:
-            html_log_file = item[0].replace('/', '_')
-            append_to_file(html_page, '<a href="' + html_log_file+'.log' + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
+            html_log_file = md5(item[0])+'.log'
+            append_to_file(html_page, '<a href="' + html_log_file + '">' + str(item).replace(log_root_dir,'') + '</a><br>\n')
     #append_to_file(html_page,'<img src="'+background_image+'" alt="Trulli" width="500" height="333">\n')
     append_to_file(html_page, '<br>'*3)
     append_to_file(html_page,'<a href="https://opensource.com/article/20/1/logtool-root-cause-identification">\n')
@@ -742,7 +746,7 @@ if __name__ == "__main__":
         for line in block['BlockLines']:
             append_to_file(result_file, line + '\n')
         # Add block into dedicated file
-        html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'].replace(os.path.abspath(html_directory),'').replace('/','_')+'.log')
+        html_log_file=os.path.join(os.path.abspath(html_directory),md5(block['Log'])+'.log')
         append_to_file(html_log_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(html_log_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(html_log_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -759,7 +763,7 @@ if __name__ == "__main__":
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
-            html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace(os.path.abspath(html_directory),'').replace('/', '_')+'.log')
+            html_log_file = os.path.join(os.path.abspath(html_directory), md5(dir['Log'])+'.log')
             for line in dir['UniqueMessages']:
                 append_to_file(html_log_file,line)
 
