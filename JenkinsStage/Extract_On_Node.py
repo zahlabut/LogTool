@@ -742,7 +742,7 @@ if __name__ == "__main__":
         for line in block['BlockLines']:
             append_to_file(result_file, line + '\n')
         # Add block into dedicated file
-        html_log_file=os.path.join(os.path.abspath(html_directory),block['Log'].replace('/','_')+'.log')
+        html_log_file=os.path.join(os.path.abspath(html_directory),block['Log']..replace(os.path.abspath(html_directory),'').replace('/','_')+'.log')
         append_to_file(html_log_file, '\n'+'-'*30+' LogPath: ' + block['Log']+' '+'-'*30+' \n')
         append_to_file(html_log_file, 'IsTracebackBlock:' + str(block['IsTracebackBlock'])+'\n')
         append_to_file(html_log_file, 'UniqueCounter:' + str(block['UniqueCounter'])+'\n')
@@ -759,7 +759,7 @@ if __name__ == "__main__":
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
-            html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace('/', '_')+'.log')
+            html_log_file = os.path.join(os.path.abspath(html_directory), dir['Log'].replace(os.path.abspath(html_directory),'').replace('/', '_')+'.log')
             for line in dir['UniqueMessages']:
                 append_to_file(html_log_file,line)
 
