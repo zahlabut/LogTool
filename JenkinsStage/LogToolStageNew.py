@@ -252,8 +252,8 @@ class LogTool(unittest.TestCase):
                 download_dir_path= os.path.join(os.path.abspath(temp_dir),'Download')
                 for item in os.listdir(download_dir_path):
                     new_item=item
-                    if len(item)>10:
-                        new_item=item[0:3]+'___'+item[-3:]
+                    #if len(item)>10:
+                    #    new_item=item[0:3]+'___'+item[-3:]
                     cmd='mv '+os.path.join(download_dir_path, item) +' '+ os.path.join(os.path.abspath(destination_dir),new_item)
                     exec_command_line_command(cmd)
 
