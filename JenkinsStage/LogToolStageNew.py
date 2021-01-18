@@ -198,14 +198,14 @@ class LogTool(unittest.TestCase):
                 res = download_file(url, temp_dir)
                 if res['Status'] == 200:
                     print_in_color('OK --> ' + url, 'blue')
+                    if key == 'TempestLogs':
+                        shutil.move(res['FilePath'], res['FilePath'].replace('.html', '.log'))
+                    if key == 'ConsoleLog':
+                        shutil.move(res['FilePath'], res['FilePath'] + '.log')
+                    if key == 'BrowseLogsDownloadAll':
+                        shutil.move(res['FilePath'], res['FilePath'] + '.zstd')
                 else:
                     print_in_color('Failed to download: ' + url, 'red')
-                if key=='TempestLogs':
-                    shutil.move(res['FilePath'],res['FilePath'].replace('.html','.log'))
-                if key=='ConsoleLog':
-                    shutil.move(res['FilePath'],res['FilePath']+'.log')
-                if key=='BrowseLogsDownloadAll':
-                    shutil.move(res['FilePath'], res['FilePath']+'.zstd')
         spec_print(['Downloaded files:']+os.listdir(temp_dir),'bold')
 
     '''This test is planned to Unzip all *tar.gz files inside the temp dir'''
