@@ -798,3 +798,5 @@ if __name__ == "__main__":
     print('Execution time:'+str(time.time()-start_time))
     if total_number_of_all_logs_errors+total_number_of_errors>0:
         print('Total_Number_Of_Errors:'+str(total_number_of_all_logs_errors+total_number_of_errors))
+
+    print('SUCCESS!!!')
