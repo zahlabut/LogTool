@@ -212,6 +212,7 @@ class LogTool(unittest.TestCase):
     def test_5_unzip_compressed_files(self):
         print('\ntest_5_unzip_tar_gz_files')
         for fil in os.listdir(os.path.abspath(temp_dir)):
+            cmd = 'file '+os.path.abspath(fil) #If file type is uknown, we'll get its type.
             if fil.endswith('.log') is False:
                 temp_dir_path=os.path.abspath(temp_dir)
                 if fil.endswith('.tar.gz'):
