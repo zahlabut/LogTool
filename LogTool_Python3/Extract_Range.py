@@ -237,61 +237,39 @@ if __name__ == "__main__":
         logs=collect_log_paths(log_root_dir)
         statistics_list=[]
         for log in logs:
-            try:
-                log_stat_info={'Log':log,'NumberOfLines':0}
-                print_in_color(log,'bold')
-                # Try to check if there is a known timestamp in last 100 lines
-                first_line=get_file_first_line(log,'100')
-                last_line=get_file_last_line(log,'100')
-                is_known_time_format=False
-                # Get first line date
-                for line in first_line.splitlines():
-                    first_line_date=get_line_date(line)
-                    if first_line_date['Error']==None:
-                        is_known_time_format=True
-                        break
-                # Get last line date
-                for line in reversed(last_line.splitlines()):
-                    last_line_date=get_line_date(line)
-                    if last_line_date['Error']==None:
-                        break
-                # Check if log is relevant, basing on time start range
-                if is_known_time_format==True:
-                    first_line_time=time.strptime(first_line_date['Date'], '%Y-%m-%d %H:%M:%S')
-                    last_line_time=time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S')
-                    range_start_time=time.strptime(range_start, '%Y-%m-%d %H:%M:%S')
-                    range_stop_time=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S')
-                    if first_line_time<=range_start_time<=last_line_time:
-                        log_to_save = result_dir+log
-                        os.makedirs(os.path.dirname(log_to_save), exist_ok=True)
-                        log_file_to_save=open(log_to_save,'w')
-                        start_found=None
-                        detected_relevant_logs.append(log)
-                        append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
-                        known_lines=[]
-                        if log.endswith('.gz'):
-                            try:
-                                with open(log, 'r') as f:
-                                    for line in f:
-                                        line_date=get_line_date(line)
-                                        char_line = remove_digits_from_string(line)
-                                        if line_date['Error']==None:
-                                           if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                                start_found=True
-                                                log_file_to_save.write(line)
-                                                if char_line not in known_lines:
-                                                    known_lines.append(char_line)
-                                                    append_to_file(temp_file,line)
-                                           if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
-                                                break
-                                        if line_date['Error']!=None and start_found==True:
-                                            log_file_to_save.write(line)
-                                            if char_line not in known_lines:
-                                                known_lines.append(char_line)
-                                                append_to_file(temp_file, line)
-                            except Exception as e:
-                                print_in_color(e,'yellow')
-                        else:
+            log_stat_info={'Log':log,'NumberOfLines':0}
+            print_in_color(log,'bold')
+            # Try to check if there is a known timestamp in last 100 lines
+            first_line=get_file_first_line(log,'100')
+            last_line=get_file_last_line(log,'100')
+            is_known_time_format=False
+            # Get first line date
+            for line in first_line.splitlines():
+                first_line_date=get_line_date(line)
+                if first_line_date['Error']==None:
+                    is_known_time_format=True
+                    break
+            # Get last line date
+            for line in reversed(last_line.splitlines()):
+                last_line_date=get_line_date(line)
+                if last_line_date['Error']==None:
+                    break
+            # Check if log is relevant, basing on time start range
+            if is_known_time_format==True:
+                first_line_time=time.strptime(first_line_date['Date'], '%Y-%m-%d %H:%M:%S')
+                last_line_time=  time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S')
+                range_start_time=time.strptime(range_start, '%Y-%m-%d %H:%M:%S')
+                range_stop_time=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S')
+                if first_line_time<=range_start_time<=last_line_time:
+                    log_to_save = result_dir+log
+                    os.makedirs(os.path.dirname(log_to_save), exist_ok=True)
+                    log_file_to_save=open(log_to_save,'w')
+                    start_found=None
+                    detected_relevant_logs.append(log)
+                    append_to_file(temp_file,'\n\n\n### '+log+' ###\n')
+                    known_lines=[]
+                    if log.endswith('.gz'):
+                        try:
                             with open(log, 'r') as f:
                                 for line in f:
                                     line_date=get_line_date(line)
@@ -310,12 +288,31 @@ if __name__ == "__main__":
                                         if char_line not in known_lines:
                                             known_lines.append(char_line)
                                             append_to_file(temp_file, line)
-                        # Save statistics and close file
-                        log_stat_info['NumberOfLines']=len(known_lines)
-                        statistics_list.append(log_stat_info)
-                        log_file_to_save.close()
-            except Exception as e:
-                print_in_color(str(e),'yellow')
+                        except Exception as e:
+                            print_in_color(e,'yellow')
+                    else:
+                        with open(log, 'r') as f:
+                            for line in f:
+                                line_date=get_line_date(line)
+                                char_line = remove_digits_from_string(line)
+                                if line_date['Error']==None:
+                                   if time.strptime(range_start,'%Y-%m-%d %H:%M:%S')<=time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')<=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                        start_found=True
+                                        log_file_to_save.write(line)
+                                        if char_line not in known_lines:
+                                            known_lines.append(char_line)
+                                            append_to_file(temp_file,line)
+                                   if time.strptime(line_date['Date'],'%Y-%m-%d %H:%M:%S')>time.strptime(range_stop,'%Y-%m-%d %H:%M:%S'):
+                                        break
+                                if line_date['Error']!=None and start_found==True:
+                                    log_file_to_save.write(line)
+                                    if char_line not in known_lines:
+                                        known_lines.append(char_line)
+                                        append_to_file(temp_file, line)
+                    # Save statistics and close file
+                    log_stat_info['NumberOfLines']=len(known_lines)
+                    statistics_list.append(log_stat_info)
+                    log_file_to_save.close()
 
 
     not_relevant_lines=['### '+item['Log']+' ###' for item in statistics_list if item['NumberOfLines']==0]
