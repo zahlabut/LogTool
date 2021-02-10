@@ -317,6 +317,7 @@ if __name__ == "__main__":
             except Exception as e:
                 print_in_color(str(e),'yellow')
 
+
     not_relevant_lines=['### '+item['Log']+' ###' for item in statistics_list if item['NumberOfLines']==0]
     statistics_list=[item for item in statistics_list if item['NumberOfLines']!=0]
     print_list(statistics_list)
