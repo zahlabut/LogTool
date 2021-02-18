@@ -1,23 +1,3 @@
-
-
-Skip to content
-Using Red Hat Mail with screen readers
-13 of 28,323
-logtool
-Inbox
-Arkady
-
-Arkady Shtempler <ashtempl@redhat.com>
-Attachments
-12:16 AM (10 hours ago)
-to me
-
-http://rhos-release.virt.bos.redhat.com/log/LB_IS_IN_ERROR/
-
-	Virus-free. www.avast.com
-Attachments area
-
-
 #!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
