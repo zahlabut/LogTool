@@ -758,7 +758,7 @@ try:
         fip_list='source ' + source_rc_file_path + 'overcloudrc;openstack floating ip list -f json'
         lb_fip=[item['floating ip address'] for item in exec_command_line_command(fip_list)['JsonOutput'] if item['fixed ip address']==lb_vip ]
 
-    except KeyboardInterrupt:
+except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
     if len(executed_script_on_undercloud)!=0:
         for script in executed_script_on_undercloud:
@@ -774,5 +774,3 @@ try:
                 print('--> '+command)
                 com_result=s.ssh_command(command)
             s.ssh_close()
-PyTool.py
-Displaying PyTool.py.
