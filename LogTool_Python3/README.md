@@ -47,6 +47,8 @@ its sections (use line indexes mentioned in "Table of Content" to jump into rele
 **2) Download all logs from Overcloud nodes**
 
 Logs from all Overcloud nodes will be compressed and downloaded to local directory on your Undercloud host.
+This mode is also applies you to upload logs to remote RedHat's WEB server, so you can share the
+lnnk latter on while filing BZ for example.
 
 **3) "Grep" some string for all Overcloud logs**
 

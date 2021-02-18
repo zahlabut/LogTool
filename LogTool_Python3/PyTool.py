@@ -1,3 +1,23 @@
+
+
+Skip to content
+Using Red Hat Mail with screen readers
+13 of 28,323
+logtool
+Inbox
+Arkady
+
+Arkady Shtempler <ashtempl@redhat.com>
+Attachments
+12:16 AM (10 hours ago)
+to me
+
+http://rhos-release.virt.bos.redhat.com/log/LB_IS_IN_ERROR/
+
+	Virus-free. www.avast.com
+Attachments area
+
+
 #!/usr/bin/python3
 
 # Copyright 2018 Arkady Shtempler.
@@ -39,6 +59,10 @@ log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 #log_storage_directory='/srv/static'
 log_storage_directory='/rhos-infra/jenkins-logs'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
+ssh_host_to_upload_logs='rhos-release.virt.bos.redhat.com'
+ssh_host_to_upload_logs_www_dir='/var/www/html/log/'
+
+
 
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
@@ -555,6 +579,7 @@ try:
     if mode[1]=='Download Overcloud Logs':
         options=['Download all logs from Overcloud nodes','Download "relevant logs" only, by given timestamp']
         option = choose_option_from_list(options, 'Please choose operation mode: ')
+
         if option[1]=='Download all logs from Overcloud nodes':
             mode_start_time=time.time()
             result_dir='Overcloud_Logs'
@@ -570,7 +595,7 @@ try:
             for t in threads:
                 t.join()
             end_time=time.time()
-            spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+
         if option[1]=='Download "relevant logs" only, by given timestamp':
             # Change log path if needed #
             osp_versions=['Older than OSP13?', "Newer than OSP13?"]
@@ -600,9 +625,28 @@ try:
                 t.start()
             for t in threads:
                 t.join()
+
+        to_upload=choose_option_from_list(['yes','no'], 'Would you like to upload logs to '+ssh_host_to_upload_logs+' ?')[1]
+        if to_upload=='yes':
+            user = input('Please enter your user name: ')
+            password = input('Please enter your kerberos: ')
+            dir_name = input('Please enter directory name to be used to upload log files: ')
+            s = SSH(ssh_host_to_upload_logs, user=user, password=password)
+            s.ssh_connect_password()
+            command = 'mkdir '+ os.path.join(ssh_host_to_upload_logs_www_dir,dir_name)
+            com_result = s.ssh_command('mkdir '+os.path.join(ssh_host_to_upload_logs_www_dir,dir_name))
+            print_in_color(com_result, 'bold')
+            for log in os.listdir(os.path.abspath(result_dir)):
+                log_patch = os.path.join(os.path.abspath(result_dir),log)
+                upload_result = s.scp_upload(log_patch, os.path.join(os.path.join(ssh_host_to_upload_logs_www_dir,dir_name),log))
+                print_in_color(str(upload_result),'bold')
+            s.ssh_close()
             end_time=time.time()
             if len(errors_on_execution) == 0:
-                spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'green')
+                msg=['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]']
+                if to_upload=='yes':
+                    msg.insert(2,'URL to be used for BZ is: http://'+ssh_host_to_upload_logs+'/log/'+dir_name)
+                spec_print(msg,'green')
             else:
                 spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'red')
 
@@ -734,9 +778,7 @@ try:
         fip_list='source ' + source_rc_file_path + 'overcloudrc;openstack floating ip list -f json'
         lb_fip=[item['floating ip address'] for item in exec_command_line_command(fip_list)['JsonOutput'] if item['fixed ip address']==lb_vip ]
 
-
-
-except KeyboardInterrupt:
+    except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
     if len(executed_script_on_undercloud)!=0:
         for script in executed_script_on_undercloud:
@@ -752,3 +794,5 @@ except KeyboardInterrupt:
                 print('--> '+command)
                 com_result=s.ssh_command(command)
             s.ssh_close()
+PyTool.py
+Displaying PyTool.py.
