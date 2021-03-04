@@ -71,7 +71,7 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
             print_in_color('Warning - ' + str(node) + ' will be skipped, due to connectivity issue!!!', 'yellow')
     if len(overcloud_nodes) == 0:
         print_in_color('No Overcloud nodes detected, looks like your OSP installation has failed!', 'red')
-        sys.exit(1)
+        #sys.exit(1)
 
 # This function is called when threads (executed on OC nodes) are being started #
 def execute_on_node(**kwargs):
