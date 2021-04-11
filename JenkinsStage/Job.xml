@@ -22,7 +22,7 @@
 </description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.1"/>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.1.3"/>
     <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
       <useBuildBlocker>false</useBuildBlocker>
       <blockLevel>GLOBAL</blockLevel>
@@ -107,7 +107,7 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
         </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
-    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.3">
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.1">
       <maxConcurrentPerNode>0</maxConcurrentPerNode>
       <maxConcurrentTotal>0</maxConcurrentTotal>
       <categories class="java.util.concurrent.CopyOnWriteArrayList"/>
@@ -118,7 +118,7 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
     </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
 
   </properties>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.4.4">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.5.2">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
@@ -134,7 +134,8 @@ if you want this files to be saved in "Build Artifacts", uncheck this box.</desc
     <submoduleCfg class="list"/>
     <extensions/>
   </scm>
-  <canRoam>true</canRoam>
+  <assignedNode>slave-01 || slave-02</assignedNode>
+  <canRoam>false</canRoam>
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
@@ -148,6 +149,7 @@ virtualenv .venv &amp;&amp; source .venv/bin/activate
 pip3 install beautifulsoup4
 pip3 install requests
 pip3 install lxml
+pip3 install zstandard
 git clone https://github.com/zahlabut/LogTool.git
 echo "user_start_time='"$user_start_time"'" &gt;&gt; LogTool/JenkinsStage/Params.py
 echo "artifact_url='"$artifact_url"'" &gt;&gt; LogTool/JenkinsStage/Params.py
@@ -173,13 +175,13 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
       <caseSensitive>true</caseSensitive>
       <followSymlinks>false</followSymlinks>
     </hudson.tasks.ArtifactArchiver>
-    <htmlpublisher.HtmlPublisher plugin="htmlpublisher@1.23">
+    <htmlpublisher.HtmlPublisher plugin="htmlpublisher@1.25">
       <reportTargets>
         <htmlpublisher.HtmlPublisherTarget>
           <reportName>Analyzed Logs Report</reportName>
           <reportDir>LogTool/JenkinsStage/LogTool_HTML_Report</reportDir>
           <reportFiles>index.html</reportFiles>
-          <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
+          <alwaysLinkToLastBuild>true</alwaysLinkToLastBuild>
           <reportTitles/>
           <keepAll>true</keepAll>
           <allowMissing>false</allowMissing>
@@ -192,7 +194,7 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
           <reportFiles>GrepCommandOutput.txt</reportFiles>
           <alwaysLinkToLastBuild>false</alwaysLinkToLastBuild>
           <reportTitles/>
-          <keepAll>true</keepAll>
+          <keepAll>false</keepAll>
           <allowMissing>false</allowMissing>
           <includes>**/*</includes>
           <escapeUnderscores>true</escapeUnderscores>
@@ -209,15 +211,15 @@ cd LogTool/JenkinsStage; python -m unittest LogToolStageNew</command>
     </hudson.plugins.ws__cleanup.PreBuildCleanup>
     <hudson.plugins.build__timeout.BuildTimeoutWrapper plugin="build-timeout@1.20">
       <strategy class="hudson.plugins.build_timeout.impl.AbsoluteTimeOutStrategy">
-        <timeoutMinutes>60</timeoutMinutes>
+        <timeoutMinutes>180</timeoutMinutes>
       </strategy>
       <operationList/>
     </hudson.plugins.build__timeout.BuildTimeoutWrapper>
-    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.5"/>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.11.8"/>
     <de.jamba.hudson.plugin.wsclean.PrePostClean plugin="hudson-wsclean-plugin@1.0.8">
       <before>false</before>
     </de.jamba.hudson.plugin.wsclean.PrePostClean>
-    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.3">
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.7.5">
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
   </buildWrappers>
