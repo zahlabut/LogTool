@@ -624,6 +624,7 @@ if __name__ == "__main__":
         # Try to check if there is a known timestamp in last 100 lines
         last_line=get_file_last_line(log,'100')
         is_known_time_format=False
+        last_line_date = None
         for line in reversed(last_line.splitlines()):
             last_line_date=get_line_date(line)
             if last_line_date['Error']==None:
