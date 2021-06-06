@@ -225,17 +225,6 @@ class LogTool(unittest.TestCase):
                     download_folder_path=os.path.join(temp_dir_path,'Download')
                     os.mkdir(download_folder_path)
                     cmd = 'mv '+tar_file+' '+tar_file+'.tar;tar -xvf ' + tar_file+'.tar' + ' -C ' + download_folder_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(temp_dir_path, fil)
-
-                    # This filtering is needed to filter out Overloud or Undercloud logs as user's choice as
-                    # Download.zstd is always contains both: Overcloud and Undercloud
-                    for fil in download_folder_path:
-                        if download_undercloud_logs==False:
-                            if fil in overcloud_node_names:
-                                shutil.rmtree(fil)
-                        if download_overcloud_logs==False:
-                            if fil in undercloud_node_names:
-                                shutil.rmtree(fil)
-
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 print_in_color(cmd,'bold')
                 os.system(cmd)
@@ -263,6 +252,19 @@ class LogTool(unittest.TestCase):
             if log.endswith('Download'):
                 download_dir_path= os.path.join(os.path.abspath(temp_dir),'Download')
                 for item in os.listdir(download_dir_path):
+
+                    # This filtering is needed to filter out Overloud or Undercloud logs as user's choice as
+                    # Download.zstd is always contains both: Overcloud and Undercloud
+                    for folder in os.listdir(os.path.join(download_dir_path,item)):
+                        if download_undercloud_logs is False:
+                            for node in undercloud_node_names:
+                                if node in folder:
+                                    shutil.rmtree(os.path.join(os.path.join(download_dir_path, item), folder))
+                        if download_overcloud_logs is False:
+                            for node in overcloud_node_names:
+                                if node in folder:
+                                    shutil.rmtree(os.path.join(os.path.join(download_dir_path, item), folder))
+
                     new_item=item
                     #if len(item)>10:
                     #    new_item=item[0:3]+'___'+item[-3:]
