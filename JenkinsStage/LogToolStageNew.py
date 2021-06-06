@@ -225,6 +225,17 @@ class LogTool(unittest.TestCase):
                     download_folder_path=os.path.join(temp_dir_path,'Download')
                     os.mkdir(download_folder_path)
                     cmd = 'mv '+tar_file+' '+tar_file+'.tar;tar -xvf ' + tar_file+'.tar' + ' -C ' + download_folder_path + ' >/dev/null' + ';' + 'rm -rf ' + os.path.join(temp_dir_path, fil)
+
+                    # This filtering is needed to filter out Overloud or Undercloud logs as user's choice as
+                    # Download.zstd is always contains both: Overcloud and Undercloud
+                    for fil in download_folder_path:
+                        if download_undercloud_logs==False:
+                            if fil in overcloud_node_names:
+                                shutil.rmtree(fil)
+                        if download_overcloud_logs==False:
+                            if fil in undercloud_node_names:
+                                shutil.rmtree(fil)
+
                 print_in_color('Unzipping ' + fil + '...', 'bold')
                 print_in_color(cmd,'bold')
                 os.system(cmd)
