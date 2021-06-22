@@ -43,8 +43,9 @@ string_for_grep=set_default_arg_by_index(3,' ERROR ') # String for Grep
 result_file=set_default_arg_by_index(4,'All_Greps.log') # Result file
 result_file=os.path.join(os.path.abspath('.'),result_file)
 save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
-operation_mode=set_default_arg_by_index(6,'None') # Operation mode
-to_analyze_osp_logs_only=set_default_arg_by_index(7,'all_logs')#'osp_logs_only'
+to_analyze_osp_logs_only=set_default_arg_by_index(6,'all_logs')#'osp_logs_only'
+to_analyze_all_file_extensions=set_default_arg_by_index(7,'no')# Analyze all files not only *.log
+
 magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error', 'failure'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
@@ -144,7 +145,7 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
     for path in log_root_path:
         for root, dirs, files in os.walk(path):
             for name in files:
-                if '.log' in name or 'messages' in name:
+                if '.log' in name or 'messages' in name or to_analyze_all_file_extensions=='yes':
                     to_add=False
                     file_abs_path=os.path.join(os.path.abspath(root), name)
                     if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
@@ -156,9 +157,7 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
                         to_add = True
                     if to_add==True:
                         logs.append(file_abs_path)
-                if operation_mode == 'Analyze Gerrit(Zuul) failed gate logs':
-                    file_abs_path = os.path.join(os.path.abspath(root), name)
-                    logs.append(file_abs_path)
+
     logs=list(set(logs))
     # Remove all logs that are in black list
     filtered_logs=[]

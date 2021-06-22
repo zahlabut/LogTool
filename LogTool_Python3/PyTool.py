@@ -20,14 +20,14 @@ ssl._create_default_https_context = ssl._create_unverified_context
 from Common import *
 warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 
-### Check if updated LogTool is available ###
-cur_dir=os.path.abspath('')
-git_command='cd '+cur_dir+'; git pull --dry-run > git_status.txt'
-cur_dir=os.path.abspath('')
-git_command='cd '+cur_dir+'; git pull --dry-run'
-git_result=exec_command_line_command(git_command)
-if git_result['CommandOutput']!='':
-    spec_print(["-------Important-------","New LogTool version is available","Use 'git pull' command to upgrade!"],'yellow')
+# ### Check if updated LogTool is available ###
+# cur_dir=os.path.abspath('')
+# git_command='cd '+cur_dir+'; git pull --dry-run > git_status.txt'
+# cur_dir=os.path.abspath('')
+# git_command='cd '+cur_dir+'; git pull --dry-run'
+# git_result=exec_command_line_command(git_command)
+# if git_result['CommandOutput']!='':
+#     spec_print(["-------Important-------","New LogTool version is available","Use 'git pull' command to upgrade!"],'yellow')
 
 # Parameters #
 overcloud_logs_dir = '/var/log'
@@ -167,92 +167,31 @@ try:
            'Download Overcloud Logs',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
-           'Analyze Gerrit(Zuul) failed gate logs',
-           'Octavia - find Master']
+           'Analyze logs in local directory'
+           ]
+
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
-    if mode[1] == 'Analyze Gerrit(Zuul) failed gate logs':
-        wget_exists=exec_command_line_command('wget -h')
-        if wget_exists['ReturnCode']!=0:
-            exit('WGET tool is not installed on your host, please install and rerun this operation mode!')
-        # Make sure that BeutifulSoup is installed
-        try:
-            from bs4 import BeautifulSoup
-        except Exception as e:
-            print_in_color(str(e), 'red')
-            print_in_color('Execute "sudo yum install python3-setuptools" to install pip3', 'yellow')
-            print_in_color('Execute "pip3 install beautifulsoup4 --user" to install it!', 'yellow')
-            exit('Install beautifulsoup and rerun!')
-        # Make sure that requests is installed
-        try:
-            import requests
-        except Exception as e:
-            print_in_color(str(e), 'red')
-            print_in_color('Execute "pip3 install requests --user" to install it!', 'yellow')
-            exit('Install requests and rerun!')
-
-        # Function to receive all Urls recursively, works slow :(
-        listUrl = []
-        checked_urls=[]
-        def recursiveUrl(url):
-            if url in checked_urls:
-                return 1
-            checked_urls.append(url)
-            headers = {'Accept-Encoding': 'gzip'}
-            try:
-                page = requests.get(url, headers=headers)
-                soup = BeautifulSoup(page.text, 'html.parser')
-                links = soup.find_all('a')
-                links = [link for link in links if 'href="' in str(links) if '<a href=' in str(link) if
-                         link['href'] != '../']
-            except Exception as e:
-                print(e)
-                links=None
-            if links is None or len(links) == 0:
-                listUrl.append(url)
-                print(url)
-                return 1;
-            else:
-                listUrl.append(url)
-                print(url)
-                for link in links:
-                    recursiveUrl(url + link['href'][0:])
+    if mode[1] == 'Analyze logs in local directory':
 
         # Start mode
         options = [' ERROR ', ' WARNING ']
         grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
-        destination_dir='Zuul_Log_Files'
+        destination_dir='Local_Log_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-        zuul_log_url=input("Please enter Log URL, open failed gate, then you'll find it under Summary section in 'log_url'\nYour URL: ")
-        mode_start_time = time.time()
-        if '//storage' in zuul_log_url:
-            # spec_print(['Warning - "wget -r" (recursively) cannot be used','This storage server is always responding with "gzip" content',
-            #             'causing wget to download index.html only (as gzip compressed file)','Python will be used instead to export all Urls recursievly',
-            #             'works a bit slow :-('],'yellow')
-            recursiveUrl(zuul_log_url)
-            for link in listUrl:
-                #if link.endswith('log.txt.gz'):
-                save_to_path=os.path.join(destination_dir,link.replace('https://','').replace('http://',''))
-                exec_command_line_command('wget -P '+save_to_path+' '+link)
-        else:
-            # Download  Zuul log files with Wget
-            user_agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-            download_command='wget -r --random-wait '+'"'+user_agent+'"'+' --no-parent -e robots=off -P '+destination_dir+' '+zuul_log_url
-            print ('WGET is now running and recursively downloading all files...')
-            return_code=exec_command_line_command(download_command)
-            #if return_code['ReturnCode']!=0:
-            #    print_in_color('Failed to download Zuul logs!', 'red')
+        logs_dir_to_analyze=input("Please enter local path: ")
 
         # Run LogTool analyzing
-        print_in_color('\nStart analyzing downloaded OSP logs locally','bold')
-        result_dir='Gerrit_Failed_Gate_'+grep_string.replace(' ','')
+        mode_start_time=time.time()
+        print_in_color('\nStart analyzing downloaded logs locally','bold')
+        result_dir='Local_Logs_'+grep_string.replace(' ','')
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+os.path.abspath(destination_dir)+" '"+grep_string+"'" + ' '+result_file+" yes 'Analyze Gerrit(Zuul) failed gate logs'"
+        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')
@@ -749,14 +688,6 @@ try:
                 spec_print(['Completed with failures!!!', 'Result Directory: ' + mode_result_dir,
                             'Execution Time: ' + str(end_time-mode_start_time) + '[sec]',
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
-
-    if mode[1]=='Octavia - find Master':
-        lb_list = 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer list -f json'
-        lb_id=exec_command_line_command(lb_list)['JsonOutput'][0]['id']
-        lb_show= 'source ' + source_rc_file_path + 'overcloudrc;openstack loadbalancer show '+lb_id+' -f json'
-        lb_vip=exec_command_line_command(lb_show)['JsonOutput']['vip_address']
-        fip_list='source ' + source_rc_file_path + 'overcloudrc;openstack floating ip list -f json'
-        lb_fip=[item['floating ip address'] for item in exec_command_line_command(fip_list)['JsonOutput'] if item['fixed ip address']==lb_vip ]
 
 except KeyboardInterrupt:
     print_in_color("\n\n\nJust a minute, killing all tool's running scripts if any :-) ",'yellow')
