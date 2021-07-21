@@ -150,35 +150,45 @@ def append_to_file(log_file, msg):
     log_file.write(msg)
 
 def get_line_date(line):
-    # try:
-    #line=line[0:50]
-    now = datetime.datetime.now()
-    year=str(now.year)
-    match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)#2020-04-23 08:52:04
-    if match:
-        string=match.group()
-        string = string[0:10]+' '+string[11:]
-        date=datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
-        return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)#27 Apr 2020 11:37:46
-    if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d %b %Y %H:%M:%S')
-        return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'\d{2}/(...)/\d{4}.\d{2}:\d{2}:\d{2}', line)#30/Apr/2020:00:00:20
-    if match:
-        date=datetime.datetime.strptime(match.group().replace('T',' '), '%d/%b/%Y:%H:%M:%S')
-        return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct 29 16:25:47
-    if match:
-        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b %d %H:%M:%S')
-        return {'Error': None, 'Line': None, 'Date': str(date)}
-    match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line) #Oct-29 16:25:51
-    if match:
-        date=datetime.datetime.strptime(year+' '+match.group().replace('T',' '), '%Y %b-%d %H:%M:%S')
-        return {'Error': None, 'Line': None, 'Date': str(date)}
-    if len(line)>100:
-        line=line[0:100]+'...'
-    return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date':None}
+    try:
+        # line=line[0:50]
+        now = datetime.datetime.now()
+        year = str(now.year)
+        match = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)  # 2020-04-23 08:52:04
+        if match:
+            string = match.group()
+            string = string[0:10] + ' ' + string[11:]
+            date = datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'\d{4}/\d{2}/\d{2}.\d{2}:\d{2}:\d{2}', line)  # 2020/04/23 08:52:04
+        if match:
+            date = datetime.datetime.strptime(match.group(), '%Y/%m/%d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'\d{2}\s(...)\s\d{4}\s\d{2}:\d{2}:\d{2}', line)  # 27 Apr 2020 11:37:46
+        if match:
+            date = datetime.datetime.strptime(match.group().replace('T', ' '), '%d %b %Y %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'\d{2}/(...)/\d{4}.\d{2}:\d{2}:\d{2}', line)  # 30/Apr/2020:00:00:20
+        if match:
+            date = datetime.datetime.strptime(match.group().replace('T', ' '), '%d/%b/%Y:%H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'(...)\s\d{2}\s\d{2}:\d{2}:\d{2}', line)  # Oct 29 16:25:47
+        if match:
+            date = datetime.datetime.strptime(year + ' ' + match.group().replace('T', ' '), '%Y %b %d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'(...)-\d{2}\s\d{2}:\d{2}:\d{2}', line)  # Oct-15 13:30:46
+        if match:
+            date = datetime.datetime.strptime(year + match.group(), '%Y%b-%d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        match = re.search(r'(...)\s\s\d{1}\s\d{2}:\d{2}:\d{2}', line)  # Jul  6 22:19:00
+        if match:
+            date = datetime.datetime.strptime(year + match.group(), '%Y%b  %d %H:%M:%S')
+            return {'Error': None, 'Line': None, 'Date': str(date)}
+        if len(line) > 100:
+            line = line[0:100] + '...'
+        return {'Error': 'Unknown or missing timestamp in line!', 'Line': line.strip(), 'Date': None}
+    except Exception as e:
+        return {'Error': str(e), 'Line': line.strip(), 'Date': None}
 
 def print_list(lis):
     for l in lis:
@@ -229,6 +239,7 @@ def remove_digits_from_string(s):
 
 if __name__ == "__main__":
     detected_relevant_logs=[]
+    skipped_logs=[]
     if __name__ == "__main__":
         empty_file_content(result_file)
         empty_file_content(temp_file)
@@ -256,8 +267,16 @@ if __name__ == "__main__":
                     break
             # Check if log is relevant, basing on time start range
             if is_known_time_format==True:
+                if first_line_date['Date'] is None:
+                    print_in_color('LogTool was not able to detect "first_line_date"', 'yellow')
+                    skipped_logs.append(log)
+                    continue
+                if last_line_date['Date'] is None:
+                    print_in_color('LogTool was not able to detect "last_line_date"', 'yellow')
+                    skipped_logs.append(log)
+                    continue
                 first_line_time=time.strptime(first_line_date['Date'], '%Y-%m-%d %H:%M:%S')
-                last_line_time=  time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S')
+                last_line_time=time.strptime(last_line_date['Date'], '%Y-%m-%d %H:%M:%S')
                 range_start_time=time.strptime(range_start, '%Y-%m-%d %H:%M:%S')
                 range_stop_time=time.strptime(range_stop,'%Y-%m-%d %H:%M:%S')
                 if first_line_time<=range_start_time<=last_line_time:
@@ -326,5 +345,7 @@ if __name__ == "__main__":
     os.remove(temp_file)
     exec_command_line_command('gzip '+result_file)
     shutil.make_archive(result_dir, 'zip', result_dir)
+    print_in_color('Skipped logs (LogTool was not able to detect timestamps in its content), are:', 'yellow')
+    print_list(skipped_logs)
     print('Execution time:'+str(time.time()-start_time))
     print('SUCCESS!!!')
