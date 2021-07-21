@@ -54,13 +54,13 @@ This mode will "grep" some string (given by user) on all Overcloud logs. For exa
 
 **4) Extract messages for given time range**
 
-This mode could be useful when you might want to see log messages logged in particular time range.
-For example you want to see all messages in all log files, logged between 2020:05:01 12:00:00 till 2020:05:01 12:05:00 for debug purpose.
-This mode will create two files per Overcloud node: NodeName.log.gz and NodeName.zip.
-<br/>    _1. NodeName.zip_ - contains all relevant log files. It means that messages have been detected for given time range in these logs.
+This mode is useful when you might want to get the only log messages logged in particular time range.
+For example you might want to get all messages for all OC Nodes logs, logged between 2020:05:01 12:00:00 up untill 2020:05:01 12:05:00 for debug purposes.
+This mode will create Result Directory including two files per OC Node: NodeName.log.gz and NodeName.zip.
+<br/>    _1. NodeName.zip_ - contains all log files for given time range. It means that matched messages have been detected for given time range in these logs.
 BTW - this file could be used as attachment when you report BZ
-<br/>    _2. NodeName.log.gz_ - LogTool result file, you'll find statistics per OSP log.<br/>
-Only "unique" messages per OSP log file are saved in this result file. Duplicated are dropped.<br/>
+<br/>    _2. NodeName.log.gz_ - LogTool result file, here you'll find statistics per OSP log.<br/>
+Only "unique" messages per OSP log file are being saved in this result file. Duplicated lines are dropped.<br/>
 **Note:** this mode is available in LogTool Python3 version only.
 
 
