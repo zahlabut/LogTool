@@ -19,6 +19,7 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 from Common import *
 warnings.filterwarnings(action='ignore',module='.*paramiko.*')
+import getpass
 
 # ### Check if updated LogTool is available ###
 # cur_dir=os.path.abspath('')
@@ -548,7 +549,7 @@ try:
         to_upload=choose_option_from_list(['yes','no'], 'Would you like to upload logs to '+ssh_host_to_upload_logs+' ?')[1]
         if to_upload=='yes':
             user = input('Please enter your user name: ')
-            password = input('Please enter your kerberos: ')
+            password = getpass.getpass('Please enter your kerberos: ')
             dir_name = input('Please enter directory name to be used to upload log files: ')
             s = SSH(ssh_host_to_upload_logs, user=user, password=password)
             s.ssh_connect_password()
@@ -641,6 +642,12 @@ try:
                             'Failed nodes:'] + [k for k in list(errors_on_execution.keys())], 'yellow')
 
     if mode[1]=='Extract messages for given time range':
+        random_node = random.choice(overcloud_nodes)
+        s = SSH(random_node['ip'], user=overcloud_ssh_user, key_path=overcloud_ssh_key)
+        s.ssh_connect_key()
+        com_result = s.ssh_command('date "+%Y-%m-%d %H:%M:%S"')
+        print_in_color('Current date on OC ' + random_node['Name'] + ' is: ' + com_result['Stdout'].strip(), 'blue')
+        s.ssh_close()
         start_range_time = input('\nEnter range "start time":'
                            '\nTime format example: 2020-04-22 12:10:00 enter your time: ')
         if check_user_time(start_range_time)['Error']!=None:
