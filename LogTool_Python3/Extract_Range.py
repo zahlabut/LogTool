@@ -336,7 +336,10 @@ if __name__ == "__main__":
 
     not_relevant_lines=['### '+item['Log']+' ###' for item in statistics_list if item['NumberOfLines']==0]
     statistics_list=[item for item in statistics_list if item['NumberOfLines']!=0]
+    print_in_color('Statisctics - number of lines per log', 'yellow')
     print_list(statistics_list)
+    print_in_color('Skipped logs (LogTool was not able to detect timestamps in log content), are:', 'yellow')
+    print_list(skipped_logs)
     append_to_file(result_file,'### Statistics: Number of lines per file:')
     write_list_to_file(result_file,statistics_list,False)
     for line in open(temp_file, 'r').readlines():
@@ -345,7 +348,5 @@ if __name__ == "__main__":
     os.remove(temp_file)
     exec_command_line_command('gzip '+result_file)
     shutil.make_archive(result_dir, 'zip', result_dir)
-    print_in_color('Skipped logs (LogTool was not able to detect timestamps in log content), are:', 'yellow')
-    print_list(skipped_logs)
     print('Execution time:'+str(time.time()-start_time))
     print('SUCCESS!!!')
