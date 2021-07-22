@@ -345,7 +345,7 @@ if __name__ == "__main__":
     os.remove(temp_file)
     exec_command_line_command('gzip '+result_file)
     shutil.make_archive(result_dir, 'zip', result_dir)
-    print_in_color('Skipped logs (LogTool was not able to detect timestamps in its content), are:', 'yellow')
+    print_in_color('Skipped logs (LogTool was not able to detect timestamps in log content), are:', 'yellow')
     print_list(skipped_logs)
     print('Execution time:'+str(time.time()-start_time))
     print('SUCCESS!!!')
