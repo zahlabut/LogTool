@@ -35,7 +35,6 @@ def set_default_arg_by_index(index, default):
     except:
         return default
 
-
 ### Parameters ###
 fuzzy_match = 0.55
 time_grep=set_default_arg_by_index(1,'2018-01-01 00:00:00') # Grep by time
