@@ -192,7 +192,13 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-        command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
+
+        all_log_extension = choose_option_from_list(['yes', 'no'], 'To analyze all file extensions (yes) or *.log only (no)?')
+        if all_log_extension[1] == 'yes':
+            command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
+        else:
+            command = "python3 Extract_On_Node.py '" + "2019-01-01 00:00:00" + "' " + logs_dir_to_analyze + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
         print_in_color('\n --> '+command,'bold')

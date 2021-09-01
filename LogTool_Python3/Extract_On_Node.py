@@ -148,6 +148,9 @@ def collect_log_paths(log_root_path,black_list=logs_to_ignore):
                 if '.log' in name or 'messages' in name or to_analyze_all_file_extensions=='yes':
                     to_add=False
                     file_abs_path=os.path.join(os.path.abspath(root), name)
+                    if os.path.islink(file_abs_path):
+                        print_in_color(file_abs_path +" is symbolic link", 'yellow')
+                        continue
                     if os.path.getsize(file_abs_path)!=0 and 'LogTool' in file_abs_path:
                         if 'Jenkins_Job_Files' in file_abs_path:
                             to_add = True
