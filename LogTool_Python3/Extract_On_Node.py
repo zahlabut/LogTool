@@ -735,7 +735,7 @@ if __name__ == "__main__":
         for line in block_lines[start_from_index:]:
             if ('^^' not in line) and (line not in all_problematical_lines):
                 all_problematical_lines.append(line.strip())
-    write_list_to_file(result_file, unique_list(all_problematical_lines),False)
+    write_list_to_file(result_file, unique_list_by_fuzzy(all_problematical_lines, fuzzy_match),False)
 
 
     ### Fill statistics section - Table of Content: line+index ###
