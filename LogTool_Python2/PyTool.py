@@ -26,6 +26,8 @@ import  urllib
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+
+
 ### Check if updated LogTool is available ###
 cur_dir=os.path.abspath('')
 git_command='cd '+cur_dir+'; git pull --dry-run > git_status.txt'
