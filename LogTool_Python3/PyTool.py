@@ -42,7 +42,7 @@ log_storage_directory='/rhos-infra/jenkins-logs'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
 ssh_host_to_upload_logs='rhos-release.virt.bos.redhat.com'
 ssh_host_to_upload_logs_www_dir='/var/www/html/log/'
-
+core_puddle_file_path = '/home/stack/core_puddle_version'
 
 
 # On interrupt "ctrl+c" executed script will be killed
@@ -57,9 +57,24 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
     try:
         print_in_color('Connectivity check to all OC nodes...','bold')
         overcloud_nodes = []
-        oc_nodes_command='source ' + source_rc_file_path + 'stackrc;openstack server list -f json'
-        print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
-        all_nodes = exec_command_line_command(oc_nodes_command)['JsonOutput']
+
+        if "RHOS-17" in open(core_puddle_file_path, 'r').read():
+            oc_nodes_command = 'source ' + source_rc_file_path + 'stackrc;metalsmith -c "IP Addresses" -c "Node Name" -f table list'
+            print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
+            nodes = exec_command_line_command(oc_nodes_command)['CommandOutput']
+            print(nodes)
+            all_nodes=[]
+            for line in nodes.splitlines()[3:]:
+                if '+' not in line:
+                    line=line.replace(' ', '').split('|')
+                    name=line[1]
+                    networks=line[2]
+                    all_nodes.append({'name':name, 'networks':networks})
+            print(all_nodes)
+        else:
+            oc_nodes_command='source ' + source_rc_file_path + 'stackrc;openstack server list -f json'
+            print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
+            all_nodes = exec_command_line_command(oc_nodes_command)['JsonOutput']
     except Exception as e:
         print_in_color('Failed to detect Overcloud Nodes :( '+str(e),'red')
         sys.exit(1)
