@@ -101,7 +101,7 @@ def print_in_color(string,color_or_format=None):
     else:
         print(string)
 
-(command):
+def exec_command_line_command(command):
     try:
         command_as_list = command.split(' ')
         command_as_list = [item.replace(' ', '') for item in command_as_list if item != '']
