@@ -131,11 +131,13 @@ def execute_on_node(**kwargs):
         print('Download result file result:',s.scp_download(overcloud_home_dir + result_file, os.path.join(os.path.abspath(result_dir), result_file)))
         files_to_delete = ['Extract_On_Node.py', result_file]
     if kwargs['Mode']=='Download_All_Logs':
-        zip_file_name=kwargs['Node']['Name']+'.zip'
-        command='sudo zip -r ' + zip_file_name +' ' + overcloud_logs_dir
+        zip_file_name=kwargs['Node']['Name']+'.tar.gz'
+        command='sudo tar -zcvf ' + zip_file_name +' ' + overcloud_logs_dir
         s.ssh_command(command)
         print(s.scp_download(overcloud_home_dir + zip_file_name, os.path.join(os.path.abspath(kwargs['ResultDir']), zip_file_name)))
         files_to_delete=[zip_file_name]
+
+
     if kwargs['Mode']=='GrepString':
         output_greps_file = 'All_Grep_Strings_'+kwargs['Node']['Name']+'.log'
         print(s.scp_upload('Grep_String.py', overcloud_home_dir + 'Grep_String.py'))
