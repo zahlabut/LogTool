@@ -59,10 +59,9 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
         overcloud_nodes = []
 
         if "RHOS-17" in open(core_puddle_file_path, 'r').read():
-            oc_nodes_command = 'source ' + source_rc_file_path + 'stackrc;metalsmith -c "IP Addresses" -c "Node Name" -f table list'
+            oc_nodes_command = 'source ' + source_rc_file_path + 'stackrc;metalsmith -c "IP Addresses" -c "Hostname" -f table list'
             print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
             nodes = exec_command_line_command(oc_nodes_command)['CommandOutput']
-            print(nodes)
             all_nodes=[]
             for line in nodes.splitlines()[3:]:
                 if '+' not in line:
@@ -70,7 +69,6 @@ if os.path.isfile('/home/stack/core_puddle_version')==True:
                     name=line[1]
                     networks=line[2]
                     all_nodes.append({'name':name, 'networks':networks})
-            print(all_nodes)
         else:
             oc_nodes_command='source ' + source_rc_file_path + 'stackrc;openstack server list -f json'
             print_in_color('Trying to detect all Overcloud Nodes with:\n'+oc_nodes_command,'bold')
