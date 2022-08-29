@@ -132,8 +132,8 @@ if __name__ == "__main__":
         else:
             print('OK --> '+os.path.basename(log) + ' - is relevant!')
     # Zip the result dir #
-    com_result=exec_command_line_command('zip -r '+result_directory+'.zip '+result_directory)
+    com_result=exec_command_line_command('tar -zcvf '+result_directory+'.tar.gz '+result_directory)
     if com_result['ReturnCode']==0:
         shutil.rmtree(result_directory)
-        print_in_color('Size of: '+result_directory+'.zip '+'is: '+str(os.path.getsize(result_directory+'.zip')/1024/1024.0 )+'[MB]','bold')
+        print_in_color('Size of: '+result_directory+'.tar.gz '+'is: '+str(os.path.getsize(result_directory+'.tar.gz')/1024/1024.0 )+'[MB]','bold')
         print('SUCCESS!!!'*5)

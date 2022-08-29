@@ -40,8 +40,8 @@ log_storage_host='cougar11.scl.lab.tlv.redhat.com'
 #log_storage_directory='/srv/static'
 log_storage_directory='/rhos-infra/jenkins-logs'
 overcloud_home_dir = '/home/' + overcloud_ssh_user + '/'
-ssh_host_to_upload_logs='rhos-release.virt.bos.redhat.com'
-ssh_host_to_upload_logs_www_dir='/var/www/html/log/'
+ssh_host_to_upload_logs='file.emea.redhat.com'
+ssh_host_to_upload_logs_www_dir='/home/tlv/ashtempl/public_html/'
 core_puddle_file_path = '/home/stack/core_puddle_version'
 
 
@@ -167,9 +167,9 @@ def execute_on_node(**kwargs):
         else:
             print_in_color(str(node) + ' --> FAILED','red')
             errors_on_execution[node['Name']]=False
-        print(s.scp_download(overcloud_home_dir + kwargs['Node']['Name']+'.zip', os.path.join(os.path.abspath(kwargs['ResultDir']), kwargs['Node']['Name']+'.zip')))
+        print(s.scp_download(overcloud_home_dir + kwargs['Node']['Name']+'.tar.gz', os.path.join(os.path.abspath(kwargs['ResultDir']), kwargs['Node']['Name']+'.tar.gz')))
         # Clean all #
-        files_to_delete=['Download_Logs_By_Timestamp.py',kwargs['Node']['Name']+'.zip', kwargs['Node']['Name']]
+        files_to_delete=['Download_Logs_By_Timestamp.py',kwargs['Node']['Name']+'.tar.gz', kwargs['Node']['Name']]
     for fil in files_to_delete:
             s.ssh_command('sudo rm -rf ' + fil)
     s.ssh_close()
@@ -586,7 +586,7 @@ try:
             if len(errors_on_execution) == 0:
                 msg=['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]']
                 if to_upload=='yes':
-                    msg.insert(2,'URL to be used for BZ is: http://'+ssh_host_to_upload_logs+'/log/'+dir_name)
+                    msg.insert(2,'URL to be used for BZ is: http://'+ssh_host_to_upload_logs+'/~'+user+'/'+dir_name)
                 spec_print(msg,'green')
             else:
                 spec_print(['Completed!!!','Result Directory: '+result_dir,'Execution Time: '+str(round(end_time - mode_start_time,2))+'[sec]'],'red')
