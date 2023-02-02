@@ -32,7 +32,7 @@ import getpass
 
 # Parameters #
 overcloud_logs_dir = '/var/log'
-overcloud_ssh_user = 'heat-admin'
+overcloud_ssh_user = 'heat-admin' #For OSP17.1 use "tripleo-admin"
 overcloud_ssh_key = '/home/stack/.ssh/id_rsa'
 undercloud_logs = ['/var/log','/home/stack','/usr/share/','/var/lib/']
 source_rc_file_path='/home/stack/'
