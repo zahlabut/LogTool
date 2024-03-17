@@ -20,6 +20,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 from Common import *
 warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 import getpass
+import io
 
 # ### Check if updated LogTool is available ###
 # cur_dir=os.path.abspath('')
@@ -183,10 +184,66 @@ try:
            'Download Overcloud Logs',
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
-           'Analyze logs in local directory'
+           'Analyze logs in local directory',
+           'Openshift - analyze all PODs logs'
            ]
 
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+
+    if mode[1] == 'Openshift - analyze all PODs logs':
+
+        # Start mode
+        com_result=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')
+        local_time=com_result['CommandOutput'].strip()
+        grep_time=choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
+        options = [' ERROR ', ' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
+        destination_dir='OpenshiftPodsLogs_ERRORS'
+        destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+
+        # Use "oc logs POD_NAME" to get the logs fpr each availbale POD in "oc get pods"
+        get_pods = 'oc get pods'
+        com_result=exec_command_line_command(get_pods)['CommandOutput']
+        buf = io.StringIO(com_result).readlines()
+        pods = [item.split(' ')[0] for item in buf if item.split(' ')[0].lower()!='name']
+
+        # For each POD create its log file using "oc logs POD_NAME --timestamp"
+        logs_dir_to_analyze = '/tmp/OpenshiftPodsLogs'
+        if os.path.exists(logs_dir_to_analyze):
+            shutil.rmtree(logs_dir_to_analyze)
+        os.mkdir(logs_dir_to_analyze)
+        for pod in pods:
+            command_pods= 'oc logs --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
+            print_in_color(command_pods, 'bold')
+            exec_command_line_command(command_pods)
+
+        # Run LogTool analyzing
+        mode_start_time=time.time()
+        logs_dir_to_analyze_path = os.path.abspath(logs_dir_to_analyze)
+        print_in_color('\nStart analyzing PODs logs locally','bold')
+        result_dir='Local_Logs_'+grep_string.replace(' ','')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
+        command = "python3 Extract_On_Node.py '" + grep_time + "' " + logs_dir_to_analyze_path + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+        #shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
+        print_in_color('\n --> '+command,'bold')
+        start_time=time.time()
+        com_result=exec_command_line_command(command)
+        end_time=time.time()
+        if com_result['ReturnCode']==0:
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
+
 
     if mode[1] == 'Analyze logs in local directory':
 
