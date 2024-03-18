@@ -206,7 +206,7 @@ try:
         os.mkdir(destination_dir)
 
         #  Choose "openstack-must-gather" options of gathering logs
-        logs_dir_to_analyze = '/tmp/OenstackMustGather'
+        logs_dir_to_analyze = '/tmp/OpenstackMustGather'
         if os.path.exists(logs_dir_to_analyze):
             shutil.rmtree(logs_dir_to_analyze)
         os.mkdir(logs_dir_to_analyze)
