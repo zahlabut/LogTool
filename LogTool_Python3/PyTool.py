@@ -216,7 +216,7 @@ try:
             command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather --dest-dir=' + logs_dir_to_analyze
         if must_option[1] == 'SpecificData':
             print_in_color(
-                'Choose your data from:\r\n https://github.com/openstack-k8s-operators/openstack-must-gather/tree/main/collection-scripts',
+                'Choose your data type from:\r\n https://github.com/openstack-k8s-operators/openstack-must-gather/tree/main/collection-scripts\r\n for example "gather_ctlplane_resources": ',
                 'blue')
             data_type = input('Enter data type: ')
             command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather -- ' + data_type.strip() + ' --dest-dir=' + logs_dir_to_analyze
