@@ -87,26 +87,40 @@ In addition, on Bugzila you can attach file only if its size is less than 21MB, 
 
 This mode is the same as #1, the only difference is that it will use Undercloud logs.
 
-**9) Overcloud - check Unhealthy dockers
+**9) OSP18 - analyze PODs logs**
 
-This mode is used to search for "Unhealthy" dockers on Nodes
+This mode is for OSP18 deployment and applies to analyzing PODs' logs on controller-0 for example.
+Provided options are: specific PODs, LogLevel, "Since Time"
+It will use "oc get pods" command to list the PODs, followed by "oc logs --timestamps <POD_NAME>"
+to create log files on the file system that are later on analyzed.  
 
-**10)  Download OSP logs and run LogTool locally**
+is the same as #1, the only difference is that it will use Undercloud logs.
 
-This mode applies you to download OSP logs from Jenkins or Log Storage (cougar11.scl.lab.tlv.redhat.com) and to analyze downloaded logs locally.
+[comment]: <> (**9&#41; Overcloud - check Unhealthy dockers)
 
-**11)  Undercloud - analyze deployment log**
+[comment]: <> (This mode is used to search for "Unhealthy" dockers on Nodes)
 
-This mode may help you to understand what went wrong while OC or UC deployment, basing on generated log.
-Deployment logs are generated when ""--log" option is used, for example inside the "overcloud_deploy.sh" script, the
-problem is that such logs are not "friendly" and it's hard to understand what exactly went wrong, especially
-when verbosity is set to "vv" or more, this will make the log not readable with a bunch of data inside it.
-This mode will provide you some details about all failed TASKs.
+[comment]: <> (**10&#41;  Download OSP logs and run LogTool locally**)
 
-**12) Analyze logs in local directory**
+[comment]: <> (This mode applies you to download OSP logs from Jenkins or Log Storage &#40;cougar11.scl.lab.tlv.redhat.com&#41; and to analyze downloaded logs locally.)
 
-This mode is used to analyze log files in particular directory.
-For example, downloaded logs from Zuul artifacts to analyze some failed gate.
+[comment]: <> (**11&#41;  Undercloud - analyze deployment log**)
+
+[comment]: <> (This mode may help you to understand what went wrong while OC or UC deployment, basing on generated log.)
+
+[comment]: <> (Deployment logs are generated when ""--log" option is used, for example inside the "overcloud_deploy.sh" script, the)
+
+[comment]: <> (problem is that such logs are not "friendly" and it's hard to understand what exactly went wrong, especially)
+
+[comment]: <> (when verbosity is set to "vv" or more, this will make the log not readable with a bunch of data inside it.)
+
+[comment]: <> (This mode will provide you some details about all failed TASKs.)
+
+[comment]: <> (**12&#41; Analyze logs in local directory**)
+
+[comment]: <> (This mode is used to analyze log files in particular directory.)
+
+[comment]: <> (For example, downloaded logs from Zuul artifacts to analyze some failed gate.)
 
 
 # Installation
