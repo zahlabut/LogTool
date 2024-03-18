@@ -185,13 +185,13 @@ try:
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
            'Analyze logs in local directory',
-           'Openshift - analyze all PODs logs'
+           'OSP18 - analyze PODs logs'
            ]
 
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
 
-    if mode[1] == 'Openshift - analyze all PODs logs':
+    if mode[1] == 'OSP18 - analyze PODs logs':
 
         # Start mode
         com_result=exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')
@@ -205,8 +205,12 @@ try:
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
 
-        # Use "oc logs POD_NAME" to get the logs fpr each availbale POD in "oc get pods"
-        get_pods = 'oc get pods'
+        # Use "oc logs POD_NAME" to get the logs fpr each available POD in "oc get pods"
+        string_to_grep = input('Enter string to "grep" PODs to be analyzed or "enter" to skip: ')
+        if not string_to_grep:
+            get_pods = 'oc get pods'
+        else:
+            get_pods = 'oc get pods '+'| grep -i '+string_to_grep
         com_result=exec_command_line_command(get_pods)['CommandOutput']
         buf = io.StringIO(com_result).readlines()
         pods = [item.split(' ')[0] for item in buf if item.split(' ')[0].lower()!='name']
