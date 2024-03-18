@@ -210,20 +210,21 @@ try:
         if os.path.exists(logs_dir_to_analyze):
             shutil.rmtree(logs_dir_to_analyze)
         os.mkdir(logs_dir_to_analyze)
-        must_option = choose_option_from_list(['ControlPlane', 'SpecificData', 'MultipleOpenshiftOpenstackImage'],
+        must_option = choose_option_from_list(['ControlPlaneOpenstack', 'SpecificDataOpenstack', 'MultipleOpenshiftOpenstack'],
                                               "Choose Openstack-must-gather option to collect logs")
-        if must_option[1] == 'ControlPlane':
+        if must_option[1] == 'ControlPlaneOpenstack':
             command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather --dest-dir=' + logs_dir_to_analyze
-        if must_option[1] == 'SpecificData':
+        if must_option[1] == 'SpecificDataOpenstack':
             print_in_color(
                 'Choose your data type from:\r\n https://github.com/openstack-k8s-operators/openstack-must-gather/tree/main/collection-scripts\r\n for example "gather_ctlplane_resources": ',
                 'blue')
             data_type = input('Enter data type: ')
             command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather --dest-dir=' + logs_dir_to_analyze+ ' -- '+data_type.strip()
-
-        if must_option[1] == 'MultipleOpenshiftOpenstackImage':
+        if must_option[1] == 'MultipleOpenshiftOpenstack':
             command = 'oc adm must-gather --image-stream=openshift/must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather:latest --dest-dir=' + logs_dir_to_analyze
         print_in_color(command, 'bold')
+        output = exec_command_line_command(command)['CommandOutput']
+        print_in_color(output, 'bold')
 
         # Run LogTool analyzing
         mode_start_time = time.time()
