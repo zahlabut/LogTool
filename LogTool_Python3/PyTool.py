@@ -223,8 +223,7 @@ try:
         if must_option[1] == 'MultipleOpenshiftOpenstack':
             command = 'oc adm must-gather --image-stream=openshift/must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather:latest --dest-dir=' + logs_dir_to_analyze
         print_in_color(command, 'bold')
-        output = exec_command_line_command(command)['CommandOutput']
-        print_in_color(output, 'bold')
+        exec_command_line_command(command)
 
         # Run LogTool analyzing
         mode_start_time = time.time()
