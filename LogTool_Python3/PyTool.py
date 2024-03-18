@@ -185,10 +185,67 @@ try:
            'Export ERRORs/WARNINGs from Undercloud logs',
            'Download Jenkins Job logs and run LogTool locally',
            'Analyze logs in local directory',
-           'OSP18 - analyze PODs logs'
+           'OSP18 - analyze PODs logs',
+           'OSP18 - use "openstack-must-gather" tool'
            ]
 
+
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+    if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
+        # Start mode
+        com_result = exec_command_line_command('date "+%Y-%m-%d %H:%M:%S"')
+        local_time = com_result['CommandOutput'].strip()
+        grep_time = choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
+        options = [' ERROR ', ' WARNING ']
+        grep_string = choose_option_from_list(options, 'Please choose debug level option: ')[1]
+        destination_dir = 'OpenshiftPodsLogs_ERRORS'
+        destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
+        if os.path.exists(destination_dir):
+            shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
+
+        #  Choose "openstack-must-gather" options of gathering logs
+        logs_dir_to_analyze = '/tmp/OenstackMustGather'
+        if os.path.exists(logs_dir_to_analyze):
+            shutil.rmtree(logs_dir_to_analyze)
+        os.mkdir(logs_dir_to_analyze)
+        must_option = choose_option_from_list(['ControlPlane', 'SpecificData'],
+                                              "Choose Openstack-must-gather option to collect logs")
+        if must_option[1] == 'ControlPlane':
+            command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather --dest-dir=' + logs_dir_to_analyze
+        if must_option[1] == 'SpecificData':
+            print_in_color(
+                'Choose your data from:\r\n https://github.com/openstack-k8s-operators/openstack-must-gather/tree/main/collection-scripts',
+                'blue')
+            data_type = input('Enter data type: ')
+            command = 'oc adm must-gather --image=quay.io/openstack-k8s-operators/openstack-must-gather -- ' + data_type.strip() + ' --dest-dir=' + logs_dir_to_analyze
+        print_in_color(command, 'bold')
+        output = exec_command_line_command(command)['CommandOutput']
+        print_in_color(output, 'bold')
+
+        # Run LogTool analyzing
+        mode_start_time = time.time()
+        logs_dir_to_analyze_path = os.path.abspath(logs_dir_to_analyze)
+        print_in_color('\nStart analyzing PODs logs locally', 'bold')
+        result_dir = 'Local_Logs_' + grep_string.replace(' ', '')
+        if os.path.exists(os.path.abspath(result_dir)):
+            shutil.rmtree(os.path.abspath(result_dir))
+        result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
+        command = "python3 Extract_On_Node.py '" + grep_time + "' " + logs_dir_to_analyze_path + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+        # shutil.copytree(destination_dir, os.path.abspath(result_dir))
+        exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
+        print_in_color('\n --> ' + command, 'bold')
+        start_time = time.time()
+        com_result = exec_command_line_command(command)
+        end_time = time.time()
+        if com_result['ReturnCode'] == 0:
+            spec_print(['Completed!!!', 'You can find the result file + downloaded logs in:',
+                        'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'], 'green')
+        else:
+            spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
+                        'Analyze logs execution time: ' + str(round(end_time - mode_start_time, 2)) + '[sec]'], 'red')
 
 
     if mode[1] == 'OSP18 - analyze PODs logs':
@@ -794,4 +851,3 @@ except KeyboardInterrupt:
                 print('--> '+command)
                 com_result=s.ssh_command(command)
             s.ssh_close()
-
