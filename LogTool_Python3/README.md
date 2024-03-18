@@ -98,7 +98,7 @@ to create log files on the file system that are later on analyzed.
 
 This mode uses "openstack-must-gather" tool:
 https://ci-framework.pages.redhat.com/docs/ci-framework/07_collect_logs.html
-to collect the logs, once collected Logs will be analyzed.  
+to collect the logs. Once collected logs will be analyzed.  
 
 [comment]: <> (**9&#41; Overcloud - check Unhealthy dockers)
 
