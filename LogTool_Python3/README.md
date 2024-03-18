@@ -94,8 +94,6 @@ Provided options are: specific PODs, LogLevel, "Since Time"
 It will use "oc get pods" command to list the PODs, followed by "oc logs --timestamps <POD_NAME>"
 to create log files on the file system that are later on analyzed.
 
-is the same as #1, the only difference is that it will use Undercloud logs.
-
 [comment]: <> (**9&#41; Overcloud - check Unhealthy dockers)
 
 [comment]: <> (This mode is used to search for "Unhealthy" dockers on Nodes)
