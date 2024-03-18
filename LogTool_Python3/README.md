@@ -89,7 +89,7 @@ This mode is the same as #1, the only difference is that it will use Undercloud 
 
 **9) OSP18 - analyze PODs logs**
 
-This mode is for OSP18 deployment and applies to analyzing PODs' logs on controller-0 for example.
+This mode supports OSP18 deployd setup and applies analyzing PODs' logs on controller-0 for example.
 Provided options are: specific PODs, LogLevel, "Since Time".
 It will use "oc get pods" command to list the PODs, followed by "oc logs --timestamps <POD_NAME>"
 to create log files on the file system that are later on analyzed.
