@@ -94,6 +94,12 @@ Provided options are: specific PODs, LogLevel, "Since Time".
 It will use "oc get pods" command to list the PODs, followed by "oc logs --timestamps <POD_NAME>"
 to create log files on the file system that are later on analyzed.
 
+**10) OSP18 - use "openstack-must-gather" tool**
+
+This mode uses "openstack-must-gather" tool:
+https://ci-framework.pages.redhat.com/docs/ci-framework/07_collect_logs.html
+to collect the logs, once collected Logs will be analyzed.  
+
 [comment]: <> (**9&#41; Overcloud - check Unhealthy dockers)
 
 [comment]: <> (This mode is used to search for "Unhealthy" dockers on Nodes)
