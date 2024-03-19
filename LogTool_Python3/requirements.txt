@@ -3,4 +3,4 @@ beautifulsoup4>=4.7.1
 lxml>=4.3.4
 paramiko>=2.6.0
 cryptography>=37.0.4
-pycrypto>=2.6.1
+#pycrypto>=2.6.1
