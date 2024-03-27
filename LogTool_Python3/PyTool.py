@@ -276,9 +276,6 @@ try:
         if not string_to_grep:
             get_pods_project = 'oc get pods -n '+project_to_check
         else:
-            print(project_to_check)
-            print(string_to_grep)
-            print('oc get pods -n '+project_to_check+' | grep -i '+string_to_grep)
             get_pods_project = 'oc get pods -n '+project_to_check+' | grep -i '+string_to_grep
         com_result=exec_command_line_command(get_pods_project)['CommandOutput']
         buf = io.StringIO(com_result).readlines()
@@ -290,7 +287,7 @@ try:
             shutil.rmtree(logs_dir_to_analyze)
         os.mkdir(logs_dir_to_analyze)
         for pod in pods_project:
-            command_pods= 'oc logs -n openstack-operators --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
+            command_pods= 'oc logs -n '+project_to_check+' --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
             print_in_color(command_pods, 'bold')
             exec_command_line_command(command_pods)
 
