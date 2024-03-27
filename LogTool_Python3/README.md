@@ -96,6 +96,7 @@ https://ci-framework.pages.redhat.com/docs/ci-framework/07_collect_logs.html
 to collect the logs. Once collected logs will be analyzed.  
 
 
+
 # Installation
 This tool is available on GitHub, clone it to your **Undercloud/Controller-0** host with:
 
