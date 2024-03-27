@@ -292,7 +292,7 @@ try:
             exec_command_line_command(command_pods)
 
         "Exit if Directory is empty"
-        if os.listdir(destination_dir) ==[]:
+        if os.listdir(os.path.abspath(logs_dir_to_analyze)) ==[]:
             spec_print(['No log file created for chosen PODs', 'Nothing to analyze :('], 'red')
             sys.exit(1)
 
