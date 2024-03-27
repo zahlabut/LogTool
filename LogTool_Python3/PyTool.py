@@ -186,7 +186,8 @@ try:
            'Download Jenkins Job logs and run LogTool locally',
            'Analyze logs in local directory',
            'OSP18 - analyze PODs logs',
-           'OSP18 - use "openstack-must-gather" tool'
+           'OSP18 - use "openstack-must-gather" tool',
+           'OPS18 - analyze Ci-Framework deployment logs'
            ]
 
 
@@ -263,23 +264,33 @@ try:
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
 
+        # Get projects #
+        get_projects = "oc get projects"
+        com_result=exec_command_line_command(get_projects)['CommandOutput']
+        buf = io.StringIO(com_result).readlines()
+        projects = [item.split(' ')[0] for item in buf if item.split(' ')[0].lower()!='name']
+        project_to_check = choose_option_from_list(projects,'Choose your project to check the logs:')[1]
+
         # Use "oc logs POD_NAME" to get the logs fpr each available POD in "oc get pods"
         string_to_grep = input('Enter string to "grep" PODs to be analyzed or "enter" to skip: ')
         if not string_to_grep:
-            get_pods = 'oc get pods'
+            get_pods_project = 'oc get pods -n '+project_to_check
         else:
-            get_pods = 'oc get pods '+'| grep -i '+string_to_grep
-        com_result=exec_command_line_command(get_pods)['CommandOutput']
+            print(project_to_check)
+            print(string_to_grep)
+            print('oc get pods -n '+project_to_check+' | grep -i '+string_to_grep)
+            get_pods_project = 'oc get pods -n '+project_to_check+' | grep -i '+string_to_grep
+        com_result=exec_command_line_command(get_pods_project)['CommandOutput']
         buf = io.StringIO(com_result).readlines()
-        pods = [item.split(' ')[0] for item in buf if item.split(' ')[0].lower()!='name']
+        pods_project = [item.split(' ')[0] for item in buf if item.split(' ')[0].lower()!='name']
 
         # For each POD create its log file using "oc logs POD_NAME --timestamp"
         logs_dir_to_analyze = '/tmp/OpenshiftPodsLogs'
         if os.path.exists(logs_dir_to_analyze):
             shutil.rmtree(logs_dir_to_analyze)
         os.mkdir(logs_dir_to_analyze)
-        for pod in pods:
-            command_pods= 'oc logs --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
+        for pod in pods_project:
+            command_pods= 'oc logs -n openstack-operators --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
             print_in_color(command_pods, 'bold')
             exec_command_line_command(command_pods)
 
