@@ -291,6 +291,11 @@ try:
             print_in_color(command_pods, 'bold')
             exec_command_line_command(command_pods)
 
+        "Exit if Directory is empty"
+        if os.listdir(destination_dir) ==[]:
+            spec_print(['No log file created for chosen PODs', 'Nothing to analyze :('], 'red')
+            sys.exit(1)
+
         # Run LogTool analyzing
         mode_start_time=time.time()
         logs_dir_to_analyze_path = os.path.abspath(logs_dir_to_analyze)
