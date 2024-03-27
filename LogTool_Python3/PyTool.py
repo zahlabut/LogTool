@@ -187,7 +187,7 @@ try:
            'Analyze logs in local directory',
            'OSP18 - analyze PODs logs',
            'OSP18 - use "openstack-must-gather" tool',
-           'OPS18 - analyze Ci-Framework deployment logs'
+           #'OPS18 - analyze Ci-Framework deployment logs'
            ]
 
 
