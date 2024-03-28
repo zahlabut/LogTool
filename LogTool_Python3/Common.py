@@ -194,6 +194,8 @@ def choose_option_from_list(list_object, msg):
         choosed_option=input("Choose your option:")
         if choosed_option=='Demo':
             return [True, 'Demo']
+        if choosed_option=='zahlabut':
+            return [True, 'zahlabut']
         while (int(choosed_option)<0 or int(choosed_option)> len(list_object)):
             print("No such option - ", choosed_option)
             choosed_option=input("Choose your option:")
