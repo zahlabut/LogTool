@@ -187,11 +187,21 @@ try:
            'Analyze logs in local directory',
            'OSP18 - analyze PODs logs',
            'OSP18 - use "openstack-must-gather" tool',
-           #'OPS18 - analyze Ci-Framework deployment logs'
            ]
 
 
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
+
+    if mode[1] == 'zahlabut':
+        commands={
+            'Octavia image operator': "oc get pods -n openstack-operators -l openstack.org/operator-name=octavia -o json | jq -r '.items[0].spec.containers[].image'",
+            'Check the status of octaviaamphoracontroller with': "oc get octaviaamphoracontrollers.octavia.openstack.org",
+            'Get Octavia SHA from openstack operators': "oc describe pod openstack-operator-controller-manager-768899b46b-hld7v -n openstack-operators | grep -i @sha256 | grep -i octavia"
+        }
+        for com in commands.items():
+            print('-'*200)
+            print(com[0])
+            print(exec_command_line_command(com[1])['CommandOutput'].strip())
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
         # Start mode
