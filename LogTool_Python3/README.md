@@ -89,7 +89,7 @@ Provided options are: specific PODs, LogLevel, "Since Time".
 It will use "oc get pods" command to list the PODs within a project, followed by "oc logs -n PROJECT --timestamps POD_NAME"
 to create log files on the file system that are later on analyzed.
 When running on Controller it will also upload log files to Hypervisor and appropriate "SCP" command to download 
-the logs from Hypervisor to your Desktop will be provided. 
+the logs from Hypervisor to your Desktop will be provided. Note: ZIP needs to be installed on your Linux host.
 
 **10) OSP18 - use "openstack-must-gather" tool**
 
@@ -97,7 +97,7 @@ This mode uses "openstack-must-gather" tool:
 https://ci-framework.pages.redhat.com/docs/ci-framework/07_collect_logs.html
 to collect the logs. Once collected logs will be analyzed.  
 When running on Controller it will also upload log files to Hypervisor and appropriate "SCP" command to download 
-the logs from Hypervisor to your Desktop will be provided. 
+the logs from Hypervisor to your Desktop will be provided. Note: ZIP needs to be installed on your Linux host.
 
 
 # Installation
