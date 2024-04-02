@@ -162,8 +162,7 @@ def exec_command_line_command(command):
         return {'ReturnCode': 0, 'CommandOutput': result, 'JsonOutput': json_output}
     except subprocess.CalledProcessError as e:
         if 'wget -r' not in command:
-            print_in_color(command,'red')
-            print_in_color(e.output, 'red')
+            print_in_color('\r\nThe following command:\r\n'+command+'\r\nhas failed to be executed :( ', 'yellow')
         return {'ReturnCode': e.returncode, 'CommandOutput': e.output}
 
 def spec_print(string_list,color=None):
