@@ -256,7 +256,7 @@ try:
         try:
             scp_ok = None
             if 'controller' in exec_command_line_command('hostname')['CommandOutput'].lower():
-                host_time = exec_command_line_command('date "+%Y-%m-%d_%H:%M:%S"')['CommandOutput'].strip()
+                host_time = exec_command_line_command('date "+%Y_%m_%d_%H_%M_%S"')['CommandOutput'].strip()
                 current_dir = os.path.abspath('.')
                 zip_command = 'zip -r '+current_dir+'/logs_'+host_time+' '+logs_dir_to_analyze
                 if exec_command_line_command(zip_command)['ReturnCode'] == 0:
@@ -347,7 +347,7 @@ try:
         try:
             scp_ok = None
             if 'controller' in exec_command_line_command('hostname')['CommandOutput'].lower():
-                host_time = exec_command_line_command('date "+%Y-%m-%d_%H:%M:%S"')['CommandOutput'].strip()
+                host_time = exec_command_line_command('date "+%Y_%m_%d_%H_%M_%S"')['CommandOutput'].strip()
                 current_dir = os.path.abspath('.')
                 zip_command = 'zip -r '+current_dir+'/logs_'+host_time+' '+logs_dir_to_analyze
                 if exec_command_line_command(zip_command)['ReturnCode'] == 0:
