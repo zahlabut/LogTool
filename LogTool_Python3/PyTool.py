@@ -196,7 +196,7 @@ try:
         commands={
             'Octavia image operator': "oc get pods -n openstack-operators -l openstack.org/operator-name=octavia -o json | jq -r '.items[0].spec.containers[].image'",
             'Check the status of octaviaamphoracontroller with': "oc get octaviaamphoracontrollers.octavia.openstack.org",
-            'Get Octavia SHA from openstack operators': "oc describe pod openstack-operator-controller-manager-768899b46b-hld7v -n openstack-operators | grep -i @sha256 | grep -i octavia"
+            'Get Octavia SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i octavia | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i octavia"
         }
         for com in commands.items():
             print('-'*200)
