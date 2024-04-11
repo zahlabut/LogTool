@@ -196,7 +196,8 @@ try:
         commands={
             'Octavia image operator': "oc get pods -n openstack-operators -l openstack.org/operator-name=octavia -o json | jq -r '.items[0].spec.containers[].image'",
             'Check the status of octaviaamphoracontroller with': "oc get octaviaamphoracontrollers.octavia.openstack.org",
-            'Get Octavia SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i octavia | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i octavia"
+            'Get Octavia SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i octavia | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i octavia",
+            'Get Designate SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i designate | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i designate"
         }
         for com in commands.items():
             print('-'*200)
@@ -252,28 +253,33 @@ try:
         com_result = exec_command_line_command(command)
         end_time = time.time()
 
-        # SCP logs to hypervisor if detected host is controller
-        try:
-            scp_ok = None
-            if 'controller' in exec_command_line_command('hostname')['CommandOutput'].lower():
+        # SCP logs to some host
+        to_scp = choose_option_from_list(['yes', 'no'], "Would you like to SCP logs to some host for downloading? ")[1]
+        scp_ok = None
+        if to_scp=='yes':
+            dst_host = input("Enter your destination hostname or IP:")
+            dst_user = input("Enter your destination host user to SSH with:")
+            try:
                 host_time = exec_command_line_command('date "+%Y_%m_%d_%H_%M_%S"')['CommandOutput'].strip()
                 current_dir = os.path.abspath('.')
                 zip_command = 'zip -r '+current_dir+'/logs_'+host_time+' '+logs_dir_to_analyze
+                print_in_color(zip_command, 'bold')
                 if exec_command_line_command(zip_command)['ReturnCode'] == 0:
-                    scp_result = exec_command_line_command('scp '+current_dir+'/logs_'+host_time+'.zip hypervisor-1:/root')['ReturnCode']
-                    if scp_result ==0:
-                        hyp_ip = exec_command_line_command("ssh hypervisor-1 'hostname -I' | cut -d ' ' -f1")['CommandOutput'].strip()
-                        hyp_ip = io.StringIO(hyp_ip).readlines()[-1]
-                        scp_ok = True
-        except Exception as e:
-            print_in_color("Error happened on SCP part: "+str(e), 'yellow')
+                    scp_command = 'scp ' + current_dir + '/logs_' + host_time + '.zip '+dst_user+'@'+dst_host+':/'+dst_user
+                    print_in_color(scp_command, 'bold')
+                    if exec_command_line_command(scp_command)['ReturnCode']==0:
+                        scp_ok=True
+            except Exception as e:
+                scp_ok = False
+                print_in_color("Error happened on SCP part: "+str(e), 'yellow')
+
         if com_result['ReturnCode']==0:
             msg_to_print=[
-                'Completed!!!', 'You can find the result file + downloaded logs in:',
+                'Completed!!!',
                 'Result Directory: ' + result_dir,
                 'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]']
             if scp_ok:
-                msg_to_print.append('To download logs use: "scp root@' + hyp_ip + ':/root/' + 'logs_' + host_time + '.zip ."')
+                msg_to_print.append('To download logs use: "scp ' + dst_user+'@'+dst_host + ':/'+dst_user+'/' + 'logs_' + host_time + '.zip ."')
             spec_print(msg_to_print, 'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
@@ -342,33 +348,38 @@ try:
         com_result=exec_command_line_command(command)
         end_time=time.time()
 
-
-        # SCP logs to hypervisor if detected host is controller
-        try:
-            scp_ok = None
-            if 'controller' in exec_command_line_command('hostname')['CommandOutput'].lower():
+        # SCP logs to some host
+        to_scp = choose_option_from_list(['yes', 'no'], "Would you like to SCP logs to some host for downloading? ")[1]
+        scp_ok = None
+        if to_scp=='yes':
+            dst_host = input("Enter your destination hostname or IP:")
+            dst_user = input("Enter your destination host user to SSH with:")
+            try:
                 host_time = exec_command_line_command('date "+%Y_%m_%d_%H_%M_%S"')['CommandOutput'].strip()
                 current_dir = os.path.abspath('.')
                 zip_command = 'zip -r '+current_dir+'/logs_'+host_time+' '+logs_dir_to_analyze
+                print_in_color(zip_command, 'bold')
                 if exec_command_line_command(zip_command)['ReturnCode'] == 0:
-                    scp_result = exec_command_line_command('scp '+current_dir+'/logs_'+host_time+'.zip hypervisor-1:/root')['ReturnCode']
-                    if scp_result ==0:
-                        hyp_ip = exec_command_line_command("ssh hypervisor-1 'hostname -I' | cut -d ' ' -f1")['CommandOutput'].strip()
-                        hyp_ip = io.StringIO(hyp_ip).readlines()[-1]
-                        scp_ok = True
-        except Exception as e:
-            print_in_color("Error happened on SCP part: "+str(e), 'yellow')
+                    scp_command = 'scp ' + current_dir + '/logs_' + host_time + '.zip '+dst_user+'@'+dst_host+':/'+dst_user
+                    print_in_color(scp_command, 'bold')
+                    if exec_command_line_command(scp_command)['ReturnCode']==0:
+                        scp_ok=True
+            except Exception as e:
+                scp_ok = False
+                print_in_color("Error happened on SCP part: "+str(e), 'yellow')
+
         if com_result['ReturnCode']==0:
             msg_to_print=[
-                'Completed!!!', 'You can find the result file + downloaded logs in:',
+                'Completed!!!',
                 'Result Directory: ' + result_dir,
                 'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]']
             if scp_ok:
-                msg_to_print.append('To download logs use: "scp root@' + hyp_ip + ':/root/' + 'logs_' + host_time + '.zip ."')
+                msg_to_print.append('To download logs use: "scp ' + dst_user+'@'+dst_host + ':/'+dst_user+'/' + 'logs_' + host_time + '.zip ."')
             spec_print(msg_to_print, 'green')
         else:
             spec_print(['Completed!!!', 'Result Directory: ' + result_dir,
                         'Analyze logs execution time: ' + str(round(end_time - mode_start_time,2)) + '[sec]'], 'red')
+
 
     if mode[1] == 'Analyze logs in local directory':
 
