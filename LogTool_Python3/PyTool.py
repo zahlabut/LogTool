@@ -205,6 +205,7 @@ try:
             com_result = exec_command_line_command(com[1])['CommandOutput'].strip()
             print(com_result)
             exec_command_line_command('podman pull '+com_result.split('quay.io')[-1])
+
         print(exec_command_line_command('podman images'))
 
 
