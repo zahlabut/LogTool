@@ -204,9 +204,18 @@ try:
             print(com[0])
             com_result = exec_command_line_command(com[1])['CommandOutput'].strip()
             print(com_result)
-            exec_command_line_command('podman pull '+com_result.split('quay.io')[-1])
-
-        print(exec_command_line_command('podman images'))
+            # Let's "podman pull" the images
+            com_result = io.StringIO(com_result)
+            lines = com_result.readlines()
+            for line in lines:
+                if 'quay.io' in line:
+                    pull_url='quay.io'+line.strip().split('quay.io')[-1]
+                    print('Pull --> '+pull_url)
+                    exec_command_line_command('podman pull '+pull_url)
+        podman_images = exec_command_line_command('podman images')['CommandOutput']
+        podman_images = io.StringIO(podman_images)
+        for im in podman_images:
+            print(im.strip())
 
 
 
