@@ -212,6 +212,7 @@ try:
                     pull_url='quay.io'+line.strip().split('quay.io')[-1]
                     print('Pull --> '+pull_url)
                     exec_command_line_command('podman pull '+pull_url)
+        print_in_color('\r\nPodman images output is bellow:','bold')
         podman_images = exec_command_line_command('podman images')['CommandOutput']
         podman_images = io.StringIO(podman_images)
         for im in podman_images:
