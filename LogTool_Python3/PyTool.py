@@ -202,7 +202,12 @@ try:
         for com in commands.items():
             print('-'*200)
             print(com[0])
-            print(exec_command_line_command(com[1])['CommandOutput'].strip())
+            com_result = exec_command_line_command(com[1])['CommandOutput'].strip()
+            print(com_result)
+            exec_command_line_command('podman pull '+com_result.split('quay.io')[-1])
+        print(exec_command_line_command('podman images'))
+
+
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
         # Start mode
