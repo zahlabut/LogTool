@@ -218,6 +218,21 @@ try:
         for im in podman_images:
             print(im.strip())
 
+        #Get pods SHA
+        print_in_color("\r\nCheck POD's images INFO with: 'oc describe pod <pod> | grep Image'", 'bold')
+        component = choose_option_from_list(['octavia','designate'], 'PODs to check?')[1]
+        projects = ['openstack-operators', 'openstack']
+
+        for project in projects:
+            command = 'oc get pods -n '+project+' | grep -i '+component
+            com_result = exec_command_line_command(command)['CommandOutput'].strip()
+            lines = io.StringIO(com_result).readlines()
+            pods = [p.split(' ')[0] for p in lines]
+            for pod in pods:
+                print_in_color('\r\n--- Project:'+project+', POD_name:'+pod+' ---', 'green')
+                command = "oc describe pod -n "+project+" "+pod+" | grep Image | grep sha256 | awk '{print $1, $2, $3}' | sort | uniq"
+                com_result = exec_command_line_command(command)['CommandOutput'].strip()
+                print(com_result)
 
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
