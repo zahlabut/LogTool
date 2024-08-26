@@ -193,46 +193,75 @@ try:
     mode=choose_option_from_list(modes,'Please choose operation mode: ')
 
     if mode[1] == 'zahlabut':
+
+        # Check status
+        print_in_color("\r\nCheck Octavia status", 'green')
         commands={
             'Octavia image operator': "oc get pods -n openstack-operators -l openstack.org/operator-name=octavia -o json | jq -r '.items[0].spec.containers[].image'",
-            'Check the status of octaviaamphoracontroller with': "oc get octaviaamphoracontrollers.octavia.openstack.org",
-            'Get Octavia SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i octavia | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i octavia",
-            'Get Designate SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i designate | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i designate"
+            'Check the status of octaviaamphoracontroller': "oc get octaviaamphoracontrollers.octavia.openstack.org",
         }
         for com in commands.items():
-            print('-'*200)
-            print(com[0])
             com_result = exec_command_line_command(com[1])['CommandOutput'].strip()
+            print_in_color(com[0], 'bold')
+            print('Executed command --> '+com[1])
             print(com_result)
-            # Let's "podman pull" the images
+            # Let's pull all images
+
+        # Pull images and use "podman images" to show details after
+        print_in_color("\r\nPull Octavia and Designate images to get CREATED date", 'green')
+        commands={'Get Octavia SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i octavia | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i octavia",
+                  'Get Designate SHA from openstack operators': "OUT=$(oc get pods -n openstack-operators | grep -i designate | cut -d ' ' -f1); oc describe pod -n openstack-operators $OUT | grep -i @sha256 | grep -i designate"}
+        for com in commands.items():
+            com_result = exec_command_line_command(com[1])['CommandOutput'].strip()
             com_result = io.StringIO(com_result)
             lines = com_result.readlines()
+            urls = []
             for line in lines:
                 if 'quay.io' in line:
                     pull_url='quay.io'+line.strip().split('quay.io')[-1]
-                    print('Pull --> '+pull_url)
-                    exec_command_line_command('podman pull '+pull_url)
-        print_in_color('\r\nPodman images output is bellow:','bold')
+                    if pull_url not in urls:
+                        urls.append(pull_url)
+                        print('Pull --> '+pull_url)
+                        exec_command_line_command('podman pull '+pull_url)
+        print_in_color('"podman images" output is bellow:','bold')
         podman_images = exec_command_line_command('podman images')['CommandOutput']
         podman_images = io.StringIO(podman_images)
         for im in podman_images:
             print(im.strip())
 
         #Get pods SHA
-        print_in_color("\r\nCheck POD's images INFO with: 'oc describe pod <pod> | grep Image'", 'bold')
-        component = choose_option_from_list(['octavia','designate'], 'PODs to check?')[1]
+        print_in_color("\r\nCheck Octavia and Designate POD's images SHA256 with: 'oc describe pod <pod> | grep Image'", 'green')
+        #component = choose_option_from_list(['octavia','designate'], 'PODs to check?')[1]
         projects = ['openstack-operators', 'openstack']
-
+        components = ['octavia', 'designate']
         for project in projects:
-            command = 'oc get pods -n '+project+' | grep -i '+component
-            com_result = exec_command_line_command(command)['CommandOutput'].strip()
-            lines = io.StringIO(com_result).readlines()
-            pods = [p.split(' ')[0] for p in lines]
-            for pod in pods:
-                print_in_color('\r\n--- Project:'+project+', POD_name:'+pod+' ---', 'green')
-                command = "oc describe pod -n "+project+" "+pod+" | grep Image | grep sha256 | awk '{print $1, $2, $3}' | sort | uniq"
+            for component in components:
+                command = 'oc get pods -n '+project+' | grep -i '+component
                 com_result = exec_command_line_command(command)['CommandOutput'].strip()
-                print(com_result)
+                lines = io.StringIO(com_result).readlines()
+                pods = [p.split(' ')[0] for p in lines]
+                for pod in pods:
+                    print_in_color('Project:'+project+', POD_name:'+pod, 'bold')
+                    command = "oc describe pod -n "+project+" "+pod+" | grep Image | grep sha256 | awk '{print $1, $2, $3}' | sort | uniq"
+                    com_result = exec_command_line_command(command)['CommandOutput'].strip()
+                    print(com_result)
+
+        #Check deployment images
+        print_in_color("\r\nCheck Deployment Images", 'green')
+        command = 'oc get -n openstack-operators deployment'
+        com_result = exec_command_line_command(command)['CommandOutput'].strip()
+        lines = io.StringIO(com_result).readlines()
+        items = [item.split(' ')[0] for item in lines]
+        for item in items[1:]: #Except NAME that is the first one in the list
+            com = 'oc get -n openstack-operators deployment/'+item+' -o yaml | grep -i "image: quay."'
+            com_result = exec_command_line_command(com)['CommandOutput'].strip().split('sha256:')[-1]
+            substrings = ["octavia", "designate"]
+            any_present = any(substring in item for substring in substrings)
+            if any_present:
+                print_in_color(item+' --> '+com_result, 'blue')
+            else:
+                print(item+' --> '+com_result)
+
 
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
