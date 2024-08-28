@@ -262,7 +262,7 @@ try:
             else:
                 print(item+' --> '+com_result)
 
-
+        spec_print(['To check the latest octavia-operator SHA browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest'],'green')
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
         # Start mode
