@@ -443,6 +443,16 @@ try:
 
     if mode[1] == 'Analyze logs in local directory':
 
+        # An option to download log files from given URL
+        from_url = choose_option_from_list(['yes','no'], 'Would you like to download logs from URL?')[1]
+        dir_to_use=None
+        if from_url:
+            logs_url = input('Enter URL to download log files: ')
+            dir_to_use='/tmp/Downloaded_Log_Files'
+            command = 'lftp -c "open '+logs_url+'; mirror -e -P 10 -n . '+dir_to_use+'"'
+            print_in_color(command, 'bold')
+            exec_command_line_command(command)
+
         # Start mode
         options = [' ERROR ', ' WARNING ']
         grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
@@ -451,7 +461,10 @@ try:
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-        logs_dir_to_analyze=input("Please enter local path: ")
+        if from_url:
+            logs_dir_to_analyze=dir_to_use
+        else:
+            logs_dir_to_analyze=input("Please enter local path: ")
 
         # Run LogTool analyzing
         mode_start_time=time.time()

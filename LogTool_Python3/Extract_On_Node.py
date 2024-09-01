@@ -54,7 +54,8 @@ ignore_strings=['completed with no errors','program: Errors behavior:',
                     'Errors:None','errors, 0','errlog_type error ','errorlevel = ','ERROR %(name)s','Total errors: 0',
                 '0 errors,','python-traceback2-','"Error": ""','perl-Errno-','libgpg-error-','libcom_err-',
                 '= CRITICAL ','"Error": "",','stderr F','fatal_exception_format_errors','failed=0   ','--log-level error',
-                '--exit - command - arg error']
+                '--exit - command - arg error','Trace File System','failed=0','fatal_deprecations = False','trace_flags = None','Failed: 0',
+                'No Traceback!',"failed_builds='0'",'traceback.py']
 
 logs_to_ignore=['/var/lib/containers/storage/overlay', '/var/log/anaconda','container_info.log'] #These logs won't be analysed
 
