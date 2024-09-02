@@ -443,10 +443,16 @@ try:
 
     if mode[1] == 'Analyze logs in local directory':
 
+        # Set user parameters
+        start_time=input('Enter you start time in the following format: 2024-09-02 11:33:58\r\n')
+        options = [' ERROR ', ' WARNING ']
+        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
+        all_log_extension = choose_option_from_list(['yes', 'no'], 'To analyze all file extensions (yes) or *.log only (no)?')
+
         # An option to download log files from given URL
         from_url = choose_option_from_list(['yes','no'], 'Would you like to download logs from URL?')[1]
         dir_to_use=None
-        if from_url:
+        if from_url == 'yes':
             logs_url = input('Enter URL to download log files: ')
             dir_to_use='/tmp/Downloaded_Log_Files'
             command = 'lftp -c "open '+logs_url+'; mirror -e -P 10 -n . '+dir_to_use+'"'
@@ -454,14 +460,12 @@ try:
             exec_command_line_command(command)
 
         # Start mode
-        options = [' ERROR ', ' WARNING ']
-        grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
         destination_dir='Local_Log_Files'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir)
         if os.path.exists(destination_dir):
             shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
-        if from_url:
+        if from_url == 'yes':
             logs_dir_to_analyze=dir_to_use
         else:
             logs_dir_to_analyze=input("Please enter local path: ")
@@ -473,12 +477,10 @@ try:
         if os.path.exists(os.path.abspath(result_dir)):
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
-
-        all_log_extension = choose_option_from_list(['yes', 'no'], 'To analyze all file extensions (yes) or *.log only (no)?')
         if all_log_extension[1] == 'yes':
-            command = "python3 Extract_On_Node.py '"+"2019-01-01 00:00:00"+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
+            command = "python3 Extract_On_Node.py '"+str(start_time)+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
         else:
-            command = "python3 Extract_On_Node.py '" + "2019-01-01 00:00:00" + "' " + logs_dir_to_analyze + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+            command = "python3 Extract_On_Node.py '" +str(start_time)+ "' " + logs_dir_to_analyze + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
 
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
