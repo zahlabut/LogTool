@@ -247,7 +247,7 @@ try:
                     print(com_result)
                     if "images.paas.redhat.com" in com_result:
                         pull_command='podman pull '+com_result[com_result.find('images.paas.redhat.com'):].strip()
-                        print('--> '+pull_command)
+                        #print('--> '+pull_command)
                         exec_command_line_command(pull_command)
         for component in components:
             print_in_color("Podman images for: "+component, 'bold')
