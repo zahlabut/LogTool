@@ -399,7 +399,7 @@ try:
             shutil.rmtree(logs_dir_to_analyze)
         os.mkdir(logs_dir_to_analyze)
         for pod in pods_project:
-            command_pods= 'oc logs -n '+project_to_check+' --timestamps '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
+            command_pods= 'oc logs -n '+project_to_check+' --timestamps --all-containers '+pod+' > '+logs_dir_to_analyze+'/'+pod+'.log'
             print_in_color(command_pods, 'bold')
             exec_command_line_command(command_pods)
 
