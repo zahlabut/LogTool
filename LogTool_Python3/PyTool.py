@@ -273,9 +273,9 @@ try:
             substrings = ["octavia", "designate"]
             any_present = any(substring in item for substring in substrings)
             if any_present:
-                print_in_color('\r\n### '+item+' ###\r\n'+com_result, 'blue')
+                print_in_color('### '+item+' ###\r\n'+com_result, 'blue')
             else:
-                print('\r\n### '+item+' ###\r\n'+com_result)
+                print('### '+item+' ###\r\n'+com_result)
 
         spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest',
                     'To check the latest octavia-operator SHA D/S browse to:','https://brewweb.engineering.redhat.com/brew/packageinfo?packageID=83733'],'green')
