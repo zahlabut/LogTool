@@ -253,6 +253,13 @@ try:
             print_in_color("Podman images for: "+component, 'bold')
             print(exec_command_line_command('podman images | head -1; podman images | grep '+ component)['CommandOutput'].strip())
 
+        #Get TAGS
+        print_in_color("\r\nGetting Octavia and Designate TAGs", 'green')
+        get_tags="""oc get csv $(oc get csv  -n openstack-operators | grep -iE "octavia|designate" | awk '{print $1}') -n openstack-operators -o yaml | grep -i image: |  awk '{$1=$1;print}' | sort | uniq"""
+        print(get_tags)
+        com_result = exec_command_line_command(get_tags)['CommandOutput'].strip()
+        print(com_result)
+
         #Check deployment images
         print_in_color("\r\nCheck Deployment Images", 'green')
         command = 'oc get -n openstack-operators deployment'
