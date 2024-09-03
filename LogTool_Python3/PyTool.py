@@ -277,8 +277,7 @@ try:
             else:
                 print('### '+item+' ###\r\n'+com_result)
 
-        spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest',
-                    'To check the latest octavia-operator SHA D/S browse to:','https://brewweb.engineering.redhat.com/brew/packageinfo?packageID=83733'],'green')
+        spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest'],'green')
 
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
