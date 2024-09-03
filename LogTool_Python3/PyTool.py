@@ -245,6 +245,13 @@ try:
                     command = "oc describe pod -n "+project+" "+pod+" | grep Image | grep sha256 | awk '{print $1, $2, $3}' | sort | uniq"
                     com_result = exec_command_line_command(command)['CommandOutput'].strip()
                     print(com_result)
+                    if "images.paas.redhat.com" in com_result:
+                        pull_command='podman pull '+com_result[com_result.find('images.paas.redhat.com'):].strip()
+                        print('--> '+pull_command)
+                        exec_command_line_command(pull_command)
+        for component in components:
+            print_in_color("Podman images for: "+component, 'bold')
+            print(exec_command_line_command('podman images | head -1; podman images | grep '+ component)['CommandOutput'].strip())
 
         #Check deployment images
         print_in_color("\r\nCheck Deployment Images", 'green')
@@ -253,16 +260,19 @@ try:
         lines = io.StringIO(com_result).readlines()
         items = [item.split(' ')[0] for item in lines]
         for item in items[1:]: #Except NAME that is the first one in the list
-            com = 'oc get -n openstack-operators deployment/'+item+' -o yaml | grep -i "image: quay."'
+            com = 'oc get -n openstack-operators deployment/'+item+' -o yaml | grep -Ei "image: quay.|image: registry"'
+            com+="| awk '{$1=$1;print}'"
             com_result = exec_command_line_command(com)['CommandOutput'].strip().split('sha256:')[-1]
             substrings = ["octavia", "designate"]
             any_present = any(substring in item for substring in substrings)
             if any_present:
-                print_in_color(item+' --> '+com_result, 'blue')
+                print_in_color('\r\n### '+item+' ###\r\n'+com_result, 'blue')
             else:
-                print(item+' --> '+com_result)
+                print('\r\n### '+item+' ###\r\n'+com_result)
 
-        spec_print(['To check the latest octavia-operator SHA browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest'],'green')
+        spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest',
+                    'To check the latest octavia-operator SHA D/S browse to:','https://brewweb.engineering.redhat.com/brew/packageinfo?packageID=83733'],'green')
+
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
         # Start mode
