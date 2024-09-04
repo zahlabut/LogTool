@@ -223,8 +223,8 @@ try:
                         urls.append(pull_url)
                         print('Pull --> '+pull_url)
                         exec_command_line_command('podman pull '+pull_url)
-        print_in_color('"podman images" output is bellow:','bold')
-        podman_images = exec_command_line_command('podman images')['CommandOutput']
+        print_in_color('"podman images --digests " output is bellow:','bold')
+        podman_images = exec_command_line_command('podman images --digests')['CommandOutput']
         podman_images = io.StringIO(podman_images)
         for im in podman_images:
             print(im.strip())
@@ -251,7 +251,7 @@ try:
                         exec_command_line_command(pull_command)
         for component in components:
             print_in_color("Podman images for: "+component, 'bold')
-            print(exec_command_line_command('podman images | head -1; podman images | grep '+ component)['CommandOutput'].strip())
+            print(exec_command_line_command('podman images --digests | head -1; podman images --digests | grep '+ component)['CommandOutput'].strip())
 
         #Get TAGS
         print_in_color("\r\nGetting Octavia and Designate TAGs", 'green')
@@ -277,7 +277,7 @@ try:
             else:
                 print('### '+item+' ###\r\n'+com_result)
 
-        spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest'],'green')
+        #spec_print(['To check the latest octavia-operator SHA U/S browse to:','https://quay.io/repository/openstack-k8s-operators/octavia-operator?tab=tags&tag=latest'],'green')
 
 
     if mode[1] == 'OSP18 - use "openstack-must-gather" tool':
