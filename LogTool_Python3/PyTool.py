@@ -45,6 +45,11 @@ ssh_host_to_upload_logs='file.emea.redhat.com'
 ssh_host_to_upload_logs_www_dir='/home/tlv/ashtempl/public_html/'
 core_puddle_file_path = '/home/stack/core_puddle_version'
 
+# Gemimi Parameters #
+API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+API_KEY = os.getenv("GOOGLE_API_KEY", "") # Retrieves from environment variable
+# You can get one from Google AI Studio: https://aistudio.google.com/
+# Set this as an environment variable named GOOGLE_API_KEY execute "export GOOGLE_API_KEY='your_key_here'"
 
 # On interrupt "ctrl+c" executed script will be killed
 executed_script_on_overcloud = []
@@ -287,6 +292,7 @@ try:
         grep_time = choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
         options = [' ERROR ', ' WARNING ']
         grep_string = choose_option_from_list(options, 'Please choose debug level option: ')[1]
+        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyzer?')[1]
         destination_dir = 'OpenshiftPodsLogs_ERRORS'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
         if os.path.exists(destination_dir):
@@ -322,9 +328,13 @@ try:
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_' + grep_string.replace(' ', '') + '.log')
         command = "python3 Extract_On_Node.py '" + grep_time + "' " + logs_dir_to_analyze_path + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+        if use_gemini == 'yes':
+            command = command.replace('Extract_On_Node.py', 'Extract_On_Node_Gemini.py')
+            command += ' ' + API_ENDPOINT + ' ' + API_KEY
+
         # shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r ' + destination_dir + ' ' + os.path.abspath(result_dir))
-        print_in_color('\n --> ' + command, 'bold')
+        print_in_color('\n --> ' + command.replace(API_KEY, 'API_KEY'), 'bold')
         start_time = time.time()
         com_result = exec_command_line_command(command)
         end_time = time.time()
@@ -370,6 +380,7 @@ try:
         grep_time=choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
         options = [' ERROR ', ' WARNING ']
         grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
+        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyzer?')[1]
         destination_dir_name='OpenshiftPodsLogs_ERRORS'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir_name)
         if os.path.exists(destination_dir):
@@ -417,9 +428,13 @@ try:
             shutil.rmtree(os.path.abspath(result_dir))
         result_file = os.path.join(os.path.abspath(result_dir), 'LogTool_Result_'+grep_string.replace(' ','')+'.log')
         command = "python3 Extract_On_Node.py '" + grep_time + "' " + logs_dir_to_analyze_path + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+        if use_gemini == 'yes':
+            command = command.replace('Extract_On_Node.py', 'Extract_On_Node_Gemini.py')
+            command += ' '+API_ENDPOINT+' '+API_KEY
+
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
-        print_in_color('\n --> '+command,'bold')
+        print_in_color('\n --> '+command.replace(API_KEY, 'API_KEY'),'bold')
         start_time=time.time()
         com_result=exec_command_line_command(command)
         end_time=time.time()
@@ -497,10 +512,14 @@ try:
             command = "python3 Extract_On_Node.py '"+str(start_time)+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
         else:
             command = "python3 Extract_On_Node.py '" +str(start_time)+ "' " + logs_dir_to_analyze + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
+        use_gemini = choose_option_from_list(['yes', 'no'],'Use Gemini to analyzer?')[1]
+        if use_gemini == 'yes':
+            command = command.replace('Extract_On_Node.py', 'Extract_On_Node_Gemini.py')
+            command += ' '+API_ENDPOINT+' '+API_KEY
 
         #shutil.copytree(destination_dir, os.path.abspath(result_dir))
         exec_command_line_command('cp -r '+destination_dir+' '+os.path.abspath(result_dir))
-        print_in_color('\n --> '+command,'bold')
+        print_in_color('\n --> '+command.replace(API_KEY,'API_KEY'),'bold')
         start_time=time.time()
         com_result=exec_command_line_command(command)
         end_time=time.time()
