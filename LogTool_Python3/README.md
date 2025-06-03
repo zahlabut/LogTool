@@ -130,7 +130,7 @@ This tool is interactive, so all you have to do is to start it with:
 To use the Gemini API, define your API_ENDPOINT
 (default: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent)
 and obtain your GOOGLE_API_KEY from Google AI Studio (https://aistudio.google.com/), setting
-it as an environment variable by executing export GOOGLE_API_KEY='your_key_here' in your terminal.
+it as an environment variable by executing **export GOOGLE_API_KEY='your_key_here'** in your terminal.
 Both values are set in PyTool.py
 
 
@@ -141,3 +141,5 @@ Please add the content of both into the description of issue you'd like to open.
 
 # Limitations
 1) LogTool is hardcoded to handle log files up to 1GB.
+
+
