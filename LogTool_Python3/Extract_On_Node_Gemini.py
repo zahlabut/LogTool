@@ -612,61 +612,175 @@ def sort_list_by_index(lis, index):
     return (sorted(lis, key=lambda x: x[index]))
 
 
+# # Gemini API related functions
+# def get_gemini_analysis(log_message_text):
+#     """
+#     Sends a log message to the Gemini API for analysis and returns the result.
+#     This function crafts a single-turn request for log analysis.
+#     """
+#     # This is the prompt that instructs Gemini on how to analyze the log.
+#     # It's part of the 'user' turn for this specific request.
+#     analysis_prompt = (
+#         "Analyze the following log message. State clearly if it indicates a **real problem** "
+#         "that needs immediate attention, a **minor issue** that might be ignorable but noted, "
+#         "or **no problem** (just informational/debug/normal operation). "
+#         "Explain your reasoning concisely and suggest next steps if it's a problem.\n\n"
+#         "Here is the log message:\n" + log_message_text
+#     )
+#
+#     # For a single-turn request, the 'contents' list contains only this one user prompt.
+#     payload = {
+#         "contents": [{"role": "user", "parts": [{"text": analysis_prompt}]}],
+#         "generationConfig": {
+#             "temperature": 0.2,  # Lower temperature for more focused and less creative analysis
+#             "maxOutputTokens": 400 # Adjust as needed for the length of analysis
+#         }
+#     }
+#     headers = {
+#         'Content-Type': 'application/json'
+#     }
+#     # Check if API_KEY is set
+#     if not API_KEY:
+#         print("Error: Google Gemini API Key is missing or not set correctly.")
+#         print("Please set it as an environment variable (GOOGLE_API_KEY) as explained in PyTool.py.")
+#         sys.exit(1)
+#     try:
+#         response = requests.post(f"{API_ENDPOINT}?key={API_KEY}", headers=headers, data=json.dumps(payload))
+#         response.raise_for_status() # Raise an HTTPError for bad responses (4xx or 5xx)
+#         result = response.json()
+#         # Extract the text from the response
+#         if result.get("candidates") and result["candidates"][0].get("content") and result["candidates"][0]["content"].get("parts"):
+#             return result["candidates"][0]["content"]["parts"][0]["text"]
+#         else:
+#             # Handle cases where the API might return an empty or unexpected response structure
+#             print("Warning: Gemini response structure was unexpected. No valid analysis found.")
+#             return "Unable to provide a clear analysis due to an unexpected API response."
+#
+#     except requests.exceptions.RequestException as e:
+#         print(f"Error during API request: {e}.")
+#         return "Failed to get analysis. Check your network, API key, or API limits."
+#     except json.JSONDecodeError:
+#         print("Error: Failed to decode JSON response from the API.")
+#         return "Could not parse API response."
+#     except Exception as e:
+#         print(f"An unexpected error occurred: {e}.")
+#         return "An unhandled error occurred during analysis."
+#     time.sleep(1)
 
-# Gemini API related functions
-def get_gemini_analysis(log_message_text):
+# Make sure API_ENDPOINT and API_KEY are accessible in this scope.
+# For example, they might be defined globally or passed into your main script.
+# Example:
+# API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+# API_KEY = os.getenv("GOOGLE_API_KEY", "")
+
+def get_gemini_analysis(log_message_text, max_retries=5, initial_delay=2):
     """
     Sends a log message to the Gemini API for analysis and returns the result.
-    This function crafts a single-turn request for log analysis.
+    This function crafts a single-turn request for log analysis,
+    including a retry mechanism with exponential backoff for robustness.
+
+    Args:
+        log_message_text (str): The log message text to be analyzed.
+        max_retries (int): The maximum number of times to retry the API request.
+        initial_delay (int): The initial delay in seconds before the first retry.
+
+    Returns:
+        str: The analysis result from Gemini. If all retries fail, it returns
+             a descriptive error message.
     """
-    # This is the prompt that instructs Gemini on how to analyze the log.
-    # It's part of the 'user' turn for this specific request.
     analysis_prompt = (
-        "Analyze the following log message. State clearly if it indicates a **real problem** "
-        "that needs immediate attention, a **minor issue** that might be ignorable but noted, "
-        "or **no problem** (just informational/debug/normal operation). "
-        "Explain your reasoning concisely and suggest next steps if it's a problem.\n\n"
-        "Here is the log message:\n" + log_message_text
+            "Analyze the following log message. State clearly if it indicates a **real problem** "
+            "that needs immediate attention, a **minor issue** that might be ignorable but noted, "
+            "or **no problem** (just informational/debug/normal operation). "
+            "Explain your reasoning concisely and suggest next steps if it's a problem.\n\n"
+            "Here is the log message:\n" + log_message_text
     )
 
-    # For a single-turn request, the 'contents' list contains only this one user prompt.
     payload = {
         "contents": [{"role": "user", "parts": [{"text": analysis_prompt}]}],
         "generationConfig": {
-            "temperature": 0.2,  # Lower temperature for more focused and less creative analysis
-            "maxOutputTokens": 400 # Adjust as needed for the length of analysis
+            "temperature": 0.2,
+            "maxOutputTokens": 400
         }
     }
     headers = {
         'Content-Type': 'application/json'
     }
-    # Check if API_KEY is set
-    if not API_KEY:
-        print("Error: Google Gemini API Key is missing or not set correctly.")
-        print("Please set it as an environment variable (GOOGLE_API_KEY) as explained in PyTool.py.")
-        sys.exit(1)
-    try:
-        response = requests.post(f"{API_ENDPOINT}?key={API_KEY}", headers=headers, data=json.dumps(payload))
-        response.raise_for_status() # Raise an HTTPError for bad responses (4xx or 5xx)
-        result = response.json()
-        # Extract the text from the response
-        if result.get("candidates") and result["candidates"][0].get("content") and result["candidates"][0]["content"].get("parts"):
-            return result["candidates"][0]["content"]["parts"][0]["text"]
-        else:
-            # Handle cases where the API might return an empty or unexpected response structure
-            print("Warning: Gemini response structure was unexpected. No valid analysis found.")
-            return "Unable to provide a clear analysis due to an unexpected API response."
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error during API request: {e}.")
-        return "Failed to get analysis. Check your network, API key, or API limits."
-    except json.JSONDecodeError:
-        print("Error: Failed to decode JSON response from the API.")
-        return "Could not parse API response."
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}.")
-        return "An unhandled error occurred during analysis."
-    time.sleep(1)
+    # Ensure API_KEY is defined and accessible
+    try:
+        if not API_KEY:  # This assumes API_KEY is defined in the global scope or passed in
+            print("Error: Google Gemini API Key is missing or not set correctly.")
+            print("Please set it as an environment variable (GOOGLE_API_KEY) or ensure it's defined.")
+            sys.exit(1)
+    except NameError:
+        print("Error: API_KEY variable is not defined. Please ensure it's accessible in this scope.")
+        sys.exit(1)
+
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(f"{API_ENDPOINT}?key={API_KEY}", headers=headers, data=json.dumps(payload))
+            response.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
+            result = response.json()
+
+            # Extract the text from the response
+            if result.get("candidates") and result["candidates"][0].get("content") and result["candidates"][0][
+                "content"].get("parts"):
+                # Success: Return the result and break the retry loop
+                print(f"Attempt {attempt + 1}: Gemini analysis successful.")
+                return result["candidates"][0]["content"]["parts"][0]["text"]
+            else:
+                # API returned a valid response, but its structure was unexpected or empty.
+                # This could be a transient model issue, so we might retry.
+                print(
+                    f"Attempt {attempt + 1}: Warning: Gemini response structure was unexpected (no valid analysis found).")
+                if attempt < max_retries - 1:
+                    delay = initial_delay * (2 ** attempt) + random.uniform(0, 1)  # Exponential backoff with jitter
+                    print(f"Retrying in {delay:.2f} seconds...")
+                    time.sleep(delay)
+                else:
+                    # All retries failed due to unexpected response structure
+                    print(f"Max retries reached. Unable to provide analysis due to unexpected API response structure.")
+                    return "Unable to provide a clear analysis due to an unexpected API response after multiple retries."
+
+        except requests.exceptions.RequestException as e:
+            # Catches network issues, timeouts, and HTTP errors (like 429 Too Many Requests)
+            print(f"Attempt {attempt + 1}: API request failed: {e}.")
+            if attempt < max_retries - 1:
+                delay = initial_delay * (2 ** attempt) + random.uniform(0, 1)  # Exponential backoff with jitter
+                print(f"Retrying in {delay:.2f} seconds...")
+                time.sleep(delay)
+            else:
+                # All retries failed due to request exception
+                print(f"Max retries ({max_retries}) reached. Failed to get analysis due to persistent request errors.")
+                return "Failed to get analysis after multiple attempts. Check network, API key, or API limits."
+
+        except json.JSONDecodeError:
+            # Catches issues where response is not valid JSON
+            print(f"Attempt {attempt + 1}: Error: Failed to decode JSON response from the API.")
+            if attempt < max_retries - 1:
+                delay = initial_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"Retrying in {delay:.2f} seconds...")
+                time.sleep(delay)
+            else:
+                # All retries failed due to JSON decode error
+                print(f"Max retries reached. Could not parse API response after multiple attempts.")
+                return "Could not parse API response after multiple attempts."
+
+        except Exception as e:
+            # Catch any other unexpected errors
+            print(f"Attempt {attempt + 1}: An unexpected error occurred: {e}.")
+            if attempt < max_retries - 1:
+                delay = initial_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"Retrying in {delay:.2f} seconds...")
+                time.sleep(delay)
+            else:
+                # All retries failed due to unhandled exception
+                print(f"Max retries reached. An unhandled error occurred during analysis after multiple attempts.")
+                return "An unhandled error occurred during analysis after multiple attempts."
+
+    # This line should ideally not be reached, as the loop should either return or exit
+    return "An unexpected error occurred in the retry logic flow."
 
 if __name__ == "__main__":
     not_standard_logs=[]
