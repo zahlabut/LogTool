@@ -909,7 +909,7 @@ if __name__ == "__main__":
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
             write_list_to_file(result_file,dir['UniqueMessages'])
-            gemini_result=get_gemini_analysis(dir)
+            gemini_result=str(get_gemini_analysis(dir))
             append_to_file(result_file, gemini_result + '\n')
 
 

@@ -292,7 +292,11 @@ try:
         grep_time = choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
         options = [' ERROR ', ' WARNING ']
         grep_string = choose_option_from_list(options, 'Please choose debug level option: ')[1]
-        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyzer?')[1]
+        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyze logs?')[1]
+        if use_gemini == 'yes':
+            if API_ENDPOINT or API_KEY is None:
+                print_in_color("Check out that the Gemini values: API_ENDPOINT and API_KEY are properly set!", 'red')
+                sys.exit(1)
         destination_dir = 'OpenshiftPodsLogs_ERRORS'
         destination_dir = os.path.join(os.path.dirname(os.path.abspath('.')), destination_dir)
         if os.path.exists(destination_dir):
@@ -380,7 +384,10 @@ try:
         grep_time=choose_time(local_time, exec_command_line_command('hostname')['CommandOutput'].strip())
         options = [' ERROR ', ' WARNING ']
         grep_string=choose_option_from_list(options,'Please choose debug level option: ')[1]
-        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyzer?')[1]
+        use_gemini = choose_option_from_list(['yes', 'no'], 'Use Gemini to analyze logs?')[1]
+        if API_ENDPOINT or API_KEY is None:
+            print_in_color("Check out that the Gemini values: API_ENDPOINT and API_KEY are properly set!", 'red')
+            sys.exit(1)
         destination_dir_name='OpenshiftPodsLogs_ERRORS'
         destination_dir=os.path.join(os.path.dirname(os.path.abspath('.')),destination_dir_name)
         if os.path.exists(destination_dir):
@@ -512,8 +519,11 @@ try:
             command = "python3 Extract_On_Node.py '"+str(start_time)+"' "+logs_dir_to_analyze+" '"+grep_string+"'" + ' '+result_file+" 'yes' 'all_logs' 'yes'"
         else:
             command = "python3 Extract_On_Node.py '" +str(start_time)+ "' " + logs_dir_to_analyze + " '" + grep_string + "'" + ' ' + result_file + " 'yes' 'all_logs' 'no'"
-        use_gemini = choose_option_from_list(['yes', 'no'],'Use Gemini to analyzer?')[1]
+        use_gemini = choose_option_from_list(['yes', 'no'],'Use Gemini to analyze logs?')[1]
         if use_gemini == 'yes':
+            if API_ENDPOINT or API_KEY is None:
+                print_in_color("Check out that the Gemini values: API_ENDPOINT and API_KEY are properly set!", 'red')
+                sys.exit(1)
             command = command.replace('Extract_On_Node.py', 'Extract_On_Node_Gemini.py')
             command += ' '+API_ENDPOINT+' '+API_KEY
 
