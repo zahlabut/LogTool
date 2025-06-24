@@ -47,6 +47,13 @@ save_raw_data=set_default_arg_by_index(5,'yes') # Save raw data messages
 to_analyze_osp_logs_only=set_default_arg_by_index(6,'all_logs')#'osp_logs_only'
 to_analyze_all_file_extensions=set_default_arg_by_index(7,'no')# Analyze all files not only *.log
 
+
+# Under testing, disabled by default.
+# Once enabled openshift_problem_indicators strings will be used to find POD's related issues
+use_openshift_problem_indicators = False
+
+
+
 magic_words=['error','traceback','stderr','failed','critical','fatal',"\|err\|",'trace','http error', 'failure'] # Used to cut huge size lines
 # String to ignore for Not Standard Log files
 ignore_strings=['completed with no errors','program: Errors behavior:',
@@ -69,6 +76,59 @@ python_exceptions=['StopIteration','StopAsyncIteration','ArithmeticError','Float
                    'ProcessLookupError','TimeoutError','ReferenceError','RuntimeError','NotImplementedError',
                    'RecursionError','SyntaxError','IndentationError','TabError','SystemError','TypeError',
                    'ValueError','UnicodeError','UnicodeDecodeError','UnicodeEncodeError','UnicodeTranslateError']
+
+openshift_problem_indicators = [
+    # Explicit Error Levels & Keywords
+    "EXCEPTION",
+    "ABORT",
+    "DENIED",
+    "UNAUTHORIZED",
+
+    # Pod Status/Lifecycle Problems (keywords often seen in logs/events)
+    "CrashLoopBackOff",
+    "ImagePullBackOff",
+    "ErrImagePull",
+    "ContainerCreating", # If stuck
+    "Pending",           # If stuck
+    "OOMKilled",
+    "NodeLost",
+    "Evicted",
+    "Unhealthy",         # From probes
+    "LivenessProbeFailure",
+    "ReadinessProbeFailure",
+
+    # Resource & Quota Problems
+    "QUOTA_EXCEEDED",
+    "Resource exhausted",
+    "Too many requests",
+    "Rate limit",
+    "Insufficient",      # e.g., "Insufficient cpu", "Insufficient memory"
+
+    # Configuration & Validation Problems
+    #"Invalid",
+    "Malformed",
+    "NotFound",          # e.g., "SecretNotFound", "ConfigMapNotFound", "ImageNotFound"
+    "Conflict",
+    "ValidationError",
+
+    # Connectivity & Networking Problems
+    "Connection refused",
+    "Network unreachable",
+    #"Timeout",
+    "Host lookup failure",
+    "Binding failed",    # e.g., for NetworkAttachmentDefinitions
+
+    # Operator/Controller Specific States (keywords often in status/messages)
+    "Degraded",
+    "Progressing",       # If stuck in progressing state
+    "Unhealthy",         # Operator's own health checks
+    "Error syncing"      # Common in controller logs for reconciliation issues
+]
+if use_openshift_problem_indicator:
+    for item in openshift_problem_indicators:
+        if item not in python_exceptions:
+            python_exceptions.append(item)
+
 
 # These logs are standard (contains proper debug level + timestamp),
 # but sometimes messages that supposed to be logged as ERROR are being logged as INFO for example,
@@ -261,7 +321,7 @@ def analyze_log(log, string, time_grep, last_line_date):
         basic_strings=[' ERROR',' CRITICAL',' FATAL',' TRACE','|ERR|','Traceback ',' STDERR', ' FAILED']
         strings=basic_strings
     if is_standard_log==False:
-        strings = python_exceptions+[' ' + item for item in magic_words]
+        strings = python_exceptions+[' ' + item + ' ' for item in magic_words]
         for item in strings:
             command+="grep -B2 -A7 -in '"+item+"' " + log + " >> "+grep_file+";echo -e '--' >> "+grep_file+';'
     if is_standard_log==True:
