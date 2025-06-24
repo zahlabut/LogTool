@@ -32,6 +32,7 @@ import json
 import os
 import sys
 import time
+import random
 
 def set_default_arg_by_index(index, default):
     try:
