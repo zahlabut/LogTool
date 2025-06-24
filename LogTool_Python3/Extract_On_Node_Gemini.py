@@ -131,7 +131,7 @@ openshift_problem_indicators = [
     "Unhealthy",         # Operator's own health checks
     "Error syncing"      # Common in controller logs for reconciliation issues
 ]
-if use_openshift_problem_indicator:
+if use_openshift_problem_indicators:
     for item in openshift_problem_indicators:
         if item not in python_exceptions:
             python_exceptions.append(item)
