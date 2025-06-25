@@ -451,10 +451,10 @@ def write_list_of_dict_to_file(fil, lis,msg_start='',msg_delimeter=''):
         for k in l.keys():
             append_to_file(fil,str(k)+' --> '+str(l[k])+'\n')
 
-def write_list_to_file(fil, list, add_new_line=True):
+def write_list_to_file(fil, list, add_new_line=True, new_line_numbers=1):
     for item in list:
         if add_new_line==True:
-            append_to_file(fil, '\n'+str(item)+'\n')
+            append_to_file(fil, '\n'+str(item)+'\n'*new_line_numbers)
         else:
             append_to_file(fil, '\n'+str(item))
 
@@ -746,6 +746,7 @@ def get_gemini_analysis(log_message_text, max_retries=5, initial_delay=2):
         str: The analysis result from Gemini. If all retries fail, it returns
              a descriptive error message.
     """
+    log_message_text = str(log_message_text)
     analysis_prompt = (
             "Analyze the following log message. State clearly if it indicates a **real problem** "
             "that needs immediate attention, a **minor issue** that might be ignorable but noted, "
@@ -966,10 +967,11 @@ if __name__ == "__main__":
     for dir in not_standard_logs_unique_messages:
         if len(dir['UniqueMessages'])>0:
             append_to_file(result_file,'\n'+'~'*40+' '+dir['Log']+' '+'~'*40+'\n')
-            write_list_to_file(result_file,dir['UniqueMessages'])
-            gemini_result=str(get_gemini_analysis(dir))
-            append_to_file(result_file, gemini_result + '\n')
-
+            updated_with_gemini_result_list=[]
+            for item in dir['UniqueMessages']:
+                gemini_result=str(get_gemini_analysis(item))
+                updated_with_gemini_result_list.append(item + gemini_result)
+            write_list_to_file(result_file, updated_with_gemini_result_list,True,5)
 
     # Create all unique "Potential problematical lines"
     append_to_file(result_file,'\n\n\n' + '#' * 20 + ' Standard Log Files Unique Problematical lines ' + '#' * 20)
