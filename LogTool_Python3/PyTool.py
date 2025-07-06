@@ -523,6 +523,7 @@ try:
         if use_gemini=='yes' and (not API_ENDPOINT or not API_KEY):
             print_in_color("Check out that the Gemini values: API_ENDPOINT and API_KEY are properly set!", 'red')
             sys.exit(1)
+        else:
             command = command.replace('Extract_On_Node.py', 'Extract_On_Node_Gemini.py')
             command += ' '+API_ENDPOINT+' '+API_KEY
 
