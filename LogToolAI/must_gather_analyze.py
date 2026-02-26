@@ -92,6 +92,67 @@ def group_logs_by_component(root_dir, log_paths):
     return sorted(groups.items(), key=lambda x: x[0])
 
 
+# Max number of files to sample for baseline (to avoid slow scan over thousands of files).
+BASELINE_MAX_FILES = 100
+# Lines from end of each file to scan for timestamps.
+BASELINE_TAIL_LINES = 50
+# Max bytes to read from end of each file when getting tail (avoid reading huge logs).
+BASELINE_TAIL_BYTES = 100 * 1024
+
+
+def _latest_date_in_file(path):
+    """Return the latest datetime found in the last BASELINE_TAIL_LINES of path, or None."""
+    try:
+        size = os.path.getsize(path)
+        with open(path, 'r', errors='ignore') as f:
+            if size > BASELINE_TAIL_BYTES:
+                f.seek(max(0, size - BASELINE_TAIL_BYTES))
+                # Skip partial line at seek position.
+                f.readline()
+            lines = f.readlines()
+        tail = lines[-BASELINE_TAIL_LINES:] if len(lines) > BASELINE_TAIL_LINES else lines
+        latest = None
+        for line in tail:
+            dt, _ = common.get_line_date(line)
+            if dt and (latest is None or dt > latest):
+                latest = dt
+        return latest
+    except Exception:
+        return None
+
+
+def get_baseline_from_log_files(log_paths):
+    """Return the latest timestamp found in the selected log files (same idea as pod baseline)."""
+    paths = log_paths if len(log_paths) <= BASELINE_MAX_FILES else log_paths[:BASELINE_MAX_FILES]
+    n = len(paths)
+    n_workers = min(config.MAX_WORKERS, n)
+    if len(log_paths) > BASELINE_MAX_FILES:
+        print(common.c('\033[33m', '  [baseline]') + ' Sampling {} of {} files for latest timestamp ({} workers)...'.format(BASELINE_MAX_FILES, len(log_paths), n_workers))
+    else:
+        print(common.c('\033[33m', '  [baseline]') + ' Scanning {} files ({} workers)...'.format(n, n_workers), flush=True)
+    latest = None
+    done = 0
+    lock = threading.Lock()
+    start = time_module.time()
+    with ThreadPoolExecutor(max_workers=n_workers) as ex:
+        futures = {ex.submit(_latest_date_in_file, path): path for path in paths}
+        for fut in as_completed(futures):
+            with lock:
+                done += 1
+                if done % 20 == 0 or done == n:
+                    print(common.c('\033[33m', '  [baseline]') + ' {}/{} files checked...'.format(done, n), flush=True)
+            try:
+                dt = fut.result()
+                if dt and (latest is None or dt > latest):
+                    latest = dt
+            except Exception:
+                pass
+    elapsed = time_module.time() - start
+    ts_str = latest.strftime('%Y-%m-%d %H:%M:%S') if latest else 'none'
+    print(common.c('\033[32m', '  [baseline] Done in {:.1f}s. Latest: {}').format(elapsed, ts_str))
+    return latest
+
+
 def main():
     main_start = time_module.time()
     _CYAN = '\033[36m'
@@ -100,7 +161,7 @@ def main():
     _DIM = '\033[2m'
 
     print(common.c(_CYAN, '=' * 60))
-    print(common.c(_CYAN, '[1/5] Run must-gather'))
+    print(common.c(_CYAN, '[1/6] Run must-gather'))
     print(common.c(_CYAN, '=' * 60))
     base = getattr(config, 'MUST_GATHER_BASE_DIR', os.path.join(config.BASE_DIR, 'must_gather_output'))
     os.makedirs(base, exist_ok=True)
@@ -113,7 +174,7 @@ def main():
     print(common.c(_GREEN, 'Must-gather completed.'))
 
     print('')
-    print(common.c(_CYAN, '[2/5] Discover log files'))
+    print(common.c(_CYAN, '[2/6] Discover log files'))
     print(common.c(_DIM, '-' * 60))
     log_paths, gather_root = discover_log_files(dest_dir)
     if not log_paths:
@@ -146,7 +207,45 @@ def main():
         print(common.c(_GREEN, 'Selected group "{}": {} files.').format(groups[idx - 1][0], len(selected_paths)))
 
     print('')
-    print(common.c(_CYAN, '[3/5] Extract error blocks'))
+    print(common.c(_CYAN, '[3/6] Baseline timestamp'))
+    print(common.c(_DIM, '-' * 60))
+    print(common.c(_DIM, 'Scanning last {} lines of selected log files for latest timestamp...').format(BASELINE_TAIL_LINES), flush=True)
+    baseline = get_baseline_from_log_files(selected_paths)
+    if baseline is None:
+        print(common.c(_YELLOW, 'Could not detect any timestamp. Using "since" = 24h ago.'))
+        since_dt = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    else:
+        baseline_str = baseline.strftime('%Y-%m-%d %H:%M:%S')
+        print('Last logged message was at: ' + common.c(_CYAN, baseline_str) + '.')
+        print(common.c(_DIM, 'Choose "since" time (messages after this will be analyzed):'))
+        print('  1) 2h back')
+        print('  2) 1h back')
+        print('  3) 30m back')
+        print('  4) Custom (enter minutes, e.g. 45)')
+        try:
+            choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
+        except EOFError:
+            choice = '1'
+        if choice == '1':
+            delta = datetime.timedelta(hours=2)
+        elif choice == '2':
+            delta = datetime.timedelta(hours=1)
+        elif choice == '3':
+            delta = datetime.timedelta(minutes=30)
+        elif choice == '4':
+            try:
+                mins = int(input('Minutes back: ').strip())
+                delta = datetime.timedelta(minutes=max(0, mins))
+            except Exception:
+                delta = datetime.timedelta(hours=1)
+        else:
+            delta = datetime.timedelta(hours=2)
+        since_dt = baseline - delta
+    since_str = since_dt.strftime('%Y-%m-%d %H:%M:%S')
+    print(common.c(_GREEN, 'Analyzing logs since: ') + common.c(_CYAN, since_str) + '.')
+
+    print('')
+    print(common.c(_CYAN, '[4/6] Extract error blocks'))
     print(common.c(_DIM, '-' * 60))
     keywords_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
     try:
@@ -158,11 +257,31 @@ def main():
         print(common.c(_YELLOW, 'Could not create keywords file.'))
         sys.exit(1)
 
-    # No time filter: analyze full content of each file.
-    since_dt = None
+    def _extract_one(args):
+        path, kw_path, since = args
+        return (path, common.extract_blocks_grep(path, kw_path, since))
+
+    selected_sorted = sorted(selected_paths)
+    n_files = len(selected_sorted)
+    n_workers = min(config.MAX_WORKERS, n_files)
+    print(common.c(_DIM, '  Extracting blocks from {} files ({} workers)...').format(n_files, n_workers), flush=True)
     path_blocks = {}
-    for path in sorted(selected_paths):
-        path_blocks[path] = common.extract_blocks_grep(path, keywords_path, since_dt)
+    done = 0
+    ext_lock = threading.Lock()
+    start_ext = time_module.time()
+    with ThreadPoolExecutor(max_workers=n_workers) as ex:
+        futures = {ex.submit(_extract_one, (path, keywords_path, since_dt)): path for path in selected_sorted}
+        for fut in as_completed(futures):
+            with ext_lock:
+                done += 1
+                if done % 50 == 0 or done == n_files:
+                    print(common.c(_DIM, '  [extract] {}/{} files...').format(done, n_files), flush=True)
+            try:
+                path, blocks = fut.result()
+                path_blocks[path] = blocks
+            except Exception:
+                pass
+    print(common.c(_GREEN, '  Extract done in {:.1f}s.').format(time_module.time() - start_ext))
     try:
         os.unlink(keywords_path)
     except Exception:
@@ -191,7 +310,7 @@ def main():
             use_ollama = True
         else:
             print(common.c(_YELLOW, '  Ollama not available — AI filter skipped.'), flush=True)
-    print(common.c(_CYAN, '[4/5] Analyze (grep' + (' + Ollama filter' if use_ollama else '') + ')'))
+    print(common.c(_CYAN, '[5/6] Analyze (grep' + (' + Ollama filter' if use_ollama else '') + ')'))
     print(common.c(_DIM, '-' * 60))
 
     ai_report_cache = {}
@@ -251,12 +370,11 @@ def main():
             report_entries = [e for e in report_entries if e is not None]
 
     print('')
-    print(common.c(_CYAN, '[5/5] Write report'))
+    print(common.c(_CYAN, '[6/6] Write report'))
     print(common.c(_DIM, '-' * 60))
     report_path = getattr(config, 'MUST_GATHER_REPORT_FILE', os.path.join(config.BASE_DIR, 'must_gather_error_report.txt'))
-    since_str = 'must-gather (full content)'
     with open(report_path, 'w') as f:
-        f.write(common.r(common.REPORT_BOLD, 'Must-gather error report') + ' — {}\n'.format(since_str))
+        f.write(common.r(common.REPORT_BOLD, 'Must-gather error report') + ' — since: {}\n'.format(since_str))
         f.write(common.r(common.REPORT_DIM, 'Source directory: ') + dest_dir + '\n')
         f.write(common.r(common.REPORT_DIM, 'AI filter: ') + ('on (Ollama)' if use_ollama else 'off') + '\n\n')
         for path in sorted(set(e[0] for e in report_entries)):

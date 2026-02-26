@@ -32,18 +32,78 @@ def _version_line(label, value, ok=True):
     )
 
 
-def _get_first_pod(pattern):
-    """Return (namespace, pod_name) for first pod whose name matches pattern, or (None, None)."""
+def _get_pods_by_label(label_selector):
+    """Return list of (namespace, pod_name) for pods matching the label selector."""
+    ok, out = common.run(
+        "oc get pods -A -l {} --no-headers -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name 2>/dev/null".format(
+            label_selector
+        ),
+        timeout=30
+    )
+    if not ok or not (out or '').strip():
+        return []
+    result = []
+    for line in out.strip().splitlines():
+        parts = line.split()
+        if len(parts) >= 2:
+            result.append((parts[0], parts[1]))
+    return result
+
+
+def _get_all_pods():
+    """Return list of (namespace, pod_name) for all pods."""
     ok, out = common.run(
         "oc get pods -A --no-headers -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name 2>/dev/null",
         timeout=30
     )
     if not ok:
-        return (None, None)
-    for line in out.strip().splitlines():
+        return []
+    result = []
+    for line in (out or '').strip().splitlines():
         parts = line.split()
-        if len(parts) >= 2 and re.search(pattern, parts[1], re.I):
-            return (parts[0], parts[1])
+        if len(parts) >= 2:
+            result.append((parts[0], parts[1]))
+    return result
+
+
+def _find_octavia_api_pod():
+    """Find a pod that runs the Octavia API workload (not the operator). Prefer label, then name."""
+    # Try common RHOSO/OpenStack labels first (pod names have random suffixes)
+    for label in [
+        'app.kubernetes.io/name=octavia-api',
+        'app=octavia-api',
+        'component=octavia-api',
+    ]:
+        pods = _get_pods_by_label(label)
+        if pods:
+            return pods[0]
+    # Fallback: name contains octavia-api but not operator
+    for ns, name in _get_all_pods():
+        if re.search(r'octavia-api', name, re.I) and 'operator' not in name.lower():
+            return (ns, name)
+    return (None, None)
+
+
+def _find_designate_workload_pod():
+    """Find a pod that runs Designate services (api/central/worker), not the designate-operator."""
+    # Try labels first so we get workload pods, not operator
+    for label in [
+        'app.kubernetes.io/name=designate-api',
+        'app=designate-api',
+        'component=designate-api',
+        'app.kubernetes.io/name=designate-central',
+        'app=designate-central',
+    ]:
+        pods = _get_pods_by_label(label)
+        if pods:
+            return pods[0]
+    # Fallback: name contains 'designate' but not 'operator' (skip designate-operator-controller-manager)
+    for ns, name in _get_all_pods():
+        if not re.search(r'designate', name, re.I):
+            continue
+        if 'operator' in name.lower():
+            continue
+        return (ns, name)
     return (None, None)
 
 
@@ -91,7 +151,7 @@ def main():
 
     # --- 2) Octavia (OVN Octavia provider) ---
     print(_header('Octavia (OVN Octavia provider)'))
-    ns, pod = _get_first_pod(r'octavia-api')
+    ns, pod = _find_octavia_api_pod()
     if not pod:
         print(_version_line('Octavia API pod', 'no octavia-api pod found', ok=False))
     else:
@@ -110,7 +170,7 @@ def main():
 
     # --- 3) Designate ---
     print(_header('Designate'))
-    ns, pod = _get_first_pod(r'designate')
+    ns, pod = _find_designate_workload_pod()
     if not pod:
         print(_version_line('Designate pod', 'no designate pod found', ok=False))
     else:
