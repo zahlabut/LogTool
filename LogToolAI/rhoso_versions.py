@@ -32,6 +32,11 @@ def _version_line(label, value, ok=True):
     )
 
 
+def _print_cmd(cmd):
+    """Print the final command used (dim, so user can copy-paste)."""
+    print(common.c(_DIM, '  Command: ') + common.c(_DIM, cmd))
+
+
 def _get_pods_by_label(label_selector):
     """Return list of (namespace, pod_name) for pods matching the label selector."""
     ok, out = common.run(
@@ -137,7 +142,8 @@ def main():
 
     # --- 1) OpenStack version (RHOSO in general) ---
     print(_header('OpenStack version (RHOSO)'))
-    ok, out = common.run('oc get openstackversion -A 2>/dev/null', timeout=15)
+    openstack_cmd = 'oc get openstackversion -A'
+    ok, out = common.run(openstack_cmd + ' 2>/dev/null', timeout=15)
     if not ok:
         print(_version_line('openstackversion', 'oc failed or CRD not found', ok=False))
         print(common.c(_DIM, '  (run: oc get openstackversion -A)'))
@@ -148,6 +154,7 @@ def main():
         else:
             for line in out.splitlines():
                 print('  ', line if not line.startswith('NAME') else common.c(_YELLOW, line))
+    _print_cmd(openstack_cmd)
 
     # --- 2) Octavia (OVN Octavia provider) ---
     print(_header('Octavia (OVN Octavia provider)'))
@@ -175,6 +182,7 @@ def main():
                 print(_version_line('Octavia core / Amphora provider', ver))
             if not ovn_lines and not core_lines:
                 print(_version_line('rpm', lines[0][:80] if lines else '(none)'))
+        _print_cmd("oc exec -n {} {} -c octavia-api -- rpm -qa | grep -E 'octavia'".format(ns, pod))
 
     # --- 3) Designate ---
     print(_header('Designate'))
@@ -194,6 +202,7 @@ def main():
                 print(_version_line('designate (rpm)', ver))
             else:
                 print(_version_line('rpm', rpm_out[:80] if rpm_out else '(none)'))
+        _print_cmd("oc exec -n {} {} -- rpm -qa | grep -E 'designate'".format(ns, pod))
 
     print()
     print(common.c(_DIM, 'Done.'))
