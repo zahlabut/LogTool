@@ -422,6 +422,34 @@ def ollama_detailed_explanation(block_text, model=None):
         return None
 
 
+def ollama_custom_prompt(prompt, model=None, max_predict=None):
+    """Send a custom prompt to Ollama /api/generate; return the response text or None on failure."""
+    model = (model or config.OLLAMA_MODEL or '').strip()
+    if not model:
+        return None
+    num_predict = max_predict if max_predict is not None else getattr(config, 'EXTRACT_OLLAMA_MAX_PREDICT', 1024)
+    try:
+        url = config.OLLAMA_HOST.rstrip('/') + '/api/generate'
+        payload = {
+            'model': model,
+            'prompt': prompt,
+            'stream': False,
+            'options': {'num_predict': num_predict},
+        }
+        body = json.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(url, data=body, method='POST', headers={'Content-Type': 'application/json'})
+        with urllib.request.urlopen(req, timeout=config.OLLAMA_TIMEOUT) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+        return (data.get('response') or '').strip() or None
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError, json.JSONDecodeError, KeyError) as e:
+        if isinstance(e, urllib.error.HTTPError) and e.code == 404:
+            maybe_print_ollama_404_hint(model=model)
+        if config.OLLAMA_DEBUG:
+            with _ollama_debug_lock:
+                print(c(_YELLOW, '[Ollama debug] custom prompt exception: ') + str(e), flush=True)
+        return None
+
+
 # --- Baseline from log files (for must-gather and local-dir modes) ---
 BASELINE_MAX_FILES = 100
 BASELINE_TAIL_LINES = 50

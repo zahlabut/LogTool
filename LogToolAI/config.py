@@ -97,6 +97,10 @@ LOCAL_LOG_REPORT_FILE = os.path.join(BASE_DIR, 'local_logs_error_report.txt')
 # --- Extract logs by time range (extract_logs_time_range) ---
 # Base directory for extracted log runs; a timestamped subdir is created each run.
 EXTRACTED_LOGS_BASE_DIR = os.path.join(BASE_DIR, 'extracted_logs')
+# Max characters of combined log content to send to Ollama for summary (0 = no limit; very large may time out).
+EXTRACT_OLLAMA_MAX_CHARS = 50000
+# Max tokens for Ollama summary response.
+EXTRACT_OLLAMA_MAX_PREDICT = 1024
 
 # --- Display ---
 NO_COLOR = False

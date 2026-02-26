@@ -12,7 +12,7 @@ MODES = [
     (2, 'Run must-gather, then analyze collected logs (grep + optional Ollama)', 'must_gather_analyze'),
     (3, 'Analyze logs in local directory', 'analyze_local_logs'),
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
-    (5, 'Extract pod logs for time range (colorized, no analysis)', 'extract_logs_time_range'),
+    (5, 'Extract pod logs for time range + Ollama summary (processes, success/errors)', 'extract_logs_time_range'),
 ]
 
 _BOLD = '\033[1m'

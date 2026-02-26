@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """
-Extract pod logs for a given time range (no error analysis).
-Pod list → group by component → choose group → baseline → time range (2h/1h/30m/custom)
-→ fetch oc logs --since-time for each pod → write to a dedicated folder with error strings colorized.
+Extract pod logs for a time range and optionally get an Ollama summary.
+Pod list → group by component → baseline → time range → fetch logs → write to dedicated folder
+(colorized errors). If Ollama is available, send the log content and ask: what processes do you see,
+did they complete successfully or raise errors? Summary is saved in the same folder.
 Run from LogToolMain or directly.
 """
 
@@ -40,7 +41,7 @@ def main():
     _DIM = '\033[2m'
 
     print(common.c(_CYAN, '=' * 60))
-    print(common.c(_CYAN, '[1/5] Pod list'))
+    print(common.c(_CYAN, '[1/6] Pod list'))
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_DIM, 'Collecting pod list (oc get pods -A)...'), flush=True)
     pods = get_pods()
@@ -74,7 +75,7 @@ def main():
         print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(groups[idx - 1][0], len(selected_pods)))
 
     print('')
-    print(common.c(_CYAN, '[2/5] Baseline timestamp'))
+    print(common.c(_CYAN, '[2/6] Baseline timestamp'))
     print(common.c(_DIM, '-' * 60))
     print(common.c(_DIM, 'Getting latest log timestamp (oc logs --tail=10 per pod)...'), flush=True)
     baseline = get_baseline_quick(selected_pods)
@@ -113,7 +114,7 @@ def main():
     print(common.c(_GREEN, 'Extracting logs since: ') + common.c(_CYAN, since_str) + '.')
 
     print('')
-    print(common.c(_CYAN, '[3/5] Create output folder'))
+    print(common.c(_CYAN, '[3/6] Create output folder'))
     print(common.c(_DIM, '-' * 60))
     base = getattr(config, 'EXTRACTED_LOGS_BASE_DIR', os.path.join(config.BASE_DIR, 'extracted_logs'))
     os.makedirs(base, exist_ok=True)
@@ -123,25 +124,25 @@ def main():
     print(common.c(_DIM, 'Output directory: ') + common.c(_CYAN, out_dir))
 
     print('')
-    print(common.c(_CYAN, '[4/5] Fetch and write logs (error strings colorized)'))
+    print(common.c(_CYAN, '[4/6] Fetch and write logs (error strings colorized)'))
     print(common.c(_DIM, '-' * 60))
     n = len(selected_pods)
     n_workers = min(config.MAX_WORKERS, n)
     print(common.c(_DIM, '  Fetching logs for {} pods ({} workers)...').format(n, n_workers), flush=True)
     start = time_module.time()
     written = 0
+    logs_for_ollama = []  # (ns, name, raw) for pods that had content
     with ThreadPoolExecutor(max_workers=n_workers) as ex:
         futures = {ex.submit(_fetch_one_pod_log, ns, name, since_iso): (ns, name) for ns, name in selected_pods}
         for fut in as_completed(futures):
             try:
                 ns, name, raw = fut.result()
                 if not (raw or '').strip():
-                    # No log lines in time range — skip this pod (no file written)
                     continue
+                logs_for_ollama.append((ns, name, raw))
                 out_path = os.path.join(out_dir, safe_filename(ns, name))
                 with open(out_path, 'w') as f:
                     for line in (raw or '').splitlines():
-                        # Keep newline; colorize error keywords for viewing with less -R
                         f.write(common.highlight_error_keywords(line + '\n'))
                 written += 1
                 if written % 5 == 0 or written == n:
@@ -150,8 +151,58 @@ def main():
                 pass
     print(common.c(_GREEN, '  Done in {:.1f}s. {} log files written.').format(time_module.time() - start, written))
 
+    summary_response = None
+    if written > 0 and getattr(config, 'OLLAMA_HOST', '').strip() and common.ollama_reachable():
+        print('')
+        print(common.c(_CYAN, '[5/6] Ollama summary (what processes, success or errors?)'))
+        print(common.c(_DIM, '-' * 60))
+        resolved_model = (config.OLLAMA_MODEL or '').strip()
+        if not resolved_model:
+            if sys.stdin.isatty():
+                resolved_model = common.ollama_choose_model_interactive(config.OLLAMA_HOST)
+            else:
+                resolved_model = common.ollama_pick_best_model(config.OLLAMA_HOST)
+        if resolved_model:
+            max_chars = getattr(config, 'EXTRACT_OLLAMA_MAX_CHARS', 50000) or 999999
+            # Single request with clear file separators so Ollama sees one coherent context (e.g. all Designate pods together).
+            combined = []
+            for ns, name, raw in logs_for_ollama:
+                combined.append('--- BEGIN POD: {} / {} ---\n'.format(ns, name) + (raw or '') + '\n--- END POD ---')
+            log_text = '\n\n'.join(combined)
+            if len(log_text) > max_chars:
+                log_text = log_text[:max_chars] + '\n\n[... truncated ...]'
+            prompt = (
+                'You are analyzing log output from OpenStack/OpenShift components (e.g. Designate, Nova, Neutron). '
+                'Below are logs from MULTIPLE PODS in the same area/component, sent together so you can see the full context. '
+                'Each pod is delimited by "--- BEGIN POD: namespace / podname ---" and "--- END POD ---". '
+                'Treat them as one related set (e.g. all Designate logs). Answer in 3–8 short sentences:\n'
+                '(1) What processes or operations do you see in these logs? (e.g. zone creation, API calls, startup).\n'
+                '(2) Based on the messages, did they complete successfully or did any raise errors?\n'
+                'Use plain language. No preamble like "Based on the logs". Start directly with what you see.\n\n'
+                'Logs (single combined context, pod separators for clarity):\n\n' + log_text
+            )
+            print(common.c(_DIM, '  Sending {} chars to Ollama (model: {})...').format(len(log_text), resolved_model), flush=True)
+            summary_response = common.ollama_custom_prompt(prompt, model=resolved_model)
+            if summary_response:
+                print(common.c(_GREEN, '  Ollama summary:') + '\n  ' + summary_response.replace('\n', '\n  '))
+                summary_path = os.path.join(out_dir, 'ollama_summary.txt')
+                with open(summary_path, 'w') as f:
+                    f.write('Ollama summary (time range: from {} to now)\n'.format(since_str))
+                    f.write('Model: {}\n\n'.format(resolved_model))
+                    f.write(summary_response)
+                print(common.c(_DIM, '  Saved to: ') + summary_path)
+            else:
+                print(common.c(_YELLOW, '  No response from Ollama.'))
+        else:
+            print(common.c(_YELLOW, '  No model selected — skipping Ollama summary.'))
+    else:
+        if written > 0 and not (getattr(config, 'OLLAMA_HOST', '').strip() and common.ollama_reachable()):
+            print('')
+            print(common.c(_CYAN, '[5/6] Ollama summary'))
+            print(common.c(_DIM, '  Ollama not configured or unreachable — skipping.'))
+
     print('')
-    print(common.c(_CYAN, '[5/5] Summary'))
+    print(common.c(_CYAN, '[6/6] Summary'))
     print(common.c(_DIM, '-' * 60))
     print(common.c(_GREEN, 'Logs extracted to: ') + common.c(_CYAN, out_dir))
     print(common.c(_DIM, 'Time range: from ') + since_str + common.c(_DIM, ' to now.'))
