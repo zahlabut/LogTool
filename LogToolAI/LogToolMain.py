@@ -5,6 +5,8 @@ LogToolAI — main entry. Run this script to choose a mode (e.g. analyze OpenShi
 
 import sys
 
+import logtool_common as common
+
 MODES = [
     (1, 'Analyze OpenShift pod logs (grep + optional Ollama)', 'collect_and_analyze_pod_logs'),
     (2, 'Run must-gather, then analyze collected logs (grep + optional Ollama)', 'must_gather_analyze'),
@@ -12,23 +14,29 @@ MODES = [
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
 ]
 
+_BOLD = '\033[1m'
+_CYAN = '\033[36m'
+_GREEN = '\033[32m'
+_YELLOW = '\033[33m'
+_DIM = '\033[2m'
+
 
 def main():
-    print('LogToolAI — choose mode:\n')
+    print(common.c(_BOLD + _CYAN, 'LogToolAI') + common.c(_BOLD, ' — choose mode:\n'))
     for num, label, _ in MODES:
-        print('  {}) {}'.format(num, label))
-    print('  0) Exit')
+        print('  ' + common.c(_GREEN, str(num) + ')') + ' ' + label)
+    print('  ' + common.c(_DIM, '0) Exit'))
     print()
     try:
-        choice = input('Choice [0-{}]: '.format(len(MODES))).strip()
+        choice = input(common.c(_DIM, 'Choice [0-{}]: ').format(len(MODES))).strip()
         idx = int(choice)
     except (ValueError, EOFError):
         idx = 0
     if idx == 0:
-        print('Bye.')
+        print(common.c(_DIM, 'Bye.'))
         sys.exit(0)
     if idx < 1 or idx > len(MODES):
-        print('Invalid choice.')
+        print(common.c(_YELLOW, 'Invalid choice.'))
         sys.exit(1)
     module_name = MODES[idx - 1][2]
     if module_name == 'collect_and_analyze_pod_logs':
