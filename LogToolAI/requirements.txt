@@ -1,0 +1,3 @@
+# Optional but recommended for collect_logs_analyze_remote_ollama.py:
+# enables separate connect vs read timeout and clearer timeout messages.
+requests>=2.25.0
