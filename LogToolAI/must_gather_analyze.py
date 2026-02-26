@@ -108,67 +108,6 @@ def group_logs_by_component(root_dir, log_paths):
     return sorted(groups.items(), key=lambda x: x[0])
 
 
-# Max number of files to sample for baseline (to avoid slow scan over thousands of files).
-BASELINE_MAX_FILES = 100
-# Lines from end of each file to scan for timestamps.
-BASELINE_TAIL_LINES = 50
-# Max bytes to read from end of each file when getting tail (avoid reading huge logs).
-BASELINE_TAIL_BYTES = 100 * 1024
-
-
-def _latest_date_in_file(path):
-    """Return the latest datetime found in the last BASELINE_TAIL_LINES of path, or None."""
-    try:
-        size = os.path.getsize(path)
-        with open(path, 'r', errors='ignore') as f:
-            if size > BASELINE_TAIL_BYTES:
-                f.seek(max(0, size - BASELINE_TAIL_BYTES))
-                # Skip partial line at seek position.
-                f.readline()
-            lines = f.readlines()
-        tail = lines[-BASELINE_TAIL_LINES:] if len(lines) > BASELINE_TAIL_LINES else lines
-        latest = None
-        for line in tail:
-            dt, _ = common.get_line_date(line)
-            if dt and (latest is None or dt > latest):
-                latest = dt
-        return latest
-    except Exception:
-        return None
-
-
-def get_baseline_from_log_files(log_paths):
-    """Return the latest timestamp found in the selected log files (same idea as pod baseline)."""
-    paths = log_paths if len(log_paths) <= BASELINE_MAX_FILES else log_paths[:BASELINE_MAX_FILES]
-    n = len(paths)
-    n_workers = min(config.MAX_WORKERS, n)
-    if len(log_paths) > BASELINE_MAX_FILES:
-        print(common.c('\033[33m', '  [baseline]') + ' Sampling {} of {} files for latest timestamp ({} workers)...'.format(BASELINE_MAX_FILES, len(log_paths), n_workers))
-    else:
-        print(common.c('\033[33m', '  [baseline]') + ' Scanning {} files ({} workers)...'.format(n, n_workers), flush=True)
-    latest = None
-    done = 0
-    lock = threading.Lock()
-    start = time_module.time()
-    with ThreadPoolExecutor(max_workers=n_workers) as ex:
-        futures = {ex.submit(_latest_date_in_file, path): path for path in paths}
-        for fut in as_completed(futures):
-            with lock:
-                done += 1
-                if done % 20 == 0 or done == n:
-                    print(common.c('\033[33m', '  [baseline]') + ' {}/{} files checked...'.format(done, n), flush=True)
-            try:
-                dt = fut.result()
-                if dt and (latest is None or dt > latest):
-                    latest = dt
-            except Exception:
-                pass
-    elapsed = time_module.time() - start
-    ts_str = latest.strftime('%Y-%m-%d %H:%M:%S') if latest else 'none'
-    print(common.c('\033[32m', '  [baseline] Done in {:.1f}s. Latest: {}').format(elapsed, ts_str))
-    return latest
-
-
 def main():
     main_start = time_module.time()
     _CYAN = '\033[36m'
@@ -243,8 +182,8 @@ def main():
     print('')
     print(common.c(_CYAN, '[3/6] Baseline timestamp'))
     print(common.c(_DIM, '-' * 60))
-    print(common.c(_DIM, 'Scanning last {} lines of selected log files for latest timestamp...').format(BASELINE_TAIL_LINES), flush=True)
-    baseline = get_baseline_from_log_files(selected_paths)
+    print(common.c(_DIM, 'Scanning last {} lines of selected log files for latest timestamp...').format(common.BASELINE_TAIL_LINES), flush=True)
+    baseline = common.get_baseline_from_log_files(selected_paths)
     if baseline is None:
         print(common.c(_YELLOW, 'Could not detect any timestamp. Using "since" = 24h ago.'))
         since_dt = datetime.datetime.utcnow() - datetime.timedelta(hours=24)

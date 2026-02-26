@@ -12,6 +12,7 @@ MODES = [
     (2, 'Run must-gather, then analyze collected logs (grep + optional Ollama)', 'must_gather_analyze'),
     (3, 'Analyze logs in local directory', 'analyze_local_logs'),
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
+    (5, 'Extract pod logs for time range (colorized, no analysis)', 'extract_logs_time_range'),
 ]
 
 _BOLD = '\033[1m'
@@ -47,6 +48,8 @@ def main():
         from analyze_local_logs import main as run_mode
     elif module_name == 'rhoso_versions':
         from rhoso_versions import main as run_mode
+    elif module_name == 'extract_logs_time_range':
+        from extract_logs_time_range import main as run_mode
     else:
         print('Unknown mode.')
         sys.exit(1)

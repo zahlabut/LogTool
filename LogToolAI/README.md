@@ -15,8 +15,9 @@ Tool with multiple modes. The main mode **analyzes OpenShift pod logs**: collect
 | **logtool_common.py** | Shared code used by modes: run(), colors, Ollama API, block extraction, report helpers. Imported by mode scripts. |
 | **collect_and_analyze_pod_logs.py** | Mode: analyze OpenShift pod logs (grep + optional Ollama). Can be run from main or directly. |
 | **must_gather_analyze.py** | Mode: run `oc adm must-gather`, discover log files in the output, group by component, then same analysis (grep + optional Ollama) and report. |
-| **analyze_local_logs.py** | Mode: analyze logs in a local directory (stub for future implementation). |
+| **analyze_local_logs.py** | Mode: analyze logs in a user-provided local directory (recursive .log/.txt), same pipeline as pod/must-gather: baseline, since, grep, optional Ollama, report. |
 | **rhoso_versions.py** | Mode: show RHOSO (OpenStack) version, Octavia OVN provider version, and Designate version (read-only, colorized output). |
+| **extract_logs_time_range.py** | Mode: extract pod logs for a time range; grouped by component; writes to a dedicated folder with error strings colorized (no analysis). |
 | **install_ollama_podman.sh** | Optional: run on the Ollama host to install Ollama with Podman, pull models, and verify. |
 
 ---
@@ -59,8 +60,9 @@ python3 LogToolMain.py
 Then select:
 - **1)** Analyze OpenShift pod logs (grep + optional Ollama)
 - **2)** Run must-gather, then analyze collected logs (grep + optional Ollama)
-- **3)** Analyze logs in local directory (not implemented yet)
+- **3)** Analyze logs in local directory (path → discover, baseline, since, grep + Ollama, report)
 - **4)** Show RHOSO / Octavia / Designate versions
+- **5)** Extract pod logs for time range (colorized, no analysis)
 - **0)** Exit
 
 You can also run the pod-logs mode directly:
@@ -69,7 +71,11 @@ You can also run the pod-logs mode directly:
 python3 collect_and_analyze_pod_logs.py
 ```
 
-**Mode 4 (versions):** Run `python3 rhoso_versions.py` or choose **4** from the main menu. The script runs `oc get openstackversion -A`, finds an Octavia API pod and execs `rpm -qa | grep ovn-octavia`, and finds a Designate pod and execs `rpm -qa | grep designate`, then prints a short colorized summary. No log collection or reports; requires `oc` and permission to exec into pods.
+**Mode 3 (local directory):** Run `python3 analyze_local_logs.py` or choose **3** from the main menu. You are prompted for a directory path; the tool recursively finds all `.log` and `.txt` files, groups by subfolder, then runs the same pipeline as must-gather: baseline timestamp, “since” choice (2h/1h/30m/custom), threaded block extraction, optional Ollama filter, and report to `local_logs_error_report.txt` (configurable via `LOCAL_LOG_REPORT_FILE`). No `oc` required.
+
+**Mode 4 (versions):** Run `python3 rhoso_versions.py` or choose **4** from the main menu.
+
+**Mode 5 (extract logs by time range):** Run `python3 extract_logs_time_range.py` or choose **5** from the main menu. Pod logs only: same grouping by component as mode 1, then baseline timestamp and time-range choice (2h/1h/30m/custom). Fetches `oc logs --since-time` for each selected pod and writes **new** log files into a dedicated folder (`extracted_logs/extracted_YYYYMMDD_HHMMSS/` by default). Error keywords are **colorized** in the files so you can run `less -R <file>` to see them clearly; no grep analysis or Ollama. Config: `EXTRACTED_LOGS_BASE_DIR`. The script runs `oc get openstackversion -A`, finds an Octavia API pod and execs `rpm -qa | grep ovn-octavia`, and finds a Designate pod and execs `rpm -qa | grep designate`, then prints a short colorized summary. No log collection or reports; requires `oc` and permission to exec into pods.
 
 The pod-logs mode is interactive:
 
@@ -88,6 +94,8 @@ Edit **config.py** (not the script) for:
 - **Ollama:** `OLLAMA_HOST` (default `http://10.9.95.129:11434`; set to `''` to disable), `OLLAMA_MODEL` (empty = interactive model choice or auto-pick), `OLLAMA_TIMEOUT`, `OLLAMA_DEBUG`, etc.
 - **Error detection:** `ERROR_KEYWORDS`, `CONTEXT_BEFORE`, `CONTEXT_AFTER`, `FUZZY_MATCH_RATIO`, etc.
 - **Must-gather mode:** `MUST_GATHER_BASE_DIR`, `MUST_GATHER_IMAGE` (empty = default OpenShift image; for RHOSO set to the OpenStack must-gather image), `MUST_GATHER_REPORT_FILE`.
+- **Local directory mode:** `LOCAL_LOG_REPORT_FILE` (report path when analyzing a user-provided folder).
+- **Extract logs by time range:** `EXTRACTED_LOGS_BASE_DIR` (base directory for timestamped extraction runs).
 
 ---
 

@@ -90,5 +90,13 @@ MUST_GATHER_IMAGE = ''
 # Report file for must-gather analysis (default: next to REPORT_FILE).
 MUST_GATHER_REPORT_FILE = os.path.join(BASE_DIR, 'must_gather_error_report.txt')
 
+# --- Local directory mode (analyze_local_logs) ---
+# Report file when analyzing logs in a user-provided local directory.
+LOCAL_LOG_REPORT_FILE = os.path.join(BASE_DIR, 'local_logs_error_report.txt')
+
+# --- Extract logs by time range (extract_logs_time_range) ---
+# Base directory for extracted log runs; a timestamped subdir is created each run.
+EXTRACTED_LOGS_BASE_DIR = os.path.join(BASE_DIR, 'extracted_logs')
+
 # --- Display ---
 NO_COLOR = False
