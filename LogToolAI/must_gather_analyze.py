@@ -21,6 +21,22 @@ import logtool_common as common
 LOG_EXTENSIONS = ('.log', '.txt')
 # Also include files under .../pods/.../ that have no extension (container logs).
 PODS_PATH_PART = 'pods'
+# Prefix for timestamped must-gather subdirs (must_gather_YYYYMMDD_HHMMSS).
+MUST_GATHER_DIR_PREFIX = 'must_gather_'
+
+
+def find_existing_must_gather_dirs(base_dir):
+    """Return list of (full_path, dirname) for existing must_gather_* dirs, newest first."""
+    if not os.path.isdir(base_dir):
+        return []
+    found = []
+    for name in os.listdir(base_dir):
+        if name.startswith(MUST_GATHER_DIR_PREFIX) and os.path.isdir(os.path.join(base_dir, name)):
+            full = os.path.join(base_dir, name)
+            found.append((full, name))
+    # Sort by name descending so newest (larger timestamp) first
+    found.sort(key=lambda x: x[1], reverse=True)
+    return found
 
 
 def run_must_gather(dest_dir):
@@ -161,17 +177,35 @@ def main():
     _DIM = '\033[2m'
 
     print(common.c(_CYAN, '=' * 60))
-    print(common.c(_CYAN, '[1/6] Run must-gather'))
+    print(common.c(_CYAN, '[1/6] Must-gather: use existing or run fresh'))
     print(common.c(_CYAN, '=' * 60))
     base = getattr(config, 'MUST_GATHER_BASE_DIR', os.path.join(config.BASE_DIR, 'must_gather_output'))
     os.makedirs(base, exist_ok=True)
-    dest_dir = os.path.join(base, 'must_gather_{}'.format(datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')))
-    print(common.c(_DIM, 'Destination: ') + common.c(_CYAN, dest_dir))
-    ok, msg = run_must_gather(dest_dir)
-    if not ok:
-        print(common.c(_YELLOW, 'Must-gather failed: ') + msg)
-        sys.exit(1)
-    print(common.c(_GREEN, 'Must-gather completed.'))
+    existing = find_existing_must_gather_dirs(base)
+    dest_dir = None
+    if existing:
+        print(common.c(_DIM, 'Existing must-gather directories (newest first):'))
+        for i, (full, name) in enumerate(existing, 1):
+            print(common.c(_DIM, '  {}) {}').format(i, name))
+        print(common.c(_DIM, '  0) Run fresh must-gather (new collection)'))
+        try:
+            choice = input(common.c(_DIM, 'Choice [0-{}]: ').format(len(existing))).strip()
+            idx = int(choice)
+        except (ValueError, EOFError):
+            idx = 0
+        if 1 <= idx <= len(existing):
+            dest_dir = existing[idx - 1][0]
+            print(common.c(_GREEN, 'Using existing: ') + common.c(_CYAN, dest_dir))
+        else:
+            idx = 0
+    if dest_dir is None:
+        dest_dir = os.path.join(base, 'must_gather_{}'.format(datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')))
+        print(common.c(_DIM, 'Destination: ') + common.c(_CYAN, dest_dir))
+        ok, msg = run_must_gather(dest_dir)
+        if not ok:
+            print(common.c(_YELLOW, 'Must-gather failed: ') + msg)
+            sys.exit(1)
+        print(common.c(_GREEN, 'Must-gather completed.'))
 
     print('')
     print(common.c(_CYAN, '[2/6] Discover log files'))

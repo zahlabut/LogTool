@@ -182,7 +182,9 @@ def main():
                 print(_version_line('Octavia core / Amphora provider', ver))
             if not ovn_lines and not core_lines:
                 print(_version_line('rpm', lines[0][:80] if lines else '(none)'))
-        _print_cmd("oc exec -n {} {} -c octavia-api -- rpm -qa | grep -E 'octavia'".format(ns, pod))
+        octavia_cmd = "oc exec -n {} {} -c octavia-api -- rpm -qa | grep -E 'octavia'".format(ns, pod)
+        _print_cmd(octavia_cmd)
+        print(common.c(_DIM, "  (OVN Octavia provider + Octavia core versions from the command above.)"))
 
     # --- 3) Designate ---
     print(_header('Designate'))
