@@ -7,7 +7,8 @@ import sys
 
 MODES = [
     (1, 'Analyze OpenShift pod logs (grep + optional Ollama)', 'collect_and_analyze_pod_logs'),
-    (2, 'Analyze logs in local directory', 'analyze_local_logs'),
+    (2, 'Run must-gather, then analyze collected logs (grep + optional Ollama)', 'must_gather_analyze'),
+    (3, 'Analyze logs in local directory', 'analyze_local_logs'),
 ]
 
 
@@ -31,6 +32,8 @@ def main():
     module_name = MODES[idx - 1][2]
     if module_name == 'collect_and_analyze_pod_logs':
         from collect_and_analyze_pod_logs import main as run_mode
+    elif module_name == 'must_gather_analyze':
+        from must_gather_analyze import main as run_mode
     elif module_name == 'analyze_local_logs':
         from analyze_local_logs import main as run_mode
     else:

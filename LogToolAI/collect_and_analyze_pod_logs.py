@@ -326,9 +326,11 @@ def main():
         f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + '{}\n'.format(os.path.abspath(logs_dir)))
         f.write(common.r(common.REPORT_DIM, 'AI filter: ') + ('on (Ollama)' if use_ollama else 'off — set OLLAMA_HOST in config to enable') + '\n\n')
         for path in sorted(set(e[0] for e in report_entries)):
-            f.write(common.r(common.REPORT_CYAN, '=' * 80) + '\n')
+            log_file_line = 'Log file: ' + path
+            sep_len = len(log_file_line)
+            f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n')
             f.write(common.r(common.REPORT_BOLD, 'Log file: ') + path + '\n')
-            f.write(common.r(common.REPORT_CYAN, '=' * 80) + '\n\n')
+            f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n\n')
             for (p, lines_with_nums, block_text, sig, count) in report_entries:
                 if p != path:
                     continue

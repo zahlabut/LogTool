@@ -80,5 +80,15 @@ AI_MAX_EXPLANATION_CHARS = 8000
 OLLAMA_MAX_CONCURRENT = 6
 OLLAMA_DEBUG = True
 
+# --- Must-gather (for must_gather_analyze mode) ---
+# Directory for must-gather output. A timestamped subdir will be created each run.
+MUST_GATHER_BASE_DIR = os.path.join(BASE_DIR, 'must_gather_output')
+# Must-gather image. Empty = default OpenShift image. For RHOSO/OpenStack use e.g.:
+# MUST_GATHER_IMAGE = 'quay.io/openstack-k8s-operators/openstack-must-gather'
+# or registry.redhat.io/rhoso-operators/openstack-must-gather-rhel9
+MUST_GATHER_IMAGE = ''
+# Report file for must-gather analysis (default: next to REPORT_FILE).
+MUST_GATHER_REPORT_FILE = os.path.join(BASE_DIR, 'must_gather_error_report.txt')
+
 # --- Display ---
 NO_COLOR = False

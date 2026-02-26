@@ -14,6 +14,7 @@ Tool with multiple modes. The main mode **analyzes OpenShift pod logs**: collect
 | **config.py** | All configurable parameters (paths, Ollama URL/timeout, error keywords, concurrency, etc.). Edit this file to change behavior. |
 | **logtool_common.py** | Shared code used by modes: run(), colors, Ollama API, block extraction, report helpers. Imported by mode scripts. |
 | **collect_and_analyze_pod_logs.py** | Mode: analyze OpenShift pod logs (grep + optional Ollama). Can be run from main or directly. |
+| **must_gather_analyze.py** | Mode: run `oc adm must-gather`, discover log files in the output, group by component, then same analysis (grep + optional Ollama) and report. |
 | **analyze_local_logs.py** | Mode: analyze logs in a local directory (stub for future implementation). |
 | **install_ollama_podman.sh** | Optional: run on the Ollama host to install Ollama with Podman, pull models, and verify. |
 
@@ -56,7 +57,8 @@ python3 LogToolMain.py
 
 Then select:
 - **1)** Analyze OpenShift pod logs (grep + optional Ollama)
-- **2)** Analyze logs in local directory (not implemented yet)
+- **2)** Run must-gather, then analyze collected logs (grep + optional Ollama)
+- **3)** Analyze logs in local directory (not implemented yet)
 - **0)** Exit
 
 You can also run the pod-logs mode directly:
@@ -81,6 +83,7 @@ Edit **config.py** (not the script) for:
 - **Concurrency:** `MAX_WORKERS`, `OLLAMA_MAX_CONCURRENT`
 - **Ollama:** `OLLAMA_HOST` (default `http://10.9.95.129:11434`; set to `''` to disable), `OLLAMA_MODEL` (empty = interactive model choice or auto-pick), `OLLAMA_TIMEOUT`, `OLLAMA_DEBUG`, etc.
 - **Error detection:** `ERROR_KEYWORDS`, `CONTEXT_BEFORE`, `CONTEXT_AFTER`, `FUZZY_MATCH_RATIO`, etc.
+- **Must-gather mode:** `MUST_GATHER_BASE_DIR`, `MUST_GATHER_IMAGE` (empty = default OpenShift image; for RHOSO set to the OpenStack must-gather image), `MUST_GATHER_REPORT_FILE`.
 
 ---
 
