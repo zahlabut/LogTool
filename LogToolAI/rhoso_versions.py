@@ -156,17 +156,25 @@ def main():
         print(_version_line('Octavia API pod', 'no octavia-api pod found', ok=False))
     else:
         print(_version_line('Pod', '{} / {}'.format(ns, pod)))
-        ok, rpm_out = _exec_rpm_grep(ns, pod, 'octavia-api', r'python3-ovn-octavia|ovn-octavia')
+        # One exec for all octavia-related packages (OVN provider + core/Amphora)
+        ok, rpm_out = _exec_rpm_grep(ns, pod, 'octavia-api', r'octavia')
         if not rpm_out:
-            print(_version_line('Package', 'no python3-ovn-octavia* package in pod', ok=False))
+            print(_version_line('Package', 'no octavia* package in pod', ok=False))
         else:
-            # Prefer the line with ovn-octavia-provider
-            lines = [l for l in rpm_out.splitlines() if 'ovn-octavia' in l]
-            if lines:
-                ver = _extract_version_from_rpm_line(lines[0])
-                print(_version_line('python3-ovn-octavia-provider', ver))
-            else:
-                print(_version_line('rpm', rpm_out.splitlines()[0][:80] if rpm_out else '(none)'))
+            lines = [l.strip() for l in rpm_out.splitlines() if l.strip()]
+            ovn_lines = [l for l in lines if 'ovn-octavia' in l or 'ovn-octavia-provider' in l]
+            # Core Octavia (Amphora provider / API): python3-octavia, octavia-common, etc. (exclude OVN-only)
+            core_lines = [l for l in lines if 'ovn-octavia' not in l and 'ovn-octavia-provider' not in l]
+            if ovn_lines:
+                ver = _extract_version_from_rpm_line(ovn_lines[0])
+                print(_version_line('python3-ovn-octavia-provider (OVN)', ver))
+            if core_lines:
+                # Prefer python3-octavia as the Amphora/core version
+                preferred = next((l for l in core_lines if 'python3-octavia' in l and 'ovn' not in l), core_lines[0])
+                ver = _extract_version_from_rpm_line(preferred)
+                print(_version_line('Octavia core / Amphora provider', ver))
+            if not ovn_lines and not core_lines:
+                print(_version_line('rpm', lines[0][:80] if lines else '(none)'))
 
     # --- 3) Designate ---
     print(_header('Designate'))
