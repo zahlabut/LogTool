@@ -69,10 +69,12 @@ def main():
         idx = num_options
     if idx == num_options:
         selected_pods = pods
+        selected_group_name = 'all'
         print(common.c(_GREEN, 'Selected all {} pods.').format(total))
     else:
         selected_pods = groups[idx - 1][1]
-        print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(groups[idx - 1][0], len(selected_pods)))
+        selected_group_name = groups[idx - 1][0]
+        print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(selected_group_name, len(selected_pods)))
 
     print('')
     print(common.c(_CYAN, '[2/6] Baseline timestamp'))
@@ -164,23 +166,27 @@ def main():
                 resolved_model = common.ollama_pick_best_model(config.OLLAMA_HOST)
         if resolved_model:
             max_chars = getattr(config, 'EXTRACT_OLLAMA_MAX_CHARS', 50000) or 999999
-            # Single request with clear file separators so Ollama sees one coherent context (e.g. all Designate pods together).
+            # Single request with clear file separators so Ollama sees one coherent context.
             combined = []
+            pod_names = []
             for ns, name, raw in logs_for_ollama:
+                pod_names.append('{} / {}'.format(ns, name))
                 combined.append('--- BEGIN POD: {} / {} ---\n'.format(ns, name) + (raw or '') + '\n--- END POD ---')
             log_text = '\n\n'.join(combined)
             if len(log_text) > max_chars:
                 log_text = log_text[:max_chars] + '\n\n[... truncated ...]'
+            pod_list = ', '.join(pod_names) if len(pod_names) <= 10 else ', '.join(pod_names[:10]) + ' ... ({} total)'.format(len(pod_names))
             prompt = (
-                'You are analyzing log output from OpenStack/OpenShift components (e.g. Designate, Nova, Neutron). '
-                'Below are logs from MULTIPLE PODS in the same area/component, sent together so you can see the full context. '
-                'Each pod is delimited by "--- BEGIN POD: namespace / podname ---" and "--- END POD ---". '
-                'Treat them as one related set (e.g. all Designate logs). Answer in 3–8 short sentences:\n'
-                '(1) What processes or operations do you see in these logs? (e.g. zone creation, API calls, startup).\n'
-                '(2) Based on the messages, did they complete successfully or did any raise errors?\n'
-                'Use plain language. No preamble like "Based on the logs". Start directly with what you see.\n\n'
-                'Logs (single combined context, pod separators for clarity):\n\n' + log_text
-            )
+                'Context: These logs are from a RHOSO (Red Hat OpenStack on OpenShift) environment. '
+                'The group you are looking at is named "{}". '
+                'We are troubleshooting: we want to know if everything went OK or if there were issues detected and logged.\n\n'
+                'Log source names (pods): {}.\n\n'
+                'Below are the log contents. Each pod is delimited by "--- BEGIN POD: namespace / podname ---" and "--- END POD ---". '
+                'Answer in 3–8 short sentences: (1) What processes or operations do you see in these logs? '
+                '(e.g. zone creation, API calls, startup). (2) Based on the messages, did they complete successfully or did any raise errors? '
+                'Use plain language. Start directly with what you see—no preamble like "Based on the logs".\n\n'
+                'Logs:\n\n'
+            ).format(selected_group_name, pod_list) + log_text
             print(common.c(_DIM, '  Sending {} chars to Ollama (model: {})...').format(len(log_text), resolved_model), flush=True)
             summary_response = common.ollama_custom_prompt(prompt, model=resolved_model)
             if summary_response:
