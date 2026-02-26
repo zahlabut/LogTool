@@ -281,7 +281,7 @@ def main():
             n_workers = min(config.OLLAMA_MAX_CONCURRENT, n_unique)
             print(common.c(_DIM, 'Asking Ollama in parallel ({} workers, {} unique blocks; real error? + explanation)...').format(n_workers, n_unique), flush=True)
             if model_was_auto:
-                print(common.c(_DIM, '  Model: {} (auto-selected, largest on server)').format(resolved_model), flush=True)
+                print(common.c(_DIM, '  Model: {} (auto-selected, smallest/fastest on server)').format(resolved_model), flush=True)
             else:
                 print(common.c(_DIM, '  Model: {}').format(resolved_model), flush=True)
             print(common.c(_DIM, '  Sending {} blocks to Ollama...').format(n_unique), flush=True)

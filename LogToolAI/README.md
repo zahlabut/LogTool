@@ -15,6 +15,7 @@ Tool with multiple modes. The main mode **analyzes OpenShift pod logs**: collect
 | **logtool_common.py** | Shared code used by modes: run(), colors, Ollama API, block extraction, report helpers. Imported by mode scripts. |
 | **collect_and_analyze_pod_logs.py** | Mode: analyze OpenShift pod logs (grep + optional Ollama). Can be run from main or directly. |
 | **analyze_local_logs.py** | Mode: analyze logs in a local directory (stub for future implementation). |
+| **install_ollama_podman.sh** | Optional: run on the Ollama host to install Ollama with Podman, pull models, and verify. |
 
 ---
 
@@ -113,27 +114,46 @@ You can extend or trim `ERROR_KEYWORDS` in the script to match your environment.
 
 ## Installing Ollama on a remote server (Podman)
 
-To use the script’s AI filtering, Ollama must be running on a host reachable from where you run the script (e.g. `http://<server>:11434`). Below: run Ollama with **Podman** on a remote server, pull models, and verify.
+To use the tool's AI filtering, Ollama must be running on a host reachable from where you run LogToolAI (e.g. `http://<server>:11434`). You can either run the automated script or install manually.
 
-### 1. Run Ollama with Podman
+---
 
-On the **remote server** (RHEL/Fedora or similar with Podman):
+### Option A: Automated script (recommended)
+
+On the **host where Ollama should run** (RHEL/Fedora or similar with Podman installed):
 
 ```bash
-# Create a volume for model data (persists across container restarts)
+cd /path/to/LogTool/LogToolAI
+chmod +x install_ollama_podman.sh
+./install_ollama_podman.sh
+```
+
+The script will:
+
+- Create a Podman volume and run the Ollama container (port 11434, bound to all interfaces).
+- Wait for Ollama to be ready, then pull a default small model (e.g. `llama3.2:1b`).
+- Verify with `curl http://localhost:11434/api/tags`.
+
+**Optional environment variables:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OLLAMA_GPU` | (unset) | Set to `1` to use NVIDIA GPU: `OLLAMA_GPU=1 ./install_ollama_podman.sh` |
+| `OLLAMA_MODELS` | `llama3.2:1b` | Space-separated list of models to pull, e.g. `OLLAMA_MODELS="llama3.2 mistral" ./install_ollama_podman.sh` |
+| `OLLAMA_PORT` | `11434` | Host port to expose. |
+
+Then set `OLLAMA_HOST` in **config.py** to `http://<this-server-ip>:11434` (or leave the default if you run LogToolAI on the same host).
+
+---
+
+### Option B: Manual install
+
+On the **remote server** (with Podman):
+
+**1. Run Ollama (CPU, all interfaces):**
+
+```bash
 podman volume create ollama-data
-
-# Run Ollama (CPU). Expose port 11434 so the script can call the API.
-podman run -d \
-  --name ollama \
-  -v ollama-data:/root/.ollama \
-  -p 11434:11434 \
-  ollama/ollama
-```
-
-To listen on all interfaces (for access from other hosts), bind to `0.0.0.0`:
-
-```bash
 podman run -d \
   --name ollama \
   -v ollama-data:/root/.ollama \
@@ -141,74 +161,24 @@ podman run -d \
   ollama/ollama
 ```
 
-**With NVIDIA GPU:**
+**With NVIDIA GPU:** add `--gpus=all` to the `podman run` command.
+
+**2. Pull models:**
 
 ```bash
-podman run -d \
-  --name ollama \
-  --gpus=all \
-  -v ollama-data:/root/.ollama \
-  -p 0.0.0.0:11434:11434 \
-  ollama/ollama
+podman exec ollama ollama pull llama3.2:1b
+# or: podman exec ollama ollama list   then   podman exec ollama ollama pull <model>
 ```
 
-### 2. Pull models
-
-Containers start with no models. Pull one or more from inside the container:
+**3. Verify:**
 
 ```bash
-# List already pulled models
-podman exec -it ollama ollama list
-
-# Pull a model (examples)
-podman exec -it ollama ollama pull llama3.2
-podman exec -it ollama ollama pull llama3.1:8b
-podman exec -it ollama ollama pull mistral
-```
-
-To pull several in one go:
-
-```bash
-for model in llama3.2 llama3.1:8b mistral; do
-  podman exec ollama ollama pull "$model"
-done
-```
-
-Browse [Ollama Library](https://ollama.com/library) for model names. There is no single “install all” command; choose the models you need.
-
-### 3. Verify Ollama is up and running
-
-From the **same server**:
-
-```bash
-# Health / API
 curl -s http://localhost:11434/api/tags
 ```
 
-You should get JSON with a `"models"` array (possibly empty before any pull). Example:
+You should see JSON with a `"models"` array. From another host, use `http://<SERVER_IP>:11434` and set `OLLAMA_HOST` in **config.py** to that URL.
 
-```json
-{"models":[{"name":"llama3.2","model":"...","size":...}]}
-```
-
-From **another host** (e.g. where you run the script), replace `localhost` with the server’s IP or hostname:
-
-```bash
-curl -s http://<SERVER_IP>:11434/api/tags
-```
-
-Then in the script set:
-
-```python
-OLLAMA_HOST = 'http://<SERVER_IP>:11434'
-```
-
-(Or leave the default if it already points to your server.)
-
-### 4. Restart and persistence
-
-- **Restart container:** `podman restart ollama`
-- **Start after reboot:** Run the `podman run` command above with your preferred options, or use a systemd unit (e.g. Quadlet) to start the container on boot. Models stay in the `ollama-data` volume.
+**4. Restart / persistence:** `podman restart ollama`. Models persist in the `ollama-data` volume. Use a systemd unit (e.g. Quadlet) to start the container on boot if needed.
 
 ---
 

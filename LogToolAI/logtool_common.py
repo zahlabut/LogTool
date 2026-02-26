@@ -344,8 +344,9 @@ def ollama_fetch_models(host=None):
 
 
 def ollama_pick_best_model(host=None):
+    """Return the smallest (fastest) model on the server. None if none available."""
     models = ollama_fetch_models(host)
-    return models[0]['name'] if models else None
+    return models[-1]['name'] if models else None
 
 
 def ollama_choose_model_interactive(host=None):
@@ -359,13 +360,13 @@ def ollama_choose_model_interactive(host=None):
     for i, m in enumerate(models, 1):
         extra = ', {}'.format(m['parameter_size']) if m['parameter_size'] else ''
         print('  {}) {}  ({:.1f} GB{})'.format(i, m['name'], m['size_gb'], extra), flush=True)
-    print('  0) Auto (use largest: {})'.format(models[0]['name']), flush=True)
+    print('  0) Auto (use smallest/fastest: {})'.format(models[-1]['name']), flush=True)
     print('', flush=True)
     while True:
         try:
             choice = input(c(_DIM, 'Choice [0-{}] (default 0): ').format(len(models))).strip() or '0'
             if choice == '0':
-                return models[0]['name']
+                return models[-1]['name']
             idx = int(choice)
             if 1 <= idx <= len(models):
                 return models[idx - 1]['name']
