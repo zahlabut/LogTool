@@ -73,7 +73,8 @@ OLLAMA_HOST = 'http://10.9.95.129:11434'
 OLLAMA_CHECK_TIMEOUT = 5
 AI_MAX_BLOCK_CHARS = 900
 OLLAMA_MODEL = ''
-OLLAMA_TIMEOUT = 300
+# Seconds to wait for Ollama response. Large prompts (e.g. extract-mode summary with 50k chars) or 70B models may need 600–900.
+OLLAMA_TIMEOUT = 900
 OLLAMA_MAX_PREDICT = 320
 OLLAMA_MAX_PREDICT_DETAILED = 450
 AI_MAX_EXPLANATION_CHARS = 8000
