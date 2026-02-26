@@ -16,6 +16,7 @@ Tool with multiple modes. The main mode **analyzes OpenShift pod logs**: collect
 | **collect_and_analyze_pod_logs.py** | Mode: analyze OpenShift pod logs (grep + optional Ollama). Can be run from main or directly. |
 | **must_gather_analyze.py** | Mode: run `oc adm must-gather`, discover log files in the output, group by component, then same analysis (grep + optional Ollama) and report. |
 | **analyze_local_logs.py** | Mode: analyze logs in a local directory (stub for future implementation). |
+| **rhoso_versions.py** | Mode: show RHOSO (OpenStack) version, Octavia OVN provider version, and Designate version (read-only, colorized output). |
 | **install_ollama_podman.sh** | Optional: run on the Ollama host to install Ollama with Podman, pull models, and verify. |
 
 ---
@@ -59,6 +60,7 @@ Then select:
 - **1)** Analyze OpenShift pod logs (grep + optional Ollama)
 - **2)** Run must-gather, then analyze collected logs (grep + optional Ollama)
 - **3)** Analyze logs in local directory (not implemented yet)
+- **4)** Show RHOSO / Octavia / Designate versions
 - **0)** Exit
 
 You can also run the pod-logs mode directly:
@@ -66,6 +68,8 @@ You can also run the pod-logs mode directly:
 ```bash
 python3 collect_and_analyze_pod_logs.py
 ```
+
+**Mode 4 (versions):** Run `python3 rhoso_versions.py` or choose **4** from the main menu. The script runs `oc get openstackversion -A`, finds an Octavia API pod and execs `rpm -qa | grep ovn-octavia`, and finds a Designate pod and execs `rpm -qa | grep designate`, then prints a short colorized summary. No log collection or reports; requires `oc` and permission to exec into pods.
 
 The pod-logs mode is interactive:
 
