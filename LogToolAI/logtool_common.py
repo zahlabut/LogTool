@@ -386,10 +386,11 @@ def ollama_classify_and_explain(block_text, model=None):
         if explanation:
             expl_lower = explanation.lower()
             if any(p in expl_lower for p in (
-                'not a real error', 'not an error', 'false positive', 'no real error',
+                'not a real error', 'not an error', 'not error', "it's not error", 'false positive', 'no real error',
                 'zero errors', 'zero error', 'healthy state', 'no actual error',
                 'does not indicate an error', 'indicating success', 'not actually an error',
-                'is actually indicating success', 'not a real issue'
+                'is actually indicating success', 'not a real issue',
+                'no errors occurred', 'no error occurred', 'indicates that no errors'
             )):
                 if config.OLLAMA_DEBUG:
                     with _ollama_debug_lock:
