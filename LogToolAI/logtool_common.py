@@ -785,14 +785,15 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
     if not include:
         return
     min_ln, max_ln = min(include), max(include)
-    lines_out = []
-    lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Log: ' + html_escape(log_path) + '</title>')
-    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{display:block;height:0;overflow:hidden;line-height:0;margin:0;padding:0;font-size:0;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;}     .viewer-footer{font-size:0.75rem;color:#999;margin-top:1rem;} .viewer-banner{font-size:0.8rem;color:#666;background:#f0f0f0;padding:0.35rem 0.5rem;margin-bottom:0.5rem;border-radius:4px;}</style></head><body>')
+    header = []
+    header.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Log: ' + html_escape(log_path) + '</title>')
+    header.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{display:block;height:0;overflow:hidden;line-height:0;margin:0;padding:0;font-size:0;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;} .viewer-footer{font-size:0.75rem;color:#999;margin-top:1rem;} .viewer-banner{font-size:0.8rem;color:#666;background:#f0f0f0;padding:0.35rem 0.5rem;margin-bottom:0.5rem;border-radius:4px;}</style></head><body>')
     if back_link_url:
-        lines_out.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
-    lines_out.append('<p class="viewer-banner">LogToolAI log viewer — error keywords highlighted in yellow, empty lines collapsed</p>')
-    lines_out.append('<h2>' + html_escape(log_path) + '</h2>')
-    lines_out.append('<pre>')
+        header.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
+    header.append('<p class="viewer-banner">LogToolAI log viewer — error keywords highlighted in yellow, empty lines collapsed</p>')
+    header.append('<h2>' + html_escape(log_path) + '</h2>')
+    header.append('<pre>')
+    spans = []
     open_fn = gzip.open if (log_path or '').lower().endswith('.gz') else open
     mode = 'rt'
     kwargs = {'errors': 'replace'}
@@ -805,18 +806,18 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
                 if num in include:
                     raw = line.rstrip('\n')
                     if not raw.strip():
-                        lines_out.append('<span id="L' + str(num) + '" class="line line-empty">' + str(num) + ':</span>')
+                        spans.append('<span id="L' + str(num) + '" class="line line-empty">' + str(num) + ':</span>')
                     else:
                         highlighted = html_highlight_line(raw)
-                        lines_out.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + highlighted + '</span>')
+                        spans.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + highlighted + '</span>')
     except (OSError, gzip.BadGzipFile):
-        lines_out.append(html_escape('(Could not read log file: ' + log_path + ')'))
-    lines_out.append('</pre>')
-    lines_out.append('<p class="viewer-footer">LogToolAI log viewer (errors highlighted, empty lines collapsed)</p>')
-    lines_out.append('</body></html>')
+        spans.append(html_escape('(Could not read log file: ' + log_path + ')'))
+    footer = ['</pre>', '<p class="viewer-footer">LogToolAI log viewer (errors highlighted, empty lines collapsed)</p>', '</body></html>']
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(lines_out))
+            f.write('\n'.join(header) + '\n')
+            f.write(''.join(spans))  # no newlines between spans so no blank lines in <pre>
+            f.write('\n' + '\n'.join(footer))
     except OSError:
         pass
 
