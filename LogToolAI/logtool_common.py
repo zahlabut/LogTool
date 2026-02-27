@@ -401,9 +401,11 @@ def ollama_classify_and_explain(block_text, model=None, source_context=None, com
                 'not a real error', 'not an error', 'not error', "it's not error", 'false positive', 'no real error',
                 'zero errors', 'zero error', 'healthy state', 'no actual error',
                 'does not indicate an error', 'indicating success', 'not actually an error',
-                'is actually indicating success', 'not a real issue',
+                'is actually indicating success', 'not a real issue', 'no real issues',
                 'no errors occurred', 'no error occurred', 'indicates that no errors',
-                'non-error context', 'non-error', 'indicates a non-error'
+                'non-error context', 'non-error', 'indicates a non-error',
+                'functioning correctly', 'no real issues reported', 'successful operation',
+                'without any errors', 'without any failures'
             )):
                 if config.OLLAMA_DEBUG:
                     with _ollama_debug_lock:
