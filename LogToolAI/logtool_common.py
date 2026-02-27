@@ -350,7 +350,9 @@ def ollama_classify_and_explain(block_text, model=None):
             data = json.loads(resp.read().decode('utf-8'))
         reply = (data.get('response') or '').strip()
         reply_upper = reply.upper()
-        if 'NO' in reply_upper and 'YES' not in reply_upper:
+        # First line wins: if reply starts with NO, treat as NO even if YES appears later
+        first_line = (reply.split('\n')[0] or '').strip().upper()
+        if first_line.startswith('NO') or ('NO' in reply_upper and 'YES' not in reply_upper):
             if config.OLLAMA_DEBUG:
                 with _ollama_debug_lock:
                     print(c(_DIM, '[Ollama debug] classify reply (NO): ') + repr(reply[:400]) + ('...' if len(reply) > 400 else ''), flush=True)
@@ -380,6 +382,19 @@ def ollama_classify_and_explain(block_text, model=None):
                 explanation = after
         if explanation and len(explanation) > config.AI_MAX_EXPLANATION_CHARS:
             explanation = explanation[: config.AI_MAX_EXPLANATION_CHARS - 3] + '...'
+        # If explanation says it's not a real error, treat as NO so we filter the block out everywhere
+        if explanation:
+            expl_lower = explanation.lower()
+            if any(p in expl_lower for p in (
+                'not a real error', 'not an error', 'false positive', 'no real error',
+                'zero errors', 'zero error', 'healthy state', 'no actual error',
+                'does not indicate an error', 'indicating success', 'not actually an error',
+                'is actually indicating success', 'not a real issue'
+            )):
+                if config.OLLAMA_DEBUG:
+                    with _ollama_debug_lock:
+                        print(c(_DIM, '[Ollama debug] explanation says not a real error -> treating as NO'), flush=True)
+                return (False, None)
         if config.OLLAMA_DEBUG:
             with _ollama_debug_lock:
                 print(c(_DIM, '[Ollama debug] classify reply (YES): ') + repr(reply[:500]) + ('...' if len(reply) > 500 else ''), flush=True)
@@ -464,7 +479,7 @@ def ollama_choose_model_interactive(host=None):
     while True:
         try:
             prompt_str = c(_DIM, 'Choice [0-{} or s] (default 0): ').format(len(models))
-            choice = timed_input(prompt_str, 's', timeout_sec=timeout_sec).lower() or '0'
+            choice = timed_input(prompt_str, '0', timeout_sec=timeout_sec).lower() or '0'
             if choice == 's':
                 return OLLAMA_SKIP
             if choice == '0':
@@ -951,27 +966,35 @@ def get_download_command_for_zip(zip_path):
 
 def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None):
     """
-    Create a ZIP archive of the report, then print the download command block (RunTempest style).
+    Print paths to the text report (on this host) and create a ZIP archive, then print the download command (RunTempest style).
+    The .txt report stays on disk at report_path so the user can cat/ls it without unzipping.
     """
-    zip_path = create_report_archive(html_path, report_path, report_logs_dir=report_logs_dir)
-    if not zip_path:
-        return
-    cmd = get_download_command_for_zip(zip_path)
-    if not cmd:
-        return
+    report_path_abs = os.path.abspath(report_path) if report_path else None
     width = 60
     print('')
     print(c(_CYAN, '=' * width))
-    print(c(_CYAN, 'DOWNLOAD COMMAND FOR RESULTS ARCHIVE'))
+    print(c(_CYAN, 'REPORT PATHS'))
     print(c(_CYAN, '=' * width))
-    print(c(_GREEN, 'All results are packaged in a single ZIP file.'))
-    print(c(_DIM, 'Copy and paste this command on your local desktop:'))
-    print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
-    print('')
-    print(c(_YELLOW, '# Download all results (ZIP archive):'))
-    print(c(_CYAN, cmd))
-    print('')
-    print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
+    if report_path_abs and os.path.isfile(report_path_abs):
+        print(c(_GREEN, 'Text report (on this host):'))
+        print(c(_CYAN, report_path_abs))
+        print(c(_DIM, '  View: ') + 'cat ' + report_path_abs + '  or  less -R ' + report_path_abs)
+        print(c(_DIM, '  List: ') + 'ls -la ' + report_path_abs)
+        print('')
+    zip_path = create_report_archive(html_path, report_path, report_logs_dir=report_logs_dir)
+    if not zip_path:
+        print(c(_CYAN, '=' * width))
+        return
+    cmd = get_download_command_for_zip(zip_path)
+    print(c(_GREEN, 'ZIP archive (for download to desktop):'))
+    print(c(_CYAN, zip_path))
+    if cmd:
+        print('')
+        print(c(_YELLOW, 'Download command (run on your local desktop):'))
+        print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
+        print(c(_CYAN, cmd))
+        print('')
+        print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
     print(c(_CYAN, '=' * width))
 
 
