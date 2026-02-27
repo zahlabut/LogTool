@@ -787,7 +787,7 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
     min_ln, max_ln = min(include), max(include)
     lines_out = []
     lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Log: ' + html_escape(log_path) + '</title>')
-    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{color:#bbb;font-size:0.8em;line-height:0.7;min-height:0.7em;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;}</style></head><body>')
+    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{display:block;height:0;overflow:hidden;line-height:0;margin:0;padding:0;font-size:0;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;}</style></head><body>')
     if back_link_url:
         lines_out.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
     lines_out.append('<h2>' + html_escape(log_path) + '</h2>')
