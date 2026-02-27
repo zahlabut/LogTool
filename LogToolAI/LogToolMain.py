@@ -13,6 +13,7 @@ MODES = [
     (3, 'Analyze logs in local directory', 'analyze_local_logs'),
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
     (5, 'Extract pod logs for time range + Ollama summary (processes, success/errors)', 'extract_logs_time_range'),
+    (6, 'Analyze Zuul job (URL or local path: download then console, tempest, report)', 'zuul_job_analyze'),
 ]
 
 _BOLD = '\033[1m'
@@ -50,6 +51,8 @@ def main():
         from rhoso_versions import main as run_mode
     elif module_name == 'extract_logs_time_range':
         from extract_logs_time_range import main as run_mode
+    elif module_name == 'zuul_job_analyze':
+        from zuul_job_analyze import main as run_mode
     else:
         print('Unknown mode.')
         sys.exit(1)

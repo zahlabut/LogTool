@@ -6,6 +6,9 @@ import sys
 import os
 import json
 import shlex
+import socket
+import gzip
+import hashlib
 import linecache
 import datetime
 import difflib
@@ -59,6 +62,15 @@ def get_line_date(line):
                 ts = ts.split('.')[0]
             dt = datetime.datetime.strptime(ts.replace('T', ' '), '%Y-%m-%d %H:%M:%S')
             return (dt, None)
+        # Space-separated date + time (e.g. Zuul console "2026-02-24 21:09:15.023346 |")
+        m = re.search(r'(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})(?:\.(\d+))?\s', line)
+        if m:
+            base = m.group(1) + ' ' + m.group(2)
+            dt = datetime.datetime.strptime(base, '%Y-%m-%d %H:%M:%S')
+            if m.group(3):
+                us = int((m.group(3) + '000000')[:6])
+                dt = dt.replace(microsecond=us)
+            return (dt, None)
         m = re.search(r'\d{4}-\d{2}-\d{2}.\d{2}:\d{2}:\d{2}', line)
         if m:
             s = m.group()
@@ -89,6 +101,11 @@ def similar(a, b):
 def _normalize_signature_text(s):
     s = re.sub(r'\bstream\s+[A-Za-z0-9_.-]+', 'stream __', s, flags=re.IGNORECASE)
     s = re.sub(r'\bimagestream\s+[A-Za-z0-9_.-]+', 'imagestream __', s, flags=re.IGNORECASE)
+    # Collapse package-like tokens (e.g. perl-Error, perl-Encode, rhosp-rhel-9.4-appstream) so
+    # DNF/yum install blocks that only differ by package name merge into one (avoid duplicate blocks).
+    s = re.sub(r'\b[a-zA-Z][a-zA-Z0-9_.]*-[a-zA-Z0-9_.-]+\b', '__', s)
+    # Normalize DNF/yum operation words so "Installing", "Verifying", "Downloading" blocks merge
+    s = re.sub(r'\b(?:Installing|Verifying|Downloading)\b', '_DnfOp_', s, flags=re.IGNORECASE)
     return s
 
 
@@ -572,6 +589,271 @@ def extract_blocks_grep(path, keywords_file, since_dt):
         blocks.append((rep, rep_text, block_dt))
     linecache.clearcache()
     return blocks
+
+
+def html_escape(s):
+    """Escape for HTML content (amp, lt, gt, quote)."""
+    if not s:
+        return ''
+    s = str(s)
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+
+
+def line_for_display(line_text):
+    """Expand literal \\n and \\t in log lines (e.g. JSON details) for display."""
+    if not line_text:
+        return line_text
+    return line_text.replace('\\n', '\n').replace('\\t', '\t')
+
+
+def html_highlight_line(line_text):
+    """Escape HTML and wrap ERROR_KEYWORDS in <span class="hl">."""
+    out = html_escape(line_text)
+    for kw in (config.ERROR_KEYWORDS or []):
+        k = (kw or '').strip()
+        if not k:
+            continue
+        pat = re.compile(re.escape(k), re.IGNORECASE)
+        out = pat.sub(lambda m: '<span class="hl">' + m.group(0) + '</span>', out)
+    return out
+
+
+def safe_log_filename(log_path, used_names=None):
+    """Return a unique safe HTML filename for a log path. used_names is optional set to avoid collisions."""
+    base = (log_path or '').replace('/', '_').replace('\\', '_')
+    base = re.sub(r'[^\w\-\.]', '_', base)
+    base = base[-60:] if len(base) > 60 else (base or 'log')
+    h = hashlib.md5((log_path or '').encode('utf-8', errors='replace')).hexdigest()[:8]
+    name = base + '_' + h + '.html'
+    if used_names is not None:
+        while name in used_names:
+            h = hashlib.md5(((log_path or '') + h).encode('utf-8', errors='replace')).hexdigest()[:8]
+            name = base + '_' + h + '.html'
+        used_names.add(name)
+    return name
+
+
+def build_error_report_html(title, source_label, source_path, report_entries, use_ollama, ai_cache, html_path, report_logs_subdir_basename):
+    """
+    Build HTML report for pod/must-gather/local modes: main HTML + per-log HTML + viewer HTML in report_logs_dir.
+    Returns (html_content_string, report_logs_dir). Caller writes html_content to html_path.
+    """
+    ai_cache = ai_cache or {}
+    report_logs_dir = os.path.join(os.path.dirname(html_path), report_logs_subdir_basename)
+    main_basename = os.path.basename(html_path)
+    viewer_links = {}
+    if report_entries:
+        os.makedirs(report_logs_dir, exist_ok=True)
+        viewer_ranges = compute_viewer_line_ranges(report_entries)
+        used_viewer = set()
+        for p in viewer_ranges:
+            viewer_links[p] = 'view_' + safe_log_filename(p, used_viewer)
+        for p in viewer_links:
+            out_path = os.path.join(report_logs_dir, viewer_links[p])
+            build_log_viewer_file(p, viewer_ranges[p], out_path, back_link_url='../' + main_basename, back_link_text='Back to report')
+    lines = []
+    lines.append('<!DOCTYPE html>')
+    lines.append('<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">')
+    lines.append('<title>' + html_escape(title) + '</title>')
+    lines.append('<style>')
+    lines.append('body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1200px;}')
+    lines.append('a{color:#06c;} h1{font-size:1.5rem;} h2{font-size:1.2rem;margin-top:2rem;border-bottom:1px solid #ccc;}')
+    lines.append('.meta{color:#666;font-size:0.9rem;}')
+    lines.append('pre{white-space:pre-wrap;word-break:break-all;background:#f5f5f5;padding:0.75rem;border-radius:4px;font-size:0.85rem;}')
+    lines.append('.hl{background:#fce4a0;padding:0 2px;}')
+    lines.append('.block-meta{color:#666;margin-bottom:0.25rem;}')
+    lines.append('.ollama-explanation{margin-top:0.5rem;padding:0.5rem;background:#e8f4f8;border-left:3px solid #06c;font-size:0.9rem;}')
+    lines.append('.log-links{list-style:none;padding:0;} .log-links li{margin:0.4rem 0;}')
+    lines.append('</style></head><body>')
+    lines.append('<h1>' + html_escape(title) + '</h1>')
+    lines.append('<p class="meta">' + html_escape(source_label) + ': ' + html_escape(source_path) + ' &middot; AI filter: ' + ('on' if use_ollama else 'off') + '</p>')
+    lines.append('<h2>Error blocks</h2>')
+    max_block_lines = getattr(config, 'MAX_BLOCK_LINES_SHOWN', 9)
+    if not report_entries:
+        lines.append('<p class="meta">(No error blocks to report.)</p>')
+    elif report_logs_dir and os.path.isdir(report_logs_dir):
+        used = set()
+        path_counts = [(path, sum(1 for e in report_entries if e[0] == path)) for path in set(e[0] for e in report_entries)]
+        path_counts.sort(key=lambda x: -x[1])
+        lines.append('<p class="meta">Logs with error blocks (click to open):</p>')
+        lines.append('<ul class="log-links">')
+        subdir_name = report_logs_subdir_basename
+        for p, n_blocks in path_counts:
+            safe_name = safe_log_filename(p, used)
+            link_text = os.path.basename(p) if os.path.basename(p) else p.replace('/', '_')[-40:]
+            lines.append('<li><a href="' + html_escape(subdir_name + '/' + safe_name) + '">' + html_escape(link_text) + '</a> <span class="meta">(' + str(n_blocks) + ' block' + ('s' if n_blocks != 1 else '') + ')</span></li>')
+            log_lines = []
+            log_lines.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Log: ' + html_escape(p) + '</title>')
+            log_lines.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;} pre{white-space:pre-wrap;word-break:break-all;background:#f5f5f5;padding:0.75rem;font-size:0.85rem;} .hl{background:#fce4a0;} .block-meta{color:#666;} .ollama-explanation{margin-top:0.5rem;padding:0.5rem;background:#e8f4f8;border-left:3px solid #06c;} a{color:#06c;}</style></head><body>')
+            log_lines.append('<p><a href="' + html_escape('../' + main_basename) + '">&larr; Back to report</a></p>')
+            log_lines.append('<h2>' + html_escape(p) + '</h2>')
+            for (fp, lines_with_nums, block_text, sig, count) in report_entries:
+                if fp != p:
+                    continue
+                log_lines.append('<p class="block-meta">(occurred ' + str(count) + ' time' + ('s' if count != 1 else '') + ')</p>')
+                block_lines = []
+                for line_no, line_text in lines_with_nums[:max_block_lines]:
+                    display = line_for_display(line_text)
+                    for i, part in enumerate(display.splitlines()):
+                        prefix = (str(line_no) + ': ') if i == 0 else '      '
+                        block_lines.append(prefix + html_highlight_line(part))
+                if len(lines_with_nums) > max_block_lines:
+                    block_lines.append('... (' + str(len(lines_with_nums) - max_block_lines) + ' more lines)')
+                log_lines.append('<pre>' + '\n'.join(block_lines) + '</pre>')
+                if use_ollama and sig in ai_cache:
+                    _, expl = ai_cache[sig]
+                    if expl and expl.strip():
+                        log_lines.append('<p class="ollama-explanation"><strong>Ollama:</strong> ' + html_escape(expl.strip()) + '</p>')
+                if fp in viewer_links and lines_with_nums:
+                    first_ln = lines_with_nums[0][0]
+                    log_lines.append('<p><a href="' + html_escape(viewer_links[fp] + '#L' + str(first_ln)) + '">View in log at line ' + str(first_ln) + '</a></p>')
+            try:
+                with open(os.path.join(report_logs_dir, safe_name), 'w', encoding='utf-8') as f:
+                    f.write('\n'.join(log_lines))
+            except OSError:
+                pass
+        lines.append('</ul>')
+    else:
+        for p in sorted(set(e[0] for e in report_entries)):
+            lines.append('<h3>' + html_escape(p) + '</h3>')
+            for (fp, lines_with_nums, block_text, sig, count) in report_entries:
+                if fp != p:
+                    continue
+                lines.append('<p class="block-meta">(occurred ' + str(count) + ' time' + ('s' if count != 1 else '') + ')</p>')
+                block_lines = []
+                for line_no, line_text in lines_with_nums[:max_block_lines]:
+                    display = line_for_display(line_text)
+                    for i, part in enumerate(display.splitlines()):
+                        prefix = (str(line_no) + ': ') if i == 0 else '      '
+                        block_lines.append(prefix + html_highlight_line(part))
+                if len(lines_with_nums) > max_block_lines:
+                    block_lines.append('... (' + str(len(lines_with_nums) - max_block_lines) + ' more lines)')
+                lines.append('<pre>' + '\n'.join(block_lines) + '</pre>')
+                if use_ollama and sig in ai_cache:
+                    _, expl = ai_cache[sig]
+                    if expl and expl.strip():
+                        lines.append('<p class="ollama-explanation"><strong>Ollama:</strong> ' + html_escape(expl.strip()) + '</p>')
+                if fp in viewer_links and lines_with_nums:
+                    first_ln = lines_with_nums[0][0]
+                    lines.append('<p><a href="' + html_escape(viewer_links[fp] + '#L' + str(first_ln)) + '">View in log at line ' + str(first_ln) + '</a></p>')
+    lines.append('</body></html>')
+    return ('\n'.join(lines), report_logs_dir)
+
+
+def compute_viewer_line_ranges(report_entries, context_lines=None):
+    """
+    From report_entries (list of (path, lines_with_nums, block_text, sig, count)), compute per-path
+    merged line ranges (start, end) to include in log viewer, with context_lines before/after each block.
+    Returns dict: log_path -> list of (start_line, end_line) sorted and merged.
+    """
+    context = context_lines if context_lines is not None else getattr(config, 'REPORT_VIEWER_CONTEXT_LINES', 80)
+    by_path = {}
+    for entry in report_entries:
+        path = entry[0]
+        lines_with_nums = entry[1]
+        if not lines_with_nums:
+            continue
+        line_nos = [n for n, _ in lines_with_nums]
+        start = max(1, min(line_nos) - context)
+        end = max(line_nos) + context
+        by_path.setdefault(path, []).append((start, end))
+    out = {}
+    for path, ranges in by_path.items():
+        ranges.sort(key=lambda r: r[0])
+        merged = []
+        for a, b in ranges:
+            if merged and a <= merged[-1][1] + 1:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], b))
+            else:
+                merged.append((a, b))
+        out[path] = merged
+    return out
+
+
+def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None, back_link_text='Back to report'):
+    """
+    Write an HTML file that shows selected line ranges from log_path with anchors id="L123".
+    line_ranges: list of (start_line, end_line). Log can be plain or .gz.
+    """
+    include = set()
+    for a, b in line_ranges:
+        for i in range(a, b + 1):
+            include.add(i)
+    if not include:
+        return
+    min_ln, max_ln = min(include), max(include)
+    lines_out = []
+    lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Log: ' + html_escape(log_path) + '</title>')
+    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} a{color:#06c;}</style></head><body>')
+    if back_link_url:
+        lines_out.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
+    lines_out.append('<h2>' + html_escape(log_path) + '</h2>')
+    lines_out.append('<pre>')
+    open_fn = gzip.open if (log_path or '').lower().endswith('.gz') else open
+    mode = 'rt'
+    kwargs = {'errors': 'replace'}
+    try:
+        with open_fn(log_path, mode, **kwargs) as f:
+            for num in range(1, max_ln + 1):
+                line = f.readline()
+                if not line:
+                    break
+                if num in include:
+                    escaped = html_escape(line.rstrip('\n'))
+                    lines_out.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + escaped + '</span>')
+    except (OSError, gzip.BadGzipFile):
+        lines_out.append(html_escape('(Could not read log file: ' + log_path + ')'))
+    lines_out.append('</pre></body></html>')
+    try:
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(lines_out))
+    except OSError:
+        pass
+
+
+def get_download_command(html_path, report_path, report_logs_dir=None, extra_dirs=None):
+    """
+    Return a one-line command string for the user to run on their desktop to download the report
+    (HTML, TXT, and optional report_logs_dir / extra_dirs). Uses tar + base64 over SSH.
+    html_path, report_path: absolute paths to main HTML and text report.
+    report_logs_dir: optional directory (e.g. per-log HTML + viewer HTML).
+    extra_dirs: optional list of additional dir basenames to include (relative to same parent as html_path).
+    """
+    parent = os.path.dirname(os.path.abspath(html_path))
+    host = socket.gethostname()
+    user = os.environ.get('USER', 'root')
+    parts = [os.path.basename(html_path), os.path.basename(report_path)]
+    if report_logs_dir and os.path.isdir(report_logs_dir):
+        parts.append(os.path.basename(report_logs_dir))
+    for d in (extra_dirs or []):
+        if d and os.path.isdir(os.path.join(parent, d)):
+            if os.path.basename(d) not in parts:
+                parts.append(os.path.basename(d))
+    if not parts:
+        return None
+    # One command: mkdir -p report_download && ssh user@host "cd parent && tar cf - ... | base64" | base64 -d | tar xf - -C report_download
+    tar_list = ' '.join(shlex.quote(p) for p in parts)
+    remote_cmd = 'cd ' + shlex.quote(parent) + ' && tar cf - ' + tar_list + ' | base64'
+    cmd = 'mkdir -p report_download && ssh ' + shlex.quote(user + '@' + host) + ' ' + shlex.quote(remote_cmd) + ' | base64 -d | tar xf - -C report_download'
+    return cmd
+
+
+def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None):
+    """Print the download command in a visible block (like RunTempestMonitorPods)."""
+    cmd = get_download_command(html_path, report_path, report_logs_dir=report_logs_dir, extra_dirs=extra_dirs)
+    if not cmd:
+        return
+    width = 60
+    print('')
+    print('=' * width)
+    print('DOWNLOAD REPORT TO YOUR DESKTOP')
+    print('=' * width)
+    print('Run this on your desktop (replace <host> with controller hostname if different):')
+    print('')
+    print(cmd)
+    print('')
+    print('Then open report_download/' + os.path.basename(html_path) + ' in your browser.')
+    print('=' * width)
 
 
 # Export for report writing
