@@ -9,6 +9,7 @@ import shlex
 import socket
 import gzip
 import hashlib
+import zipfile
 import linecache
 import datetime
 import difflib
@@ -813,48 +814,73 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
         pass
 
 
-def get_download_command(html_path, report_path, report_logs_dir=None, extra_dirs=None):
+def create_report_archive(html_path, report_path, report_logs_dir=None):
     """
-    Return a one-line command string for the user to run on their desktop to download the report
-    (HTML, TXT, and optional report_logs_dir / extra_dirs). Uses tar + base64 over SSH.
-    html_path, report_path: absolute paths to main HTML and text report.
-    report_logs_dir: optional directory (e.g. per-log HTML + viewer HTML).
-    extra_dirs: optional list of additional dir basenames to include (relative to same parent as html_path).
+    Create a ZIP archive containing the report files (HTML, TXT, and optional report_logs_dir).
+    Returns the absolute path to the created ZIP, or None on failure.
+    ZIP is named report_archive_YYYYMMDD_HHMMSS.zip in the same directory as html_path.
     """
     parent = os.path.dirname(os.path.abspath(html_path))
-    host = socket.gethostname()
-    user = os.environ.get('USER', 'root')
-    parts = [os.path.basename(html_path), os.path.basename(report_path)]
-    if report_logs_dir and os.path.isdir(report_logs_dir):
-        parts.append(os.path.basename(report_logs_dir))
-    for d in (extra_dirs or []):
-        if d and os.path.isdir(os.path.join(parent, d)):
-            if os.path.basename(d) not in parts:
-                parts.append(os.path.basename(d))
-    if not parts:
+    ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    zip_name = 'report_archive_{}.zip'.format(ts)
+    zip_path = os.path.join(parent, zip_name)
+    try:
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for path in (html_path, report_path):
+                path = os.path.abspath(path)
+                if os.path.isfile(path):
+                    zf.write(path, os.path.basename(path))
+            if report_logs_dir and os.path.isdir(report_logs_dir):
+                subdir_name = os.path.basename(report_logs_dir.rstrip(os.sep))
+                for root, _dirs, files in os.walk(report_logs_dir):
+                    for f in files:
+                        full = os.path.join(root, f)
+                        arcname = os.path.join(subdir_name, os.path.relpath(full, report_logs_dir))
+                        zf.write(full, arcname)
+        return zip_path
+    except (OSError, zipfile.BadZipFile):
         return None
-    # One command: mkdir -p report_download && ssh user@host "cd parent && tar cf - ... | base64" | base64 -d | tar xf - -C report_download
-    tar_list = ' '.join(shlex.quote(p) for p in parts)
-    remote_cmd = 'cd ' + shlex.quote(parent) + ' && tar cf - ' + tar_list + ' | base64'
-    cmd = 'mkdir -p report_download && ssh ' + shlex.quote(user + '@' + host) + ' ' + shlex.quote(remote_cmd) + ' | base64 -d | tar xf - -C report_download'
+
+
+def get_download_command_for_zip(zip_path):
+    """
+    Return the one-line download command (RunTempest style): desktop runs ssh to bastion,
+    su - zuul, ssh to controller, base64 the ZIP, then base64 -d on desktop.
+    """
+    zip_path = os.path.abspath(zip_path)
+    if not os.path.isfile(zip_path):
+        return None
+    controller = socket.gethostname()
+    zip_basename = os.path.basename(zip_path)
+    # ssh root@<bastion> "su - zuul -c 'ssh -q controller-0 \"base64 /path/to/file.zip\"'" | base64 -d > file.zip
+    cmd = 'ssh root@<your_bastion_host> "su - zuul -c \'ssh -q {} \\"base64 {}\\"\'" | base64 -d > {}'.format(
+        controller, zip_path, shlex.quote(zip_basename))
     return cmd
 
 
 def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None):
-    """Print the download command in a visible block (like RunTempestMonitorPods)."""
-    cmd = get_download_command(html_path, report_path, report_logs_dir=report_logs_dir, extra_dirs=extra_dirs)
+    """
+    Create a ZIP archive of the report, then print the download command block (RunTempest style).
+    """
+    zip_path = create_report_archive(html_path, report_path, report_logs_dir=report_logs_dir)
+    if not zip_path:
+        return
+    cmd = get_download_command_for_zip(zip_path)
     if not cmd:
         return
     width = 60
     print('')
     print('=' * width)
-    print('DOWNLOAD REPORT TO YOUR DESKTOP')
+    print('DOWNLOAD COMMAND FOR RESULTS ARCHIVE')
     print('=' * width)
-    print('Run this on your desktop (replace <host> with controller hostname if different):')
+    print('All results are packaged in a single ZIP file.')
+    print('Copy and paste this command on your local desktop:')
+    print('(Replace <your_bastion_host> with your actual bastion hostname)')
     print('')
+    print('# Download all results (ZIP archive):')
     print(cmd)
     print('')
-    print('Then open report_download/' + os.path.basename(html_path) + ' in your browser.')
+    print('Then unzip the archive and open the HTML report in your browser.')
     print('=' * width)
 
 
