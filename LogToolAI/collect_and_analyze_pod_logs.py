@@ -260,6 +260,15 @@ def main():
             seen_sigs.append(sig)
             report_entries.append((path, lines_with_nums, block_text, sig, count))
 
+    n_blocks = len(report_entries)
+    n_unique = len(set(e[3] for e in report_entries)) if report_entries else 0
+    print(common.c(_GREEN, 'Grep found {} error block(s) ({} unique).').format(n_blocks, n_unique), flush=True)
+    if use_ollama and n_unique > 0:
+        print(common.c(_DIM, '  {} unique block(s) will be sent to Ollama for classification.').format(n_unique), flush=True)
+    elif use_ollama and n_unique == 0:
+        print(common.c(_DIM, '  No blocks to classify — skipping Ollama.'), flush=True)
+        use_ollama = False
+
     if use_ollama:
         resolved_model = (config.OLLAMA_MODEL or '').strip()
         model_was_auto = False
