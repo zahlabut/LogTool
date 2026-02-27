@@ -566,8 +566,10 @@ def extract_blocks_grep(path, keywords_file, since_dt):
                 block_dt = dt
                 break
         if block_dt is None:
-            block_dt = datetime.datetime.min
-        if since_dt and block_dt < since_dt:
+            block_dt = datetime.datetime.min  # sentinel: no parseable timestamp in block
+        # Skip only when we have a parseable timestamp that is before since_dt.
+        # If no line in the block had a parseable timestamp, keep the block (don't drop by time).
+        if since_dt and block_dt != datetime.datetime.min and block_dt < since_dt:
             continue
         rep = one_representative_block(lines_with_nums)
         if len(rep) == 1:
