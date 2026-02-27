@@ -254,6 +254,10 @@ def print_menu_columns(items, num_columns=3, cell_width=38):
 
 
 # --- Ollama ---
+# Sentinel returned by ollama_choose_model_interactive when user chooses "Skip Ollama"
+OLLAMA_SKIP = '_skip_ollama'
+
+
 def ollama_classify_and_explain(block_text, model=None):
     model = model or config.OLLAMA_MODEL
     snippet = (block_text or '')[:config.AI_MAX_BLOCK_CHARS]
@@ -380,10 +384,13 @@ def ollama_choose_model_interactive(host=None):
         extra = ', {}'.format(m['parameter_size']) if m['parameter_size'] else ''
         print('  {}) {}  ({:.1f} GB{})'.format(i, m['name'], m['size_gb'], extra), flush=True)
     print('  0) Auto (use smallest/fastest: {})'.format(models[-1]['name']), flush=True)
+    print('  s) Skip Ollama (include all blocks in report, no AI filter)', flush=True)
     print('', flush=True)
     while True:
         try:
-            choice = input(c(_DIM, 'Choice [0-{}] (default 0): ').format(len(models))).strip() or '0'
+            choice = input(c(_DIM, 'Choice [0-{} or s] (default 0): ').format(len(models))).strip().lower() or '0'
+            if choice == 's':
+                return OLLAMA_SKIP
             if choice == '0':
                 return models[-1]['name']
             idx = int(choice)
@@ -391,7 +398,7 @@ def ollama_choose_model_interactive(host=None):
                 return models[idx - 1]['name']
         except (ValueError, EOFError):
             pass
-        print(c(_YELLOW, '  Invalid choice. Enter 0 for auto or a number from the list.'), flush=True)
+        print(c(_YELLOW, '  Invalid choice. Enter 0 for auto, s to skip Ollama, or a number from the list.'), flush=True)
 
 
 def maybe_print_ollama_404_hint(model=None):

@@ -164,7 +164,9 @@ def main():
                 resolved_model = common.ollama_choose_model_interactive(config.OLLAMA_HOST)
             else:
                 resolved_model = common.ollama_pick_best_model(config.OLLAMA_HOST)
-        if resolved_model:
+        if resolved_model == common.OLLAMA_SKIP:
+            print(common.c(_DIM, '  Skipping Ollama summary.'), flush=True)
+        elif resolved_model:
             max_chars = getattr(config, 'EXTRACT_OLLAMA_MAX_CHARS', 50000) or 999999
             # Single request with clear file separators so Ollama sees one coherent context.
             combined = []

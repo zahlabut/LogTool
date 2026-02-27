@@ -294,7 +294,10 @@ def main():
             else:
                 resolved_model = common.ollama_pick_best_model(config.OLLAMA_HOST)
                 model_was_auto = True
-            if not resolved_model:
+            if resolved_model == common.OLLAMA_SKIP:
+                print(common.c(_DIM, '  Skipping Ollama — all blocks will be included in report.'), flush=True)
+                use_ollama = False
+            elif not resolved_model:
                 print(common.c(_YELLOW, '  No models on Ollama server — AI analyzing will be skipped.'), flush=True)
                 use_ollama = False
         if use_ollama:

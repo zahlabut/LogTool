@@ -1072,7 +1072,9 @@ def main():
                 resolved_model = common.ollama_choose_model_interactive(config.OLLAMA_HOST)
             else:
                 resolved_model = common.ollama_pick_best_model(config.OLLAMA_HOST)
-        if resolved_model:
+        if resolved_model == common.OLLAMA_SKIP:
+            print(common.c(_DIM, '  Skipping Ollama — all blocks will be included in report.'), flush=True)
+        elif resolved_model:
             unique_sigs = {}
             for (path, lines_with_nums, block_text, sig, count) in report_entries:
                 if sig not in unique_sigs:
