@@ -167,35 +167,35 @@ def main():
     print(common.c(_DIM, '-' * 60))
     print(common.c(_DIM, 'Getting latest log timestamp (oc logs --tail=10 per pod)...'), flush=True)
     baseline = get_baseline_quick(pods)
+    now = datetime.datetime.utcnow()
+    ref_dt = baseline if baseline is not None else now
     if baseline is None:
-        print(common.c(_YELLOW, 'Could not detect any timestamp. Using "since" = 24h ago.'))
-        since_dt = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
-        since_iso = None
+        print(common.c(_YELLOW, 'Could not detect any timestamp in logs.'))
+        print(common.c(_DIM, 'Choose how far back to analyze (from now):'))
     else:
-        baseline_str = baseline.strftime('%Y-%m-%d %H:%M:%S')
-        print('Last logged message was at: ' + common.c(_CYAN, baseline_str) + '.')
+        print('Last logged message was at: ' + common.c(_CYAN, ref_dt.strftime('%Y-%m-%d %H:%M:%S')) + '.')
         print(common.c(_DIM, 'Choose "since" time (messages after this will be analyzed):'))
-        print('  1) 2h back')
-        print('  2) 1h back')
-        print('  3) 30m back')
-        print('  4) Custom (enter minutes, e.g. 45)')
-        choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
-        if choice == '1':
-            delta = datetime.timedelta(hours=2)
-        elif choice == '2':
+    print('  1) 2h back')
+    print('  2) 1h back')
+    print('  3) 30m back')
+    print('  4) Custom (enter minutes, e.g. 45)')
+    choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
+    if choice == '1':
+        delta = datetime.timedelta(hours=2)
+    elif choice == '2':
+        delta = datetime.timedelta(hours=1)
+    elif choice == '3':
+        delta = datetime.timedelta(minutes=30)
+    elif choice == '4':
+        try:
+            mins = int(input('Minutes back: ').strip())
+            delta = datetime.timedelta(minutes=max(0, mins))
+        except Exception:
             delta = datetime.timedelta(hours=1)
-        elif choice == '3':
-            delta = datetime.timedelta(minutes=30)
-        elif choice == '4':
-            try:
-                mins = int(input('Minutes back: ').strip())
-                delta = datetime.timedelta(minutes=max(0, mins))
-            except Exception:
-                delta = datetime.timedelta(hours=1)
-        else:
-            delta = datetime.timedelta(hours=2)
-        since_dt = baseline - delta
-        since_iso = since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    else:
+        delta = datetime.timedelta(hours=2)
+    since_dt = ref_dt - delta
+    since_iso = since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
 
     since_str = since_dt.strftime('%Y-%m-%d %H:%M:%S')
     print(common.c(_GREEN, 'Analyzing logs since: ') + common.c(_CYAN, since_str) + '.')
