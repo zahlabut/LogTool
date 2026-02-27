@@ -6,10 +6,14 @@ import os
 # Base directory for the tool (where config.py lives). Paths below are relative to this.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# --- Paths & output ---
-LOGS_DIR = os.path.join(BASE_DIR, 'collected_pod_logs')
-REPORT_FILE = os.path.join(BASE_DIR, 'pod_logs_error_report.txt')
-REPORT_HTML = os.path.join(BASE_DIR, 'pod_logs_error_report.html')
+# --- Result directory (one base dir per run; each mode has a subdir with its outputs) ---
+# All mode reports and mode-specific outputs go under RESULT_DIR / <mode_subdir>.
+RESULT_DIR = os.path.join(BASE_DIR, 'results')
+
+# --- Paths & output (mode 1: pod logs) ---
+LOGS_DIR = os.path.join(RESULT_DIR, 'pod_logs', 'collected_pod_logs')
+REPORT_FILE = os.path.join(RESULT_DIR, 'pod_logs', 'pod_logs_error_report.txt')
+REPORT_HTML = os.path.join(RESULT_DIR, 'pod_logs', 'pod_logs_error_report.html')
 
 # --- Concurrency ---
 MAX_WORKERS = 16
@@ -91,36 +95,38 @@ MUST_GATHER_BASE_DIR = os.path.join(BASE_DIR, 'must_gather_output')
 # MUST_GATHER_IMAGE = 'quay.io/openstack-k8s-operators/openstack-must-gather'
 # or registry.redhat.io/rhoso-operators/openstack-must-gather-rhel9
 MUST_GATHER_IMAGE = ''
-# Report file for must-gather analysis (default: next to REPORT_FILE).
-MUST_GATHER_REPORT_FILE = os.path.join(BASE_DIR, 'must_gather_error_report.txt')
-MUST_GATHER_REPORT_HTML = os.path.join(BASE_DIR, 'must_gather_error_report.html')
+# Report files go under result dir for this mode.
+MUST_GATHER_REPORT_FILE = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_error_report.txt')
+MUST_GATHER_REPORT_HTML = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_error_report.html')
 
 # --- Local directory mode (analyze_local_logs) ---
-# Report file when analyzing logs in a user-provided local directory.
-LOCAL_LOG_REPORT_FILE = os.path.join(BASE_DIR, 'local_logs_error_report.txt')
-LOCAL_LOG_REPORT_HTML = os.path.join(BASE_DIR, 'local_logs_error_report.html')
+LOCAL_LOG_REPORT_FILE = os.path.join(RESULT_DIR, 'local_logs', 'local_logs_error_report.txt')
+LOCAL_LOG_REPORT_HTML = os.path.join(RESULT_DIR, 'local_logs', 'local_logs_error_report.html')
 
 # --- Extract logs by time range (extract_logs_time_range) ---
 # Base directory for extracted log runs; a timestamped subdir is created each run.
-EXTRACTED_LOGS_BASE_DIR = os.path.join(BASE_DIR, 'extracted_logs')
+EXTRACTED_LOGS_BASE_DIR = os.path.join(RESULT_DIR, 'extract_logs')
 # Max characters of combined log content to send to Ollama for summary (0 = no limit; very large may time out).
 EXTRACT_OLLAMA_MAX_CHARS = 50000
 # Max tokens for Ollama summary response.
 EXTRACT_OLLAMA_MAX_PREDICT = 1024
 
 # --- Zuul job analysis (zuul_job_analyze) ---
-# Report files when analyzing Zuul job logs (local directory).
-ZUUL_JOB_REPORT_FILE = os.path.join(BASE_DIR, 'zuul_job_analysis_report.txt')
-# HTML report (main report with links to console, tempest, deployment sections).
-ZUUL_JOB_REPORT_HTML = os.path.join(BASE_DIR, 'zuul_job_analysis_report.html')
+ZUUL_JOB_REPORT_FILE = os.path.join(RESULT_DIR, 'zuul_job', 'zuul_job_analysis_report.txt')
+ZUUL_JOB_REPORT_HTML = os.path.join(RESULT_DIR, 'zuul_job', 'zuul_job_analysis_report.html')
 # Base directory for downloaded Zuul logs (zuul_logs_download.py); each run creates a subdir.
-ZUUL_DOWNLOAD_DIR = os.path.join(BASE_DIR, 'zuul_downloaded')
+ZUUL_DOWNLOAD_DIR = os.path.join(RESULT_DIR, 'zuul_job', 'zuul_downloaded')
 # PSI/Red Hat: ci-framework-tools GitLab (download-zuul-logs.py). Script is run with --api, --tenant, --build-id, --download-dir.
 ZUUL_PSI_REQUIREMENTS_URL = 'https://gitlab.cee.redhat.com/ci-framework/ci-framework-tools/-/raw/main/download/requirements.txt'
 ZUUL_PSI_SCRIPT_URL = 'https://gitlab.cee.redhat.com/ci-framework/ci-framework-tools/-/raw/main/download/download-zuul-logs.py'
 # --- Report HTML: log viewer (link to original log at line) ---
 # Number of lines before/after each error block to include in the "view in log" viewer HTML.
 REPORT_VIEWER_CONTEXT_LINES = 80
+
+# --- Interactive prompts: auto-choose fastest option if no input ---
+# Seconds to wait for user input at prompts (since time, Ollama model, etc.). After timeout, the
+# fastest option is used (e.g. 30m since, skip Ollama). Set to 0 to wait indefinitely.
+PROMPT_TIMEOUT_SEC = 300  # 5 minutes
 
 # --- Display ---
 NO_COLOR = False

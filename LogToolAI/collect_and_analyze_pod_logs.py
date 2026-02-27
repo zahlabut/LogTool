@@ -144,7 +144,8 @@ def main():
         menu_items.append((i, '{} ({} pod{})'.format(component, n, 's' if n != 1 else '')))
     menu_items.append((num_options, 'All pods ({} pods)'.format(total)))
     common.print_menu_columns(menu_items, num_columns=3, cell_width=38)
-    choice = input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options)).strip()
+    _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
+    choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
     try:
         idx = int(choice)
         if 1 <= idx <= len(groups):
@@ -179,7 +180,7 @@ def main():
     print('  2) 1h back')
     print('  3) 30m back')
     print('  4) Custom (enter minutes, e.g. 45)')
-    choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
+    choice = common.timed_input(common.c(_DIM, 'Choice [1-4]: '), '3', timeout_sec=_timeout).strip() or '3'
     if choice == '1':
         delta = datetime.timedelta(hours=2)
     elif choice == '2':
@@ -188,7 +189,7 @@ def main():
         delta = datetime.timedelta(minutes=30)
     elif choice == '4':
         try:
-            mins = int(input('Minutes back: ').strip())
+            mins = int(common.timed_input('Minutes back: ', '30', timeout_sec=_timeout).strip())
             delta = datetime.timedelta(minutes=max(0, mins))
         except Exception:
             delta = datetime.timedelta(hours=1)
@@ -349,6 +350,7 @@ def main():
     print('')
     print(common.c(_CYAN, '[5/5] Write report'))
     print(common.c(_DIM, '-' * 60))
+    os.makedirs(os.path.dirname(report_path), exist_ok=True)
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Pod logs error report') + ' — since: {}\n'.format(since_str))
         f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + '{}\n'.format(os.path.abspath(logs_dir)))

@@ -99,8 +99,10 @@ The pod-logs mode is interactive:
    ```
 
 Edit **config.py** (not the script) for:
-- **Paths:** `LOGS_DIR`, `REPORT_FILE`
+- **Result directory:** `RESULT_DIR` (default: `results/` under the tool). Each mode writes its outputs into a subdir: `pod_logs/`, `must_gather/`, `local_logs/`, `zuul_job/`, `extract_logs/`. Reports and mode-specific files live under `RESULT_DIR/<subdir>/`.
+- **Paths:** `LOGS_DIR`, `REPORT_FILE` (pod mode; under `RESULT_DIR/pod_logs/` by default)
 - **Concurrency:** `MAX_WORKERS`, `OLLAMA_MAX_CONCURRENT`
+- **Prompt timeout:** `PROMPT_TIMEOUT_SEC` (default 300). If the user does not answer a prompt (e.g. since time, Ollama model) within this time, the tool uses the **fastest** option (e.g. 30m since, skip Ollama, first group). Set to 0 to wait indefinitely.
 - **Ollama:** `OLLAMA_HOST` (default `http://10.9.95.129:11434`; set to `''` to disable), `OLLAMA_MODEL` (empty = interactive model choice or auto-pick), `OLLAMA_TIMEOUT`, `OLLAMA_DEBUG`, etc.
 - **Error detection:** `ERROR_KEYWORDS`, `CONTEXT_BEFORE`, `CONTEXT_AFTER`, `FUZZY_MATCH_RATIO`, etc.
 - **Must-gather mode:** `MUST_GATHER_BASE_DIR`, `MUST_GATHER_IMAGE` (empty = default OpenShift image; for RHOSO set to the OpenStack must-gather image), `MUST_GATHER_REPORT_FILE`.
@@ -218,9 +220,14 @@ You should see JSON with a `"models"` array. From another host, use `http://<SER
 
 ## Files and directories (defaults)
 
-| Item | Default |
-|------|--------|
-| Collected logs | `LogToolAI/collected_pod_logs/` |
-| Report file | `LogToolAI/pod_logs_error_report.txt` |
+All mode outputs go under **`config.RESULT_DIR`** (default: `results/` next to the tool). Each mode has its own subdirectory:
 
-Both are under `config.BASE_DIR` and can be changed in **config.py**.
+| Mode | Subdir | Contents |
+|------|--------|----------|
+| 1 Pod logs | `results/pod_logs/` | `pod_logs_error_report.txt`, `pod_logs_error_report.html`, `collected_pod_logs/`, report viewer logs |
+| 2 Must-gather | `results/must_gather/` | `must_gather_error_report.txt`, `must_gather_error_report.html`, report viewer logs |
+| 3 Local logs | `results/local_logs/` | `local_logs_error_report.txt`, `local_logs_error_report.html`, report viewer logs |
+| 4 Zuul job | `results/zuul_job/` | `zuul_job_analysis_report.txt`, `zuul_job_analysis_report.html`, `zuul_downloaded/`, report viewer logs |
+| 5 Extract logs | `results/extract_logs/` | Timestamped run dirs with extracted logs and optional `ollama_summary.txt` |
+
+Raw must-gather output stays in `config.MUST_GATHER_BASE_DIR` (default: `must_gather_output/` under the tool). Override paths in **config.py**.

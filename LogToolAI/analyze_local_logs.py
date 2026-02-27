@@ -65,11 +65,8 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_CYAN, '[1/6] Directory path'))
     print(common.c(_CYAN, '=' * 60))
-    try:
-        path_in = input(common.c(_DIM, 'Enter path to directory containing logs: ')).strip()
-    except EOFError:
-        print(common.c(_YELLOW, 'No input. Exiting.'))
-        sys.exit(1)
+    _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
+    path_in = common.timed_input(common.c(_DIM, 'Enter path to directory containing logs: '), '.', timeout_sec=_timeout).strip()
     if not path_in:
         print(common.c(_YELLOW, 'Empty path. Exiting.'))
         sys.exit(1)
@@ -98,8 +95,8 @@ def main():
         menu_items.append((i, '{} ({} file{})'.format(component, n, 's' if n != 1 else '')))
     menu_items.append((num_options, 'All ({} files)'.format(total)))
     common.print_menu_columns(menu_items, num_columns=3, cell_width=38)
+    choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
     try:
-        choice = input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options)).strip()
         idx = int(choice)
     except (ValueError, EOFError):
         idx = num_options
@@ -129,10 +126,7 @@ def main():
         print('  2) 1h back')
         print('  3) 30m back')
         print('  4) Custom (enter minutes, e.g. 45)')
-        try:
-            choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
-        except EOFError:
-            choice = '1'
+        choice = common.timed_input(common.c(_DIM, 'Choice [1-4]: '), '3', timeout_sec=_timeout).strip() or '3'
         if choice == '1':
             delta = datetime.timedelta(hours=2)
         elif choice == '2':
@@ -141,7 +135,7 @@ def main():
             delta = datetime.timedelta(minutes=30)
         elif choice == '4':
             try:
-                mins = int(input('Minutes back: ').strip())
+                mins = int(common.timed_input('Minutes back: ', '30', timeout_sec=_timeout).strip())
                 delta = datetime.timedelta(minutes=max(0, mins))
             except Exception:
                 delta = datetime.timedelta(hours=1)
@@ -283,6 +277,7 @@ def main():
     print(common.c(_CYAN, '[6/6] Write report'))
     print(common.c(_DIM, '-' * 60))
     report_path = getattr(config, 'LOCAL_LOG_REPORT_FILE', os.path.join(config.BASE_DIR, 'local_logs_error_report.txt'))
+    os.makedirs(os.path.dirname(report_path), exist_ok=True)
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Local directory error report') + ' — since: {}\n'.format(since_str))
         f.write(common.r(common.REPORT_DIM, 'Source directory: ') + root_dir + '\n')

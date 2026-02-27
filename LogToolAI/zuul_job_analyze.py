@@ -863,11 +863,8 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_DIM, 'Enter Zuul job URL (base URL is fine; we add /logs if needed) or path to existing job dir:'))
     print(common.c(_DIM, '  URL example: https://.../zuul/t/tenant/build/<uuid>'))
-    try:
-        path_in = input(common.c(_DIM, 'URL or path: ')).strip()
-    except EOFError:
-        print(common.c(_YELLOW, 'No input. Exiting.'))
-        sys.exit(1)
+    _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
+    path_in = common.timed_input(common.c(_DIM, 'URL or path: '), '', timeout_sec=_timeout).strip()
     if not path_in:
         print(common.c(_YELLOW, 'Empty input. Exiting.'))
         sys.exit(1)
@@ -898,8 +895,8 @@ def main():
         for i, j in enumerate(job_dirs, 1):
             print('  {}) {}'.format(i, os.path.basename(j)))
         print('  {}) All'.format(len(job_dirs) + 1))
+        choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(len(job_dirs) + 1), '1', timeout_sec=_timeout)
         try:
-            choice = input(common.c(_DIM, 'Choice [1-{}]: ').format(len(job_dirs) + 1)).strip()
             idx = int(choice)
         except (ValueError, EOFError):
             idx = len(job_dirs) + 1
@@ -1050,11 +1047,9 @@ def main():
     print(common.c(_DIM, '-' * 60))
     print(common.c(_DIM, '  Found {} unique error block(s).').format(n_blocks), flush=True)
     if n_blocks > 0 and config.OLLAMA_HOST and common.ollama_reachable():
-        try:
-            sys.stdout.flush()
-            choice = input(common.c(_DIM, '  Use Ollama to filter blocks (real error vs not)? [y/N]: ')).strip().lower()
-        except EOFError:
-            choice = 'n'
+        choice = common.timed_input(
+            common.c(_DIM, '  Use Ollama to filter blocks (real error vs not)? [y/N]: '), 'n', timeout_sec=_timeout
+        ).strip().lower()
         if choice in ('y', 'yes'):
             use_ollama = True
         else:
@@ -1113,6 +1108,7 @@ def main():
     print(common.c(_DIM, '-' * 60))
     report_path = getattr(config, 'ZUUL_JOB_REPORT_FILE', os.path.join(config.BASE_DIR, 'zuul_job_analysis_report.txt'))
     print(common.c(_DIM, '  Writing text report: ') + report_path, flush=True)
+    os.makedirs(os.path.dirname(report_path), exist_ok=True)
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Zuul job analysis report') + '\n')
         f.write(common.r(common.REPORT_DIM, 'Source path: ') + path + '\n')

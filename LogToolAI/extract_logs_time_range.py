@@ -60,8 +60,9 @@ def main():
         menu_items.append((i, '{} ({} pod{})'.format(component, n, 's' if n != 1 else '')))
     menu_items.append((num_options, 'All pods ({} pods)'.format(total)))
     common.print_menu_columns(menu_items, num_columns=3, cell_width=38)
+    _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
+    choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
     try:
-        choice = input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options)).strip()
         idx = int(choice)
     except (ValueError, EOFError):
         idx = num_options
@@ -92,10 +93,7 @@ def main():
         print('  2) 1h back')
         print('  3) 30m back')
         print('  4) Custom (enter minutes, e.g. 45)')
-        try:
-            choice = input(common.c(_DIM, 'Choice [1-4]: ')).strip() or '1'
-        except EOFError:
-            choice = '1'
+        choice = common.timed_input(common.c(_DIM, 'Choice [1-4]: '), '3', timeout_sec=_timeout).strip() or '3'
         if choice == '1':
             delta = datetime.timedelta(hours=2)
         elif choice == '2':
@@ -104,7 +102,7 @@ def main():
             delta = datetime.timedelta(minutes=30)
         elif choice == '4':
             try:
-                mins = int(input('Minutes back: ').strip())
+                mins = int(common.timed_input('Minutes back: ', '30', timeout_sec=_timeout).strip())
                 delta = datetime.timedelta(minutes=max(0, mins))
             except Exception:
                 delta = datetime.timedelta(hours=1)

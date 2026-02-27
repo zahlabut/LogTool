@@ -16,12 +16,24 @@ import difflib
 import subprocess
 import tempfile
 import threading
+import time as time_module
 import urllib.error
 import urllib.request
 from string import digits
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
+
+# Optional: select for timed stdin (Unix)
+try:
+    import select
+except ImportError:
+    select = None
+# Optional: msvcrt for timed stdin on Windows
+try:
+    import msvcrt
+except ImportError:
+    msvcrt = None
 
 # --- Display (from config) ---
 _USE_COLOR = sys.stdout.isatty() and not config.NO_COLOR
@@ -124,6 +136,61 @@ def c(style, msg):
 
 def r(style, s):
     return style + s + _REPORT_RESET
+
+
+def timed_input(prompt, default, timeout_sec=None):
+    """
+    Read a line from stdin with optional timeout. If timeout_sec is 0 or None, or stdin is not
+    a tty, behaves like input(prompt) and returns stripped line or default if empty.
+    If timeout expires before input, flush stdin (Unix) and return default (fastest option).
+    """
+    timeout_sec = timeout_sec if timeout_sec is not None else getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
+    if timeout_sec <= 0 or not sys.stdin.isatty():
+        try:
+            line = input(prompt).strip()
+            return line if line else default
+        except EOFError:
+            return default
+    # Timed input
+    sys.stdout.write(prompt)
+    sys.stdout.flush()
+    if select and hasattr(sys.stdin, 'fileno'):
+        try:
+            r, _, _ = select.select([sys.stdin], [], [], timeout_sec)
+            if r:
+                line = sys.stdin.readline().strip()
+                return line if line else default
+            # Timeout: discard any partial input so next prompt gets clean stdin
+            while True:
+                r, _, _ = select.select([sys.stdin], [], [], 0)
+                if not r:
+                    break
+                sys.stdin.readline()
+            print(c(_YELLOW, '  No input in {}s — using fastest option.').format(timeout_sec), flush=True)
+            return default
+        except (ValueError, OSError):
+            pass
+    if msvcrt:
+        try:
+            end_time = time_module.monotonic() + timeout_sec
+            chars = []
+            while time_module.monotonic() < end_time:
+                if msvcrt.kbhit():
+                    ch = msvcrt.getwche()
+                    if ch in ('\r', '\n'):
+                        line = ''.join(chars).strip()
+                        return line if line else default
+                    chars.append(ch)
+                time_module.sleep(0.05)
+            print(c(_YELLOW, '  No input in {}s — using fastest option.').format(timeout_sec), flush=True)
+            return default
+        except (OSError, AttributeError):
+            pass
+    try:
+        line = input().strip()
+        return line if line else default
+    except EOFError:
+        return default
 
 
 def highlight_error_keywords(line_text):
@@ -386,9 +453,11 @@ def ollama_choose_model_interactive(host=None):
     print('  0) Auto (use smallest/fastest: {})'.format(models[-1]['name']), flush=True)
     print('  s) Skip Ollama (include all blocks in report, no AI filter)', flush=True)
     print('', flush=True)
+    timeout_sec = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
     while True:
         try:
-            choice = input(c(_DIM, 'Choice [0-{} or s] (default 0): ').format(len(models))).strip().lower() or '0'
+            prompt_str = c(_DIM, 'Choice [0-{} or s] (default 0): ').format(len(models))
+            choice = timed_input(prompt_str, 's', timeout_sec=timeout_sec).lower() or '0'
             if choice == 's':
                 return OLLAMA_SKIP
             if choice == '0':
