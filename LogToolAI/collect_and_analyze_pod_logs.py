@@ -211,6 +211,20 @@ def main():
     print(common.c(_DIM, 'Logs directory: ') + common.c(_CYAN, logs_dir))
     log_paths = collect_logs_since(logs_dir, pods, since_iso)
 
+    total_lines = 0
+    total_bytes = 0
+    for p in log_paths:
+        try:
+            with open(p, 'rb') as f:
+                data = f.read()
+                total_bytes += len(data)
+                total_lines += data.count(b'\n') + (1 if data and not data.endswith(b'\n') else 0)
+        except (OSError, IOError):
+            pass
+    print(common.c(_DIM, '  Collected {} lines ({} bytes) in {} file(s).').format(total_lines, total_bytes, len(log_paths)), flush=True)
+    if total_lines == 0:
+        print(common.c(_YELLOW, '  No log content in the selected time window. Pods may have been restarted or logs rotated. Try a shorter "since" (e.g. 2h or 30m).'), flush=True)
+
     print('')
     use_ollama = False
     if config.OLLAMA_HOST:
@@ -263,6 +277,8 @@ def main():
     n_blocks = len(report_entries)
     n_unique = len(set(e[3] for e in report_entries)) if report_entries else 0
     print(common.c(_GREEN, 'Grep found {} error block(s) ({} unique).').format(n_blocks, n_unique), flush=True)
+    if n_blocks == 0 and total_lines > 0:
+        print(common.c(_YELLOW, '  No lines matched error keywords. Logs are in {} (keywords: config.ERROR_KEYWORDS in config.py).').format(logs_dir), flush=True)
     if use_ollama and n_unique > 0:
         print(common.c(_DIM, '  {} unique block(s) will be sent to Ollama for classification.').format(n_unique), flush=True)
     elif use_ollama and n_unique == 0:
