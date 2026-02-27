@@ -870,18 +870,18 @@ def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_di
         return
     width = 60
     print('')
-    print('=' * width)
-    print('DOWNLOAD COMMAND FOR RESULTS ARCHIVE')
-    print('=' * width)
-    print('All results are packaged in a single ZIP file.')
-    print('Copy and paste this command on your local desktop:')
-    print('(Replace <your_bastion_host> with your actual bastion hostname)')
+    print(c(_CYAN, '=' * width))
+    print(c(_CYAN, 'DOWNLOAD COMMAND FOR RESULTS ARCHIVE'))
+    print(c(_CYAN, '=' * width))
+    print(c(_GREEN, 'All results are packaged in a single ZIP file.'))
+    print(c(_DIM, 'Copy and paste this command on your local desktop:'))
+    print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
     print('')
-    print('# Download all results (ZIP archive):')
-    print(cmd)
+    print(c(_YELLOW, '# Download all results (ZIP archive):'))
+    print(c(_CYAN, cmd))
     print('')
-    print('Then unzip the archive and open the HTML report in your browser.')
-    print('=' * width)
+    print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
+    print(c(_CYAN, '=' * width))
 
 
 # Export for report writing
