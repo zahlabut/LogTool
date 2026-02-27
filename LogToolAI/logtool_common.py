@@ -786,8 +786,8 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
         return
     min_ln, max_ln = min(include), max(include)
     lines_out = []
-    lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Log: ' + html_escape(log_path) + '</title>')
-    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{display:block;height:0;overflow:hidden;line-height:0;margin:0;padding:0;font-size:0;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;}</style></head><body>')
+    lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Log: ' + html_escape(log_path) + '</title>')
+    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{display:block;height:0;overflow:hidden;line-height:0;margin:0;padding:0;font-size:0;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;} .viewer-footer{font-size:0.75rem;color:#999;margin-top:1rem;}</style></head><body>')
     if back_link_url:
         lines_out.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
     lines_out.append('<h2>' + html_escape(log_path) + '</h2>')
@@ -810,7 +810,9 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
                         lines_out.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + highlighted + '</span>')
     except (OSError, gzip.BadGzipFile):
         lines_out.append(html_escape('(Could not read log file: ' + log_path + ')'))
-    lines_out.append('</pre></body></html>')
+    lines_out.append('</pre>')
+    lines_out.append('<p class="viewer-footer">LogToolAI log viewer (errors highlighted, empty lines collapsed)</p>')
+    lines_out.append('</body></html>')
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines_out))
