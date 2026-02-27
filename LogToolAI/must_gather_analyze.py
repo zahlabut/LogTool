@@ -175,10 +175,12 @@ def main():
         idx = num_options
     if idx == num_options:
         selected_paths = log_paths
+        selected_component = 'all'
         print(common.c(_GREEN, 'Selected all {} files.').format(total))
     else:
         selected_paths = groups[idx - 1][1]
-        print(common.c(_GREEN, 'Selected group "{}": {} files.').format(groups[idx - 1][0], len(selected_paths)))
+        selected_component = groups[idx - 1][0]
+        print(common.c(_GREEN, 'Selected group "{}": {} files.').format(selected_component, len(selected_paths)))
 
     print('')
     print(common.c(_CYAN, '[3/6] Baseline timestamp'))
@@ -315,11 +317,14 @@ def main():
             done_count = [0]
             lock = threading.Lock()
 
+            ollama_source = 'RHOSO (Red Hat OpenStack on OpenShift)'
             def _classify_one(args):
                 sig, block_text, model = args
-                keep, expl = common.ollama_classify_and_explain(block_text, model=model)
+                keep, expl = common.ollama_classify_and_explain(
+                    block_text, model=model, source_context=ollama_source, component_name=selected_component)
                 if keep and (not expl or len(expl.strip()) < 40):
-                    expl = common.ollama_detailed_explanation(block_text, model=model)
+                    expl = common.ollama_detailed_explanation(
+                        block_text, model=model, source_context=ollama_source, component_name=selected_component)
                 return (sig, keep, expl)
 
             with ThreadPoolExecutor(max_workers=n_workers or 1) as ex:

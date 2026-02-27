@@ -1080,9 +1080,12 @@ def main():
             print(common.c(_DIM, '  Classifying {} unique blocks (Ollama)...').format(n_unique), flush=True)
             done_count = [0]
             lock = threading.Lock()
+            ollama_source = 'Zuul job (RHOSO CI)'
+            ollama_component = 'Zuul job'
             def _classify(args):
                 s, text, model = args
-                keep, expl = common.ollama_classify_and_explain(text, model=model)
+                keep, expl = common.ollama_classify_and_explain(
+                    text, model=model, source_context=ollama_source, component_name=ollama_component)
                 return (s, keep, expl)
             with ThreadPoolExecutor(max_workers=n_workers_ollama or 1) as ex:
                 futures = [ex.submit(_classify, (sig, unique_sigs[sig], resolved_model)) for sig in unique_sigs]

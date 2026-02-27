@@ -146,19 +146,23 @@ def main():
     common.print_menu_columns(menu_items, num_columns=3, cell_width=38)
     _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
     choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
+    selected_component = 'all'
     try:
         idx = int(choice)
         if 1 <= idx <= len(groups):
             pods = groups[idx - 1][1]
-            print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(groups[idx - 1][0], len(pods)))
+            selected_component = groups[idx - 1][0]
+            print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(selected_component, len(pods)))
         elif idx == len(groups) + 1:
             print(common.c(_GREEN, 'Selected all pods: {}.').format(total))
         else:
             pods = groups[0][1]
-            print(common.c(_YELLOW, 'Invalid choice; using first group "{}".').format(groups[0][0]))
+            selected_component = groups[0][0]
+            print(common.c(_YELLOW, 'Invalid choice; using first group "{}".').format(selected_component))
     except ValueError:
         pods = groups[0][1]
-        print(common.c(_YELLOW, 'Invalid input; using first group "{}".').format(groups[0][0]))
+        selected_component = groups[0][0]
+        print(common.c(_YELLOW, 'Invalid input; using first group "{}".').format(selected_component))
     if not pods:
         print(common.c(_YELLOW, 'No pods to analyze. Exiting.'))
         sys.exit(0)
@@ -318,11 +322,14 @@ def main():
             done_count = [0]
             lock = threading.Lock()
 
+            ollama_source = 'RHOSO (Red Hat OpenStack on OpenShift)'
             def _classify_one(args):
                 sig, block_text, model = args
-                keep, expl = common.ollama_classify_and_explain(block_text, model=model)
+                keep, expl = common.ollama_classify_and_explain(
+                    block_text, model=model, source_context=ollama_source, component_name=selected_component)
                 if keep and (not expl or len(expl.strip()) < 40):
-                    expl = common.ollama_detailed_explanation(block_text, model=model)
+                    expl = common.ollama_detailed_explanation(
+                        block_text, model=model, source_context=ollama_source, component_name=selected_component)
                 return (sig, keep, expl)
 
             with ThreadPoolExecutor(max_workers=n_workers or 1) as ex:

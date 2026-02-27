@@ -325,12 +325,21 @@ def print_menu_columns(items, num_columns=3, cell_width=38):
 OLLAMA_SKIP = '_skip_ollama'
 
 
-def ollama_classify_and_explain(block_text, model=None):
+def ollama_classify_and_explain(block_text, model=None, source_context=None, component_name=None):
     model = model or config.OLLAMA_MODEL
     snippet = (block_text or '')[:config.AI_MAX_BLOCK_CHARS]
     if len(block_text or '') > config.AI_MAX_BLOCK_CHARS:
         snippet += '\n... [truncated]'
+    context_line = ''
+    if source_context or component_name:
+        parts = []
+        if source_context:
+            parts.append('Environment: {}'.format(source_context))
+        if component_name:
+            parts.append('Component/group: {}'.format(component_name))
+        context_line = '\n'.join(parts) + '\n\n'
     prompt = (
+        context_line +
         'You are classifying a log block that was matched by a grep for words like "error", "failed", "exception". '
         'Many matches are FALSE POSITIVES: the word appears in a non-error context.\n\n'
         'Rules:\n'
@@ -339,9 +348,11 @@ def ollama_classify_and_explain(block_text, model=None):
         '- Say YES only when: there is an actual failure, exception, stack trace, non-zero error count, crash, timeout, or message indicating something went wrong (e.g. "request_errors\": 5 or "failed to connect").\n'
         '- Say NO when "error" appears only in a logger or module name (e.g. gunicorn.gunicorn.error, logging.error). Those are log channel names, not failure messages. GET/PUT requests logged through such a channel are often normal; say YES only if the log line reports a failure, exception, or error response.\n'
         '- Read the FULL line and only the log block content. Do not confuse examples from the instructions with the actual log. "request_errors\': 0" means healthy. Do not answer YES just because the word "error" appears in a key name, in a logger name, or in "errors\": 0.\n\n'
-        'Reply with exactly YES or NO on the first line. If YES, add 2-4 short sentences explaining the real error. If NO, write nothing else.\n'
-        'Format:\nYES\n<explanation>\nor\nNO\n\nLog block:\n' + snippet
+        'Reply with exactly YES or NO on the first line. If YES, add 2-4 short sentences explaining the real error.'
     )
+    if context_line:
+        prompt += ' When explaining a YES (real error), include relevance to the environment and component above (e.g. impact on RHOSO/OpenStack, what to check in this component).'
+    prompt += '\nFormat:\nYES\n<explanation>\nor\nNO\n\nLog block:\n' + snippet
     try:
         url = config.OLLAMA_HOST.rstrip('/') + '/api/generate'
         payload = {'model': model, 'prompt': prompt, 'stream': False, 'options': {'num_predict': config.OLLAMA_MAX_PREDICT}}
@@ -504,11 +515,22 @@ def maybe_print_ollama_404_hint(model=None):
         print(c(_YELLOW, '[Ollama] HTTP 404: the model may not be installed on the server. On the Ollama host run:  ollama list   and  ollama pull ') + name, flush=True)
 
 
-def ollama_detailed_explanation(block_text, model=None):
+def ollama_detailed_explanation(block_text, model=None, source_context=None, component_name=None):
     model = model or config.OLLAMA_MODEL
     snippet = (block_text or '')[:config.AI_MAX_BLOCK_CHARS]
+    context_line = ''
+    if source_context or component_name:
+        parts = []
+        if source_context:
+            parts.append('Environment: {}'.format(source_context))
+        if component_name:
+            parts.append('Component: {}'.format(component_name))
+        context_line = '\n'.join(parts) + '\n\n'
     prompt = (
-        'This log block is a real error. Write 2-5 short sentences for someone debugging. Include: (1) what the error means, (2) common causes, (3) impact, (4) what to check when fixing. Start your reply immediately with the first sentence of the explanation. No preamble, no "Explanation:" or "The error is".\n\nLog block:\n' + snippet
+        context_line +
+        'This log block is a real error. Write 2-5 short sentences for someone debugging. '
+        'Include: (1) what the error means, (2) common causes, (3) impact on this environment/component, (4) what to check when fixing. '
+        'Start your reply immediately with the first sentence. No preamble, no "Explanation:" or "The error is".\n\nLog block:\n' + snippet
     )
     try:
         url = config.OLLAMA_HOST.rstrip('/') + '/api/generate'
