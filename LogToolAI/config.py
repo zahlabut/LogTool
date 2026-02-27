@@ -85,7 +85,9 @@ OLLAMA_TIMEOUT = 1800
 OLLAMA_MAX_PREDICT = 320
 OLLAMA_MAX_PREDICT_DETAILED = 450
 AI_MAX_EXPLANATION_CHARS = 8000
-OLLAMA_MAX_CONCURRENT = 6
+# Max concurrent requests to Ollama when classifying blocks. Higher = faster if the server has enough GPU/RAM.
+# Reduce (e.g. 2–4) if Ollama runs out of memory or gets very slow with large models (e.g. 70B).
+OLLAMA_MAX_CONCURRENT = 30
 OLLAMA_DEBUG = True
 
 # --- Must-gather (for must_gather_analyze mode) ---
