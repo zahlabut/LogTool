@@ -787,7 +787,7 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
     min_ln, max_ln = min(include), max(include)
     lines_out = []
     lines_out.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Log: ' + html_escape(log_path) + '</title>')
-    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} a{color:#06c;}</style></head><body>')
+    lines_out.append('<style>body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;} pre{white-space:pre-wrap;word-break:break-all;font-size:0.85rem;} .line{display:block;} .line:hover{background:#f0f0f0;} .line-empty{color:#bbb;font-size:0.8em;line-height:0.7;min-height:0.7em;} .hl{background:#fce4a0;padding:0 2px;} a{color:#06c;}</style></head><body>')
     if back_link_url:
         lines_out.append('<p><a href="' + html_escape(back_link_url) + '">&larr; ' + html_escape(back_link_text) + '</a></p>')
     lines_out.append('<h2>' + html_escape(log_path) + '</h2>')
@@ -802,8 +802,12 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
                 if not line:
                     break
                 if num in include:
-                    escaped = html_escape(line.rstrip('\n'))
-                    lines_out.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + escaped + '</span>')
+                    raw = line.rstrip('\n')
+                    if not raw.strip():
+                        lines_out.append('<span id="L' + str(num) + '" class="line line-empty">' + str(num) + ':</span>')
+                    else:
+                        highlighted = html_highlight_line(raw)
+                        lines_out.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + highlighted + '</span>')
     except (OSError, gzip.BadGzipFile):
         lines_out.append(html_escape('(Could not read log file: ' + log_path + ')'))
     lines_out.append('</pre></body></html>')
