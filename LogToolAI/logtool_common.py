@@ -991,10 +991,11 @@ def get_download_command_for_zip(zip_path):
     return cmd
 
 
-def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None):
+def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None, local_mode=False):
     """
-    Print paths to the text report (on this host) and create a ZIP archive, then print the download command (RunTempest style).
-    The .txt report stays on disk at report_path so the user can cat/ls it without unzipping.
+    Print paths to the text report and optionally create a ZIP. If local_mode is False (e.g. pod/must-gather
+    run on controller), also print the SSH download command. If local_mode is True (e.g. Zuul job run on
+    your desktop), results are already local — no download command, just paths.
     """
     report_path_abs = os.path.abspath(report_path) if report_path else None
     width = 60
@@ -1002,8 +1003,11 @@ def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_di
     print(c(_CYAN, '=' * width))
     print(c(_CYAN, 'REPORT PATHS'))
     print(c(_CYAN, '=' * width))
+    if local_mode:
+        print(c(_DIM, 'Results are stored locally in the directory below.'))
+        print('')
     if report_path_abs and os.path.isfile(report_path_abs):
-        print(c(_GREEN, 'Text report (on this host):'))
+        print(c(_GREEN, 'Text report:'))
         print(c(_CYAN, report_path_abs))
         print(c(_DIM, '  View: ') + 'cat ' + report_path_abs + '  or  less -R ' + report_path_abs)
         print(c(_DIM, '  List: ') + 'ls -la ' + report_path_abs)
@@ -1012,16 +1016,20 @@ def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_di
     if not zip_path:
         print(c(_CYAN, '=' * width))
         return
-    cmd = get_download_command_for_zip(zip_path)
-    print(c(_GREEN, 'ZIP archive (for download to desktop):'))
+    print(c(_GREEN, 'ZIP archive:'))
     print(c(_CYAN, zip_path))
-    if cmd:
+    if not local_mode:
+        cmd = get_download_command_for_zip(zip_path)
+        if cmd:
+            print('')
+            print(c(_YELLOW, 'Download command (run on your local desktop):'))
+            print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
+            print(c(_CYAN, cmd))
+            print('')
+            print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
+    else:
         print('')
-        print(c(_YELLOW, 'Download command (run on your local desktop):'))
-        print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
-        print(c(_CYAN, cmd))
-        print('')
-        print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
+        print(c(_DIM, 'Unzip the archive and open the HTML report in your browser.'))
     print(c(_CYAN, '=' * width))
 
 

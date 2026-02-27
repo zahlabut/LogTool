@@ -13,7 +13,7 @@ MODES = [
     (3, 'Analyze logs in local directory', 'analyze_local_logs'),
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
     (5, 'Extract pod logs for time range + Ollama summary (processes, success/errors)', 'extract_logs_time_range'),
-    (6, 'Analyze Zuul job (URL or local path: download then console, tempest, report)', 'zuul_job_analyze'),
+    (6, 'Analyze Zuul job (run locally: URL or path, download then console, tempest, report)', 'zuul_job_analyze'),
 ]
 
 _BOLD = '\033[1m'

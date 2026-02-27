@@ -861,6 +861,8 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_CYAN, '[1/5] Zuul job: URL or local path'))
     print(common.c(_CYAN, '=' * 60))
+    print(common.c(_DIM, 'This mode is intended to run locally (e.g. on your desktop), not on controller-0 or a remote host. Results are written to a local directory.'))
+    print('')
     print(common.c(_DIM, 'Enter Zuul job URL (base URL is fine; we add /logs if needed) or path to existing job dir:'))
     print(common.c(_DIM, '  URL example: https://.../zuul/t/tenant/build/<uuid>'))
     _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
@@ -1209,7 +1211,7 @@ def main():
     print(common.c(_GREEN, 'HTML report: ') + common.c(_CYAN, html_path))
     print(common.c(_GREEN, 'Jobs analyzed: {}; error blocks: {}.').format(len(job_info), len(report_entries)))
     print(common.c(_DIM, 'Time: {:.1f}s').format(elapsed))
-    common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir)
+    common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir, local_mode=True)
 
 
 if __name__ == '__main__':
