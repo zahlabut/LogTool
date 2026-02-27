@@ -337,7 +337,8 @@ def ollama_classify_and_explain(block_text, model=None):
         '- Say NO (not a real error) when: the log shows a SUCCESS or healthy state. Examples: "request_errors\": 0, "error_count\": 0, "errors\": 0, "no error", "DEBUG" with stats/counters that are zero or OK. A key name containing "error" (e.g. request_errors) with value 0 means NO errors occurred.\n'
         '- Say NO for: routine INFO/DEBUG lines, heartbeat/health stats that report zeros (e.g. DEBUG ... stats: {\'request_errors\': 0}), "updated successfully", "completed", metrics that show no failures.\n'
         '- Say YES only when: there is an actual failure, exception, stack trace, non-zero error count, crash, timeout, or message indicating something went wrong (e.g. "request_errors\": 5 or "failed to connect").\n'
-        '- Read the FULL line: "request_errors\': 0" means zero errors = healthy. Do not answer YES just because the word "error" appears in a key name or in "errors\": 0.\n\n'
+        '- Say NO when "error" appears only in a logger or module name (e.g. gunicorn.gunicorn.error, logging.error). Those are log channel names, not failure messages. GET/PUT requests logged through such a channel are often normal; say YES only if the log line reports a failure, exception, or error response.\n'
+        '- Read the FULL line and only the log block content. Do not confuse examples from the instructions with the actual log. "request_errors\': 0" means healthy. Do not answer YES just because the word "error" appears in a key name, in a logger name, or in "errors\": 0.\n\n'
         'Reply with exactly YES or NO on the first line. If YES, add 2-4 short sentences explaining the real error. If NO, write nothing else.\n'
         'Format:\nYES\n<explanation>\nor\nNO\n\nLog block:\n' + snippet
     )
@@ -390,7 +391,8 @@ def ollama_classify_and_explain(block_text, model=None):
                 'zero errors', 'zero error', 'healthy state', 'no actual error',
                 'does not indicate an error', 'indicating success', 'not actually an error',
                 'is actually indicating success', 'not a real issue',
-                'no errors occurred', 'no error occurred', 'indicates that no errors'
+                'no errors occurred', 'no error occurred', 'indicates that no errors',
+                'non-error context', 'non-error', 'indicates a non-error'
             )):
                 if config.OLLAMA_DEBUG:
                     with _ollama_debug_lock:
