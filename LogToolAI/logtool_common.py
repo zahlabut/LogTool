@@ -331,8 +331,15 @@ def ollama_classify_and_explain(block_text, model=None):
     if len(block_text or '') > config.AI_MAX_BLOCK_CHARS:
         snippet += '\n... [truncated]'
     prompt = (
-        'Reply with exactly YES or NO on the first line. If YES, write 2-4 short sentences on the following lines explaining: what this error means, common causes, impact, and what to check when fixing it. If NO, write nothing else.\n'
-        'Format:\nYES\n<your explanation here, 2-4 sentences>\nor\nNO\n\nLog block:\n' + snippet
+        'You are classifying a log block that was matched by a grep for words like "error", "failed", "exception". '
+        'Many matches are FALSE POSITIVES: the word appears in a non-error context.\n\n'
+        'Rules:\n'
+        '- Say NO (not a real error) when: the log shows a SUCCESS or healthy state. Examples: "request_errors\": 0, "error_count\": 0, "errors\": 0, "no error", "DEBUG" with stats/counters that are zero or OK. A key name containing "error" (e.g. request_errors) with value 0 means NO errors occurred.\n'
+        '- Say NO for: routine INFO/DEBUG lines, heartbeat/health stats that report zeros (e.g. DEBUG ... stats: {\'request_errors\': 0}), "updated successfully", "completed", metrics that show no failures.\n'
+        '- Say YES only when: there is an actual failure, exception, stack trace, non-zero error count, crash, timeout, or message indicating something went wrong (e.g. "request_errors\": 5 or "failed to connect").\n'
+        '- Read the FULL line: "request_errors\': 0" means zero errors = healthy. Do not answer YES just because the word "error" appears in a key name or in "errors\": 0.\n\n'
+        'Reply with exactly YES or NO on the first line. If YES, add 2-4 short sentences explaining the real error. If NO, write nothing else.\n'
+        'Format:\nYES\n<explanation>\nor\nNO\n\nLog block:\n' + snippet
     )
     try:
         url = config.OLLAMA_HOST.rstrip('/') + '/api/generate'
