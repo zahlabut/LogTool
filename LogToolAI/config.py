@@ -118,6 +118,9 @@ ID_TRACE_CONTEXT_LINES = 5
 ID_TRACE_COLLECT_MAX_HOURS = 0
 # Also include lines with the same OpenStack req-<uuid> as ID hits (pulls in octavia-worker, etc.).
 ID_TRACE_CORRELATE_REQUEST_IDS = True
+# Time window for [req] lines (API req-* often ends before worker runs; worker may use a new req-*).
+ID_TRACE_CORRELATE_BEFORE_MINUTES = 2
+ID_TRACE_CORRELATE_AFTER_MINUTES = 60
 
 # --- Local directory mode (analyze_local_logs) ---
 # Reports under timestamped run dir: local_logs/YYYYMMDD_HHMMSS/

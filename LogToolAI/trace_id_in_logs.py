@@ -70,17 +70,39 @@ def _count_id_lines_per_file(log_paths, search_id):
     return counts
 
 
+def _count_req_lines_per_file(log_paths, request_ids):
+    """Lines containing any correlated req-* (full collected logs, for diagnostics)."""
+    if not request_ids:
+        return {}
+    counts = {}
+    for path in log_paths:
+        if not os.path.isfile(path):
+            continue
+        counts[path] = sum(
+            1 for _ln, text in _iter_log_lines(path)
+            if any(rid in text for rid in request_ids)
+        )
+    return counts
+
+
+def _req_only_healthcheck_noise(line_text):
+    """Skip req-correlated lines that are only probe traffic (common false positive on api)."""
+    t = (line_text or '').lower()
+    return '/healthcheck' in t or 'request path is /healthcheck' in t
+
+
 def build_trace_timeline(log_paths, search_id, context_lines=None):
     """
     1) Grep all logs for search_id; find first/last time and OpenStack req-* ids on those lines.
-    2) From first ID time onward, include lines with the ID or the same req-* (octavia-worker, etc.).
-    3) Add context lines around each hit.
+    2) Include every line with the ID (any timestamp in collected logs).
+    3) Include [req] lines with the same req-* in a wide window after last ID (worker is async).
+    4) Add context lines around each hit.
 
-    Returns (entries, first_dt, last_dt, request_ids, id_counts_per_file).
+    Returns (entries, first_dt, last_dt, request_ids, id_counts_per_file, req_counts_per_file).
     entries: (dt, path, line_no, line_text, has_id, has_req)
     """
     if not search_id:
-        return [], None, None, set(), {}
+        return [], None, None, set(), {}, {}
     if context_lines is None:
         context_lines = getattr(config, 'ID_TRACE_CONTEXT_LINES', 5)
     correlate = getattr(config, 'ID_TRACE_CORRELATE_REQUEST_IDS', True)
@@ -99,14 +121,20 @@ def build_trace_timeline(log_paths, search_id, context_lines=None):
             if dt:
                 id_times.append(dt)
 
+    req_counts = _count_req_lines_per_file(log_paths, request_ids) if request_ids else {}
+
     if not id_times:
-        return [], None, None, request_ids, id_counts
+        return [], None, None, request_ids, id_counts, req_counts
 
     first_dt = min(id_times)
     last_dt = max(id_times)
-    end_dt = last_dt + datetime.timedelta(minutes=2)
+    before_min = int(getattr(config, 'ID_TRACE_CORRELATE_BEFORE_MINUTES', 2))
+    after_min = int(getattr(config, 'ID_TRACE_CORRELATE_AFTER_MINUTES', 60))
+    req_start = first_dt - datetime.timedelta(minutes=before_min)
+    req_end = last_dt + datetime.timedelta(minutes=after_min)
     if not correlate:
         request_ids = set()
+        req_counts = {}
 
     include_by_path = {}
     for path in log_paths:
@@ -117,9 +145,11 @@ def build_trace_timeline(log_paths, search_id, context_lines=None):
             has_req = bool(request_ids) and any(rid in line_text for rid in request_ids)
             if not has_id and not has_req:
                 continue
-            dt, _ = common.get_line_date(line_text)
-            if dt is not None:
-                if dt < first_dt or dt > end_dt:
+            if has_req and not has_id:
+                if _req_only_healthcheck_noise(line_text):
+                    continue
+                dt, _ = common.get_line_date(line_text)
+                if dt is not None and (dt < req_start or dt > req_end):
                     continue
             nums = include_by_path.setdefault(path, set())
             nums.add(line_no)
@@ -145,7 +175,7 @@ def build_trace_timeline(log_paths, search_id, context_lines=None):
         return (dt if dt is not None else sentinel, path, line_no)
 
     entries.sort(key=sort_key)
-    return entries, first_dt, last_dt, request_ids, id_counts
+    return entries, first_dt, last_dt, request_ids, id_counts, req_counts
 
 
 def _log_display_name(path):
@@ -161,7 +191,7 @@ def _line_prefix(has_id, has_req):
     return '     '
 
 
-def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
+def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts, req_counts):
     f.write(common.r(common.REPORT_BOLD, 'ID trace report') + '\n')
     f.write(common.r(common.REPORT_DIM, 'Search ID: ') + search_id + '\n')
     f.write(common.r(common.REPORT_DIM, 'Log collection: ') + collect_note + '\n')
@@ -177,14 +207,26 @@ def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_d
         if len(request_ids) > 8:
             f.write(' ... (+{} more)'.format(len(request_ids) - 8))
         f.write('\n')
-    f.write(common.r(common.REPORT_DIM, 'Note: octavia-worker often logs req-* but not the LB UUID; [req] lines are from other pods in the same request.') + '\n')
-    f.write(common.r(common.REPORT_DIM, 'Context: ') + str(context_lines) + ' lines before/after each hit. ERROR keywords in red.\n\n')
+    after_min = int(getattr(config, 'ID_TRACE_CORRELATE_AFTER_MINUTES', 60))
+    f.write(common.r(common.REPORT_DIM, 'Note: octavia-api logs the LB UUID in URLs; worker/producer often use a different req-* and may log the UUID later (async).') + '\n')
+    f.write(common.r(common.REPORT_DIM, '[req] window: {} min before first ID through {} min after last ID. Context: {} lines per hit.\n\n').format(
+        int(getattr(config, 'ID_TRACE_CORRELATE_BEFORE_MINUTES', 2)), after_min, context_lines))
     if id_counts:
         f.write(common.r(common.REPORT_BOLD, 'Direct ID matches per collected log file:') + '\n')
         for path in sorted(id_counts.keys(), key=lambda p: (-id_counts[p], _log_display_name(p))):
             n = id_counts[path]
-            mark = '' if n else ' (0 — may still appear via [req])'
+            mark = '' if n else ' (0)'
             f.write(common.r(common.REPORT_DIM, '  {}: {}{}\n').format(_log_display_name(path), n, mark))
+        f.write('\n')
+    if req_counts and request_ids:
+        f.write(common.r(common.REPORT_BOLD, 'Correlated req-* matches per file (entire collected log):') + '\n')
+        for path in sorted(req_counts.keys(), key=lambda p: (-req_counts[p], _log_display_name(p))):
+            n = req_counts[path]
+            if n:
+                f.write(common.r(common.REPORT_DIM, '  {}: {}\n').format(_log_display_name(path), n))
+        zero_req = [p for p, n in req_counts.items() if n == 0 and 'octavia' in _log_display_name(p).lower()]
+        if zero_req and len(zero_req) <= 12:
+            f.write(common.r(common.REPORT_DIM, '  (0 req-* hits in: {})').format(', '.join(_log_display_name(p) for p in zero_req[:12])) + '\n')
         f.write('\n')
     if not entries:
         f.write(common.r(common.REPORT_DIM, '(No lines containing this ID in the collected logs.)') + '\n')
@@ -212,7 +254,7 @@ def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_d
     f.write(', '.join(_log_display_name(p) for p in files_in_timeline) + '\n')
 
 
-def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
+def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts, req_counts):
     id_lines = sum(1 for e in entries if e[4])
     req_lines = sum(1 for e in entries if e[5])
     lines = []
@@ -238,7 +280,9 @@ def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entrie
         if len(request_ids) > 6:
             lines.append(' ...')
         lines.append('</p>')
-    lines.append('<p class="meta">octavia-worker and other pods often log <span class="reqtag">[req]</span> without the LB UUID. Context: ' + str(context_lines) + ' lines per hit.</p>')
+    after_min = int(getattr(config, 'ID_TRACE_CORRELATE_AFTER_MINUTES', 60))
+    lines.append('<p class="meta">octavia-api logs the LB UUID; worker/producer may use a different req-* (async). '
+                 '[req] window: {} min after last ID. Context: {} lines per hit.</p>'.format(after_min, context_lines))
     if not entries:
         lines.append('<p class="meta">(No lines containing this ID.) Try All pods and a longer time window.</p>')
         lines.append('</body></html>')
@@ -366,7 +410,7 @@ def main():
     print(common.c(_CYAN, '[3/3] Grep ID, find first time, build timeline'))
     print(common.c(_DIM, '-' * 60))
     print(common.c(_DIM, '  Scanning {} file(s) for "{}" (+ correlated req-* )...').format(len(log_paths), search_id), flush=True)
-    entries, first_dt, last_dt, request_ids, id_counts = build_trace_timeline(
+    entries, first_dt, last_dt, request_ids, id_counts, req_counts = build_trace_timeline(
         log_paths, search_id, context_lines=context_lines)
     if first_dt:
         first_id_str = first_dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -392,15 +436,20 @@ def main():
               + (' ...' if len(files_in) > 12 else ''), flush=True)
     zero_id = [_log_display_name(p) for p, n in id_counts.items() if n == 0 and 'octavia' in p.lower()]
     if zero_id:
-        print(common.c(_DIM, '  No direct ID in: ') + ', '.join(zero_id[:8]) + ' (check [req] lines in timeline)', flush=True)
+        print(common.c(_DIM, '  No direct ID in: ') + ', '.join(zero_id[:8]), flush=True)
+    if request_ids and req_counts:
+        worker_req = sum(n for p, n in req_counts.items() if 'worker' in p.lower() or 'producer' in p.lower())
+        if worker_req == 0:
+            print(common.c(_YELLOW, '  No correlated req-* in octavia-worker/producer logs (they often use a new req-* per task).'), flush=True)
+            print(common.c(_DIM, '  If worker logged the LB UUID, it will appear as [ID]; increase ID_TRACE_CORRELATE_AFTER_MINUTES if timing is later.'), flush=True)
 
     run_dir = config.timestamped_report_dir('id_trace')
     os.makedirs(run_dir, exist_ok=True)
     report_path = os.path.join(run_dir, 'id_trace_report.txt')
     html_path = os.path.join(run_dir, 'id_trace_report.html')
     with open(report_path, 'w', encoding='utf-8') as f:
-        _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
-    html_content = _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
+        _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts, req_counts)
+    html_content = _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts, req_counts)
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
