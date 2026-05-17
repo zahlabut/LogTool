@@ -113,8 +113,9 @@ MUST_GATHER_REPORT_HTML = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_e
 ID_TRACE_LOGS_DIR = os.path.join(RESULT_DIR, 'id_trace', 'collected_pod_logs')
 # Lines before/after each line that contains the ID (context for the full story).
 ID_TRACE_CONTEXT_LINES = 5
-# How far back to fetch pod logs before scanning for the ID (no user prompt).
-ID_TRACE_COLLECT_MAX_HOURS = 24
+# Pod log collection: 0 = all logs available per pod (no --since-time; best for old resources).
+# Set to e.g. 24 or 720 only to limit collection time on huge clusters.
+ID_TRACE_COLLECT_MAX_HOURS = 0
 # Also include lines with the same OpenStack req-<uuid> as ID hits (pulls in octavia-worker, etc.).
 ID_TRACE_CORRELATE_REQUEST_IDS = True
 

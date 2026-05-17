@@ -161,10 +161,10 @@ def _line_prefix(has_id, has_req):
     return '     '
 
 
-def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
+def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
     f.write(common.r(common.REPORT_BOLD, 'ID trace report') + '\n')
     f.write(common.r(common.REPORT_DIM, 'Search ID: ') + search_id + '\n')
-    f.write(common.r(common.REPORT_DIM, 'Logs collected since: ') + collect_since_str + ' (auto)\n')
+    f.write(common.r(common.REPORT_DIM, 'Log collection: ') + collect_note + '\n')
     if first_id_str:
         f.write(common.r(common.REPORT_DIM, 'Timeline starts at first ID: ') + first_id_str + '\n')
     f.write(common.r(common.REPORT_DIM, 'Collected logs: ') + os.path.abspath(logs_dir) + '\n')
@@ -188,7 +188,7 @@ def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, l
         f.write('\n')
     if not entries:
         f.write(common.r(common.REPORT_DIM, '(No lines containing this ID in the collected logs.)') + '\n')
-        f.write(common.r(common.REPORT_DIM, 'Try: All pods, increase ID_TRACE_COLLECT_MAX_HOURS in config, or check the ID string.') + '\n')
+        f.write(common.r(common.REPORT_DIM, 'Try: All pods, or check the ID string. If the resource is old, ensure pod logs were not rotated away.') + '\n')
         return
     current_path = None
     for dt, path, line_no, line_text, has_id, has_req in entries:
@@ -212,7 +212,7 @@ def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, l
     f.write(', '.join(_log_display_name(p) for p in files_in_timeline) + '\n')
 
 
-def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
+def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
     id_lines = sum(1 for e in entries if e[4])
     req_lines = sum(1 for e in entries if e[5])
     lines = []
@@ -227,7 +227,7 @@ def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, e
     lines.append('</style></head><body>')
     lines.append('<h1>ID trace report</h1>')
     lines.append('<p class="meta"><strong>Search ID:</strong> ' + common.html_escape(search_id) + '</p>')
-    lines.append('<p class="meta"><strong>Logs collected since:</strong> ' + common.html_escape(collect_since_str) + ' (auto)</p>')
+    lines.append('<p class="meta"><strong>Log collection:</strong> ' + common.html_escape(collect_note) + '</p>')
     if first_id_str:
         lines.append('<p class="meta"><strong>Timeline starts at first ID:</strong> ' + common.html_escape(first_id_str) + '</p>')
     lines.append('<p class="meta"><strong>Collected logs:</strong> ' + common.html_escape(os.path.abspath(logs_dir)) + '</p>')
@@ -280,8 +280,7 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_CYAN, 'Trace ID in pod logs (controller)'))
     print(common.c(_CYAN, '=' * 60))
-    max_h = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 24)
-    print(common.c(_DIM, 'Collects pod logs (auto, up to {}h back), greps your ID, finds first time it appears.'.format(max_h)))
+    print(common.c(_DIM, 'Collects all available pod logs (no time cutoff), greps your ID, finds first time it appears.'))
     print(common.c(_DIM, 'Report: ID lines + same OpenStack req-* in other pods (worker, etc.), sorted by time.'))
     print(common.c(_DIM, 'ERROR keywords highlighted in red (same as mode 1). Tip: choose All pods.'))
     print('')
@@ -335,14 +334,17 @@ def main():
         print(common.c(_YELLOW, 'No pods to collect. Exiting.'))
         sys.exit(0)
 
-    max_hours = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 24)
-    now = datetime.datetime.utcnow()
-    collect_since_dt = now - datetime.timedelta(hours=max_hours)
-    since_iso = collect_since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
-    collect_since_str = collect_since_dt.strftime('%Y-%m-%d %H:%M:%S')
+    max_hours = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 0)
+    if max_hours and int(max_hours) > 0:
+        collect_since_dt = datetime.datetime.utcnow() - datetime.timedelta(hours=int(max_hours))
+        since_iso = collect_since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        collect_note = 'last {} hours per pod (since {})'.format(max_hours, collect_since_dt.strftime('%Y-%m-%d %H:%M:%S'))
+    else:
+        since_iso = None
+        collect_note = 'all logs currently available per pod (no time cutoff; limited by cluster log retention)'
 
     print('')
-    print(common.c(_CYAN, '[2/3] Collect logs (auto window)'))
+    print(common.c(_CYAN, '[2/3] Collect logs'))
     print(common.c(_DIM, '-' * 60))
     if os.path.isdir(logs_dir):
         for f in os.listdir(logs_dir):
@@ -352,7 +354,8 @@ def main():
                 pass
     else:
         os.makedirs(logs_dir, exist_ok=True)
-    print(common.c(_DIM, 'Auto: collecting up to {}h of logs per pod (since {}).').format(max_hours, collect_since_str), flush=True)
+    print(common.c(_DIM, collect_note.capitalize() + '.'), flush=True)
+    print(common.c(_DIM, '  (Timeline in the report is sorted by log line time, from first ID sighting onward.)'), flush=True)
     print(common.c(_DIM, 'Logs directory: ') + common.c(_CYAN, logs_dir))
     log_paths = collect_logs_since(logs_dir, pods, since_iso)
     if not log_paths:
@@ -396,8 +399,8 @@ def main():
     report_path = os.path.join(run_dir, 'id_trace_report.txt')
     html_path = os.path.join(run_dir, 'id_trace_report.html')
     with open(report_path, 'w', encoding='utf-8') as f:
-        _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
-    html_content = _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
+        _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
+    html_content = _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
