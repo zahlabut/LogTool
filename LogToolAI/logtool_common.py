@@ -193,6 +193,17 @@ def timed_input(prompt, default, timeout_sec=None):
         return default
 
 
+def line_has_error_keyword(line_text):
+    """True if line contains any configured ERROR_KEYWORDS (case-insensitive)."""
+    if not line_text or not _HL_KEYWORDS_LOWER:
+        return False
+    line_lower = escape_ansi(line_text).lower()
+    for kw in _HL_KEYWORDS_LOWER:
+        if kw and kw in line_lower:
+            return True
+    return False
+
+
 def highlight_error_keywords(line_text):
     if not line_text or not _HL_KEYWORDS_LOWER:
         return line_text

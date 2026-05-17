@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-Extract pod logs for a time range, grep suspicious error strings, and optionally get an Ollama summary.
-Pod list → group → baseline → time window → fetch logs → error report (TXT/HTML + ZIP download).
+Extract pod logs for a time range and optionally get an Ollama summary.
+Full TXT/HTML report includes every line in the window; configured error keywords are highlighted.
 Run from LogToolMain or directly.
 """
 
@@ -9,10 +9,8 @@ import os
 import re
 import sys
 import shutil
-import tempfile
 import datetime
 import time as time_module
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
@@ -123,113 +121,116 @@ def _filter_raw_log_by_range(raw, start_dt, end_dt):
     return '\n'.join(kept) + '\n'
 
 
-def _extract_error_blocks_from_paths(paths, since_dt):
-    """Grep paths for ERROR_KEYWORDS; return deduplicated report_entries tuples."""
-    if not paths:
-        return []
-    keywords_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
-    try:
-        for kw in config.ERROR_KEYWORDS:
-            keywords_file.write(kw.strip() + '\n')
-        keywords_file.close()
-        keywords_path = keywords_file.name
-    except Exception:
-        return []
-
-    def _extract_one(path):
-        return (path, common.extract_blocks_grep(path, keywords_path, since_dt))
-
-    path_blocks = {}
-    selected_sorted = sorted(paths)
-    n_files = len(selected_sorted)
-    n_workers = min(config.MAX_WORKERS, n_files)
-    done = 0
-    ext_lock = threading.Lock()
-    with ThreadPoolExecutor(max_workers=n_workers) as ex:
-        futures = {ex.submit(_extract_one, path): path for path in selected_sorted}
-        for fut in as_completed(futures):
-            with ext_lock:
-                done += 1
-                if done % 20 == 0 or done == n_files:
-                    print(common.c('\033[2m', '  [grep] {}/{} files...').format(done, n_files), flush=True)
-            try:
-                path, blocks = fut.result()
-                path_blocks[path] = blocks
-            except Exception:
-                pass
-    try:
-        os.unlink(keywords_path)
-    except Exception:
-        pass
-
-    report_entries = []
-    for path in sorted(path_blocks.keys()):
-        blocks = path_blocks[path]
-        seen_sigs = []
-        for (lines_with_nums, block_text, block_dt) in blocks:
-            sig = common.block_signature(block_text)
-            found_similar = False
-            for seen in seen_sigs:
-                if common.similar(sig, seen) >= config.FUZZY_MATCH_RATIO:
-                    found_similar = True
-                    break
-            if found_similar:
-                continue
-            count = sum(
-                1 for (_l, bt, _d) in blocks
-                if common.similar(common.block_signature(bt), sig) >= config.FUZZY_MATCH_RATIO
-            )
-            seen_sigs.append(sig)
-            report_entries.append((path, lines_with_nums, block_text, sig, count))
-    return report_entries
+def _log_display_name(path):
+    return os.path.basename(path) or path
 
 
-def _write_extract_error_reports(run_dir, logs_dir, report_entries, start_str, end_str, selected_group_name):
-    """Write text/HTML error reports; return (report_path, html_path, report_logs_dir)."""
-    report_path = os.path.join(run_dir, 'extract_logs_error_report.txt')
+def _collect_full_log_entries(written_paths):
+    """Load every line from extracted log files; return sorted (dt, path, line_no, line_text, has_err)."""
+    entries = []
+    for path in sorted(written_paths):
+        try:
+            with open(path, 'r', encoding='utf-8', errors='replace') as f:
+                for line_no, raw in enumerate(f, 1):
+                    line_text = common.escape_ansi(raw.rstrip('\n\r'))
+                    if not line_text:
+                        continue
+                    dt, _ = common.get_line_date(line_text)
+                    has_err = common.line_has_error_keyword(line_text)
+                    entries.append((dt, path, line_no, line_text, has_err))
+        except OSError:
+            pass
+
+    def _sort_key(item):
+        dt, path, line_no, _text, _err = item
+        ts = dt.timestamp() if dt else float('inf')
+        return (ts, path, line_no)
+
+    entries.sort(key=_sort_key)
+    return entries
+
+
+def _format_extract_line_text(line_text):
+    return common.highlight_error_keywords(line_text)
+
+
+def _format_extract_line_html(line_text):
+    return common.html_highlight_line(common.line_for_display(line_text))
+
+
+def _write_extract_full_reports(run_dir, logs_dir, entries, start_str, end_str, selected_group_name):
+    """Write text/HTML with every log line in the window; highlight ERROR_KEYWORDS. Returns paths tuple."""
+    report_path = os.path.join(run_dir, 'extract_logs_report.txt')
+    html_path = os.path.join(run_dir, 'extract_logs_report.html')
+    total = len(entries)
+    err_lines = sum(1 for e in entries if e[4])
+
     with open(report_path, 'w', encoding='utf-8') as f:
-        f.write(
-            common.r(common.REPORT_BOLD, 'Extract logs error report')
-            + ' — window: {} to {}\n'.format(start_str, end_str)
-        )
+        f.write(common.r(common.REPORT_BOLD, 'Extract logs report') + ' — window: {} to {}\n'.format(start_str, end_str))
         f.write(common.r(common.REPORT_DIM, 'Pod group: ') + selected_group_name + '\n')
-        f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + os.path.abspath(logs_dir) + '\n\n')
-        for path in sorted(set(e[0] for e in report_entries)):
-            log_file_line = 'Log file: ' + path
-            sep_len = len(log_file_line)
-            f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n')
-            f.write(common.r(common.REPORT_BOLD, 'Log file: ') + path + '\n')
-            f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n\n')
-            for (p, lines_with_nums, block_text, sig, count) in report_entries:
-                if p != path:
-                    continue
-                f.write(
-                    common.r(common.REPORT_YELLOW, '  (occurred {} time{})').format(
-                        count, 's' if count != 1 else ''
-                    ) + '\n'
-                )
-                for line_no, line_text in lines_with_nums[:config.MAX_BLOCK_LINES_SHOWN]:
-                    f.write('  {}: {}'.format(line_no, common.highlight_error_keywords(line_text)))
-                if len(lines_with_nums) > config.MAX_BLOCK_LINES_SHOWN:
-                    f.write('  ... ({} more lines)\n'.format(len(lines_with_nums) - config.MAX_BLOCK_LINES_SHOWN))
+        f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + os.path.abspath(logs_dir) + '\n')
+        f.write(
+            common.r(common.REPORT_DIM, 'Lines in report: {} ({} with error keywords highlighted). Sorted by time.\n\n')
+            .format(total, err_lines)
+        )
+        if not entries:
+            f.write(common.r(common.REPORT_DIM, '(No log lines in the selected time window.)') + '\n')
+        current_path = None
+        for dt, path, line_no, line_text, has_err in entries:
+            if path != current_path:
+                current_path = path
+                log_file_line = 'Log file: ' + path
+                sep_len = len(log_file_line)
                 f.write('\n')
-        if not report_entries:
-            f.write(common.r(common.REPORT_DIM, '(No suspicious error strings found in extracted logs.)') + '\n')
+                f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n')
+                f.write(common.r(common.REPORT_BOLD, 'Log file: ') + path + '\n')
+                f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n')
+            ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
+            err_mark = common.r(common.REPORT_YELLOW, '[!] ') if has_err else '    '
+            highlighted = _format_extract_line_text(line_text)
+            f.write('{} {}:{} {}{}\n'.format(ts, _log_display_name(path), line_no, err_mark, highlighted))
 
-    html_path = os.path.join(run_dir, 'extract_logs_error_report.html')
-    html_content, report_logs_dir = common.build_error_report_html(
-        'Extract logs error report',
-        'Time window',
-        '{} to {}'.format(start_str, end_str),
-        report_entries,
-        False,
-        {},
-        html_path,
-        'extract_logs_report_logs',
-    )
+    lines = []
+    lines.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">')
+    lines.append('<title>Extract logs: {} to {}</title>'.format(common.html_escape(start_str), common.html_escape(end_str)))
+    lines.append('<style>')
+    lines.append('body{font-family:system-ui,sans-serif;margin:1rem 2rem;max-width:1400px;}')
+    lines.append('h1{font-size:1.4rem;} h2{font-size:1rem;margin-top:1.5rem;color:#333;border-bottom:1px solid #ccc;padding-bottom:0.25rem;word-break:break-all;}')
+    lines.append('.meta{color:#666;font-size:0.9rem;} .timeline{margin:0;padding:0;list-style:none;}')
+    lines.append('.timeline li{margin:0.12rem 0;font-family:ui-monospace,monospace;font-size:0.82rem;white-space:pre-wrap;word-break:break-all;}')
+    lines.append('.hl{background:#fce4a0;padding:0 2px;} .errline{background:#fff8e6;} .errtag{color:#c60;font-weight:600;}')
+    lines.append('.ts{color:#555;}</style></head><body>')
+    lines.append('<h1>Extract logs report</h1>')
+    lines.append('<p class="meta"><strong>Time window:</strong> {} to {}</p>'.format(
+        common.html_escape(start_str), common.html_escape(end_str)))
+    lines.append('<p class="meta"><strong>Pod group:</strong> ' + common.html_escape(selected_group_name) + '</p>')
+    lines.append('<p class="meta"><strong>Logs directory:</strong> ' + common.html_escape(os.path.abspath(logs_dir)) + '</p>')
+    lines.append('<p class="meta"><strong>Lines:</strong> {} total, {} with error keywords highlighted (<span class="errtag">[!]</span>). Sorted by time.</p>'.format(
+        total, err_lines))
+    if not entries:
+        lines.append('<p class="meta">(No log lines in the selected time window.)</p></body></html>')
+    else:
+        current_path = None
+        for dt, path, line_no, line_text, has_err in entries:
+            if path != current_path:
+                if current_path is not None:
+                    lines.append('</ul>')
+                current_path = path
+                lines.append('<h2>Log file: ' + common.html_escape(path) + '</h2>')
+                lines.append('<ul class="timeline">')
+            ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
+            body = _format_extract_line_html(line_text)
+            tag = '<span class="errtag">[!]</span> ' if has_err else ''
+            li_cls = ' class="errline"' if has_err else ''
+            lines.append(
+                '<li' + li_cls + '><span class="ts">' + common.html_escape(ts) + ' '
+                + common.html_escape(_log_display_name(path)) + ':' + str(line_no) + '</span> ' + tag + body + '</li>'
+            )
+        lines.append('</ul>')
+    lines.append('</body></html>')
     with open(html_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-    return report_path, html_path, report_logs_dir
+        f.write('\n'.join(lines))
+    return report_path, html_path, None
 
 
 def _cleanup_extract_run_after_zip(run_dir, logs_dir, extra_paths):
@@ -332,7 +333,7 @@ def main():
         mf.write('Pods: {}\n'.format(len(selected_pods)))
 
     print('')
-    print(common.c(_CYAN, '[4/7] Fetch and write logs (error strings colorized)'))
+    print(common.c(_CYAN, '[4/7] Fetch and write logs'))
     print(common.c(_DIM, '-' * 60))
     n = len(selected_pods)
     n_workers = min(config.MAX_WORKERS, n)
@@ -351,9 +352,8 @@ def main():
                     continue
                 logs_for_ollama.append((ns, name, raw))
                 out_path = os.path.join(out_dir, safe_filename(ns, name))
-                with open(out_path, 'w') as f:
-                    for line in (raw or '').splitlines():
-                        f.write(common.highlight_error_keywords(line + '\n'))
+                with open(out_path, 'w', encoding='utf-8') as f:
+                    f.write(raw if raw.endswith('\n') else raw + '\n')
                 written_paths.append(out_path)
                 written += 1
                 if written % 5 == 0 or written == n:
@@ -421,21 +421,22 @@ def main():
             print(common.c(_DIM, '  Ollama not configured or unreachable — skipping.'))
 
     print('')
-    print(common.c(_CYAN, '[6/7] Extract suspicious error strings'))
+    print(common.c(_CYAN, '[6/7] Build full log report (all lines, error keywords highlighted)'))
     print(common.c(_DIM, '-' * 60))
-    report_entries = []
+    entries = []
     if written_paths:
-        print(common.c(_DIM, '  Scanning {} log files for configured error keywords...').format(len(written_paths)), flush=True)
-        report_entries = _extract_error_blocks_from_paths(written_paths, since_dt)
-        print(common.c(_GREEN, '  Found {} unique error block(s).').format(len(report_entries)))
+        print(common.c(_DIM, '  Loading {} log file(s)...').format(len(written_paths)), flush=True)
+        entries = _collect_full_log_entries(written_paths)
+        err_n = sum(1 for e in entries if e[4])
+        print(common.c(_GREEN, '  {} line(s) in report ({} with error keywords marked).').format(len(entries), err_n))
     else:
-        print(common.c(_YELLOW, '  No log files to scan.'))
+        print(common.c(_YELLOW, '  No log files to include.'))
 
     print('')
     print(common.c(_CYAN, '[7/7] Write report and create download archive'))
     print(common.c(_DIM, '-' * 60))
-    report_path, html_path, report_logs_dir = _write_extract_error_reports(
-        run_dir, out_dir, report_entries, start_str, end_str, selected_group_name,
+    report_path, html_path, report_logs_dir = _write_extract_full_reports(
+        run_dir, out_dir, entries, start_str, end_str, selected_group_name,
     )
     zip_log_paths = list(written_paths)
     if meta_path and os.path.isfile(meta_path):
@@ -451,7 +452,7 @@ def main():
     )
     _cleanup_extract_run_after_zip(run_dir, out_dir, [meta_path, summary_path])
     print(common.c(_DIM, 'Time window: ') + start_str + common.c(_DIM, ' → ') + end_str)
-    print(common.c(_DIM, 'View extracted logs in the ZIP under logs/ (use less -R for colorized errors).'))
+    print(common.c(_DIM, 'Open the HTML report in the ZIP for all lines; error keywords are highlighted.'))
 
 
 if __name__ == '__main__':
