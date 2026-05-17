@@ -3,7 +3,13 @@
 LogToolAI — main entry. Run this script to choose a mode (e.g. analyze OpenShift pod logs, analyze local directory).
 """
 
+import os
 import sys
+
+# Ensure mode scripts in this directory are importable (e.g. when cwd is not LogToolAI).
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
 
 import logtool_common as common
 
@@ -55,7 +61,17 @@ def main():
     elif module_name == 'zuul_job_analyze':
         from zuul_job_analyze import main as run_mode
     elif module_name == 'trace_id_in_logs':
-        from trace_id_in_logs import main as run_mode
+        trace_script = os.path.join(_SCRIPT_DIR, 'trace_id_in_logs.py')
+        if not os.path.isfile(trace_script):
+            print(common.c(_YELLOW, 'Mode 7 requires trace_id_in_logs.py in the LogToolAI directory.'))
+            print(common.c(_DIM, 'Expected: ') + trace_script)
+            print(common.c(_DIM, 'Copy the file from your repo to controller-0, then run again.'))
+            sys.exit(1)
+        try:
+            from trace_id_in_logs import main as run_mode
+        except ImportError as e:
+            print(common.c(_YELLOW, 'Could not load mode 7 (trace_id_in_logs): ') + str(e))
+            sys.exit(1)
     else:
         print('Unknown mode.')
         sys.exit(1)
