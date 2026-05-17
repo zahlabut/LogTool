@@ -8,8 +8,15 @@ Error keywords highlighted in red. Run on controller-0 with oc access.
 import datetime
 import gzip
 import os
+import re
 import sys
 import time as time_module
+
+# OpenStack request id in log lines, e.g. req-d11ca9c1-a712-47e6-b3c5-bae9a94ef364
+_REQ_ID_RE = re.compile(
+    r'req-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+    re.IGNORECASE,
+)
 
 import config
 import logtool_common as common
@@ -50,27 +57,76 @@ def _read_log_file_lines(path):
     return out
 
 
-def scan_log_paths_for_id(log_paths, search_id, context_lines=None):
+def _extract_request_ids(line_text):
+    return {m.group(0) for m in _REQ_ID_RE.finditer(line_text or '')}
+
+
+def _count_id_lines_per_file(log_paths, search_id):
+    counts = {}
+    for path in log_paths:
+        if not os.path.isfile(path):
+            continue
+        counts[path] = sum(1 for _ln, text in _iter_log_lines(path) if search_id in text)
+    return counts
+
+
+def build_trace_timeline(log_paths, search_id, context_lines=None):
     """
-    Find every line containing search_id, plus context_lines before/after each hit (same log file).
-    Return list of (dt, path, line_no, line_text, has_id) sorted by time globally.
-    has_id is True when the line contains search_id.
+    1) Grep all logs for search_id; find first/last time and OpenStack req-* ids on those lines.
+    2) From first ID time onward, include lines with the ID or the same req-* (octavia-worker, etc.).
+    3) Add context lines around each hit.
+
+    Returns (entries, first_dt, last_dt, request_ids, id_counts_per_file).
+    entries: (dt, path, line_no, line_text, has_id, has_req)
     """
     if not search_id:
-        return []
+        return [], None, None, set(), {}
     if context_lines is None:
         context_lines = getattr(config, 'ID_TRACE_CONTEXT_LINES', 5)
+    correlate = getattr(config, 'ID_TRACE_CORRELATE_REQUEST_IDS', True)
+    id_counts = _count_id_lines_per_file(log_paths, search_id)
+
+    request_ids = set()
+    id_times = []
+    for path in log_paths:
+        if not os.path.isfile(path):
+            continue
+        for _line_no, line_text in _iter_log_lines(path):
+            if search_id not in line_text:
+                continue
+            request_ids |= _extract_request_ids(line_text)
+            dt, _ = common.get_line_date(line_text)
+            if dt:
+                id_times.append(dt)
+
+    if not id_times:
+        return [], None, None, request_ids, id_counts
+
+    first_dt = min(id_times)
+    last_dt = max(id_times)
+    end_dt = last_dt + datetime.timedelta(minutes=2)
+    if not correlate:
+        request_ids = set()
+
     include_by_path = {}
     for path in log_paths:
         if not os.path.isfile(path):
             continue
         for line_no, line_text in _iter_log_lines(path):
-            if search_id not in line_text:
+            has_id = search_id in line_text
+            has_req = bool(request_ids) and any(rid in line_text for rid in request_ids)
+            if not has_id and not has_req:
                 continue
+            dt, _ = common.get_line_date(line_text)
+            if dt is not None:
+                if dt < first_dt or dt > end_dt:
+                    continue
             nums = include_by_path.setdefault(path, set())
+            nums.add(line_no)
             for i in range(line_no - context_lines, line_no + context_lines + 1):
                 if i >= 1:
                     nums.add(i)
+
     entries = []
     sentinel = datetime.datetime.max
     for path, line_nums in include_by_path.items():
@@ -81,14 +137,15 @@ def scan_log_paths_for_id(log_paths, search_id, context_lines=None):
                 continue
             dt, _ = common.get_line_date(line_text)
             has_id = search_id in line_text
-            entries.append((dt, path, line_no, line_text, has_id))
+            has_req = bool(request_ids) and any(rid in line_text for rid in request_ids) and not has_id
+            entries.append((dt, path, line_no, line_text, has_id, has_req))
 
     def sort_key(item):
-        dt, path, line_no, _, _ = item
+        dt, path, line_no, _, _, _ = item
         return (dt if dt is not None else sentinel, path, line_no)
 
     entries.sort(key=sort_key)
-    return entries
+    return entries, first_dt, last_dt, request_ids, id_counts
 
 
 def _log_display_name(path):
@@ -96,20 +153,15 @@ def _log_display_name(path):
     return os.path.basename(path) or path
 
 
-def first_id_timestamp(entries):
-    """Earliest parseable timestamp among lines that contain the ID."""
-    id_times = [e[0] for e in entries if e[4] and e[0] is not None]
-    return min(id_times) if id_times else None
+def _line_prefix(has_id, has_req):
+    if has_id:
+        return '[ID] '
+    if has_req:
+        return '[req] '
+    return '     '
 
 
-def filter_entries_from_timestamp(entries, from_dt):
-    """Keep timeline lines at or after from_dt (lines without a timestamp are kept)."""
-    if from_dt is None:
-        return entries
-    return [e for e in entries if e[0] is None or e[0] >= from_dt]
-
-
-def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines):
+def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
     f.write(common.r(common.REPORT_BOLD, 'ID trace report') + '\n')
     f.write(common.r(common.REPORT_DIM, 'Search ID: ') + search_id + '\n')
     f.write(common.r(common.REPORT_DIM, 'Logs collected since: ') + collect_since_str + ' (auto)\n')
@@ -117,16 +169,29 @@ def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, l
         f.write(common.r(common.REPORT_DIM, 'Timeline starts at first ID: ') + first_id_str + '\n')
     f.write(common.r(common.REPORT_DIM, 'Collected logs: ') + os.path.abspath(logs_dir) + '\n')
     id_lines = sum(1 for e in entries if e[4])
-    f.write(common.r(common.REPORT_DIM, 'Timeline lines: ') + str(len(entries)) + ' ({} with ID, {} context)'.format(id_lines, len(entries) - id_lines) + '\n')
-    f.write(common.r(common.REPORT_DIM, 'Context: ') + str(context_lines) + ' lines before/after each ID hit in the same log file.\n')
-    f.write(common.r(common.REPORT_DIM, 'Order: chronological. All ID lines from first sighting onward; log path header when file changes.') + '\n')
-    f.write(common.r(common.REPORT_DIM, 'ERROR keywords are highlighted in red (same as mode 1).') + '\n\n')
+    req_lines = sum(1 for e in entries if e[5])
+    ctx_lines = len(entries) - id_lines - req_lines
+    f.write(common.r(common.REPORT_DIM, 'Timeline lines: ') + str(len(entries)) + ' ({} [ID], {} [req], {} context)'.format(id_lines, req_lines, ctx_lines) + '\n')
+    if request_ids:
+        f.write(common.r(common.REPORT_DIM, 'Correlated request IDs (same OpenStack request as ID hits): ') + ', '.join(sorted(request_ids)[:8]))
+        if len(request_ids) > 8:
+            f.write(' ... (+{} more)'.format(len(request_ids) - 8))
+        f.write('\n')
+    f.write(common.r(common.REPORT_DIM, 'Note: octavia-worker often logs req-* but not the LB UUID; [req] lines are from other pods in the same request.') + '\n')
+    f.write(common.r(common.REPORT_DIM, 'Context: ') + str(context_lines) + ' lines before/after each hit. ERROR keywords in red.\n\n')
+    if id_counts:
+        f.write(common.r(common.REPORT_BOLD, 'Direct ID matches per collected log file:') + '\n')
+        for path in sorted(id_counts.keys(), key=lambda p: (-id_counts[p], _log_display_name(p))):
+            n = id_counts[path]
+            mark = '' if n else ' (0 — may still appear via [req])'
+            f.write(common.r(common.REPORT_DIM, '  {}: {}{}\n').format(_log_display_name(path), n, mark))
+        f.write('\n')
     if not entries:
         f.write(common.r(common.REPORT_DIM, '(No lines containing this ID in the collected logs.)') + '\n')
         f.write(common.r(common.REPORT_DIM, 'Try: All pods, increase ID_TRACE_COLLECT_MAX_HOURS in config, or check the ID string.') + '\n')
         return
     current_path = None
-    for dt, path, line_no, line_text, has_id in entries:
+    for dt, path, line_no, line_text, has_id, has_req in entries:
         if path != current_path:
             current_path = path
             log_file_line = 'Log file: ' + path
@@ -138,17 +203,18 @@ def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, l
         ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
         display = common.escape_ansi(line_text)
         highlighted = common.highlight_error_keywords(display)
-        prefix = '[ID] ' if has_id else '     '
+        prefix = _line_prefix(has_id, has_req)
         f.write('{} {}:{} {}{}\n'.format(ts, _log_display_name(path), line_no, prefix, highlighted))
 
-    files_with_id = sorted(set(e[1] for e in entries if e[4]))
+    files_in_timeline = sorted(set(e[1] for e in entries))
     f.write('\n')
-    f.write(common.r(common.REPORT_DIM, 'Log files with at least one ID match ({}): ').format(len(files_with_id)))
-    f.write(', '.join(_log_display_name(p) for p in files_with_id) + '\n')
+    f.write(common.r(common.REPORT_DIM, 'Log files in timeline ({}): ').format(len(files_in_timeline)))
+    f.write(', '.join(_log_display_name(p) for p in files_in_timeline) + '\n')
 
 
-def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines):
+def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts):
     id_lines = sum(1 for e in entries if e[4])
+    req_lines = sum(1 for e in entries if e[5])
     lines = []
     lines.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">')
     lines.append('<title>ID trace: ' + common.html_escape(search_id) + '</title>')
@@ -157,7 +223,7 @@ def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, e
     lines.append('h1{font-size:1.4rem;} h2{font-size:1rem;margin-top:1.5rem;color:#333;border-bottom:1px solid #ccc;padding-bottom:0.25rem;word-break:break-all;}')
     lines.append('.meta{color:#666;font-size:0.9rem;} .timeline{margin:0;padding:0;list-style:none;}')
     lines.append('.timeline li{margin:0.15rem 0;font-family:ui-monospace,monospace;font-size:0.82rem;white-space:pre-wrap;word-break:break-all;}')
-    lines.append('.hl{background:#fce4a0;padding:0 2px;} .ts{color:#555;} .ctx{color:#666;} .idtag{color:#06c;font-weight:600;}')
+    lines.append('.hl{background:#fce4a0;padding:0 2px;} .ts{color:#555;} .ctx{color:#666;} .idtag{color:#06c;font-weight:600;} .reqtag{color:#080;font-weight:600;}')
     lines.append('</style></head><body>')
     lines.append('<h1>ID trace report</h1>')
     lines.append('<p class="meta"><strong>Search ID:</strong> ' + common.html_escape(search_id) + '</p>')
@@ -165,14 +231,20 @@ def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, e
     if first_id_str:
         lines.append('<p class="meta"><strong>Timeline starts at first ID:</strong> ' + common.html_escape(first_id_str) + '</p>')
     lines.append('<p class="meta"><strong>Collected logs:</strong> ' + common.html_escape(os.path.abspath(logs_dir)) + '</p>')
-    lines.append('<p class="meta"><strong>Timeline:</strong> ' + str(len(entries)) + ' lines ({} with <span class="idtag">[ID]</span>, {} context). Sorted by time.</p>'.format(id_lines, len(entries) - id_lines))
-    lines.append('<p class="meta">Context: ' + str(context_lines) + ' lines before/after each ID hit. ERROR keywords highlighted in yellow.</p>')
+    lines.append('<p class="meta"><strong>Timeline:</strong> ' + str(len(entries)) + ' lines ({} <span class="idtag">[ID]</span>, {} <span class="reqtag">[req]</span>, {} context). Sorted by time.</p>'.format(
+        id_lines, req_lines, len(entries) - id_lines - req_lines))
+    if request_ids:
+        lines.append('<p class="meta"><strong>Correlated request IDs:</strong> ' + common.html_escape(', '.join(sorted(request_ids)[:6])))
+        if len(request_ids) > 6:
+            lines.append(' ...')
+        lines.append('</p>')
+    lines.append('<p class="meta">octavia-worker and other pods often log <span class="reqtag">[req]</span> without the LB UUID. Context: ' + str(context_lines) + ' lines per hit.</p>')
     if not entries:
         lines.append('<p class="meta">(No lines containing this ID.) Try All pods and a longer time window.</p>')
         lines.append('</body></html>')
         return '\n'.join(lines)
     current_path = None
-    for dt, path, line_no, line_text, has_id in entries:
+    for dt, path, line_no, line_text, has_id, has_req in entries:
         if path != current_path:
             if current_path is not None:
                 lines.append('</ul>')
@@ -182,8 +254,15 @@ def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, e
         ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
         display = common.line_for_display(line_text)
         body = common.html_highlight_line(display)
-        tag = '<span class="idtag">[ID]</span> ' if has_id else '<span class="ctx">     </span> '
-        li_cls = '' if has_id else ' class="ctx"'
+        if has_id:
+            tag = '<span class="idtag">[ID]</span> '
+            li_cls = ''
+        elif has_req:
+            tag = '<span class="reqtag">[req]</span> '
+            li_cls = ''
+        else:
+            tag = '<span class="ctx">     </span> '
+            li_cls = ' class="ctx"'
         lines.append('<li' + li_cls + '><span class="ts">' + common.html_escape(ts) + ' ' + common.html_escape(_log_display_name(path)) + ':' + str(line_no) + '</span> ' + tag + body + '</li>')
     lines.append('</ul></body></html>')
     return '\n'.join(lines)
@@ -203,7 +282,7 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     max_h = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 24)
     print(common.c(_DIM, 'Collects pod logs (auto, up to {}h back), greps your ID, finds first time it appears.'.format(max_h)))
-    print(common.c(_DIM, 'Report: all ID lines from that moment onward, sorted by time (+ {} lines context).'.format(context_lines)))
+    print(common.c(_DIM, 'Report: ID lines + same OpenStack req-* in other pods (worker, etc.), sorted by time.'))
     print(common.c(_DIM, 'ERROR keywords highlighted in red (same as mode 1). Tip: choose All pods.'))
     print('')
     print(common.c(_GREEN, 'Which ID do you want to trace in the pod logs?'))
@@ -283,34 +362,42 @@ def main():
     print('')
     print(common.c(_CYAN, '[3/3] Grep ID, find first time, build timeline'))
     print(common.c(_DIM, '-' * 60))
-    print(common.c(_DIM, '  Scanning {} file(s) for "{}"...').format(len(log_paths), search_id), flush=True)
-    all_entries = scan_log_paths_for_id(log_paths, search_id, context_lines=context_lines)
-    first_dt = first_id_timestamp(all_entries)
+    print(common.c(_DIM, '  Scanning {} file(s) for "{}" (+ correlated req-* )...').format(len(log_paths), search_id), flush=True)
+    entries, first_dt, last_dt, request_ids, id_counts = build_trace_timeline(
+        log_paths, search_id, context_lines=context_lines)
     if first_dt:
         first_id_str = first_dt.strftime('%Y-%m-%d %H:%M:%S')
-        entries = filter_entries_from_timestamp(all_entries, first_dt)
         print(common.c(_GREEN, '  First ID logged at: ') + common.c(_CYAN, first_id_str), flush=True)
+        if last_dt:
+            print(common.c(_DIM, '  Last ID activity: ') + last_dt.strftime('%Y-%m-%d %H:%M:%S'), flush=True)
     else:
         first_id_str = ''
-        entries = all_entries
-        if not all_entries:
+        if not id_counts or not any(id_counts.values()):
             print(common.c(_YELLOW, '  ID not found in collected logs.'), flush=True)
         else:
-            print(common.c(_YELLOW, '  ID found but no parseable timestamps; showing all matches.'), flush=True)
+            print(common.c(_YELLOW, '  ID found but no parseable timestamps.'), flush=True)
+    if request_ids:
+        print(common.c(_DIM, '  Correlated {} request ID(s), e.g. {}').format(
+            len(request_ids), sorted(request_ids)[0][:40] + '...'), flush=True)
     id_hits = sum(1 for e in entries if e[4])
-    files_with_id = sorted(set(e[1] for e in entries if e[4]))
-    print(common.c(_GREEN, '  {} ID line(s) in {} log file(s); {} timeline lines (with context).').format(
-        id_hits, len(files_with_id), len(entries)), flush=True)
-    if id_hits and len(files_with_id) == 1:
-        print(common.c(_DIM, '  ID in: ') + ', '.join(_log_display_name(p) for p in files_with_id), flush=True)
+    req_hits = sum(1 for e in entries if e[5])
+    files_in = sorted(set(e[1] for e in entries))
+    print(common.c(_GREEN, '  Timeline: {} lines ({} [ID], {} [req], {} files).').format(
+        len(entries), id_hits, req_hits, len(files_in)), flush=True)
+    if files_in:
+        print(common.c(_DIM, '  Files: ') + ', '.join(_log_display_name(p) for p in files_in[:12])
+              + (' ...' if len(files_in) > 12 else ''), flush=True)
+    zero_id = [_log_display_name(p) for p, n in id_counts.items() if n == 0 and 'octavia' in p.lower()]
+    if zero_id:
+        print(common.c(_DIM, '  No direct ID in: ') + ', '.join(zero_id[:8]) + ' (check [req] lines in timeline)', flush=True)
 
     run_dir = config.timestamped_report_dir('id_trace')
     os.makedirs(run_dir, exist_ok=True)
     report_path = os.path.join(run_dir, 'id_trace_report.txt')
     html_path = os.path.join(run_dir, 'id_trace_report.html')
     with open(report_path, 'w', encoding='utf-8') as f:
-        _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines)
-    html_content = _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines)
+        _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
+    html_content = _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts)
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 

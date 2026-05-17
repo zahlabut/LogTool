@@ -115,6 +115,8 @@ ID_TRACE_LOGS_DIR = os.path.join(RESULT_DIR, 'id_trace', 'collected_pod_logs')
 ID_TRACE_CONTEXT_LINES = 5
 # How far back to fetch pod logs before scanning for the ID (no user prompt).
 ID_TRACE_COLLECT_MAX_HOURS = 24
+# Also include lines with the same OpenStack req-<uuid> as ID hits (pulls in octavia-worker, etc.).
+ID_TRACE_CORRELATE_REQUEST_IDS = True
 
 # --- Local directory mode (analyze_local_logs) ---
 # Reports under timestamped run dir: local_logs/YYYYMMDD_HHMMSS/
