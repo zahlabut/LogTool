@@ -15,7 +15,6 @@ import config
 import logtool_common as common
 from collect_and_analyze_pod_logs import (
     collect_logs_since,
-    get_baseline_quick,
     get_pods,
     group_pods_by_component,
 )
@@ -97,19 +96,34 @@ def _log_display_name(path):
     return os.path.basename(path) or path
 
 
-def _write_text_timeline_report(f, search_id, since_str, logs_dir, entries, context_lines):
+def first_id_timestamp(entries):
+    """Earliest parseable timestamp among lines that contain the ID."""
+    id_times = [e[0] for e in entries if e[4] and e[0] is not None]
+    return min(id_times) if id_times else None
+
+
+def filter_entries_from_timestamp(entries, from_dt):
+    """Keep timeline lines at or after from_dt (lines without a timestamp are kept)."""
+    if from_dt is None:
+        return entries
+    return [e for e in entries if e[0] is None or e[0] >= from_dt]
+
+
+def _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines):
     f.write(common.r(common.REPORT_BOLD, 'ID trace report') + '\n')
     f.write(common.r(common.REPORT_DIM, 'Search ID: ') + search_id + '\n')
-    f.write(common.r(common.REPORT_DIM, 'Logs since: ') + since_str + '\n')
+    f.write(common.r(common.REPORT_DIM, 'Logs collected since: ') + collect_since_str + ' (auto)\n')
+    if first_id_str:
+        f.write(common.r(common.REPORT_DIM, 'Timeline starts at first ID: ') + first_id_str + '\n')
     f.write(common.r(common.REPORT_DIM, 'Collected logs: ') + os.path.abspath(logs_dir) + '\n')
     id_lines = sum(1 for e in entries if e[4])
     f.write(common.r(common.REPORT_DIM, 'Timeline lines: ') + str(len(entries)) + ' ({} with ID, {} context)'.format(id_lines, len(entries) - id_lines) + '\n')
     f.write(common.r(common.REPORT_DIM, 'Context: ') + str(context_lines) + ' lines before/after each ID hit in the same log file.\n')
-    f.write(common.r(common.REPORT_DIM, 'Order: chronological (time). Log path header when the source file changes.') + '\n')
+    f.write(common.r(common.REPORT_DIM, 'Order: chronological. All ID lines from first sighting onward; log path header when file changes.') + '\n')
     f.write(common.r(common.REPORT_DIM, 'ERROR keywords are highlighted in red (same as mode 1).') + '\n\n')
     if not entries:
         f.write(common.r(common.REPORT_DIM, '(No lines containing this ID in the collected logs.)') + '\n')
-        f.write(common.r(common.REPORT_DIM, 'Try: All pods, longer time window (e.g. 2h), or check the ID string.') + '\n')
+        f.write(common.r(common.REPORT_DIM, 'Try: All pods, increase ID_TRACE_COLLECT_MAX_HOURS in config, or check the ID string.') + '\n')
         return
     current_path = None
     for dt, path, line_no, line_text, has_id in entries:
@@ -133,7 +147,7 @@ def _write_text_timeline_report(f, search_id, since_str, logs_dir, entries, cont
     f.write(', '.join(_log_display_name(p) for p in files_with_id) + '\n')
 
 
-def _build_timeline_html(search_id, since_str, logs_dir, entries, context_lines):
+def _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines):
     id_lines = sum(1 for e in entries if e[4])
     lines = []
     lines.append('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">')
@@ -147,7 +161,9 @@ def _build_timeline_html(search_id, since_str, logs_dir, entries, context_lines)
     lines.append('</style></head><body>')
     lines.append('<h1>ID trace report</h1>')
     lines.append('<p class="meta"><strong>Search ID:</strong> ' + common.html_escape(search_id) + '</p>')
-    lines.append('<p class="meta"><strong>Logs since:</strong> ' + common.html_escape(since_str) + '</p>')
+    lines.append('<p class="meta"><strong>Logs collected since:</strong> ' + common.html_escape(collect_since_str) + ' (auto)</p>')
+    if first_id_str:
+        lines.append('<p class="meta"><strong>Timeline starts at first ID:</strong> ' + common.html_escape(first_id_str) + '</p>')
     lines.append('<p class="meta"><strong>Collected logs:</strong> ' + common.html_escape(os.path.abspath(logs_dir)) + '</p>')
     lines.append('<p class="meta"><strong>Timeline:</strong> ' + str(len(entries)) + ' lines ({} with <span class="idtag">[ID]</span>, {} context). Sorted by time.</p>'.format(id_lines, len(entries) - id_lines))
     lines.append('<p class="meta">Context: ' + str(context_lines) + ' lines before/after each ID hit. ERROR keywords highlighted in yellow.</p>')
@@ -185,10 +201,10 @@ def main():
     print(common.c(_CYAN, '=' * 60))
     print(common.c(_CYAN, 'Trace ID in pod logs (controller)'))
     print(common.c(_CYAN, '=' * 60))
-    print(common.c(_DIM, 'Collects pod logs via oc, finds lines with your ID (+ {} lines context per hit).'.format(context_lines)))
-    print(common.c(_DIM, 'Full timeline sorted by time; log path header when the source file changes.'))
-    print(common.c(_DIM, 'ERROR keywords highlighted in red (same as mode 1).'))
-    print(common.c(_DIM, 'Tip: choose All pods and 2h+ window for the full story across components.'))
+    max_h = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 24)
+    print(common.c(_DIM, 'Collects pod logs (auto, up to {}h back), greps your ID, finds first time it appears.'.format(max_h)))
+    print(common.c(_DIM, 'Report: all ID lines from that moment onward, sorted by time (+ {} lines context).'.format(context_lines)))
+    print(common.c(_DIM, 'ERROR keywords highlighted in red (same as mode 1). Tip: choose All pods.'))
     print('')
     print(common.c(_GREEN, 'Which ID do you want to trace in the pod logs?'))
     print(common.c(_DIM, '  (Any string that appears in log lines: LB UUID, server ID, port ID, request-id, etc.)'))
@@ -202,7 +218,7 @@ def main():
     logs_dir = getattr(config, 'ID_TRACE_LOGS_DIR', os.path.join(config.RESULT_DIR, 'id_trace', 'collected_pod_logs'))
 
     print('')
-    print(common.c(_CYAN, '[1/4] Pod list'))
+    print(common.c(_CYAN, '[1/3] Pod list'))
     print(common.c(_DIM, '-' * 60))
     print(common.c(_DIM, 'Collecting pod list (oc get pods -A)...'), flush=True)
     pods = get_pods()
@@ -240,40 +256,14 @@ def main():
         print(common.c(_YELLOW, 'No pods to collect. Exiting.'))
         sys.exit(0)
 
-    print('')
-    print(common.c(_CYAN, '[2/4] Baseline and since time'))
-    print(common.c(_DIM, '-' * 60))
-    baseline = get_baseline_quick(pods)
+    max_hours = getattr(config, 'ID_TRACE_COLLECT_MAX_HOURS', 24)
     now = datetime.datetime.utcnow()
-    ref_dt = baseline if baseline is not None else now
-    if baseline is None:
-        print(common.c(_YELLOW, 'Could not detect any timestamp in logs.'))
-    else:
-        print('Last logged message was at: ' + common.c(_CYAN, ref_dt.strftime('%Y-%m-%d %H:%M:%S')) + '.')
-    print(common.c(_DIM, 'How far back to collect (wider window = more of the ID story):'))
-    print('  1) 2h back  2) 1h back  3) 30m back  4) Custom (minutes)')
-    choice = common.timed_input(common.c(_DIM, 'Choice [1-4] (default 2h): '), '1', timeout_sec=_timeout).strip() or '1'
-    if choice == '1':
-        delta = datetime.timedelta(hours=2)
-    elif choice == '2':
-        delta = datetime.timedelta(hours=1)
-    elif choice == '3':
-        delta = datetime.timedelta(minutes=30)
-    elif choice == '4':
-        try:
-            mins = int(common.timed_input('Minutes back: ', '120', timeout_sec=_timeout).strip())
-            delta = datetime.timedelta(minutes=max(0, mins))
-        except Exception:
-            delta = datetime.timedelta(hours=2)
-    else:
-        delta = datetime.timedelta(hours=2)
-    since_dt = ref_dt - delta
-    since_iso = since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
-    since_str = since_dt.strftime('%Y-%m-%d %H:%M:%S')
-    print(common.c(_GREEN, 'Collecting logs since: ') + common.c(_CYAN, since_str) + '.')
+    collect_since_dt = now - datetime.timedelta(hours=max_hours)
+    since_iso = collect_since_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    collect_since_str = collect_since_dt.strftime('%Y-%m-%d %H:%M:%S')
 
     print('')
-    print(common.c(_CYAN, '[3/4] Collect logs'))
+    print(common.c(_CYAN, '[2/3] Collect logs (auto window)'))
     print(common.c(_DIM, '-' * 60))
     if os.path.isdir(logs_dir):
         for f in os.listdir(logs_dir):
@@ -283,6 +273,7 @@ def main():
                 pass
     else:
         os.makedirs(logs_dir, exist_ok=True)
+    print(common.c(_DIM, 'Auto: collecting up to {}h of logs per pod (since {}).').format(max_hours, collect_since_str), flush=True)
     print(common.c(_DIM, 'Logs directory: ') + common.c(_CYAN, logs_dir))
     log_paths = collect_logs_since(logs_dir, pods, since_iso)
     if not log_paths:
@@ -290,26 +281,36 @@ def main():
         sys.exit(1)
 
     print('')
-    print(common.c(_CYAN, '[4/4] Scan logs for ID and write report'))
+    print(common.c(_CYAN, '[3/3] Grep ID, find first time, build timeline'))
     print(common.c(_DIM, '-' * 60))
-    print(common.c(_DIM, '  Scanning {} file(s) for "{}" (+ context)...').format(len(log_paths), search_id), flush=True)
-    entries = scan_log_paths_for_id(log_paths, search_id, context_lines=context_lines)
+    print(common.c(_DIM, '  Scanning {} file(s) for "{}"...').format(len(log_paths), search_id), flush=True)
+    all_entries = scan_log_paths_for_id(log_paths, search_id, context_lines=context_lines)
+    first_dt = first_id_timestamp(all_entries)
+    if first_dt:
+        first_id_str = first_dt.strftime('%Y-%m-%d %H:%M:%S')
+        entries = filter_entries_from_timestamp(all_entries, first_dt)
+        print(common.c(_GREEN, '  First ID logged at: ') + common.c(_CYAN, first_id_str), flush=True)
+    else:
+        first_id_str = ''
+        entries = all_entries
+        if not all_entries:
+            print(common.c(_YELLOW, '  ID not found in collected logs.'), flush=True)
+        else:
+            print(common.c(_YELLOW, '  ID found but no parseable timestamps; showing all matches.'), flush=True)
     id_hits = sum(1 for e in entries if e[4])
     files_with_id = sorted(set(e[1] for e in entries if e[4]))
-    print(common.c(_GREEN, '  {} line(s) with ID in {} log file(s); {} total timeline lines (with context).').format(
+    print(common.c(_GREEN, '  {} ID line(s) in {} log file(s); {} timeline lines (with context).').format(
         id_hits, len(files_with_id), len(entries)), flush=True)
-    if id_hits < 10 and len(pods) < total:
-        print(common.c(_YELLOW, '  Few matches — re-run with All pods and/or 2h+ window if you need more of the story.'), flush=True)
-    elif id_hits and len(files_with_id) == 1:
-        print(common.c(_DIM, '  ID seen only in: ') + ', '.join(_log_display_name(p) for p in files_with_id), flush=True)
+    if id_hits and len(files_with_id) == 1:
+        print(common.c(_DIM, '  ID in: ') + ', '.join(_log_display_name(p) for p in files_with_id), flush=True)
 
     run_dir = config.timestamped_report_dir('id_trace')
     os.makedirs(run_dir, exist_ok=True)
     report_path = os.path.join(run_dir, 'id_trace_report.txt')
     html_path = os.path.join(run_dir, 'id_trace_report.html')
     with open(report_path, 'w', encoding='utf-8') as f:
-        _write_text_timeline_report(f, search_id, since_str, logs_dir, entries, context_lines)
-    html_content = _build_timeline_html(search_id, since_str, logs_dir, entries, context_lines)
+        _write_text_timeline_report(f, search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines)
+    html_content = _build_timeline_html(search_id, collect_since_str, first_id_str, logs_dir, entries, context_lines)
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
