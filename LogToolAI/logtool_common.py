@@ -919,10 +919,11 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
     header.append('<h2>' + html_escape(log_path) + '</h2>')
     header.append('<pre>')
     spans = []
-    open_fn = gzip.open if (log_path or '').lower().endswith('.gz') else open
+    use_gzip = (log_path or '').lower().endswith('.gz')
     mode = 'rt'
     kwargs = {'errors': 'replace'}
-    try:
+
+    def read_lines_into_spans(open_fn):
         with open_fn(log_path, mode, **kwargs) as f:
             for num in range(1, max_ln + 1):
                 line = f.readline()
@@ -935,8 +936,19 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
                     else:
                         highlighted = html_highlight_line(raw)
                         spans.append('<span id="L' + str(num) + '" class="line">' + str(num) + ': ' + highlighted + '</span>')
-    except (OSError, gzip.BadGzipFile):
-        spans.append(html_escape('(Could not read log file: ' + log_path + ')'))
+
+    try:
+        if use_gzip:
+            try:
+                read_lines_into_spans(gzip.open)
+            except gzip.BadGzipFile:
+                # .gz extension but content is not gzip (e.g. raw text); open as plain file
+                read_lines_into_spans(open)
+        else:
+            read_lines_into_spans(open)
+    except (OSError, gzip.BadGzipFile) as e:
+        err_msg = str(e).strip() or type(e).__name__
+        spans.append(html_escape('(Could not read log file: ' + log_path + ' — ' + err_msg + ')'))
     footer = ['</pre>', '<p class="viewer-footer">LogToolAI log viewer (errors highlighted, empty lines collapsed)</p>', '</body></html>']
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -947,11 +959,13 @@ def build_log_viewer_file(log_path, line_ranges, output_path, back_link_url=None
         pass
 
 
-def create_report_archive(html_path, report_path, report_logs_dir=None):
+def create_report_archive(html_path, report_path, report_logs_dir=None, log_paths_to_include=None):
     """
-    Create a ZIP archive containing the report files (HTML, TXT, and optional report_logs_dir).
+    Create a ZIP archive containing the report files (HTML, TXT, optional report_logs_dir, optional log files).
     Returns the absolute path to the created ZIP, or None on failure.
     ZIP is named report_archive_YYYYMMDD_HHMMSS.zip in the same directory as html_path.
+    If log_paths_to_include is provided (e.g. list of analyzed log paths), they are added under "logs/" with
+    unique names so the archive is self-contained.
     """
     parent = os.path.dirname(os.path.abspath(html_path))
     ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -970,6 +984,16 @@ def create_report_archive(html_path, report_path, report_logs_dir=None):
                         full = os.path.join(root, f)
                         arcname = os.path.join(subdir_name, os.path.relpath(full, report_logs_dir))
                         zf.write(full, arcname)
+            if log_paths_to_include:
+                for i, log_p in enumerate(log_paths_to_include):
+                    log_p = os.path.abspath(log_p)
+                    if os.path.isfile(log_p):
+                        base = os.path.basename(log_p)
+                        arcname = os.path.join('logs', '{}_{}'.format(i, base))
+                        try:
+                            zf.write(log_p, arcname)
+                        except OSError:
+                            pass
         return zip_path
     except (OSError, zipfile.BadZipFile):
         return None
@@ -983,7 +1007,7 @@ def get_download_command_for_zip(zip_path):
     zip_path = os.path.abspath(zip_path)
     if not os.path.isfile(zip_path):
         return None
-    controller = socket.gethostname()
+    controller = (getattr(config, 'REPORT_SSH_CONTROLLER_HOST', None) or '').strip() or socket.gethostname()
     zip_basename = os.path.basename(zip_path)
     # ssh root@<bastion> "su - zuul -c 'ssh -q controller-0 \"base64 /path/to/file.zip\"'" | base64 -d > file.zip
     cmd = 'ssh root@<your_bastion_host> "su - zuul -c \'ssh -q {} \\"base64 {}\\"\'" | base64 -d > {}'.format(
@@ -991,46 +1015,69 @@ def get_download_command_for_zip(zip_path):
     return cmd
 
 
-def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None, local_mode=False):
+def print_ssh_download_command(zip_path):
+    """Print SSH download instructions for a report ZIP (run the command on your local desktop). Returns True if printed."""
+    cmd = get_download_command_for_zip(zip_path)
+    if not cmd:
+        return False
+    print('')
+    print(c(_YELLOW, 'Download command (run on your local desktop):'))
+    print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
+    print(c(_CYAN, cmd))
+    print('')
+    print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
+    return True
+
+
+def _remove_report_files_keep_zip(report_path, html_path, report_logs_dir):
+    """After ZIP is created, remove the loose report files so only the ZIP remains in the run dir."""
+    try:
+        if report_path and os.path.isfile(report_path):
+            os.remove(report_path)
+        if html_path and os.path.isfile(html_path):
+            os.remove(html_path)
+        if report_logs_dir and os.path.isdir(report_logs_dir):
+            for root, dirs, files in os.walk(report_logs_dir, topdown=False):
+                for f in files:
+                    os.remove(os.path.join(root, f))
+                for d in dirs:
+                    os.rmdir(os.path.join(root, d))
+            os.rmdir(report_logs_dir)
+    except OSError:
+        pass
+
+
+def print_download_prompt(html_path, report_path, report_logs_dir=None, extra_dirs=None, local_mode=False, log_paths_to_include=None, show_ssh_download=None):
     """
-    Print paths to the text report and optionally create a ZIP. If local_mode is False (e.g. pod/must-gather
-    run on controller), also print the SSH download command. If local_mode is True (e.g. Zuul job run on
-    your desktop), results are already local — no download command, just paths.
+    Create a ZIP with the report (and optional logs), then remove the loose files so only the ZIP remains.
+    If show_ssh_download is True, or (show_ssh_download is None and local_mode is False), print the SSH download command.
+    log_paths_to_include: optional list of log file paths to add to the ZIP under logs/ (e.g. Zuul all_log_paths).
     """
-    report_path_abs = os.path.abspath(report_path) if report_path else None
     width = 60
     print('')
     print(c(_CYAN, '=' * width))
     print(c(_CYAN, 'REPORT PATHS'))
     print(c(_CYAN, '=' * width))
     if local_mode:
-        print(c(_DIM, 'Results are stored locally in the directory below.'))
+        print(c(_DIM, 'Results are stored locally (ZIP only in this directory).'))
         print('')
-    if report_path_abs and os.path.isfile(report_path_abs):
-        print(c(_GREEN, 'Text report:'))
-        print(c(_CYAN, report_path_abs))
-        print(c(_DIM, '  View: ') + 'cat ' + report_path_abs + '  or  less -R ' + report_path_abs)
-        print(c(_DIM, '  List: ') + 'ls -la ' + report_path_abs)
-        print('')
-    zip_path = create_report_archive(html_path, report_path, report_logs_dir=report_logs_dir)
+    zip_path = create_report_archive(html_path, report_path, report_logs_dir=report_logs_dir, log_paths_to_include=log_paths_to_include)
     if not zip_path:
         print(c(_CYAN, '=' * width))
         return
-    print(c(_GREEN, 'ZIP archive:'))
+    _remove_report_files_keep_zip(report_path, html_path, report_logs_dir)
+    print(c(_GREEN, 'ZIP archive (everything needed):'))
     print(c(_CYAN, zip_path))
-    if not local_mode:
-        cmd = get_download_command_for_zip(zip_path)
-        if cmd:
-            print('')
-            print(c(_YELLOW, 'Download command (run on your local desktop):'))
-            print(c(_DIM, '(Replace <your_bastion_host> with your actual bastion hostname)'))
-            print(c(_CYAN, cmd))
-            print('')
-            print(c(_DIM, 'Then unzip the archive and open the HTML report in your browser.'))
-    else:
+    want_ssh = show_ssh_download if show_ssh_download is not None else (not local_mode)
+    if want_ssh:
+        print_ssh_download_command(zip_path)
+    elif local_mode:
         print('')
-        print(c(_DIM, 'Unzip the archive and open the HTML report in your browser.'))
+        if log_paths_to_include:
+            print(c(_DIM, 'ZIP contains main report, per-log viewer HTMLs, and a copy of analyzed logs under logs/.'))
+        print(c(_DIM, 'Unzip and open the HTML report in your browser.'))
     print(c(_CYAN, '=' * width))
+    return zip_path
 
 
 # Export for report writing

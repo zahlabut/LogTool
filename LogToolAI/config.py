@@ -2,17 +2,25 @@
 # Edit this file to change paths, Ollama settings, error keywords, and other parameters.
 
 import os
+import datetime
 
 # Base directory for the tool (where config.py lives). Paths below are relative to this.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- Result directory (one base dir per run; each mode has a subdir with its outputs) ---
 # All mode reports and mode-specific outputs go under RESULT_DIR / <mode_subdir>.
+# Each report run writes to a timestamped subdir so you can tell old vs new: .../pod_logs/YYYYMMDD_HHMMSS/
 RESULT_DIR = os.path.join(BASE_DIR, 'results')
 
+
+def timestamped_report_dir(mode_subdir):
+    """Return a new timestamped directory for this run, e.g. results/pod_logs/20260304_143022/."""
+    return os.path.join(RESULT_DIR, mode_subdir, datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
+
 # --- Paths & output (mode 1: pod logs) ---
+# Reports are written under timestamped run dirs (e.g. pod_logs/YYYYMMDD_HHMMSS/). Below: collected logs dir.
 LOGS_DIR = os.path.join(RESULT_DIR, 'pod_logs', 'collected_pod_logs')
-REPORT_FILE = os.path.join(RESULT_DIR, 'pod_logs', 'pod_logs_error_report.txt')
+REPORT_FILE = os.path.join(RESULT_DIR, 'pod_logs', 'pod_logs_error_report.txt')  # legacy; actual path uses timestamped_report_dir
 REPORT_HTML = os.path.join(RESULT_DIR, 'pod_logs', 'pod_logs_error_report.html')
 
 # --- Concurrency ---
@@ -97,11 +105,15 @@ MUST_GATHER_BASE_DIR = os.path.join(BASE_DIR, 'must_gather_output')
 # MUST_GATHER_IMAGE = 'quay.io/openstack-k8s-operators/openstack-must-gather'
 # or registry.redhat.io/rhoso-operators/openstack-must-gather-rhel9
 MUST_GATHER_IMAGE = ''
-# Report files go under result dir for this mode.
+# Report files go under result dir for this mode (timestamped run dir: must_gather/YYYYMMDD_HHMMSS/).
 MUST_GATHER_REPORT_FILE = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_error_report.txt')
 MUST_GATHER_REPORT_HTML = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_error_report.html')
 
+# --- Trace ID in pod logs (trace_id_in_logs) ---
+ID_TRACE_LOGS_DIR = os.path.join(RESULT_DIR, 'id_trace', 'collected_pod_logs')
+
 # --- Local directory mode (analyze_local_logs) ---
+# Reports under timestamped run dir: local_logs/YYYYMMDD_HHMMSS/
 LOCAL_LOG_REPORT_FILE = os.path.join(RESULT_DIR, 'local_logs', 'local_logs_error_report.txt')
 LOCAL_LOG_REPORT_HTML = os.path.join(RESULT_DIR, 'local_logs', 'local_logs_error_report.html')
 
@@ -114,6 +126,7 @@ EXTRACT_OLLAMA_MAX_CHARS = 50000
 EXTRACT_OLLAMA_MAX_PREDICT = 1024
 
 # --- Zuul job analysis (zuul_job_analyze) ---
+# Reports under timestamped run dir: zuul_job/YYYYMMDD_HHMMSS/
 ZUUL_JOB_REPORT_FILE = os.path.join(RESULT_DIR, 'zuul_job', 'zuul_job_analysis_report.txt')
 ZUUL_JOB_REPORT_HTML = os.path.join(RESULT_DIR, 'zuul_job', 'zuul_job_analysis_report.html')
 # Base directory for downloaded Zuul logs (zuul_logs_download.py); each run creates a subdir.
@@ -129,6 +142,10 @@ REPORT_VIEWER_CONTEXT_LINES = 80
 # Seconds to wait for user input at prompts (since time, Ollama model, etc.). After timeout, the
 # fastest option is used (e.g. 30m since, skip Ollama). Set to 0 to wait indefinitely.
 PROMPT_TIMEOUT_SEC = 300  # 5 minutes
+
+# --- Report download (SSH from controller to desktop; modes 1, 2, 3, 7 on controller-0) ---
+# Target host in: ssh ... "su - zuul -c 'ssh -q <this_host> \"base64 ...\"'"
+REPORT_SSH_CONTROLLER_HOST = 'controller-0'
 
 # --- Display ---
 NO_COLOR = False

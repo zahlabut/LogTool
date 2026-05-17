@@ -11,6 +11,7 @@ import html as html_module
 import os
 import re
 import sys
+from pathlib import Path
 import tempfile
 import time as time_module
 import gzip
@@ -25,6 +26,8 @@ CONSOLE_LOG = 'job-output.txt'
 TAIL_LINES = 400
 # Only .log and .log.gz are scanned for error blocks (excludes .txt, .html, .xml, .yaml, etc.).
 LOG_EXTENSIONS_FOR_GREP = ('.log', '.log.gz')
+# Test result files that are .html but we treat as logs and scan for error blocks (exception to extension rule).
+RESULT_HTML_ALSO_GREP = ('tempest_results.html', 'tobiko_results.html')
 # Tempest result files we look for by name (anywhere under job dir).
 TEMPEST_RESULT_NAMES = ('tempest_results.html', 'tempest_results.xml', 'stestr_failing.txt', 'tempest_results.log', 'tempest_results.log.gz')
 # Tempest-related paths to use when no html/xml: build logs under tempest/ or named tempest*build*.log
@@ -49,6 +52,28 @@ def _is_tobiko_related_path(job_dir, full_path):
         return full_path.lower().endswith(('.log', '.yaml', '.xml', '.html'))
     name = os.path.basename(full_path)
     return bool(TOBIKO_RELATED_PATTERN.search(name))
+
+
+def _get_test_operator_dir(job_dir, tempest_paths):
+    """
+    Return (full_path, rel_path) for the tests result directory (controller/ci-framework-data/tests/test_operator)
+    if it exists under job_dir; else (None, None). Derives from any tempest result file path.
+    """
+    if not tempest_paths:
+        return (None, None)
+    any_path = next(iter(tempest_paths.values()))
+    if not any_path or not os.path.exists(any_path):
+        return (None, None)
+    path = os.path.dirname(any_path)
+    while path and path != job_dir:
+        if os.path.basename(path) == 'test_operator':
+            try:
+                rel = os.path.relpath(path, job_dir)
+            except ValueError:
+                rel = path
+            return (path, rel)
+        path = os.path.dirname(path)
+    return (None, None)
 
 
 def _html_escape(s):
@@ -153,6 +178,16 @@ def _build_html_report(source_path, job_info, report_entries, use_ollama, report
         lines.append('<div class="job-id">' + _html_escape(info['id']) + '</div>')
         lines.append('<div class="job-dir">' + _html_escape(info['dir']) + '</div>')
         lines.append('<p><strong>Summary:</strong> ' + _html_escape(info['tempest_summary']) + '</p>')
+        test_op_full, test_op_rel = _get_test_operator_dir(info['dir'], info.get('tempest_paths') or {})
+        if test_op_full and os.path.isdir(test_op_full):
+            try:
+                file_uri = Path(test_op_full).resolve().as_uri()
+            except Exception:
+                file_uri = None
+            if file_uri:
+                lines.append('<p class="job-dir">Open tests result directory (all raw data): <a href="' + _html_escape(file_uri) + '">' + _html_escape(test_op_rel) + '</a></p>')
+            else:
+                lines.append('<p class="job-dir">Tests result directory: ' + _html_escape(test_op_rel) + '</p>')
         if info.get('tempest_paths'):
             rels = [os.path.relpath(p, info['dir']) for p in info['tempest_paths'].values()]
             lines.append('<p class="job-dir">Tempest result files: ' + _html_escape(', '.join(rels)) + '</p>')
@@ -522,8 +557,10 @@ def discover_all_log_and_tempest_files(job_dir):
                 # Tobiko-related (e.g. tobiko/ dir, tobiko*build*.log)
                 if _is_tobiko_related_path(job_dir, full):
                     tobiko_related_paths.append(full)
-                # Only .log and .log.gz are scanned for error blocks (no .txt, .html, .xml)
+                # Only .log and .log.gz are scanned for error blocks; exception: tempest/tobiko result HTML
                 if any(lower.endswith(ext) for ext in LOG_EXTENSIONS_FOR_GREP):
+                    log_paths.append(full)
+                elif name in RESULT_HTML_ALSO_GREP:
                     log_paths.append(full)
     except OSError:
         pass
@@ -960,6 +997,25 @@ def main():
     if not all_log_paths:
         print(common.c(_YELLOW, 'No log files to grep. Writing report with console/tempest only.'))
 
+    # Optional: custom since time (overrides tempest start / default per job)
+    print('')
+    print(common.c(_CYAN, 'Since time (optional)'))
+    print(common.c(_DIM, '  Enter custom since time to analyze logs from this time (e.g. 2026-03-03 10:00), or press Enter for default above.'))
+    custom_since_raw = common.timed_input(common.c(_DIM, '  Custom since (YYYY-MM-DD HH:MM): '), '', timeout_sec=_timeout).strip()
+    if custom_since_raw:
+        for fmt in ('%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S'):
+            try:
+                custom_dt = datetime.datetime.strptime(custom_since_raw, fmt)
+                for info in job_info:
+                    info['since_dt'] = custom_dt
+                    info['since_reason'] = 'user-specified: {}'.format(custom_dt.strftime('%Y-%m-%d %H:%M'))
+                print(common.c(_GREEN, '  Using since time: {}').format(custom_dt.strftime('%Y-%m-%d %H:%M')), flush=True)
+                break
+            except ValueError:
+                continue
+        else:
+            print(common.c(_YELLOW, '  Could not parse "{}"; using default since time.').format(custom_since_raw), flush=True)
+
     print('')
     print(common.c(_CYAN, '[3/5] Extract error blocks (grep, threaded)'))
     print(common.c(_DIM, '-' * 60))
@@ -1111,9 +1167,10 @@ def main():
     print('')
     print(common.c(_CYAN, '[5/5] Write report'))
     print(common.c(_DIM, '-' * 60))
-    report_path = getattr(config, 'ZUUL_JOB_REPORT_FILE', os.path.join(config.BASE_DIR, 'zuul_job_analysis_report.txt'))
+    run_dir = config.timestamped_report_dir('zuul_job')
+    os.makedirs(run_dir, exist_ok=True)
+    report_path = os.path.join(run_dir, 'zuul_job_analysis_report.txt')
     print(common.c(_DIM, '  Writing text report: ') + report_path, flush=True)
-    os.makedirs(os.path.dirname(report_path), exist_ok=True)
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Zuul job analysis report') + '\n')
         f.write(common.r(common.REPORT_DIM, 'Source path: ') + path + '\n')
@@ -1187,9 +1244,9 @@ def main():
         if not report_entries:
             f.write(common.r(common.REPORT_DIM, '(No error blocks to report.)') + '\n')
 
-    html_path = getattr(config, 'ZUUL_JOB_REPORT_HTML', os.path.join(config.BASE_DIR, 'zuul_job_analysis_report.html'))
+    html_path = os.path.join(run_dir, 'zuul_job_analysis_report.html')
     print(common.c(_DIM, '  Writing HTML report: ') + html_path, flush=True)
-    report_logs_dir = os.path.join(os.path.dirname(html_path), REPORT_LOGS_SUBDIR)
+    report_logs_dir = os.path.join(run_dir, REPORT_LOGS_SUBDIR)
     main_basename = os.path.basename(html_path)
     viewer_links = {}
     if report_entries:
@@ -1207,11 +1264,9 @@ def main():
     print(common.c(_DIM, '  Done (main report + {} per-log links).').format(len(report_entries) and len(set(e[0] for e in report_entries)) or 0), flush=True)
 
     elapsed = time_module.time() - main_start
-    print(common.c(_GREEN, 'Report written to: ') + common.c(_CYAN, report_path))
-    print(common.c(_GREEN, 'HTML report: ') + common.c(_CYAN, html_path))
     print(common.c(_GREEN, 'Jobs analyzed: {}; error blocks: {}.').format(len(job_info), len(report_entries)))
     print(common.c(_DIM, 'Time: {:.1f}s').format(elapsed))
-    common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir, local_mode=True)
+    common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir, local_mode=True, log_paths_to_include=all_log_paths)
 
 
 if __name__ == '__main__':

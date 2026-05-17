@@ -117,7 +117,6 @@ def collect_logs_since(logs_dir, pods, since_iso=None):
 
 def main():
     logs_dir = config.LOGS_DIR
-    report_path = config.REPORT_FILE
     main_start = time_module.time()
     _CYAN = '\033[36m'
     _GREEN = '\033[32m'
@@ -357,7 +356,9 @@ def main():
     print('')
     print(common.c(_CYAN, '[5/5] Write report'))
     print(common.c(_DIM, '-' * 60))
-    os.makedirs(os.path.dirname(report_path), exist_ok=True)
+    run_dir = config.timestamped_report_dir('pod_logs')
+    os.makedirs(run_dir, exist_ok=True)
+    report_path = os.path.join(run_dir, 'pod_logs_error_report.txt')
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Pod logs error report') + ' — since: {}\n'.format(since_str))
         f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + '{}\n'.format(os.path.abspath(logs_dir)))
@@ -387,16 +388,14 @@ def main():
         if not report_entries:
             f.write(common.r(common.REPORT_DIM, '(No error blocks to report.)') + '\n')
 
-    html_path = getattr(config, 'REPORT_HTML', os.path.join(config.BASE_DIR, 'pod_logs_error_report.html'))
+    html_path = os.path.join(run_dir, 'pod_logs_error_report.html')
     html_content, report_logs_dir = common.build_error_report_html(
         'Pod logs error report', 'Logs directory', os.path.abspath(logs_dir),
         report_entries, use_ollama, ai_report_cache, html_path, 'pod_logs_report_logs')
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    print(common.c(_GREEN, 'HTML report: ') + common.c(_CYAN, html_path))
 
     total_elapsed = time_module.time() - main_start
-    print(common.c(_GREEN, 'Report written to: ') + common.c(_CYAN, report_path))
     print(common.c(_GREEN, 'Total unique blocks: {}.').format(len(report_entries)))
     print(common.c(_DIM, 'Total time: ') + '{:.1f}s'.format(total_elapsed))
     common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir)

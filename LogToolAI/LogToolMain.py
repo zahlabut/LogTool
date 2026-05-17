@@ -14,6 +14,7 @@ MODES = [
     (4, 'Show RHOSO / Octavia / Designate versions', 'rhoso_versions'),
     (5, 'Extract pod logs for time range + Ollama summary (processes, success/errors)', 'extract_logs_time_range'),
     (6, 'Analyze Zuul job (run locally: URL or path, download then console, tempest, report)', 'zuul_job_analyze'),
+    (7, 'Trace ID in pod logs (collect on controller, chronological timeline, error highlight)', 'trace_id_in_logs'),
 ]
 
 _BOLD = '\033[1m'
@@ -53,6 +54,8 @@ def main():
         from extract_logs_time_range import main as run_mode
     elif module_name == 'zuul_job_analyze':
         from zuul_job_analyze import main as run_mode
+    elif module_name == 'trace_id_in_logs':
+        from trace_id_in_logs import main as run_mode
     else:
         print('Unknown mode.')
         sys.exit(1)

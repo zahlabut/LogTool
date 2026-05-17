@@ -281,8 +281,9 @@ def main():
     print('')
     print(common.c(_CYAN, '[6/6] Write report'))
     print(common.c(_DIM, '-' * 60))
-    report_path = getattr(config, 'LOCAL_LOG_REPORT_FILE', os.path.join(config.BASE_DIR, 'local_logs_error_report.txt'))
-    os.makedirs(os.path.dirname(report_path), exist_ok=True)
+    run_dir = config.timestamped_report_dir('local_logs')
+    os.makedirs(run_dir, exist_ok=True)
+    report_path = os.path.join(run_dir, 'local_logs_error_report.txt')
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Local directory error report') + ' — since: {}\n'.format(since_str))
         f.write(common.r(common.REPORT_DIM, 'Source directory: ') + root_dir + '\n')
@@ -312,16 +313,14 @@ def main():
         if not report_entries:
             f.write(common.r(common.REPORT_DIM, '(No error blocks to report.)') + '\n')
 
-    html_path = getattr(config, 'LOCAL_LOG_REPORT_HTML', os.path.join(config.BASE_DIR, 'local_logs_error_report.html'))
+    html_path = os.path.join(run_dir, 'local_logs_error_report.html')
     html_content, report_logs_dir = common.build_error_report_html(
         'Local directory error report', 'Source directory', root_dir,
         report_entries, use_ollama, ai_report_cache, html_path, 'local_logs_report_logs')
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    print(common.c(_GREEN, 'HTML report: ') + common.c(_CYAN, html_path))
 
     total_elapsed = time_module.time() - main_start
-    print(common.c(_GREEN, 'Report written to: ') + common.c(_CYAN, report_path))
     print(common.c(_GREEN, 'Total unique blocks: {}.').format(len(report_entries)))
     print(common.c(_DIM, 'Total time: ') + '{:.1f}s'.format(total_elapsed))
     common.print_download_prompt(html_path, report_path, report_logs_dir=report_logs_dir)
