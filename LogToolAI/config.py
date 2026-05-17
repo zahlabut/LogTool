@@ -111,6 +111,8 @@ MUST_GATHER_REPORT_HTML = os.path.join(RESULT_DIR, 'must_gather', 'must_gather_e
 
 # --- Trace ID in pod logs (trace_id_in_logs) ---
 ID_TRACE_LOGS_DIR = os.path.join(RESULT_DIR, 'id_trace', 'collected_pod_logs')
+# Lines before/after each line that contains the ID (context for the full story).
+ID_TRACE_CONTEXT_LINES = 5
 
 # --- Local directory mode (analyze_local_logs) ---
 # Reports under timestamped run dir: local_logs/YYYYMMDD_HHMMSS/
