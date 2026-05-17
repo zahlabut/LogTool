@@ -105,8 +105,8 @@ def _write_text_timeline_report(f, search_id, since_str, logs_dir, entries, cont
     id_lines = sum(1 for e in entries if e[4])
     f.write(common.r(common.REPORT_DIM, 'Timeline lines: ') + str(len(entries)) + ' ({} with ID, {} context)'.format(id_lines, len(entries) - id_lines) + '\n')
     f.write(common.r(common.REPORT_DIM, 'Context: ') + str(context_lines) + ' lines before/after each ID hit in the same log file.\n')
-    f.write(common.r(common.REPORT_DIM, 'Order: chronological (time). Log path header when the source file changes.\n')
-    f.write(common.r(common.REPORT_DIM, 'ERROR keywords are highlighted in red (same as mode 1).\n\n')
+    f.write(common.r(common.REPORT_DIM, 'Order: chronological (time). Log path header when the source file changes.') + '\n')
+    f.write(common.r(common.REPORT_DIM, 'ERROR keywords are highlighted in red (same as mode 1).') + '\n\n')
     if not entries:
         f.write(common.r(common.REPORT_DIM, '(No lines containing this ID in the collected logs.)') + '\n')
         f.write(common.r(common.REPORT_DIM, 'Try: All pods, longer time window (e.g. 2h), or check the ID string.') + '\n')
