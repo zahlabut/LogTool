@@ -191,6 +191,46 @@ def _line_prefix(has_id, has_req):
     return '     '
 
 
+# Bold cyan in terminal/text reports for the searched ID substring.
+_ID_HL_ANSI = common.REPORT_BOLD + '\033[36m'
+
+
+def _highlight_substring_ansi(line_text, needle):
+    """Wrap every occurrence of needle in ANSI highlight (line must not already contain ANSI)."""
+    if not line_text or not needle:
+        return line_text
+    out = []
+    pos = 0
+    n = len(needle)
+    while True:
+        i = line_text.find(needle, pos)
+        if i == -1:
+            out.append(line_text[pos:])
+            break
+        out.append(line_text[pos:i])
+        out.append(_ID_HL_ANSI + line_text[i:i + n] + common.REPORT_RESET)
+        pos = i + n
+    return ''.join(out)
+
+
+def _format_timeline_line_text(line_text, search_id):
+    display = common.escape_ansi(line_text)
+    display = common.highlight_error_keywords(display)
+    return _highlight_substring_ansi(display, search_id)
+
+
+def _format_timeline_line_html(line_text, search_id):
+    display = common.line_for_display(line_text)
+    body = common.html_highlight_line(display)
+    if search_id:
+        body = re.sub(
+            re.escape(search_id),
+            lambda m: '<span class="idhl">' + m.group(0) + '</span>',
+            body,
+        )
+    return body
+
+
 def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_dir, entries, context_lines, request_ids, id_counts, req_counts):
     f.write(common.r(common.REPORT_BOLD, 'ID trace report') + '\n')
     f.write(common.r(common.REPORT_DIM, 'Search ID: ') + search_id + '\n')
@@ -209,8 +249,9 @@ def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_d
         f.write('\n')
     after_min = int(getattr(config, 'ID_TRACE_CORRELATE_AFTER_MINUTES', 60))
     f.write(common.r(common.REPORT_DIM, 'Note: octavia-api logs the LB UUID in URLs; worker/producer often use a different req-* and may log the UUID later (async).') + '\n')
-    f.write(common.r(common.REPORT_DIM, '[req] window: {} min before first ID through {} min after last ID. Context: {} lines per hit.\n\n').format(
+    f.write(common.r(common.REPORT_DIM, '[req] window: {} min before first ID through {} min after last ID. Context: {} lines per hit. ').format(
         int(getattr(config, 'ID_TRACE_CORRELATE_BEFORE_MINUTES', 2)), after_min, context_lines))
+    f.write(common.r(common.REPORT_DIM, 'Search ID ') + common.r(_ID_HL_ANSI, search_id) + common.r(common.REPORT_DIM, ' highlighted in log lines.\n\n'))
     if id_counts:
         f.write(common.r(common.REPORT_BOLD, 'Direct ID matches per collected log file:') + '\n')
         for path in sorted(id_counts.keys(), key=lambda p: (-id_counts[p], _log_display_name(p))):
@@ -243,8 +284,7 @@ def _write_text_timeline_report(f, search_id, collect_note, first_id_str, logs_d
             f.write(common.r(common.REPORT_BOLD, 'Log file: ') + path + '\n')
             f.write(common.r(common.REPORT_CYAN, '=' * sep_len) + '\n')
         ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
-        display = common.escape_ansi(line_text)
-        highlighted = common.highlight_error_keywords(display)
+        highlighted = _format_timeline_line_text(line_text, search_id)
         prefix = _line_prefix(has_id, has_req)
         f.write('{} {}:{} {}{}\n'.format(ts, _log_display_name(path), line_no, prefix, highlighted))
 
@@ -265,7 +305,8 @@ def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entrie
     lines.append('h1{font-size:1.4rem;} h2{font-size:1rem;margin-top:1.5rem;color:#333;border-bottom:1px solid #ccc;padding-bottom:0.25rem;word-break:break-all;}')
     lines.append('.meta{color:#666;font-size:0.9rem;} .timeline{margin:0;padding:0;list-style:none;}')
     lines.append('.timeline li{margin:0.15rem 0;font-family:ui-monospace,monospace;font-size:0.82rem;white-space:pre-wrap;word-break:break-all;}')
-    lines.append('.hl{background:#fce4a0;padding:0 2px;} .ts{color:#555;} .ctx{color:#666;} .idtag{color:#06c;font-weight:600;} .reqtag{color:#080;font-weight:600;}')
+    lines.append('.hl{background:#fce4a0;padding:0 2px;} .idhl{background:#b3d7ff;font-weight:700;padding:0 2px;}')
+    lines.append('.ts{color:#555;} .ctx{color:#666;} .idtag{color:#06c;font-weight:600;} .reqtag{color:#080;font-weight:600;}')
     lines.append('</style></head><body>')
     lines.append('<h1>ID trace report</h1>')
     lines.append('<p class="meta"><strong>Search ID:</strong> ' + common.html_escape(search_id) + '</p>')
@@ -282,7 +323,8 @@ def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entrie
         lines.append('</p>')
     after_min = int(getattr(config, 'ID_TRACE_CORRELATE_AFTER_MINUTES', 60))
     lines.append('<p class="meta">octavia-api logs the LB UUID; worker/producer may use a different req-* (async). '
-                 '[req] window: {} min after last ID. Context: {} lines per hit.</p>'.format(after_min, context_lines))
+                 '[req] window: {} min after last ID. Context: {} lines per hit. Search ID: <span class="idhl">'
+                 + common.html_escape(search_id) + '</span>.</p>'.format(after_min, context_lines))
     if not entries:
         lines.append('<p class="meta">(No lines containing this ID.) Try All pods and a longer time window.</p>')
         lines.append('</body></html>')
@@ -296,8 +338,7 @@ def _build_timeline_html(search_id, collect_note, first_id_str, logs_dir, entrie
             lines.append('<h2>Log file: ' + common.html_escape(path) + '</h2>')
             lines.append('<ul class="timeline">')
         ts = dt.strftime('%Y-%m-%d %H:%M:%S') if dt else '?'
-        display = common.line_for_display(line_text)
-        body = common.html_highlight_line(display)
+        body = _format_timeline_line_html(line_text, search_id)
         if has_id:
             tag = '<span class="idtag">[ID]</span> '
             li_cls = ''
