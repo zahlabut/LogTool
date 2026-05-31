@@ -21,6 +21,7 @@ MODES = [
     (5, 'Extract pod logs for time range + Ollama summary (processes, success/errors)', 'extract_logs_time_range'),
     (6, 'Analyze Zuul job (run locally: URL or path, download then console, tempest, report)', 'zuul_job_analyze'),
     (7, 'Trace ID in pod logs (collect on controller, chronological timeline, error highlight)', 'trace_id_in_logs'),
+    (8, 'Collect pod logs by component(s) (raw oc logs, ZIP download)', 'collect_component_logs'),
 ]
 
 _BOLD = '\033[1m'
@@ -72,6 +73,8 @@ def main():
         except ImportError as e:
             print(common.c(_YELLOW, 'Could not load mode 7 (trace_id_in_logs): ') + str(e))
             sys.exit(1)
+    elif module_name == 'collect_component_logs':
+        from collect_component_logs import main as run_mode
     else:
         print('Unknown mode.')
         sys.exit(1)
