@@ -22,6 +22,7 @@ MODES = [
     (6, 'Analyze Zuul job (run locally: URL or path, download then console, tempest, report)', 'zuul_job_analyze'),
     (7, 'Trace ID in pod logs (collect on controller, chronological timeline, error highlight)', 'trace_id_in_logs'),
     (8, 'Collect pod logs by component(s) (raw oc logs, ZIP download)', 'collect_component_logs'),
+    (9, 'Check pod health (oc get/describe, single report file)', 'check_pod_health'),
 ]
 
 _BOLD = '\033[1m'
@@ -75,6 +76,8 @@ def main():
             sys.exit(1)
     elif module_name == 'collect_component_logs':
         from collect_component_logs import main as run_mode
+    elif module_name == 'check_pod_health':
+        from check_pod_health import main as run_mode
     else:
         print('Unknown mode.')
         sys.exit(1)
