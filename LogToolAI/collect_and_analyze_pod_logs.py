@@ -40,6 +40,71 @@ def group_pods_by_component(pods):
     return sorted(groups.items(), key=lambda x: x[0])
 
 
+def parse_component_selection(raw, groups):
+    """
+    Parse comma-separated menu numbers or component names.
+    Returns list of (component, pods) tuples, or None if 'all' / all-pods menu number.
+    Empty list if nothing valid matched.
+    """
+    raw = (raw or '').strip()
+    if not raw:
+        return []
+    if raw.lower() == 'all':
+        return None
+    if raw.isdigit() and int(raw) == len(groups) + 1:
+        return None
+    selected = []
+    comp_by_name = {comp.lower(): (comp, pod_list) for comp, pod_list in groups}
+    for token in raw.split(','):
+        token = token.strip()
+        if not token:
+            continue
+        if token.lower() == 'all':
+            return None
+        if token.isdigit():
+            idx = int(token)
+            if idx == len(groups) + 1:
+                return None
+            if 1 <= idx <= len(groups):
+                selected.append(groups[idx - 1])
+            continue
+        key = token.lower()
+        if key in comp_by_name:
+            selected.append(comp_by_name[key])
+    seen = set()
+    unique = []
+    for comp, pod_list in selected:
+        if comp in seen:
+            continue
+        seen.add(comp)
+        unique.append((comp, pod_list))
+    return unique
+
+
+def pods_from_component_selection(raw, groups, all_pods):
+    """
+    Resolve user input to (pods, label).
+    label is 'all', a single component name, or comma-separated names.
+    """
+    parsed = parse_component_selection(raw, groups)
+    if parsed is None:
+        return all_pods, 'all'
+    if parsed:
+        merged = []
+        seen = set()
+        names = []
+        for comp, pod_list in parsed:
+            names.append(comp)
+            for ns, name in pod_list:
+                key = (ns, name)
+                if key not in seen:
+                    seen.add(key)
+                    merged.append(key)
+        label = names[0] if len(names) == 1 else ', '.join(names)
+        return merged, label
+    return None, None
+
+
 def safe_filename(namespace, pod_name):
     return (namespace + '_' + pod_name + '.log').replace('/', '-')
 
@@ -135,33 +200,31 @@ def main():
 
     groups = group_pods_by_component(pods)
     total = len(pods)
+    all_pods = list(pods)
     num_options = len(groups) + 1
-    print(common.c(_DIM, 'Choose which group of pods to analyze (components in alphabetical order):'))
+    print(common.c(_DIM, 'Choose component(s) to analyze (components in alphabetical order):'))
     menu_items = []
     for i, (component, group_pods) in enumerate(groups, 1):
         n = len(group_pods)
         menu_items.append((i, '{} ({} pod{})'.format(component, n, 's' if n != 1 else '')))
     menu_items.append((num_options, 'All pods ({} pods)'.format(total)))
     common.print_menu_columns(menu_items, num_columns=3, cell_width=38)
+    print('')
+    print(common.c(_DIM, 'Enter one or more — menu numbers or names, comma-separated.'))
+    print(common.c(_DIM, 'Examples: 65   or   nova,octavia,cinder   or   all   or   {} for all pods').format(num_options))
     _timeout = getattr(config, 'PROMPT_TIMEOUT_SEC', 0)
-    choice = common.timed_input(common.c(_DIM, 'Choice [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
-    selected_component = 'all'
-    try:
-        idx = int(choice)
-        if 1 <= idx <= len(groups):
-            pods = groups[idx - 1][1]
-            selected_component = groups[idx - 1][0]
-            print(common.c(_GREEN, 'Selected group "{}": {} pods.').format(selected_component, len(pods)))
-        elif idx == len(groups) + 1:
-            print(common.c(_GREEN, 'Selected all pods: {}.').format(total))
-        else:
-            pods = groups[0][1]
-            selected_component = groups[0][0]
-            print(common.c(_YELLOW, 'Invalid choice; using first group "{}".').format(selected_component))
-    except ValueError:
+    choice = common.timed_input(common.c(_DIM, 'Components [1-{}]: ').format(num_options), '1', timeout_sec=_timeout)
+    pods, selected_component = pods_from_component_selection(choice, groups, all_pods)
+    if pods is None:
         pods = groups[0][1]
         selected_component = groups[0][0]
-        print(common.c(_YELLOW, 'Invalid input; using first group "{}".').format(selected_component))
+        print(common.c(_YELLOW, 'No valid selection; using first group "{}".').format(selected_component))
+    elif selected_component == 'all':
+        pods = all_pods
+        print(common.c(_GREEN, 'Selected all pods: {}.').format(total))
+    else:
+        print(common.c(_GREEN, 'Selected {} component(s): {} ({} pods).').format(
+            len(selected_component.split(', ')), selected_component, len(pods)))
     if not pods:
         print(common.c(_YELLOW, 'No pods to analyze. Exiting.'))
         sys.exit(0)
@@ -361,6 +424,7 @@ def main():
     report_path = os.path.join(run_dir, 'pod_logs_error_report.txt')
     with open(report_path, 'w') as f:
         f.write(common.r(common.REPORT_BOLD, 'Pod logs error report') + ' — since: {}\n'.format(since_str))
+        f.write(common.r(common.REPORT_DIM, 'Components: ') + selected_component + '\n')
         f.write(common.r(common.REPORT_DIM, 'Logs directory: ') + '{}\n'.format(os.path.abspath(logs_dir)))
         f.write(common.r(common.REPORT_DIM, 'AI filter: ') + ('on (Ollama)' if use_ollama else 'off — set OLLAMA_HOST in config to enable') + '\n\n')
         for path in sorted(set(e[0] for e in report_entries)):
@@ -390,7 +454,7 @@ def main():
 
     html_path = os.path.join(run_dir, 'pod_logs_error_report.html')
     html_content, report_logs_dir = common.build_error_report_html(
-        'Pod logs error report', 'Logs directory', os.path.abspath(logs_dir),
+        'Pod logs error report', 'Components', selected_component,
         report_entries, use_ollama, ai_report_cache, html_path, 'pod_logs_report_logs')
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_content)

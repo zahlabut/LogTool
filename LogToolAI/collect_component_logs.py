@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
 import logtool_common as common
-from collect_and_analyze_pod_logs import get_pods, group_pods_by_component
+from collect_and_analyze_pod_logs import get_pods, group_pods_by_component, parse_component_selection
 
 
 def _pod_log_filename(ns, name, used_names):
@@ -26,34 +26,6 @@ def _pod_log_filename(ns, name, used_names):
     alt = (ns + '_' + name).replace('/', '-') + '.log'
     used_names.add(alt)
     return alt
-
-
-def _parse_component_selection(raw, groups):
-    """Parse comma-separated menu numbers or component names. Returns list of (component, pods)."""
-    if not raw or not raw.strip():
-        return []
-    selected = []
-    comp_by_name = {comp.lower(): (comp, pods) for comp, pods in groups}
-    for token in raw.split(','):
-        token = token.strip()
-        if not token:
-            continue
-        if token.isdigit():
-            idx = int(token)
-            if 1 <= idx <= len(groups):
-                selected.append(groups[idx - 1])
-            continue
-        key = token.lower()
-        if key in comp_by_name:
-            selected.append(comp_by_name[key])
-    seen = set()
-    unique = []
-    for comp, pods in selected:
-        if comp in seen:
-            continue
-        seen.add(comp)
-        unique.append((comp, pods))
-    return unique
 
 
 def _collect_one_pod(args):
@@ -177,7 +149,10 @@ def main():
         '',
         timeout_sec=_timeout,
     ).strip()
-    selected = _parse_component_selection(raw, groups)
+    selected = parse_component_selection(raw, groups)
+    if selected is None:
+        print(common.c(_YELLOW, 'Use menu numbers or names for specific components, not "all" in this mode. Exiting.'))
+        sys.exit(1)
     if not selected:
         print(common.c(_YELLOW, 'No valid components selected. Exiting.'))
         sys.exit(1)
